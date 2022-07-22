@@ -50,7 +50,7 @@ export const CreatorProfile = ({ creator }: Props) => {
           </div>
           {creator.tags && (
             <div className="flex flex-wrap gap-3">
-              {creator.tags.map((tag, index) => (
+              {creator.tags.map((tag: string, index: number) => (
                 <p
                   key={index}
                   className="border border-gray-900 rounded-full py-1 px-3 inline-flex text-xs"

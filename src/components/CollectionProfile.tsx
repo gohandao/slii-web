@@ -81,7 +81,7 @@ export const CollectionProfile = ({ collection }: any) => {
           </div>
           {collection.tags && (
             <div className="flex flex-wrap gap-3">
-              {collection.tags.map((tag, index) => (
+              {collection.tags.map((tag: string, index: number) => (
                 <p
                   key={index}
                   className="border border-gray-900 rounded-full py-1 px-3 inline-flex text-xs"

@@ -15,7 +15,7 @@ export const Header = () => {
           <div className="flex-shrink-0">
             <Link href="/">
               <a className="relative flex h-7">
-                <Image src="/logo.svg" width={98} height={28} />
+                <Image src="/logo.svg" width={98} height={28} alt="" />
               </a>
             </Link>
           </div>

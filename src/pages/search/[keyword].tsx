@@ -31,7 +31,7 @@ import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
 import { Tag } from "@/types/tag";
 
-const keywordPage: NextPage = () => {
+const KeywordPage: NextPage = () => {
   const router = useRouter();
   const { keyword, page } = router.query;
   const creators = useContext(CreatorsContext);
@@ -105,4 +105,4 @@ const keywordPage: NextPage = () => {
   );
 };
 
-export default keywordPage;
+export default KeywordPage;

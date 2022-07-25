@@ -1,6 +1,6 @@
-import React from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
+import React from "react";
+import Link from "next/link";
+import Image from "next/image";
 
 export const Footer = () => {
   return (
@@ -9,11 +9,11 @@ export const Footer = () => {
         <div className="justify-center items-center flex text-center">
           <Link href="/">
             <a className="relative flex h-8">
-              <Image src="/logo.svg" width={138} height={24} />
+              <Image src="/logo.svg" width={138} height={24} alt="" />
             </a>
           </Link>
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};

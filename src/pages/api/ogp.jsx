@@ -38,7 +38,8 @@ export default async (req, res) => {
   const html = `<!doctype html>${markup}`;
 
   // HTMLをセットして、ページの読み込み完了を待つ
-  await page.setContent(html, { waitUntil: "domcontentloaded" });
+  //await page.setContent(html, { waitUntil: "domcontentloaded" });
+  await page.setContent(html, { waitUntil: "load" });
 
   // スクリーンショットを取得する
   const image = await page.screenshot({ type: "png" });

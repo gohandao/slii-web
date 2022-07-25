@@ -30,6 +30,11 @@ export const Searchbox = () => {
           onChange={(e) => {
             onChangeText(e);
           }}
+          onKeyPress={(e) => {
+            if (e.key == "Enter") {
+              searchHandler();
+            }
+          }}
           className="block w-full py-2 pl-5 pr-4 text-base text-gray-900 bg-white  rounded-lg border-2 border-gray-900 bg-blue-50"
         />
         <button

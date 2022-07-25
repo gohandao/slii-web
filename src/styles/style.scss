@@ -8,3 +8,29 @@
     -webkit-text-fill-color: transparent;
             text-fill-color: transparent;
 }
+.bg-line {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: -1;
+    width: 1px;
+    height: 100vh;
+    margin: auto;
+    background: rgba(0, 0, 0, .075);
+    &:before, &:after {
+        position: fixed;
+        top: 0;
+        width: 1px;
+        height: 100vh;
+        margin: auto;
+        background: rgba(0, 0, 0, .075);
+        content: "";
+    }
+    &:before {
+        left: 10%;
+    }
+    &:after {
+        right: 10%;
+    }
+}

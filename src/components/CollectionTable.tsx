@@ -4,15 +4,20 @@ import { CollectionsContext } from "@/contexts/CollectionsContext";
 import { Card } from "@/components/Card";
 import { CollectionTr } from "@/components/CollectionTr";
 
-type Props = {
+import { Collection } from "@/types/collection";
+
+type ThProps = {
   children: ReactNode;
 };
-export const CollectionTable = () => {
+type Props = {
+  collections: Collection[];
+};
+export const CollectionTable = ({ collections }: Props) => {
   const creators = useContext(CreatorsContext);
-  const collections = useContext(CollectionsContext);
+  //const collections = useContext(CollectionsContext);
   const [list, setList] = useState();
 
-  const Th = ({ children }: Props) => {
+  const Th = ({ children }: ThProps) => {
     return (
       <th
         scope="col"
@@ -36,6 +41,7 @@ export const CollectionTable = () => {
                   <Th>24h %</Th>
                   <Th>7d %</Th>
                   <Th>Owners</Th>
+                  <Th>NFTs</Th>
                 </tr>
               </thead>
 

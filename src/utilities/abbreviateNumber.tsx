@@ -4,13 +4,14 @@ export const abbreviateNumber = (value: number, integar = false) => {
   var newValue = value.toFixed(1);
   if (value >= 1000) {
     var suffixes = ["", "k", "m", "b", "t"];
-    var suffixNum = Math.floor(("" + value).length / 3);
+    const shortenValue = value.toFixed(0);
+    var suffixNum = Math.floor(("" + shortenValue).length / 3);
     var shortValue;
     for (var precision = 2; precision >= 1; precision--) {
       shortValue = parseFloat(
         (suffixNum != 0
-          ? value / Math.pow(1000, suffixNum)
-          : value
+          ? Number(shortenValue) / Math.pow(1000, suffixNum)
+          : Number(shortenValue)
         ).toPrecision(precision)
       );
       var dotLessShortValue = (shortValue + "").replace(/[^a-zA-Z 0-9]+/g, "");

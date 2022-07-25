@@ -9,8 +9,6 @@ type Props = {
 export const CollectionTr = ({ collection }: any) => {
   const [data, setData] = useState<any>();
   const options = { method: "GET" };
-  console.log("collectioaaan");
-  console.log(collection);
   const getCollection = () => {
     fetch(
       `https://api.opensea.io/api/v1/collection/${collection.slug}`,
@@ -18,8 +16,6 @@ export const CollectionTr = ({ collection }: any) => {
     )
       .then((response) => response.json())
       .then((response) => {
-        console.log("response.collection");
-        console.log(response.collection);
         setData(response.collection);
       })
       .catch((err) => console.error(err));
@@ -53,17 +49,11 @@ export const CollectionTr = ({ collection }: any) => {
                     alt=""
                   />
                   <div className="ml-4">
-                    <p className="text-base font-bold text-gray-900">
-                      <a href="#" title="" className="line-clamp-1">
-                        {data.name}
-                        <span
-                          className="absolute inset-0"
-                          aria-hidden="true"
-                        ></span>
-                      </a>
+                    <p className="text-base font-bold text-gray-900 line-clamp-1">
+                      {data.name}
                     </p>
                     <p className="text-sm font-medium text-gray-500 mt-0.5">
-                      {data.stats.total_supply} NFTs
+                      {collection.creator_id}
                     </p>
                   </div>
                 </div>
@@ -91,6 +81,7 @@ export const CollectionTr = ({ collection }: any) => {
             %
           </Td>
           <Td>{data.stats.num_owners}</Td>
+          <Td>{data.stats.total_supply}</Td>
         </tr>
       )}
     </>

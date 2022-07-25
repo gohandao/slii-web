@@ -2,8 +2,9 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import React, { useState, useContext } from "react";
 
-import { CreatorsList } from "@/components/CreatorsList";
+import { CreatorList } from "@/components/CreatorList";
 import { CollectionTable } from "@/components/CollectionTable";
 import { SearchArea } from "@/components/SearchArea";
 
@@ -16,10 +17,20 @@ import { Hr } from "@/components/Hr";
 import { Title } from "@/components/Title";
 import { LinkButton } from "@/components/LinkButton";
 
+import { Dropdown } from "@/components/Dropdown";
+
+import { CreatorsContext } from "@/contexts/CreatorsContext";
+import { CollectionsContext } from "@/contexts/CollectionsContext";
+
+import { Creator } from "@/types/creator";
+import { Collection } from "@/types/collection";
 const CollectionsPage: NextPage = () => {
   const router = useRouter();
   const { page } = router.query;
+  const creators = useContext(CreatorsContext);
+  const collections = useContext(CollectionsContext);
 
+  const [collectionsMenu, setCollectionMenu] = useState<[string]>([""]);
   return (
     <div>
       <Head>
@@ -31,9 +42,12 @@ const CollectionsPage: NextPage = () => {
         <section className="mx-auto max-w-7xl mt-12">
           <Title property="h2" addClass="mb-5">
             Collections
-          </Title>{" "}
+          </Title>
+          <div className="flex gap-5">
+            <Dropdown menus={collectionsMenu} />
+          </div>
           <div className="mb-10">
-            <CollectionTable />
+            <CollectionTable collections={collections} />
           </div>
           <div className="flex justify-center mb-20">
             <ShowMore currentPage={page ? Number(page) : 1} />

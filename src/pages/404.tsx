@@ -3,7 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
-import { CreatorsList } from "@/components/CreatorsList";
+import { CreatorList } from "@/components/CreatorList";
 import { CollectionTable } from "@/components/CollectionTable";
 import { SearchArea } from "@/components/SearchArea";
 

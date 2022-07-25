@@ -2,23 +2,34 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { base } from "@/libs/airtable";
 
-import { CreatorsList } from "@/components/CreatorsList";
+import React, { useState, useEffect, useContext } from "react";
+
+import {
+  CreatorTagsContext,
+  CollectionTagsContext,
+} from "@/contexts/TagsContext";
+
+import { TagList } from "@/components/TagList";
+import { CreatorList } from "@/components/CreatorList";
 import { CollectionTable } from "@/components/CollectionTable";
-import { SearchArea } from "@/components/SearchArea";
-
-import { Mainvisual } from "@/components/Mainvisual";
-import { ShowMore } from "@/components/ShowMore";
-import { Pagination } from "@/components/Pagination";
 import { BaseLayout } from "@/components/BaseLayout";
-import { IndexTab } from "@/components/IndexTab";
-import { Hr } from "@/components/Hr";
 import { Title } from "@/components/Title";
-import { LinkButton } from "@/components/LinkButton";
 
+import { Tag } from "@/types/tag";
+
+type GetAllTags = {
+  baseName: string;
+  currentTags: [];
+  setState: React.Dispatch<React.SetStateAction<Tag[]>>;
+};
 const TagsPage: NextPage = () => {
+  const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
   const router = useRouter();
   const { page } = router.query;
+  const CreatorTags = useContext(CreatorTagsContext);
+  const CollectionTags = useContext(CollectionTagsContext);
 
   return (
     <div>
@@ -33,7 +44,7 @@ const TagsPage: NextPage = () => {
             Creator Tags
           </Title>{" "}
           <div className="mb-10">
-            <CollectionTable />
+            <TagList tags={CreatorTags} />
           </div>
         </section>
         <section className="mx-auto max-w-7xl mt-12">
@@ -41,7 +52,7 @@ const TagsPage: NextPage = () => {
             Collection Tags
           </Title>{" "}
           <div className="mb-10">
-            <CollectionTable />
+            <TagList tags={CollectionTags} />
           </div>
         </section>
       </BaseLayout>

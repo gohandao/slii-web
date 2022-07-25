@@ -9,6 +9,7 @@ export const BaseLayout = ({ children }: Props) => {
   return (
     <>
       <Header />
+      <div className="bg-line"></div>
       <main>{children}</main>
       <Footer />
     </>

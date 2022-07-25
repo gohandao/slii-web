@@ -7,12 +7,17 @@ import { useRouter } from "next/router";
 import { base } from "@/libs/airtable";
 
 import { CreatorsContext } from "@/contexts/CreatorsContext";
+import {
+  CreatorTagsContext,
+  CollectionTagsContext,
+} from "@/contexts/TagsContext";
 import { CollectionsContext } from "@/contexts/CollectionsContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 import { List } from "@/components/List";
 import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
+import { Tag } from "@/types/tag";
 import { Utilities } from "@/types/utilities";
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -30,6 +35,8 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const [creators, setCreators] = useState<Creator[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
+  const [creatorTags, setCreatorTags] = useState<Tag[]>([]);
+  const [collectionTags, setCollectionTags] = useState<Tag[]>([]);
 
   const router = useRouter();
   //const { page } = router.query
@@ -73,6 +80,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           });
           setCreators(new_records);
           fetchNextPage();
+          return new_records as Creator[];
         },
         function done(err: any) {
           if (err) {
@@ -119,10 +127,52 @@ function MyApp({ Component, pageProps }: AppProps) {
         }
       );
   };
+  const getAllTags = (
+    baseName: string,
+    setState: React.Dispatch<React.SetStateAction<Tag[]>>
+  ) => {
+    let new_records = [...creatorTags];
+    base(baseName)
+      .select({
+        // Selecting the first 3 records in All:
+        maxRecords: 10,
+        view: "All",
+      })
+      .eachPage(
+        //@ts-ignore
+        function page(records: any[], fetchNextPage: () => void) {
+          records.forEach(function (record) {
+            const fields = record.fields;
+            new_records = [
+              ...new_records,
+              {
+                name: fields.name,
+                createdAt: fields.createdAt,
+                collections_slug: fields.collections_slug,
+                count: fields.count,
+              } as Tag,
+            ];
+            //console.log("creators", new_records);
+            //console.log("Retrieved", record.fields);
+          });
+          setState(new_records);
+          fetchNextPage();
+        },
+        function done(err: any) {
+          if (err) {
+            console.error(err);
+            return;
+          }
+        }
+      );
+  };
 
   useEffect(() => {
+    //getCreators();
     getCreators();
     getCollections();
+    getAllTags("creator_tags", setCreatorTags);
+    getAllTags("collection_tags", setCollectionTags);
   }, []);
 
   /*
@@ -150,13 +200,19 @@ function MyApp({ Component, pageProps }: AppProps) {
         setIndexTab: setIndexTab,
         page: page,
         setPage: setPage,
+        //collectionsMenu: collectionsMenu,
+        //setCollectionsMenu: setCollectionsMenu,
       }}
     >
       <CreatorsContext.Provider value={creators}>
         <CollectionsContext.Provider value={collections}>
-          <div className="font-outfit">
-            <Component {...pageProps} />
-          </div>
+          <CreatorTagsContext.Provider value={creatorTags}>
+            <CollectionTagsContext.Provider value={collectionTags}>
+              <div className="font-outfit">
+                <Component {...pageProps} />
+              </div>
+            </CollectionTagsContext.Provider>
+          </CreatorTagsContext.Provider>
         </CollectionsContext.Provider>
       </CreatorsContext.Provider>
     </UtilitiesContext.Provider>

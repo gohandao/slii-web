@@ -2,16 +2,28 @@ import React, { useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { JP } from "country-flag-icons/react/3x2";
+import { FaEthereum } from "react-icons/fa";
+
 import { CreatorsContext } from "@/contexts/CreatorsContext";
 
-export const CreatorsList = () => {
-  const creators = useContext(CreatorsContext);
+import { Creator } from "@/types/creator";
+
+type Props = {
+  creators: Creator[];
+};
+export const CreatorList = ({ creators }: Props) => {
+  //const creators = useContext(CreatorsContext);
+
   return (
     <div className="flex gap-4 flex-wrap">
       {creators &&
         creators.map((creator, index) => (
           <Link href={`/${creator.username}`} key={index}>
-            <a className="flex flex-col border-2 border-gray-100 rounded w-60 items-center shadow-lg">
+            <a className="relative flex flex-col border-2 border-gray-100 rounded w-60 items-center shadow-lg">
+              <div className="absolute left-2 top-2 bg-yellow-500 flex py-[2px] px-3 z-10 rounded-full text-sm text-white">
+                {creator.type}
+              </div>
               <div className="flex relative w-full h-20 overflow-hidden">
                 {creator.background && (
                   <Image
@@ -35,7 +47,13 @@ export const CreatorsList = () => {
                 )}
               </div>
               <div className="pt-1 pb-5">
-                <h3 className="font-bold line-crump-1">{creator.username}</h3>
+                <h3 className="font-bold line-crump-1 mb-2">
+                  {creator.username}
+                </h3>
+                <p className="flex justify-center gap-2">
+                  <JP title="Japan" className="h-5 border rounded" />
+                  <Image src="/icon-eth.svg" width={16} height={16} />
+                </p>
               </div>
             </a>
           </Link>

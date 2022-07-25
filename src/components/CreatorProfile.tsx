@@ -25,6 +25,7 @@ export const CreatorProfile = ({ creator }: Props) => {
             layout="fill"
             height="100%"
             objectFit="cover"
+            alt=""
           />
         )}
       </div>
@@ -37,6 +38,7 @@ export const CreatorProfile = ({ creator }: Props) => {
               width={100}
               height={100}
               objectFit="cover"
+              alt=""
             />
           )}
         </div>

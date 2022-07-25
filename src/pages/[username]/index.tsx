@@ -62,7 +62,7 @@ const CreatorIndex: NextPage = (props: any) => {
   };
 
   useEffect(() => {
-    if (username) {
+    if (username && creators) {
       //set creator
       const creator_filter = creators.filter(
         (creator) => creator.username === username

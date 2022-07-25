@@ -54,6 +54,7 @@ export const CollectionProfile = ({ collection }: any) => {
             layout="fill"
             height="100%"
             objectFit="cover"
+            alt=""
           />
         )}
       </div>
@@ -66,6 +67,7 @@ export const CollectionProfile = ({ collection }: any) => {
               width={100}
               height={100}
               objectFit="cover"
+              alt=""
             />
           )}
         </div>

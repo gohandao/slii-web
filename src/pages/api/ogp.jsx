@@ -1,4 +1,5 @@
 /* pages/api/ogp.js */
+import Head from "next/head";
 
 import ReactDOM from "react-dom/server";
 import * as playwright from "playwright-aws-lambda";
@@ -14,9 +15,9 @@ const styles = `
 
 const Content = (props) => (
   <html>
-    <head>
+    <Head>
       <style>{styles}</style>
-    </head>
+    </Head>
     <body>
       <h1>{props.title}</h1>
     </body>

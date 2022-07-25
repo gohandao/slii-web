@@ -32,6 +32,7 @@ export const CreatorList = ({ creators }: Props) => {
                     layout="fill"
                     height="100%"
                     objectFit="cover"
+                    alt=""
                   />
                 )}
               </div>
@@ -43,6 +44,7 @@ export const CreatorList = ({ creators }: Props) => {
                     width={100}
                     height={100}
                     objectFit="cover"
+                    alt=""
                   />
                 )}
               </div>
@@ -52,7 +54,7 @@ export const CreatorList = ({ creators }: Props) => {
                 </h3>
                 <p className="flex justify-center gap-2">
                   <JP title="Japan" className="h-5 border rounded" />
-                  <Image src="/icon-eth.svg" width={16} height={16} />
+                  <Image src="/icon-eth.svg" width={16} height={16} alt="" />
                 </p>
               </div>
             </a>

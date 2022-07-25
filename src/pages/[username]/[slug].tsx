@@ -48,8 +48,6 @@ const CollectionIndex: NextPage = (props: any) => {
     fetch(`https://api.opensea.io/api/v1/collection/${slug}`, options)
       .then((response) => response.json())
       .then((response) => {
-        console.log("response.collection");
-        console.log(response.collection);
         setCollection(response.collection);
       })
       .catch((err) => console.error(err));
@@ -82,18 +80,16 @@ const CollectionIndex: NextPage = (props: any) => {
   };
 
   useEffect(() => {
+    getCollection();
     if (slug) {
       getCollectionAssets();
     }
   }, [slug, collection]);
+  /*
   useEffect(() => {
     slug && getCollection();
   }, [slug]);
-
-  useEffect(() => {
-    console.log("uuuuucollectionAssets");
-    console.log(collectionAssets);
-  }, [collectionAssets]);
+  */
 
   /*useEffect(() => {
     const test = async () => {

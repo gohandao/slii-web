@@ -35,6 +35,7 @@ export const CollectionCard = ({ collection }: any) => {
                 layout="fill"
                 height="100%"
                 objectFit="cover"
+                alt=""
               />
             )}
           </div>
@@ -47,6 +48,7 @@ export const CollectionCard = ({ collection }: any) => {
                   layout="fill"
                   width="100%"
                   objectFit="cover"
+                  alt=""
                 />
               )}
             </div>

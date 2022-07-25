@@ -33,6 +33,7 @@ export const Card = ({ creator }: Props) => {
                   height="100%"
                   layout="fill"
                   objectFit="cover"
+                  alt=""
                 />
               </>
             )}

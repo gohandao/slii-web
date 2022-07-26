@@ -29,7 +29,8 @@ import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
 
 type PathProps = {
-  //title: string;
+  title: string;
+  description: string;
   ogImageUrl: string;
 };
 type Params = ParsedUrlQuery & {
@@ -83,26 +84,22 @@ const CreatorIndex: NextPage = (props: any) => {
     collectionSlug && getCollection();
   }, [collectionSlug]);
 
-  //@ts-ignore
-  const title = creator && creator.username;
-  //@ts-ignore
-  const description = creator && creator.description;
   return (
     <div>
       <NextSeo
-        title={title}
-        description={description}
+        title={props.title}
+        description={props.description}
         openGraph={{
           type: "article",
-          title: title,
-          description: description,
+          title: props.title,
+          description: props.description,
           url: process.env.NEXT_PUBLIC_SITE_URL + `/${username}`,
           images: [
             {
               url: props.ogImageUrl,
               width: 1200,
               height: 630,
-              alt: title,
+              alt: props.title,
               type: "image/jpeg",
             },
           ],
@@ -165,7 +162,9 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
     props: {
       // OGP画像は絶対URLで記述する必要があります
       //ogImageUrl: `${baseUrl}/api/ogp?title=${creator.username}&page=creators`,
-      ogImageUrl: `${creator}`,
+      title: `${creator.fields.username}'s Gachi collections`,
+      description: `${creator.fields.description}`,
+      ogImageUrl: `${baseUrl}/api/ogp?title=${creator.fields.username}&page=creators`,
       revalidate: 10,
     },
   };

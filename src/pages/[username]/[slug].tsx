@@ -194,6 +194,8 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   const collection = collections.filter(
     (collection: any) => collection.fields.slug === slug
   );*/
+  console.log("records");
+  console.log(records);
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
@@ -204,8 +206,8 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   return {
     props: {
       slug: records[0].fields.slug,
-      title: `${records[0].fields.name} collection by ${records[0].fields.creator_id}`,
-      description: `${records[0].fields.name} is a Gachi featured NFT collection created by ${records[0].fields.creator_id}.`,
+      title: `${records[0].fields.name} collection by ${records[0].fields.creator_id[0]}`,
+      description: `${records[0].fields.name} is a Gachi featured NFT collection created by ${records[0].fields.creator_id[0]}.`,
       // OGP画像は絶対URLで記述する必要があります
       ogImageUrl: `${baseUrl}/api/ogp?title=${slug}&page=collections`,
       revalidate: 10,

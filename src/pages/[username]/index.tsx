@@ -141,17 +141,21 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   params,
 }) => {
   const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
-  const response = await fetch(
+  /*const response = await fetch(
     `https://api.airtable.com/v0/appFYknMhbtkUTFgt/creators?api_key=${AIRTABLE_API_KEY}`
+  );*/
+  const username = params && params.username;
+  const response = await fetch(
+    `https://api.airtable.com/v0/appFYknMhbtkUTFgt/creators?api_key=${AIRTABLE_API_KEY}&filterByFormula=%7Busername%7D+%3D+%22${username}%22`
   );
   const { records } = await response.json();
-  const creators = records;
-  const username = params && params.username;
-  console.log("static username");
-  console.log(username);
-  const creator = creators.filter(
+  //const creators = records;
+  //const creator = creators[0];
+  //console.log("static creator");
+  //console.log(creator);
+  /*const creator = creators.filter(
     (creator: any) => creator.fields.username === username
-  );
+  );*/
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
@@ -164,8 +168,8 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
       // OGP画像は絶対URLで記述する必要があります
       //ogImageUrl: `${baseUrl}/api/ogp?title=${creator.username}&page=creators`,
       title: `${username}'s Gachi collections`,
-      description: `${creator.fields.description}`,
-      ogImageUrl: `${baseUrl}/api/ogp?title=${creator.fields.username}&page=creators`,
+      description: `${records[0].fields.description}`,
+      ogImageUrl: `${baseUrl}/api/ogp?title=${username}&page=creators`,
       revalidate: 10,
     },
   };

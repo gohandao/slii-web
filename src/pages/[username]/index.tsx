@@ -163,7 +163,7 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
     props: {
       // OGP画像は絶対URLで記述する必要があります
       //ogImageUrl: `${baseUrl}/api/ogp?title=${creator.username}&page=creators`,
-      title: `${creator.fields.username}'s Gachi collections`,
+      title: `${username}'s Gachi collections`,
       description: `${creator.fields.description}`,
       ogImageUrl: `${baseUrl}/api/ogp?title=${creator.fields.username}&page=creators`,
       revalidate: 10,

@@ -104,10 +104,6 @@ const CollectionIndex: NextPage = (props: any) => {
     test();
   }, []);*/
 
-  //@ts-ignore
-  const title = collection && collection.name;
-  //@ts-ignore
-  const description = collection && collection.description;
   return (
     <>
       <NextSeo
@@ -117,12 +113,13 @@ const CollectionIndex: NextPage = (props: any) => {
           type: "article",
           title: props.title,
           description: props.description,
+          url: process.env.NEXT_PUBLIC_SITE_URL + `/${props.slug}`,
           images: [
             {
               url: props.ogImageUrl,
               width: 1200,
               height: 630,
-              alt: title,
+              alt: props.title,
               type: "image/jpeg",
             },
           ],
@@ -156,6 +153,9 @@ const CollectionIndex: NextPage = (props: any) => {
 export default CollectionIndex;
 
 type PathProps = {
+  title: string;
+  name: string;
+  description: string;
   ogImageUrl: string;
 };
 type Params = ParsedUrlQuery & {
@@ -203,6 +203,7 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   }
   return {
     props: {
+      slug: slug,
       title: `${records[0].fields.name} collection by ${records[0].fields.creator_id}`,
       description: `${records[0].fields.name} is a Gachi featured NFT collection created by ${records[0].fields.creator_id}.`,
       // OGP画像は絶対URLで記述する必要があります

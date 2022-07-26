@@ -187,7 +187,7 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
   const slug = params && params.slug;
   const response = await fetch(
-    `https://api.airtable.com/v0/appFYknMhbtkUTFgt/creators?api_key=${AIRTABLE_API_KEY}&filterByFormula=%7Bslug%7D+%3D+%22${slug}%22`
+    `https://api.airtable.com/v0/appFYknMhbtkUTFgt/collections?api_key=${AIRTABLE_API_KEY}&filterByFormula=%7Bslug%7D+%3D+%22${slug}%22`
   );
   const { records } = await response.json();
   /*const collections = records;

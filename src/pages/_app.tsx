@@ -172,10 +172,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     //getCreators();
-    getCreators();
-    getCollections();
-    getAllTags("creator_tags", setCreatorTags);
-    getAllTags("collection_tags", setCollectionTags);
+    creators.length == 0 && getCreators();
+    collections.length == 0 && getCollections();
+    creatorTags.length == 0 && getAllTags("creator_tags", setCreatorTags);
+    collectionTags.length == 0 &&
+      getAllTags("collection_tags", setCollectionTags);
   }, []);
 
   /*

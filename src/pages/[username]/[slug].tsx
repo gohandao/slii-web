@@ -35,7 +35,7 @@ const CollectionIndex: NextPage = (props: any) => {
   const collections = useContext(CollectionsContext);
 
   const [creator, setCreator] = useState<Creator>();
-  const [collectionAssets, setCollectionAssets] = useState<string>();
+  const [collectionAssets, setCollectionAssets] = useState<[]>([]);
   const { slug } = router.query;
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -75,7 +75,7 @@ const CollectionIndex: NextPage = (props: any) => {
       .then((response) => {
         console.log("assets");
         console.log(response.asset_events);
-        //setCollectionAssets(response.asset_events);
+        setCollectionAssets(response.asset_events);
         //updateCollectionAssets(response.assets);
       })
       .catch((err) => console.error(err));
@@ -83,13 +83,12 @@ const CollectionIndex: NextPage = (props: any) => {
 
   useEffect(() => {
     if (slug) {
-      getCollectionAssets();
+      collection.length == 0 && getCollection();
+    }
+    if (collection) {
+      collectionAssets.length == 0 && getCollectionAssets();
     }
   }, [slug, collection]);
-
-  useEffect(() => {
-    slug && getCollection();
-  }, [slug]);
 
   /*useEffect(() => {
     const test = async () => {
@@ -156,6 +155,13 @@ const CollectionIndex: NextPage = (props: any) => {
 
 export default CollectionIndex;
 
+type PathProps = {
+  ogImageUrl: string;
+};
+type Params = ParsedUrlQuery & {
+  slug: string;
+};
+
 export const getStaticPaths = async () => {
   const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
   const response = await fetch(
@@ -175,26 +181,19 @@ export const getStaticPaths = async () => {
   };
 };
 
-type PathProps = {
-  ogImageUrl: string;
-};
-type Params = ParsedUrlQuery & {
-  slug: string;
-};
-
 export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   params,
 }) => {
   const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
+  const slug = params && params.slug;
   const response = await fetch(
-    `https://api.airtable.com/v0/appFYknMhbtkUTFgt/collections?api_key=${AIRTABLE_API_KEY}`
+    `https://api.airtable.com/v0/appFYknMhbtkUTFgt/creators?api_key=${AIRTABLE_API_KEY}&filterByFormula=%7Bslug%7D+%3D+%22${slug}%22`
   );
   const { records } = await response.json();
-  const collections = records;
-  const slug = params && params.slug;
+  /*const collections = records;
   const collection = collections.filter(
     (collection: any) => collection.fields.slug === slug
-  );
+  );*/
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
@@ -205,7 +204,7 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   return {
     props: {
       // OGP画像は絶対URLで記述する必要があります
-      ogImageUrl: `${baseUrl}/api/ogp?key=${slug}&page=collections`,
+      ogImageUrl: `${baseUrl}/api/ogp?title=${slug}&page=collections`,
       revalidate: 10,
     },
   };

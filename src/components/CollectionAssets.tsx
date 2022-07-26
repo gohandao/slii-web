@@ -6,8 +6,6 @@ import Moment from "react-moment";
 import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 
 export const CollectionAssets = ({ collectionAssets }: any) => {
-  console.log("aaacollectionAssets");
-  console.log(collectionAssets);
   return (
     <div className="flex flex-wrap gap-5">
       {collectionAssets &&

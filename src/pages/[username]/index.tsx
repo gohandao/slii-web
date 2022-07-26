@@ -28,15 +28,6 @@ import { Custom404 } from "@/pages/404";
 import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
 
-type PathProps = {
-  title: string;
-  description: string;
-  ogImageUrl: string;
-};
-type Params = ParsedUrlQuery & {
-  username: string;
-};
-
 const CreatorIndex: NextPage = (props: any) => {
   const router = useRouter();
   const creators = useContext(CreatorsContext);
@@ -122,6 +113,15 @@ const CreatorIndex: NextPage = (props: any) => {
   );
 };
 export default CreatorIndex;
+
+type PathProps = {
+  title: string;
+  description: string;
+  ogImageUrl: string;
+};
+type Params = ParsedUrlQuery & {
+  username: string;
+};
 
 export const getStaticPaths = async () => {
   const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;

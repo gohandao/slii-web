@@ -14,12 +14,17 @@ type Props = {
 };
 export const CreatorList = ({ creators }: Props) => {
   //const creators = useContext(CreatorsContext);
+  console.log(creators);
 
   return (
     <div className="flex gap-4 flex-wrap">
       {creators &&
         creators.map((creator, index) => (
-          <Link href={`/${creator.username}`} key={index}>
+          <Link
+            href={`/${creator.username}`}
+            as={`/${creator.username}`}
+            key={index}
+          >
             <a className="relative flex flex-col border-2 border-gray-100 rounded w-60 items-center shadow-lg">
               <div className="absolute left-2 top-2 bg-yellow-500 flex py-[2px] px-3 z-10 rounded-full text-sm text-white">
                 {creator.type}
@@ -32,6 +37,7 @@ export const CreatorList = ({ creators }: Props) => {
                     layout="fill"
                     objectFit="cover"
                     alt=""
+                    loading="lazy"
                   />
                 )}
               </div>

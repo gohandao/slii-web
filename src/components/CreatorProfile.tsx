@@ -25,6 +25,7 @@ export const CreatorProfile = ({ creator }: Props) => {
             layout="fill"
             objectFit="cover"
             alt=""
+            loading="lazy"
           />
         )}
       </div>

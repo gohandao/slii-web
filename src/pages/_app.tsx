@@ -194,7 +194,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       });
   }, []);*/
 
-  const site_url = "https://gachi.vercel.com";
+  const site_url = "https://gachi.vercel.app";
   const site_name = "Gachi";
   const title = "Gachi | Awesome NFT Creators / Collections Database";
   const description =

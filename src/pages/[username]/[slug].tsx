@@ -109,7 +109,7 @@ const CollectionIndex: NextPage = (props: any) => {
   //@ts-ignore
   const description = collection && collection.description;
   return (
-    <div>
+    <>
       <NextSeo
         title={title}
         description={description}
@@ -149,7 +149,7 @@ const CollectionIndex: NextPage = (props: any) => {
           )}
         </div>
       </BaseLayout>
-    </div>
+    </>
   );
 };
 

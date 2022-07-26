@@ -85,7 +85,7 @@ const CreatorIndex: NextPage = (props: any) => {
   }, [collectionSlug]);
 
   return (
-    <div>
+    <>
       <NextSeo
         title={props.title}
         description={props.description}
@@ -118,7 +118,7 @@ const CreatorIndex: NextPage = (props: any) => {
           )}
         </div>
       </BaseLayout>
-    </div>
+    </>
   );
 };
 export default CreatorIndex;

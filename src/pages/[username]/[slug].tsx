@@ -163,8 +163,8 @@ export const getStaticPaths = async () => {
   );
   const { records } = await response.json();
   const collections = records;
-  console.log("testrecords");
-  console.log(records);
+  //console.log("testrecords");
+  //console.log(records);
   return {
     paths: collections.map(
       (colelction: any) =>

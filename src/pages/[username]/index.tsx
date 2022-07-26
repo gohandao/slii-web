@@ -147,7 +147,8 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   const { records } = await response.json();
   const creators = records;
   const username = params && params.username;
-
+  console.log("static username");
+  console.log(username);
   const creator = creators.filter(
     (creator: any) => creator.fields.username === username
   );

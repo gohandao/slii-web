@@ -153,8 +153,8 @@ const CollectionIndex: NextPage = (props: any) => {
 export default CollectionIndex;
 
 type PathProps = {
+  slug: string;
   title: string;
-  name: string;
   description: string;
   ogImageUrl: string;
 };
@@ -203,7 +203,7 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   }
   return {
     props: {
-      slug: slug,
+      slug: records[0].fields.slug,
       title: `${records[0].fields.name} collection by ${records[0].fields.creator_id}`,
       description: `${records[0].fields.name} is a Gachi featured NFT collection created by ${records[0].fields.creator_id}.`,
       // OGP画像は絶対URLで記述する必要があります

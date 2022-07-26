@@ -133,8 +133,6 @@ export const getStaticPaths = async () => {
   );
   const { records } = await response.json();
   const creators = records;
-  console.log("testrecords");
-  console.log(records);
   return {
     paths: creators.map((creator: any) => `/${creator.fields.username}`),
     //fallback: false,
@@ -152,6 +150,7 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   const { records } = await response.json();
   const creators = records;
   const username = params && params.username;
+
   const creator = creators.filter(
     (creator: any) => creator.fields.username === username
   );
@@ -165,7 +164,8 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   return {
     props: {
       // OGP画像は絶対URLで記述する必要があります
-      ogImageUrl: `${baseUrl}/api/ogp?title=${creator.username}&page=creators`,
+      //ogImageUrl: `${baseUrl}/api/ogp?title=${creator.username}&page=creators`,
+      ogImageUrl: `${creator}`,
       revalidate: 10,
     },
   };

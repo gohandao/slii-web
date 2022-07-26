@@ -77,7 +77,8 @@ const CreatorIndex: NextPage = (props: any) => {
       collection_filter.length > 0 &&
         updateCollectionSlug(collection_filter[0].slug);
     }
-  }, [username, collections]);
+  }, [collections]);
+  //[username, collections]
   useEffect(() => {
     collectionSlug && getCollection();
   }, [collectionSlug]);
@@ -95,6 +96,7 @@ const CreatorIndex: NextPage = (props: any) => {
           type: "article",
           title: title,
           description: description,
+          url: process.env.NEXT_PUBLIC_SITE_URL + `/${username}`,
           images: [
             {
               url: props.ogImageUrl,
@@ -163,7 +165,7 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   return {
     props: {
       // OGP画像は絶対URLで記述する必要があります
-      ogImageUrl: `${baseUrl}/api/ogp?key=${creator.username}&page=creators`,
+      ogImageUrl: `${baseUrl}/api/ogp?title=${creator.username}&page=creators`,
       revalidate: 10,
     },
   };

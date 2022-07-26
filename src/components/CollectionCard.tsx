@@ -9,8 +9,6 @@ type StatsProps = {
   element: any;
 };
 export const CollectionCard = ({ collection }: any) => {
-  console.log("collection");
-  console.log(collection);
   const Stats = ({ title, element }: StatsProps) => {
     return (
       <div className="inline-flex min-w-[120px] rounded border-2 border-gray-100 bg-gray-50 flex-col p-2">

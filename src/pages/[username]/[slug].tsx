@@ -111,12 +111,12 @@ const CollectionIndex: NextPage = (props: any) => {
   return (
     <>
       <NextSeo
-        title={title}
-        description={description}
+        title={props.title}
+        description={props.description}
         openGraph={{
           type: "article",
-          title: title,
-          description: description,
+          title: props.title,
+          description: props.description,
           images: [
             {
               url: props.ogImageUrl,
@@ -203,6 +203,8 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   }
   return {
     props: {
+      title: `${records[0].fields.name} collection by ${records[0].fields.creator_id}`,
+      description: `${records[0].fields.name} is a Gachi featured NFT collection created by ${records[0].fields.creator_id}.`,
       // OGP画像は絶対URLで記述する必要があります
       ogImageUrl: `${baseUrl}/api/ogp?title=${slug}&page=collections`,
       revalidate: 10,

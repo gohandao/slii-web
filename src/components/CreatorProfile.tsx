@@ -23,7 +23,6 @@ export const CreatorProfile = ({ creator }: Props) => {
             //@ts-ignore
             src={creator.background[0].thumbnails.large.url}
             layout="fill"
-            height="100%"
             objectFit="cover"
             alt=""
           />

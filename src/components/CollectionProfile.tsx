@@ -52,7 +52,6 @@ export const CollectionProfile = ({ collection }: any) => {
             //@ts-ignore
             src={collection.featured_image_url}
             layout="fill"
-            height="100%"
             objectFit="cover"
             alt=""
           />

@@ -33,7 +33,6 @@ export const CollectionCard = ({ collection }: any) => {
                 //@ts-ignore
                 src={collection.featured_image_url}
                 layout="fill"
-                height="100%"
                 objectFit="cover"
                 alt=""
               />
@@ -46,7 +45,6 @@ export const CollectionCard = ({ collection }: any) => {
                   //@ts-ignore
                   src={collection.image_url}
                   layout="fill"
-                  width="100%"
                   objectFit="cover"
                   alt=""
                 />

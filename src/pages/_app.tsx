@@ -1,6 +1,9 @@
 import "@/styles/style.scss";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
+import Head from "next/head";
+import { DefaultSeo } from "next-seo";
+
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { useRouter } from "next/router";
 
@@ -191,31 +194,71 @@ function MyApp({ Component, pageProps }: AppProps) {
       });
   }, []);*/
 
+  const site_url = "https://gachi.vercel.com";
+  const site_name = "Gachi";
+  const title = "Gachi | Awesome NFT Creators / Collections Database";
+  const description =
+    "Search creators, collections and NFTs with Gachi. We are creating special database and collaboration platform.";
+  const twitter_id = "gachi";
+
   return (
-    <UtilitiesContext.Provider
-      value={{
-        search: search,
-        setSearch: setSearch,
-        indexTab: indexTab,
-        setIndexTab: setIndexTab,
-        page: page,
-        setPage: setPage,
-        //collectionsMenu: collectionsMenu,
-        //setCollectionsMenu: setCollectionsMenu,
-      }}
-    >
-      <CreatorsContext.Provider value={creators}>
-        <CollectionsContext.Provider value={collections}>
-          <CreatorTagsContext.Provider value={creatorTags}>
-            <CollectionTagsContext.Provider value={collectionTags}>
-              <div className="font-outfit">
-                <Component {...pageProps} />
-              </div>
-            </CollectionTagsContext.Provider>
-          </CreatorTagsContext.Provider>
-        </CollectionsContext.Provider>
-      </CreatorsContext.Provider>
-    </UtilitiesContext.Provider>
+    <>
+      <Head>
+        <meta
+          name="viewport"
+          content="minimum-scale=1, initial-scale=1, width=device-width"
+        />
+      </Head>
+      <DefaultSeo
+        defaultTitle={title}
+        description={description}
+        openGraph={{
+          type: "website",
+          title: title,
+          description: description,
+          site_name: site_name,
+          url: site_url,
+          images: [
+            {
+              url: site_url + "/default-ogp.jpg",
+              width: 1200,
+              height: 630,
+              alt: title,
+              type: "image/jpeg",
+            },
+          ],
+        }}
+        twitter={{
+          handle: "@ik_takagishi",
+          //site: "@ik_takagishi",
+          cardType: "summary_large_image",
+        }}
+      />
+      <UtilitiesContext.Provider
+        value={{
+          search: search,
+          setSearch: setSearch,
+          indexTab: indexTab,
+          setIndexTab: setIndexTab,
+          page: page,
+          setPage: setPage,
+          //collectionsMenu: collectionsMenu,
+          //setCollectionsMenu: setCollectionsMenu,
+        }}
+      >
+        <CreatorsContext.Provider value={creators}>
+          <CollectionsContext.Provider value={collections}>
+            <CreatorTagsContext.Provider value={creatorTags}>
+              <CollectionTagsContext.Provider value={collectionTags}>
+                <div className="font-outfit">
+                  <Component {...pageProps} />
+                </div>
+              </CollectionTagsContext.Provider>
+            </CreatorTagsContext.Provider>
+          </CollectionsContext.Provider>
+        </CreatorsContext.Provider>
+      </UtilitiesContext.Provider>
+    </>
   );
 }
 

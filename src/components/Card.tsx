@@ -30,7 +30,6 @@ export const Card = ({ creator }: Props) => {
                 <Image
                   //@ts-ignore
                   src={creator.avatar[0].thumbnails.large.url}
-                  height="100%"
                   layout="fill"
                   objectFit="cover"
                   alt=""

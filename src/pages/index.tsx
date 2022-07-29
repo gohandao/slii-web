@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 import React, { useState, useEffect, useContext } from "react";
@@ -88,18 +89,25 @@ const Home: NextPage = () => {
         <Mainvisual />
         <Hr />
         <section className="mx-auto max-w-7xl">
-          <Title property="h2" addClass="mb-5">
-            Creators
-          </Title>
-          <p>{creatorsLength} Creators</p>
-
+          <div className="flex gap-4 items-baseline mb-5">
+            <Title property="h2" addClass="">
+              Creators
+            </Title>
+            <p className="text-gray-400 text-sm">{creatorsLength} Creators</p>
+          </div>
           <div className="mb-10">
             <CreatorList creators={creators} />
           </div>
-          <p>{creatorTagsLength} Creator Tags</p>
-
-          <div className="mb-10">
-            {filteredCreatorTags && <TagList tags={filteredCreatorTags} />}
+          <div className="mb-10 flex gap-5 items-baseline">
+            {filteredCreatorTags && (
+              <TagList tags={filteredCreatorTags} type="creator" />
+            )}
+            <Link href="/tags">
+              <a className="mb-2">
+                <span className="text-gray-900">+ {creatorTagsLength - 2}</span>
+                <span className="text-gray-400 ml-2 ">Creator Tags</span>
+              </a>
+            </Link>
           </div>
           <div className="flex justify-center">
             <LinkButton href="/creators">Check creators</LinkButton>
@@ -107,19 +115,30 @@ const Home: NextPage = () => {
         </section>
         <Hr />
         <section className="mx-auto max-w-7xl">
-          <Title property="h2" addClass="mb-5">
-            Collections
-          </Title>{" "}
-          <p>{collectionsLength} Collections</p>
+          <div className="flex gap-4 items-baseline mb-5">
+            <Title property="h2" addClass="">
+              Collections
+            </Title>
+            <p className="text-gray-400 text-sm">
+              {collectionsLength} Collections
+            </p>
+          </div>
           <div className="mb-10">
             <CollectionTable collections={collections} />
           </div>
-          <div className="mb-10">
+          <div className="mb-10 flex gap-5 items-baseline">
             {filteredCollectionTags && (
-              <TagList tags={filteredCollectionTags} />
+              <TagList tags={filteredCollectionTags} type="collection" />
             )}
+            <Link href="/tags">
+              <a className="mb-2">
+                <span className="text-gray-900">
+                  + {collectionTagsLength - 2}
+                </span>
+                <span className="text-gray-400 ml-2 ">Collection Tags</span>
+              </a>
+            </Link>
           </div>
-          <p>{collectionTagsLength} Collection Tags</p>
           <div className="flex justify-center mb-20">
             <LinkButton href="/collections">Check collections</LinkButton>
           </div>

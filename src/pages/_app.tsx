@@ -40,6 +40,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [collections, setCollections] = useState<Collection[]>([]);
   const [creatorTags, setCreatorTags] = useState<Tag[]>([]);
   const [collectionTags, setCollectionTags] = useState<Tag[]>([]);
+  const [creatorsSort, setCreatorsSort] = useState<string>();
+  const [collectionsSort, setCollectionsSort] = useState<string>();
 
   const router = useRouter();
   //const { page } = router.query
@@ -108,6 +110,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             new_records = [
               ...new_records,
               {
+                name: fields.name,
                 slug: fields.slug,
                 creator_id: fields.creator_id[0],
                 type: fields.type,
@@ -158,6 +161,14 @@ function MyApp({ Component, pageProps }: AppProps) {
             //console.log("creators", new_records);
             //console.log("Retrieved", record.fields);
           });
+          //sort
+          new_records = new_records.sort(function (a, b) {
+            if (a.count < b.count) return 1;
+            if (a.count > b.count) return -1;
+            return 0;
+          });
+          new_records = Array.from(new Set(new_records));
+
           setState(new_records);
           fetchNextPage();
         },
@@ -242,6 +253,10 @@ function MyApp({ Component, pageProps }: AppProps) {
           setIndexTab: setIndexTab,
           page: page,
           setPage: setPage,
+          creatorsSort: creatorsSort,
+          setCreatorsSort: setCreatorsSort,
+          collectionsSort: collectionsSort,
+          setCollectionsSort: setCollectionsSort,
           //collectionsMenu: collectionsMenu,
           //setCollectionsMenu: setCollectionsMenu,
         }}

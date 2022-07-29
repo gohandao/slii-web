@@ -47,10 +47,10 @@ export const CollectionProfile = ({ collection }: any) => {
   return (
     <section className="w-full">
       <div className="flex relative w-full h-60 overflow-hidden">
-        {collection.featured_image_url && (
+        {collection.banner_image_url && (
           <Image
             //@ts-ignore
-            src={collection.featured_image_url}
+            src={collection.banner_image_url}
             layout="fill"
             objectFit="cover"
             alt=""

@@ -16,7 +16,9 @@ export const Searchbox = () => {
   };
 
   const searchHandler = () => {
-    router.push(`/search/${search}`);
+    if (search && search.length > 0) {
+      router.push(`/search/${search}`);
+    }
   };
   return (
     <>

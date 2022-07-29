@@ -40,17 +40,19 @@ const KeywordPage: NextPage = () => {
   const CreatorTags = useContext(CreatorTagsContext);
   const CollectionTags = useContext(CollectionTagsContext);
 
+  const uppperKeyword = typeof keyword == "string" && keyword.toUpperCase();
   const filteredCreators01 = creators.filter(
     (item) =>
       typeof keyword == "string" &&
+      //すべて大文字にして大文字小文字の区別をなくす
       //@ts-ignore
-      item.username.includes(keyword) == true
+      item.username.toUpperCase().includes(uppperKeyword) == true
   );
   const filteredCreators02 = creators.filter(
     (item) =>
       typeof keyword == "string" &&
       //@ts-ignore
-      item.description.includes(keyword) == true
+      item.description.toUpperCase().includes(uppperKeyword) == true
   );
   const origin_filteredCreators = [
     ...filteredCreators01,
@@ -63,7 +65,7 @@ const KeywordPage: NextPage = () => {
     (item) =>
       typeof keyword == "string" &&
       //@ts-ignore
-      item.slug.includes(keyword) == true
+      item.name.toUpperCase().includes(uppperKeyword) == true
   );
   console.log();
   return (

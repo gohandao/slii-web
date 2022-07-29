@@ -47,7 +47,10 @@ export const CreatorProfile = ({ creator }: Props) => {
             <h1 className="text-3xl font-bold line-clamp-1">
               {creator.username}
             </h1>
-            <p className="text-xs text-gray-500">{creator.address}</p>
+            <p className="flex items-center gap-1 text-xs text-gray-500">
+              <Image src="/icon-eth.svg" width={16} height={16} alt="" />
+              {creator.address}
+            </p>
             <p className="text-gray-900 mt-1">{creator.description}</p>
           </div>
           {creator.tags && (

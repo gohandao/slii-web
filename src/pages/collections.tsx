@@ -21,6 +21,7 @@ import { Dropdown } from "@/components/Dropdown";
 
 import { CreatorsContext } from "@/contexts/CreatorsContext";
 import { CollectionsContext } from "@/contexts/CollectionsContext";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
@@ -29,8 +30,25 @@ const CollectionsPage: NextPage = () => {
   const { page } = router.query;
   const creators = useContext(CreatorsContext);
   const collections = useContext(CollectionsContext);
+  const { setCollectionsSort } = useContext(UtilitiesContext);
 
-  const [collectionsMenu, setCollectionMenu] = useState<[string]>([""]);
+  const collectionsMenu = [
+    "Total volume",
+    "Price Low to High",
+    "Price High to Low",
+    "24h %",
+    "3d %",
+    "7d %",
+    "Owners",
+    "NFTs",
+  ];
+  //const [collectionsMenu, setCollectionMenu] =
+    //useState<string[]>(collectionsMenus);
+
+  const collectionSortHandler = () => {
+    setCollectionsSort("volume");
+    console.log("test");
+  };
   return (
     <div>
       <Head>
@@ -43,11 +61,18 @@ const CollectionsPage: NextPage = () => {
           <Title property="h2" addClass="mb-5">
             Collections
           </Title>
-          <div className="flex gap-5">
+          <button onClick={collectionSortHandler}>test sort</button>
+
+          <div className="flex gap-5 justify-between">
+            <div className="flex">
+              <button>Handmade</button>
+              <button>Generative</button>
+              <button>Utilities</button>
+            </div>
             <Dropdown menus={collectionsMenu} />
           </div>
           <div className="mb-10">
-            <CollectionTable collections={collections} />
+            {collections && <CollectionTable collections={collections} />}
           </div>
           <div className="flex justify-center mb-20">
             <ShowMore currentPage={page ? Number(page) : 1} />

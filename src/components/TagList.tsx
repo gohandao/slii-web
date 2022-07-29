@@ -5,18 +5,23 @@ import { Tag } from "@/types/tag";
 
 type Props = {
   tags: Tag[];
+  type: "creator" | "collection",
 };
-export const TagList = ({ tags }: Props) => {
+export const TagList = ({ tags, type }: Props) => {
+  let typeClass = "bg-gray-50 text-gray-400";
+  if (type == "creator") {
+    typeClass = "bg-blue-50 text-blue-400";
+  } else if (type == "collection") {
+    typeClass = "bg-green-50 text-green-400";
+  }
   return (
-    <div className="flex flex-wrap gap-5">
+    <div className="flex flex-wrap gap-3">
       {tags &&
         tags.map((tag, index) => (
           <div key={index}>
             {tag && tag.name && (
-              <Link href={`/tags/${tag.name}`} key={index}>
-                <a className="rounded-full border-2 border-gray-900 px-3 py-1">
-                  {tag.name} ({tag.count})
-                </a>
+              <Link href={`/tags/${tag.name}`}>
+                <a className={`inline-block rounded px-4 py-3 ${typeClass}`}>#{tag.name} ({tag.count})</a>
               </Link>
             )}
           </div>

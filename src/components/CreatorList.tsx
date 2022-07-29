@@ -7,6 +7,9 @@ import { FaEthereum } from "react-icons/fa";
 
 import { CreatorsContext } from "@/contexts/CreatorsContext";
 
+import { TagList } from "@/components/TagList";
+import { Label } from "@/components/Label";
+
 import { Creator } from "@/types/creator";
 
 type Props = {
@@ -14,7 +17,7 @@ type Props = {
 };
 export const CreatorList = ({ creators }: Props) => {
   //const creators = useContext(CreatorsContext);
-  console.log(creators);
+  //console.log(creators);
 
   return (
     <div className="flex gap-4 flex-wrap">
@@ -26,10 +29,14 @@ export const CreatorList = ({ creators }: Props) => {
             key={index}
           >
             <a className="relative flex flex-col border-2 border-gray-100 rounded w-60 items-center shadow-lg">
-              <div className="absolute left-2 top-2 bg-yellow-500 flex py-[2px] px-3 z-10 rounded-full text-sm text-white">
+              <div
+                className={`absolute left-2 top-2 flex py-[2px] px-3 z-10 rounded-full text-sm text-white ${
+                  creator.type == "creator" ? "bg-yellow-500" : "bg-blue-500"
+                }`}
+              >
                 {creator.type}
               </div>
-              <div className="flex relative w-full h-20 overflow-hidden">
+              <div className="flex relative w-full h-20 overflow-hidden bg-gray-100">
                 {creator.background && (
                   <Image
                     //@ts-ignore
@@ -41,7 +48,7 @@ export const CreatorList = ({ creators }: Props) => {
                   />
                 )}
               </div>
-              <div className="-mt-10 rounded-full border-4 border-white overflow-hidden flex items center justify-center z-10">
+              <div className="-mt-10 rounded-full border-4 border-white overflow-hidden flex items center justify-center z-10 bg-gray-100">
                 {creator.avatar && (
                   <Image
                     //@ts-ignore
@@ -62,6 +69,13 @@ export const CreatorList = ({ creators }: Props) => {
                   <Image src="/icon-eth.svg" width={16} height={16} alt="" />
                 </p>
               </div>
+              {creator.tags && (
+                <div className="flex gap-2 -mt-2 pb-5 justify-start w-full px-3">
+                  {creator.tags.map((tag, index) => (
+                    <Label key={index} name={tag} type="creator" />
+                  ))}
+                </div>
+              )}
             </a>
           </Link>
         ))}

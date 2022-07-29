@@ -42,17 +42,17 @@ const TagsPage: NextPage = () => {
         <section className="mx-auto max-w-7xl mt-12">
           <Title property="h2" addClass="mb-5">
             Creator Tags
-          </Title>{" "}
+          </Title>
           <div className="mb-10">
-            <TagList tags={CreatorTags} />
+            <TagList tags={CreatorTags} type="creator"/>
           </div>
         </section>
         <section className="mx-auto max-w-7xl mt-12">
           <Title property="h2" addClass="mb-5">
             Collection Tags
-          </Title>{" "}
+          </Title>
           <div className="mb-10">
-            <TagList tags={CollectionTags} />
+            <TagList tags={CollectionTags} type="collection"/>
           </div>
         </section>
       </BaseLayout>

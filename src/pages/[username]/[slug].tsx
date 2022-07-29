@@ -73,8 +73,6 @@ const CollectionIndex: NextPage = (props: any) => {
     )
       .then((response) => response.json())
       .then((response) => {
-        console.log("assets");
-        console.log(response.asset_events);
         setCollectionAssets(response.asset_events);
         //updateCollectionAssets(response.assets);
       })

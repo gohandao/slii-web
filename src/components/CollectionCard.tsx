@@ -22,14 +22,14 @@ export const CollectionCard = ({ collection }: any) => {
   const unit =
     collection.payment_tokens && " " + collection.payment_tokens[0].symbol;
   return (
-    <Link href={`/collection/${collection.slug}`}>
+    <Link href={`/${collection.creator_id}/${collection.slug}`}>
       <a className="block relative w-full overflow-hidden bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1">
         <div className="p-4">
           <div className="relative overflow-hidden h-32 w-full rounded-lg">
-            {collection.featured_image_url && (
+            {collection.banner_image_url && (
               <Image
                 //@ts-ignore
-                src={collection.featured_image_url}
+                src={collection.banner_image_url}
                 layout="fill"
                 objectFit="cover"
                 alt=""

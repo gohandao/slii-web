@@ -51,7 +51,7 @@ const CreatorsPage: NextPage = () => {
     }
   };
 
-  const title = "Awesome NFT Creators List by Gachi";
+  const title = "Awesome NFT creators list by Gachi";
   const description = "Check these awesome NFT creators now.";
   return (
     <>

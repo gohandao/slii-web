@@ -10,5 +10,5 @@ export type Utilities = {
   creatorsSort?: string;
   setCreatorsSort: React.Dispatch<React.SetStateAction<string | undefined>>;
   collectionsSort?: string;
-  setCollectionsSort: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setCollectionsSort: React.Dispatch<React.SetStateAction<string>>;
 };

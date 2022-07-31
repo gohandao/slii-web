@@ -1,12 +1,15 @@
 import React, { useContext } from "react";
+import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 
 import { JP } from "country-flag-icons/react/3x2";
 import { FaEthereum } from "react-icons/fa";
+import { MdVerified } from "react-icons/md";
 
 import { CreatorsContext } from "@/contexts/CreatorsContext";
 
+import { CardLinks } from "@/components/CardLinks";
 import { TagList } from "@/components/TagList";
 import { Label } from "@/components/Label";
 
@@ -18,6 +21,7 @@ type Props = {
 export const CreatorList = ({ creators }: Props) => {
   //const creators = useContext(CreatorsContext);
   //console.log(creators);
+  const router = useRouter();
 
   return (
     <div className="flex gap-4 flex-wrap">
@@ -60,9 +64,12 @@ export const CreatorList = ({ creators }: Props) => {
                   />
                 )}
               </div>
-              <div className="pt-1 pb-5">
-                <h3 className="font-bold line-crump-1 mb-2">
+              <div className="pt-1 pb-3">
+                <h3 className="flex gap-2 items-center  font-bold line-crump-1 mb-2">
                   {creator.username}
+                  {creator.verified == true && (
+                    <MdVerified className="mt-[2px] text-blue-500"/>
+                  )}
                 </h3>
                 <p className="flex justify-center gap-2">
                   <JP title="Japan" className="h-5 border rounded" />
@@ -70,12 +77,19 @@ export const CreatorList = ({ creators }: Props) => {
                 </p>
               </div>
               {creator.tags && (
-                <div className="flex gap-2 -mt-2 pb-5 justify-start w-full px-3">
+                <div className="flex gap-2 pb-4 justify-start w-full px-3">
                   {creator.tags.map((tag, index) => (
                     <Label key={index} name={tag} type="creator" />
                   ))}
                 </div>
               )}
+              <CardLinks
+                twitter_id={creator.twitter_id}
+                instagram_id={creator.instagram_id}
+                discord_url={creator.discord_url}
+                website={creator.website}
+                opensea_url={creator.username}
+              />
             </a>
           </Link>
         ))}

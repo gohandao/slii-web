@@ -7,8 +7,11 @@ export type Creator = {
   website: string;
   twitter_id: string;
   instagram_id: string;
+  discord_url: string;
   type: string;
+  verified: boolean;
   createdAt: Date | null;
   updatedAt: Date | null;
+  collections: [];
   tags: [];
 };

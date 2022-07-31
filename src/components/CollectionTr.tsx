@@ -10,8 +10,8 @@ type Props = {
   children: ReactNode;
 };
 export const CollectionTr = ({ item }: any) => {
-  console.log("item");
-  console.log(item);
+  //console.log("item");
+  //console.log(item);
   const { collectionsSort } = useContext(UtilitiesContext);
 
   /*const [list, setList] = useState<any[]>([]);
@@ -58,7 +58,7 @@ export const CollectionTr = ({ item }: any) => {
     return (
       <td
         scope="col"
-        className="px-3 py-4 text-sm font-medium text-right text-gray-900 bg-white sm:px-6 whitespace-nowrap"
+        className="px-3 py-4 text-sm font-medium text-right text-gray-800 bg-white sm:px-6 whitespace-nowrap border-b border-gray-100"
       >
         {children}
       </td>
@@ -68,17 +68,17 @@ export const CollectionTr = ({ item }: any) => {
   return (
     <>
       <tr key={item.slug}>
-        <td className="relative py-4 pl-4 pr-3 bg-white sm:pl-6">
+        <td className="relative py-4 pl-4 pr-3 bg-white sm:pl-6 border-b border-gray-100 ">
           <Link href={`/${item.creator_id}/${item.slug}`}>
             <a className="block">
               <div className="flex items-center">
                 <img
-                  className="object-cover w-10 h-10 rounded-full shrink-0"
+                  className="object-cover w-10 h-10 rounded shadow-lg shrink-0"
                   src={item.image_url}
                   alt=""
                 />
                 <div className="ml-4">
-                  <p className="text-base font-bold text-gray-900 line-clamp-1">
+                  <p className="text-base font-bold text-gray-800 line-clamp-1 pr-3">
                     {item.name}
                   </p>
                   <p className="text-sm text-gray-400">

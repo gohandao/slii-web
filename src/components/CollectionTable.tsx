@@ -57,14 +57,8 @@ export const CollectionTable = ({ collections }: Props) => {
 
   const options = { method: "GET" };
   const getCollectionsData = async() => {
-    console.log("ooo")
-    //console.log(collections)
-    //console.log(list.length);
-    //console.log(newList.current.length);
-
     const getNewData = async () => {
       await Promise.all(collections.map(async (collection, index) => {
-        //for(let collection of collections) {
         await fetch(
           `https://api.opensea.io/api/v1/collection/${collection.slug}`,
           options
@@ -76,98 +70,70 @@ export const CollectionTable = ({ collections }: Props) => {
 
             const new_data = data;
             const new_list = [...newList.current, new_data];
-            //newList.current = new_list;
-            //newList.current = new_list;
             newList.current = new_list;
-            //setSetup(true);
-            //console.log(index);
-            //console.log("mapping");
-            //console.log(newList.current);
-
-            //setList(newList.current);
             return
           })
           .catch((err) => console.error(err));
       }));
-      //};
     }
     list.length == 0 && newList.current.length == 0 && (await getNewData());
     console.log("make true");
     setSetup(true);
   };
 
-  //2つ置かないと正常に取得されない
-  /*useEffect(() => {
-    collections && getCollectionsData();
-  }, []);*/
   useEffect(() => {
     collections && getCollectionsData();
   }, [collections]);
-    /*useEffect(() => {
-      collections && getCollectionsData();
-    }, [collections]);*/
-  /*useEffect(() => {
-    collections && getCollectionsData();
-  }, []);
-  useEffect(() => {
-    collections && getCollectionsData();
-  }, [collections]);*/
 
   useEffect(() => {
-    //const filteredNewList = Array.from(new Set(newList.current));
     if (setup) {
-      console.log("setlist start");
-      //setList(newList.current);
       const data = Array.from(new Set(newList.current));
       sortList();
-      //setList((list) => Array.from(new Set(newList.current)));
       setSetup(false);
     }
-    //setList((list) => newList.current);
-
-    //console.log("listああああ");
   }, [setup]);
 
+  //初期ソート
   const sortList = () => {
-    //if (collectionsSort) {
-      let new_list = [];
-      switch (collectionsSort) {
-        case "volume":
-          console.log("sort statrt");
-          new_list = list.sort(function (a, b) {
-            if (a.stats.total_volume < b.stats.total_volume) return 1;
-            if (a.stats.total_volume > b.stats.total_volume) return -1;
-            return 0;
-          });
-          newList.current = Array.from(new Set(new_list));
-          //setList(new_list);
-          setList((list) => newList.current);
-          break;
-
-        default:
-          //取引ボリュームの多い順
-          new_list = newList.current.sort(function (a, b) {
-            if (a.stats.total_volume < b.stats.total_volume) return 1;
-            if (a.stats.total_volume > b.stats.total_volume) return -1;
-            return 0;
-          });
-          newList.current = Array.from(new Set(new_list));
-          //setList(new_list);
-          setList((list) => newList.current);
-          break;
-      }
-    //}
+    let new_list = [];
+    new_list = newList.current.sort(function (a, b) {
+      if (a.stats.total_volume < b.stats.total_volume) return 1;
+      if (a.stats.total_volume > b.stats.total_volume) return -1;
+      return 0;
+    });
+    newList.current = Array.from(new Set(new_list));
+    //setList(new_list);
+    setList((list) => newList.current);
   }
 
   useEffect(() => {
     if (collectionsSort) {
       let new_list = [];
       switch (collectionsSort) {
-        case "volume":
-          console.log("sort statrt")
+        case "Total Volume":
           new_list = list.sort(function (a, b) {
             if (a.stats.total_volume < b.stats.total_volume) return 1;
             if (a.stats.total_volume > b.stats.total_volume) return -1;
+            return 0;
+          });
+          newList.current = Array.from(new Set(new_list));
+          //setList(new_list);
+          setList((list) => newList.current);
+          break;
+        case "Name":
+          new_list = list.sort(function (a, b) {
+            if (a.name < b.name) return 1;
+            if (a.name > b.name) return -1;
+            return 0;
+          });
+          newList.current = Array.from(new Set(new_list));
+          //setList(new_list);
+          setList((list) => newList.current);
+          break;
+        case "Price Low to High":
+          new_list = list.sort(function (a, b) {
+            if (a.name < b.name) return 1;
+            if (a.name > b.name) return -1;
             return 0;
           });
           newList.current = Array.from(new Set(new_list));
@@ -186,8 +152,8 @@ export const CollectionTable = ({ collections }: Props) => {
       <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
           <div className="overflow-hidden">
-            <table className="min-w-full">
-              <thead className="border-t border-x border-gray-200 bg-gray-50">
+            <table className="min-w-full border-separate rounded border border-gray-200 bg-white" style={{borderSpacing: "0"}}>
+              <thead className="bg-gray-50">
                 <tr>
                   <Th title="Collection" />
                   <Th title="Total Volume" />
@@ -199,7 +165,7 @@ export const CollectionTable = ({ collections }: Props) => {
                 </tr>
               </thead>
 
-              <tbody className="border border-gray-200 divide-y divide-gray-200">
+              <tbody className="border border-gray-200 divide-y divide-gray-200 rounded">
                 {list &&
                   list.map((item, index) => (
                     <CollectionTr

@@ -8,6 +8,9 @@ import { AiOutlineClockCircle } from "react-icons/ai";
 import { VscChecklist } from "react-icons/vsc";
 import { FaPlay } from "react-icons/fa";
 
+import { ProfileLinks } from "@/components/ProfileLinks";
+import { Label } from "@/components/Label";
+
 import { Creator } from "@/types/creator";
 
 type Props = {
@@ -30,17 +33,22 @@ export const CreatorProfile = ({ creator }: Props) => {
         )}
       </div>
       <div className="mx-auto max-w-7xl">
-        <div className="-mt-10 rounded-full border-4 border-white overflow-hidden inline-flex items center justify-center z-10">
-          {creator.avatar && (
-            <Image
-              //@ts-ignore
-              src={creator.avatar[0].thumbnails.large.url}
-              width={100}
-              height={100}
-              objectFit="cover"
-              alt=""
-            />
-          )}
+        <div className="-mt-10 relative inline-flex">
+          <div className="rounded-full border-4 border-white overflow-hidden inline-flex items center justify-center z-10">
+            {creator.avatar && (
+              <Image
+                //@ts-ignore
+                src={creator.avatar[0].thumbnails.large.url}
+                width={100}
+                height={100}
+                objectFit="cover"
+                alt=""
+              />
+            )}
+          </div>
+          <p className="absolute bottom-4 left-full -ml-6 bg-yellow-500 text-white pl-5 pr-3 rounded-tr-full rounded-br-full text-sm">
+            {creator.type}
+          </p>
         </div>
         <div className="flex flex-1 flex-col gap-5 px-5">
           <div className="flex flex-col gap-2">
@@ -54,17 +62,19 @@ export const CreatorProfile = ({ creator }: Props) => {
             <p className="text-gray-900 mt-1">{creator.description}</p>
           </div>
           {creator.tags && (
-            <div className="flex flex-wrap gap-3">
-              {creator.tags.map((tag: string, index: number) => (
-                <p
-                  key={index}
-                  className="border border-gray-900 rounded-full py-1 px-3 inline-flex text-xs"
-                >
-                  {tag}
-                </p>
-              ))}{" "}
+            <div className="flex gap-2 justify-start w-full">
+              {creator.tags.map((tag, index) => (
+                <Label key={index} name={tag} type="creator" />
+              ))}
             </div>
           )}
+          <ProfileLinks
+            twitter_id={creator.twitter_id}
+            instagram_id={creator.instagram_id}
+            discord_url={creator.discord_url}
+            website={creator.website}
+            opensea_url={creator.username}
+          />
         </div>
       </div>
     </section>

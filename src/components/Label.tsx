@@ -16,6 +16,19 @@ export const Label = ({ name, type }: Props) => {
     typeClass = "bg-green-50 text-green-400";
   }
   return (
+    <object>
+      <Link href={`/tags/${name}`}>
+        <a
+          className={`bg-blue-50 text-blue-400 rounded px-3 py-1 text-sm ${typeClass}`}
+        >
+          #{name}
+        </a>
+      </Link>
+    </object>
+  );
+}
+
+/*
     <button
       onClick={() => {
         router.push(`/tags/${name}`);
@@ -24,5 +37,4 @@ export const Label = ({ name, type }: Props) => {
       >
         #{name}
       </button>
-  );
-}
+      */

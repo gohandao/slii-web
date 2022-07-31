@@ -34,9 +34,10 @@ const CollectionIndex: NextPage = (props: any) => {
   const creators = useContext(CreatorsContext);
   const collections = useContext(CollectionsContext);
 
+  const [existence, setExistence] = useState<boolean>(false)
   const [creator, setCreator] = useState<Creator>();
   const [collectionAssets, setCollectionAssets] = useState<[]>([]);
-  const { slug } = router.query;
+  const { username, slug } = router.query;
   const [loading, setLoading] = useState<boolean>(false);
 
   const [collection, setCollection] = useState([]);
@@ -88,6 +89,28 @@ const CollectionIndex: NextPage = (props: any) => {
     }
   }, [slug, collection]);
 
+  //[username]が存在するかチェック
+  useEffect(() => {
+    if (existence == false) {
+      const creator = creators.filter(
+        (creator) => creator.username === username
+      );
+      const collection =
+        creator.length > 0 &&
+        creator[0].collections.filter((collection) => collection === slug);
+      if (collection && collection.length > 0) {
+        setExistence(true);
+      }
+      //本来ページが存在しない場合はリダイレクト
+      if (creator.length == 0 && slug && collections ) {
+        router.push("/")
+      }
+    }
+    return (() => {
+      setExistence(false);
+    })
+  }, [username, slug])
+
   /*useEffect(() => {
     const test = async () => {
       const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
@@ -104,46 +127,52 @@ const CollectionIndex: NextPage = (props: any) => {
 
   return (
     <>
-      <NextSeo
-        title={props.title}
-        description={props.description}
-        openGraph={{
-          type: "article",
-          title: props.title,
-          description: props.description,
-          url: process.env.NEXT_PUBLIC_SITE_URL + `/${props.slug}`,
-          images: [
-            {
-              url: props.ogImageUrl,
-              width: 1200,
-              height: 630,
-              alt: props.title,
-              type: "image/jpeg",
-            },
-          ],
-        }}
-      />
-      <BaseLayout>
-        <div className="">
-          <div className="flex justify-center w-full mb-6">
-            {collection && <CollectionProfile collection={collection} />}
-          </div>
-          {collectionAssets && (
-            <section className="mx-auto max-w-7xl">
-              <Title property="h2" addClass="mb-5">
-                NFTs
-              </Title>
-              <div className="flex gap-5">
-                <p>All</p>
-                <p>Buy now</p>
-                <p>On auction</p>
-                <p>Price low to high</p>
+      {existence ? (
+        <>
+          <NextSeo
+            title={props.title}
+            description={props.description}
+            openGraph={{
+              type: "article",
+              title: props.title,
+              description: props.description,
+              url: process.env.NEXT_PUBLIC_SITE_URL + `/${props.slug}`,
+              images: [
+                {
+                  url: props.ogImageUrl,
+                  width: 1200,
+                  height: 630,
+                  alt: props.title,
+                  type: "image/jpeg",
+                },
+              ],
+            }}
+          />
+          <BaseLayout>
+            <div className="">
+              <div className="flex justify-center w-full mb-6">
+                {collection && <CollectionProfile collection={collection} />}
               </div>
-              <CollectionAssets collectionAssets={collectionAssets} />
-            </section>
-          )}
-        </div>
-      </BaseLayout>
+              {collectionAssets && (
+                <section className="mx-auto max-w-7xl">
+                  <Title property="h2" addClass="mb-5">
+                    NFTs
+                  </Title>
+                  <div className="flex gap-5">
+                    <p>All</p>
+                    <p>Buy now</p>
+                    <p>On auction</p>
+                    <p>Price low to high</p>
+                  </div>
+                  <CollectionAssets collectionAssets={collectionAssets} />
+                </section>
+              )}
+            </div>
+          </BaseLayout>
+        </>
+      ) : (
+        <p>faga</p>
+      )}
     </>
   );
 };

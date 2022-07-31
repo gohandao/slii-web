@@ -13,9 +13,12 @@ export const CreatorsContext = createContext<Creator[]>([
     website: "",
     twitter_id: "",
     instagram_id: "",
+    discord_url: "",
+    verified: false,
     type: "",
     createdAt: null,
     updatedAt: null,
+    collections: [],
     tags: [],
   },
 ]);

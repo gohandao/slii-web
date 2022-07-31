@@ -41,7 +41,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [creatorTags, setCreatorTags] = useState<Tag[]>([]);
   const [collectionTags, setCollectionTags] = useState<Tag[]>([]);
   const [creatorsSort, setCreatorsSort] = useState<string>();
-  const [collectionsSort, setCollectionsSort] = useState<string>();
+  const [collectionsSort, setCollectionsSort] =
+    useState<string>("Total Volume");
 
   const router = useRouter();
   //const { page } = router.query
@@ -74,9 +75,12 @@ function MyApp({ Component, pageProps }: AppProps) {
                 website: fields.website,
                 twitter_id: fields.twitter_id,
                 instagram_id: fields.instagram_id,
+                discord_url: fields.discord_url,
                 type: fields.type,
+                verified: fields.verified,
                 createdAt: fields.createdAt,
                 updatedAt: fields.updatedAt,
+                collections: fields.collections,
                 tags: fields.tags,
               } as Creator,
             ];

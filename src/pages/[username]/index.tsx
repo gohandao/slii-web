@@ -101,10 +101,7 @@ const CreatorIndex: NextPage = (props: any) => {
           {creator && <CreatorProfile creator={creator} />}
           {collection && (
             <div className="mx-auto max-w-7xl w-full">
-              <Title property="h2" addClass="mb-5">
-                Featured Collections
-              </Title>
-              <CollectionCard collection={collection} />
+              <CollectionCard username={username} collection={collection} />
             </div>
           )}
         </div>

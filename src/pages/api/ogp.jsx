@@ -1,4 +1,6 @@
 /* pages/api/ogp.js */
+import "@/styles/style.scss";
+import "@/styles/globals.css";
 import Head from "next/head";
 import Image from "next/image";
 

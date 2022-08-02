@@ -21,6 +21,11 @@ const styles = `
     -webkit-text-fill-color: transparent;
             text-fill-color: transparent;
 }
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
   .container {
     font-family: 'Outfit', sans-serif;
     position: relative;
@@ -54,6 +59,7 @@ const styles = `
     overflow: hidden;
     text-overflow: ellipsis;
     margin-top: 40px;
+    line-height: 1.1;
   }
   .subTitle {
     font-size: 24px;

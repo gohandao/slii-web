@@ -73,5 +73,6 @@ export default async (req, res) => {
   res.setHeader("Content-Type", "image/png");
 
   // レスポンスを返す
-  res.end(image);
+  //res.end(image);
+  res.end(<Content {...props} />);
 };

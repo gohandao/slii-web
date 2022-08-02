@@ -15,11 +15,28 @@ const styles = `
 
 const Content = (props) => (
   <html>
-    <Head>
-      <style>{styles}</style>
-    </Head>
+    <Head></Head>
     <body>
-      <h1>{props.title}</h1>
+      {/*<h1>{props.title}</h1>
+      {props.subTitle && <p>{props.subTitle}</p>}
+*/}
+      <div className="flex w-full h-full">
+        <div className="relative w-[1200px] h-[600px] font-outfit">
+          <div className="absolute left-0 top-0 w-full h-full">
+            <Image src="/ogp-base.jpg" layout="fill" />
+          </div>
+          <div className="absolute w-full h-full flex flex-col items-center justify-center">
+            <h1 className="text-[70px] font-bold text-gradient mt-10">
+              {props.title}
+            </h1>
+            {props.subTitle && (
+              <p className="text-xl font-light text-[#545454] tracking-[0.4em]">
+                {props.subTitle}
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
     </body>
   </html>
 );
@@ -34,7 +51,7 @@ export default async (req, res) => {
   const page = await browser.newPage({ viewport });
 
   // HTMLの生成
-  const props = { title: title };
+  const props = { title, subTitle };
   const markup = ReactDOM.renderToStaticMarkup(<Content {...props} />);
   const html = `<!doctype html>${markup}`;
 

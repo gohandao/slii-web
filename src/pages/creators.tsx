@@ -87,7 +87,7 @@ const CreatorsPage: NextPage = () => {
           url: process.env.NEXT_PUBLIC_SITE_URL + `/creators`,
           images: [
             {
-              url: process.env.NEXT_PUBLIC_SITE_URL + "/default-ogp.jpg",
+              url: process.env.NEXT_PUBLIC_SITE_URL + "/ogp-default.jpg",
               width: 1200,
               height: 630,
               alt: title,

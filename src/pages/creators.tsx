@@ -10,6 +10,7 @@ import { CreatorList } from "@/components/CreatorList";
 import { CollectionTable } from "@/components/CollectionTable";
 import { SearchArea } from "@/components/SearchArea";
 
+import { Headline } from "@/components/Headline";
 import { Mainvisual } from "@/components/Mainvisual";
 import { ShowMore } from "@/components/ShowMore";
 import { Pagination } from "@/components/Pagination";
@@ -21,9 +22,12 @@ import { LinkButton } from "@/components/LinkButton";
 
 import { CreatorsContext } from "@/contexts/CreatorsContext";
 import { CollectionsContext } from "@/contexts/CollectionsContext";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
+import { BreadCrumbs } from "@/components/BreadCrumbs";
+import { Dropdown } from "@/components/Dropdown";
 
 const CreatorsPage: NextPage = () => {
   const router = useRouter();
@@ -31,6 +35,7 @@ const CreatorsPage: NextPage = () => {
 
   const creators = useContext(CreatorsContext);
   const collections = useContext(CollectionsContext);
+  const { creatorType } = useContext(UtilitiesContext);
 
   const [filteredCreators, setFilteredCreators] = useState<Creator[]>([]);
 
@@ -51,8 +56,25 @@ const CreatorsPage: NextPage = () => {
     }
   };
 
-  const title = "Awesome NFT creators list by Gachi";
-  const description = "Check these awesome NFT creators now.";
+  useEffect(() => {
+    filterCreatorsHandler(creatorType);
+  }, [creatorType]);
+
+  const title = "Japanese NFT creators list by Gachi";
+  const description = "Check these japanese NFT creators now.";
+
+  const Button = ({ filter }: any) => {
+    return (
+      <button
+        onClick={() => {
+          filterCreatorsHandler(filter);
+        }}
+        className="capitalize inline-flex justify-center px-6 py-1 rounded-full border border-gyay-500"
+      >
+        {filter}
+      </button>
+    );
+  };
   return (
     <>
       <NextSeo
@@ -76,31 +98,17 @@ const CreatorsPage: NextPage = () => {
       />
       <BaseLayout>
         <section className="mx-auto max-w-7xl mt-12">
-          <Title property="h2" addClass="mb-5">
-            Creators
-          </Title>
-          <div className="flex gap-5">
-            <button
-              onClick={() => {
-                filterCreatorsHandler("all");
-              }}
-            >
-              All
-            </button>
-            <button
-              onClick={() => {
-                filterCreatorsHandler("creator");
-              }}
-            >
-              Creator
-            </button>
-            <button
-              onClick={() => {
-                filterCreatorsHandler("project");
-              }}
-            >
-              Project
-            </button>
+          <div className="mb-5">
+            <Headline
+              pageTitle="Creators"
+              title="Japanese awesome NFT creatores List."
+            />
+          </div>
+          <div className="relative flex gap-5 z-20 justify-between">
+            <Dropdown position="left" type="creatorType" />
+            {/*<Button filter="all" />
+            <Button filter="creator" />
+      <Button filter="project" />*/}
           </div>
           <div className="mb-10">
             <CreatorList creators={filteredCreators} />
@@ -109,6 +117,18 @@ const CreatorsPage: NextPage = () => {
             <ShowMore currentPage={page ? Number(page) : 1} />
           </div>
         </section>
+        <BreadCrumbs
+          list={[
+            {
+              name: "Home",
+              path: "/",
+            },
+            {
+              name: "Creators",
+              path: "/creators",
+            },
+          ]}
+        />
       </BaseLayout>
     </>
   );

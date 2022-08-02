@@ -13,5 +13,6 @@ export type Creator = {
   createdAt: Date | null;
   updatedAt: Date | null;
   collections: [];
+  category: string;
   tags: [];
 };

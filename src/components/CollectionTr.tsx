@@ -9,7 +9,7 @@ import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 type Props = {
   children: ReactNode;
 };
-export const CollectionTr = ({ item }: any) => {
+export const CollectionTr = ({ item, index }: any) => {
   //console.log("item");
   //console.log(item);
   const { collectionsSort } = useContext(UtilitiesContext);
@@ -68,7 +68,12 @@ export const CollectionTr = ({ item }: any) => {
   return (
     <>
       <tr key={item.slug}>
-        <td className="relative py-4 pl-4 pr-3 bg-white sm:pl-6 border-b border-gray-100 ">
+        <td scope="col" className="border-b border-gray-100">
+          <div className="flex item-center text-gray-400 w-7 justify-center text-sm pl-[6px]">
+            {index + 1}
+          </div>
+        </td>
+        <td className="relative py-4 pr-3 bg-white border-b border-gray-100 ">
           <Link href={`/${item.creator_id}/${item.slug}`}>
             <a className="block">
               <div className="flex items-center">
@@ -81,9 +86,7 @@ export const CollectionTr = ({ item }: any) => {
                   <p className="text-base font-bold text-gray-800 line-clamp-1 pr-3">
                     {item.name}
                   </p>
-                  <p className="text-sm text-gray-400">
-                    {item.creator_id}
-                  </p>
+                  <p className="text-sm text-gray-400">{item.creator_id}</p>
                 </div>
               </div>
             </a>

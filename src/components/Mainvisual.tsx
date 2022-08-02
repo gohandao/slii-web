@@ -18,7 +18,7 @@ export const Mainvisual = () => {
   return (
     <div className="mx-auto max-w-7xl pt-20 px-5 sm:px-8 xl:px-0">
       <h2 className="text-gradient flex-inline text-3xl font-bold xl:text-7xl xl:leading-[1.2] mb-3">
-        Awesome NFT
+        Japanese NFT
         <br />
         <span className="inline">Creators / Collections</span>{" "}
         <span className="inline">Database</span>

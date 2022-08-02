@@ -4,6 +4,8 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { DefaultSeo } from "next-seo";
 
+import { MoralisProvider } from "react-moralis";
+
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { useRouter } from "next/router";
 
@@ -40,12 +42,37 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [collections, setCollections] = useState<Collection[]>([]);
   const [creatorTags, setCreatorTags] = useState<Tag[]>([]);
   const [collectionTags, setCollectionTags] = useState<Tag[]>([]);
+  const [sortAction, setSortAction] = useState<boolean>(false);
+  const [creatorType, setCreatorType] = useState<string>();
   const [creatorsSort, setCreatorsSort] = useState<string>();
+  const [creatorCategory, setCreatorCategory] = useState<string>("All");
+  const [collectionCategory, setCollectionCategory] = useState<string>("All");
   const [collectionsSort, setCollectionsSort] =
     useState<string>("Total Volume");
+  const [totalVolumeOrder, setTotalVolumeOrder] = useState<"desc" | "asc">(
+    "desc"
+  );
+  const [oneDayChangeOrder, setOneDayChangeOrder] = useState<"desc" | "asc">(
+    "desc"
+  );
+  const [threeDayChangeOrder, setThreeDayChangeOrder] = useState<
+    "desc" | "asc"
+  >("desc");
+  const [sevenDayChangeOrder, setSevenDayChangeOrder] = useState<
+    "desc" | "asc"
+  >("desc");
+  const [ownersOrder, setOwnersOrder] = useState<"desc" | "asc">("desc");
+  const [itemsOrder, setItemsOrder] = useState<"desc" | "asc">("desc");
+  const [collectionNameOrder, setCollectionNameOrder] = useState<
+    "desc" | "asc"
+  >("asc");
 
   const router = useRouter();
   //const { page } = router.query
+  const MORALIS_APP_ID = process.env.NEXT_PUBLIC_MORALIS_APP_ID as string;
+  const MORALIS_SERVER_URL = process.env
+    .NEXT_PUBLIC_MORALIS_SERVER_URL as string;
+
   const [page, setPage] = useState<number | undefined>(1);
   const limit = 10;
 
@@ -81,6 +108,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 createdAt: fields.createdAt,
                 updatedAt: fields.updatedAt,
                 collections: fields.collections,
+                category: fields.category,
                 tags: fields.tags,
               } as Creator,
             ];
@@ -120,6 +148,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 type: fields.type,
                 createdAt: fields.createdAt,
                 updatedAt: fields.updatedAt,
+                category: fields.category,
                 tags: fields.tags,
               } as Collection,
             ];
@@ -211,7 +240,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, []);*/
 
   const site_name = "Gachi";
-  const title = "Gachi | Awesome NFT Creators / Collections Database";
+  const title = "Gachi | Japanese NFT Creators / Collections Database";
   const description =
     "Search creators, collections and NFTs with Gachi. We are creating special database and collaboration platform.";
   const twitter_id = "gachi";
@@ -249,34 +278,58 @@ function MyApp({ Component, pageProps }: AppProps) {
           cardType: "summary_large_image",
         }}
       />
-      <UtilitiesContext.Provider
-        value={{
-          search: search,
-          setSearch: setSearch,
-          indexTab: indexTab,
-          setIndexTab: setIndexTab,
-          page: page,
-          setPage: setPage,
-          creatorsSort: creatorsSort,
-          setCreatorsSort: setCreatorsSort,
-          collectionsSort: collectionsSort,
-          setCollectionsSort: setCollectionsSort,
-          //collectionsMenu: collectionsMenu,
-          //setCollectionsMenu: setCollectionsMenu,
-        }}
-      >
-        <CreatorsContext.Provider value={creators}>
-          <CollectionsContext.Provider value={collections}>
-            <CreatorTagsContext.Provider value={creatorTags}>
-              <CollectionTagsContext.Provider value={collectionTags}>
-                <div className="font-outfit">
-                  <Component {...pageProps} />
-                </div>
-              </CollectionTagsContext.Provider>
-            </CreatorTagsContext.Provider>
-          </CollectionsContext.Provider>
-        </CreatorsContext.Provider>
-      </UtilitiesContext.Provider>
+      <MoralisProvider appId={MORALIS_APP_ID} serverUrl={MORALIS_SERVER_URL}>
+        <UtilitiesContext.Provider
+          value={{
+            search: search,
+            setSearch: setSearch,
+            indexTab: indexTab,
+            setIndexTab: setIndexTab,
+            page: page,
+            setPage: setPage,
+            sortAction: sortAction,
+            setSortAction: setSortAction,
+            creatorType: creatorType,
+            setCreatorType: setCreatorType,
+            creatorsSort: creatorsSort,
+            setCreatorsSort: setCreatorsSort,
+            collectionsSort: collectionsSort,
+            setCollectionsSort: setCollectionsSort,
+            creatorCategory: creatorCategory,
+            setCreatorCategory: setCreatorCategory,
+            collectionCategory: collectionCategory,
+            setCollectionCategory: setCollectionCategory,
+            totalVolumeOrder: totalVolumeOrder,
+            setTotalVolumeOrder: setTotalVolumeOrder,
+            oneDayChangeOrder: oneDayChangeOrder,
+            setOneDayChangeOrder: setOneDayChangeOrder,
+            threeDayChangeOrder: threeDayChangeOrder,
+            setThreeDayChangeOrder: setThreeDayChangeOrder,
+            sevenDayChangeOrder: sevenDayChangeOrder,
+            setSevenDayChangeOrder: setSevenDayChangeOrder,
+            ownersOrder: ownersOrder,
+            setOwnersOrder: setOwnersOrder,
+            itemsOrder: itemsOrder,
+            setItemsOrder: setItemsOrder,
+            collectionNameOrder: collectionNameOrder,
+            setCollectionNameOrder: setCollectionNameOrder,
+            //collectionsMenu: collectionsMenu,
+            //setCollectionsMenu: setCollectionsMenu,
+          }}
+        >
+          <CreatorsContext.Provider value={creators}>
+            <CollectionsContext.Provider value={collections}>
+              <CreatorTagsContext.Provider value={creatorTags}>
+                <CollectionTagsContext.Provider value={collectionTags}>
+                  <div className="font-outfit">
+                    <Component {...pageProps} />
+                  </div>
+                </CollectionTagsContext.Provider>
+              </CreatorTagsContext.Provider>
+            </CollectionsContext.Provider>
+          </CreatorsContext.Provider>
+        </UtilitiesContext.Provider>
+      </MoralisProvider>
     </>
   );
 }

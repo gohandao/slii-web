@@ -10,6 +10,8 @@ import { CreatorList } from "@/components/CreatorList";
 import { CollectionTable } from "@/components/CollectionTable";
 import { SearchArea } from "@/components/SearchArea";
 
+import { BreadCrumbs } from "@/components/BreadCrumbs";
+
 import { Mainvisual } from "@/components/Mainvisual";
 import { ShowMore } from "@/components/ShowMore";
 import { Pagination } from "@/components/Pagination";

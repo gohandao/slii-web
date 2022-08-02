@@ -25,6 +25,7 @@ import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
+import { Headline } from "@/components/Headline";
 const CollectionsPage: NextPage = () => {
   const router = useRouter();
   const { page } = router.query;
@@ -32,18 +33,8 @@ const CollectionsPage: NextPage = () => {
   const collections = useContext(CollectionsContext);
   const { setCollectionsSort } = useContext(UtilitiesContext);
 
-  const collectionsMenu = [
-    "Total volume",
-    "Price Low to High",
-    "Price High to Low",
-    "24h %",
-    "3d %",
-    "7d %",
-    "Owners",
-    "NFTs",
-  ];
   //const [collectionsMenu, setCollectionMenu] =
-    //useState<string[]>(collectionsMenus);
+  //useState<string[]>(collectionsMenus);
 
   const collectionSortHandler = () => {
     setCollectionsSort("volume");
@@ -58,18 +49,17 @@ const CollectionsPage: NextPage = () => {
       </Head>
       <BaseLayout>
         <section className="mx-auto max-w-7xl mt-12">
-          <Title property="h2" addClass="mb-5">
-            Collections
-          </Title>
-          <button onClick={collectionSortHandler}>test sort</button>
+          <div className="mb-5">
+            <Headline
+              pageTitle="Collections"
+              title="Japanese awesome NFT collections List."
+            />
+          </div>
+          {/*<button onClick={collectionSortHandler}>test sort</button>*/}
 
           <div className="flex gap-5 justify-between">
-            <div className="flex">
-              <button>Handmade</button>
-              <button>Generative</button>
-              <button>Utilities</button>
-            </div>
-            <Dropdown menus={collectionsMenu} />
+            <Dropdown position="left" type="collectionCategories" />
+            <Dropdown position="right" type="sortCollections" />
           </div>
           <div className="mb-10">
             {collections && <CollectionTable collections={collections} />}

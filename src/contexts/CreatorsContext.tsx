@@ -19,6 +19,7 @@ export const CreatorsContext = createContext<Creator[]>([
     createdAt: null,
     updatedAt: null,
     collections: [],
+    category: "",
     tags: [],
   },
 ]);

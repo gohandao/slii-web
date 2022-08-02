@@ -66,7 +66,9 @@ const styles = `
 
 const Content = (props) => (
   <html>
-    <Head></Head>
+    <head>
+      <style>{styles}</style>
+    </head>
     <body>
       {/*<h1>{props.title}</h1>
       {props.subTitle && <p>{props.subTitle}</p>}

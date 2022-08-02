@@ -59,7 +59,7 @@ const styles = `
     overflow: hidden;
     text-overflow: ellipsis;
     margin-top: 40px;
-    line-height: 1.1;
+    line-height: 1.;
   }
   .subTitle {
     font-size: 24px;
@@ -67,6 +67,7 @@ const styles = `
     font-weight: 300;
     color: #545454;
     letter-spacing: 0.4em;
+    margin-top: 20px;
   }
 `;
 

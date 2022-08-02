@@ -7,6 +7,7 @@ const nextConfig = {
       "dl.airtable.com",
       "lh3.googleusercontent.com",
       "openseauserdata.com",
+      "gachi.vercel.app",
     ],
   },
   experimental: {

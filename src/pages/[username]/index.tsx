@@ -166,7 +166,7 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
       //ogImageUrl: `${baseUrl}/api/ogp?title=${creator.username}&page=creators`,
       title: `${username}'s Gachi collections`,
       description: `${records[0].fields.description}`,
-      ogImageUrl: `${baseUrl}/api/ogp?title=${username}&page=creators`,
+      ogImageUrl: `${baseUrl}/api/ogp?title=${username}&subTitle=Creator`,
       revalidate: 10,
     },
   };

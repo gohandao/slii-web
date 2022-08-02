@@ -26,6 +26,7 @@ const Content = (props) => (
 
 export default async (req, res) => {
   // サイズの設定
+  const { title, subTitle } = req.query;
   const viewport = { width: 1200, height: 630 };
 
   // ブラウザインスタンスの生成
@@ -33,7 +34,7 @@ export default async (req, res) => {
   const page = await browser.newPage({ viewport });
 
   // HTMLの生成
-  const props = { title: "Hello OGP!" };
+  const props = { title: title };
   const markup = ReactDOM.renderToStaticMarkup(<Content {...props} />);
   const html = `<!doctype html>${markup}`;
 

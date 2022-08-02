@@ -43,7 +43,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [creatorTags, setCreatorTags] = useState<Tag[]>([]);
   const [collectionTags, setCollectionTags] = useState<Tag[]>([]);
   const [sortAction, setSortAction] = useState<boolean>(false);
-  const [creatorType, setCreatorType] = useState<string>();
+  const [creatorType, setCreatorType] = useState<string>("all");
   const [creatorsSort, setCreatorsSort] = useState<string>();
   const [creatorCategory, setCreatorCategory] = useState<string>("All");
   const [collectionCategory, setCollectionCategory] = useState<string>("All");

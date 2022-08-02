@@ -9,7 +9,7 @@ export type Utilities = {
   setPage: React.Dispatch<React.SetStateAction<number | undefined>>;
   sortAction?: boolean;
   setSortAction: React.Dispatch<React.SetStateAction<boolean>>;
-  creatorType: "all";
+  creatorType: string;
   setCreatorType: React.Dispatch<React.SetStateAction<string>>;
   creatorsSort?: string;
   setCreatorsSort: React.Dispatch<React.SetStateAction<string | undefined>>;

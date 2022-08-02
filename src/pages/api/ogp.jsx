@@ -1,5 +1,6 @@
 /* pages/api/ogp.js */
 import Head from "next/head";
+import Image from "next/image";
 
 import ReactDOM from "react-dom/server";
 import * as playwright from "playwright-aws-lambda";

@@ -97,7 +97,7 @@ const CreatorsPage: NextPage = () => {
         }}
       />
       <BaseLayout>
-        <section className="mx-auto mt-5 lg:mt-12 px-8">
+        <section className="mx-auto mt-5 lg:mt-12 px-5 md:px-8">
           <div className="mb-5">
             <Headline
               pageTitle="Creators"

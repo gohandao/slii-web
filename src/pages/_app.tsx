@@ -322,7 +322,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <CollectionsContext.Provider value={collections}>
             <CreatorTagsContext.Provider value={creatorTags}>
               <CollectionTagsContext.Provider value={collectionTags}>
-                <div className="flex flex-col min-h-screen font-outfit bg-stripe">
+                <div className="flex flex-col min-h-screen font-outfit bg-stripe overflow-hidden">
                   <Component {...pageProps} />
                   <div className="mt-auto">
                     <Footer />

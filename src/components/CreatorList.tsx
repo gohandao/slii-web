@@ -65,8 +65,8 @@ export const CreatorList = ({ creators }: Props) => {
                   )}
                 </div>
                 <div className="pt-1 pb-3 w-full">
-                  <div className="flex justify-center items-center mb-2">
-                    <h3 className="px-5 items-center  font-bold ellipsis text-gray-100">
+                  <div className="flex justify-center items-center mb-2 px-3 ">
+                    <h3 className="items-center  font-bold ellipsis text-gray-100">
                       {creator.username}
                       {creator.verified == true && (
                         <MdVerified className="-mt-[2px] text-gray-500 ml-2 inline-block" />

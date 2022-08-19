@@ -12,6 +12,7 @@ export const CollectionsContext = createContext<Collection[]>([
     createdAt: null,
     updatedAt: null,
     category: "",
+    verified: false,
     tags: [],
   },
 ]);

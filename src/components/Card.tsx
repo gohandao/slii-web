@@ -44,7 +44,7 @@ export const Card = ({ creator }: Props) => {
               {creator.username}
             </h3>
             <p className="text-xs text-gray-500">{creator.type}</p>
-            <p className="text-xs text-gray-500">{creator.website}</p>
+            <p className="text-xs text-gray-500">{creator.website_url}</p>
             <p className="text-xs text-gray-500">{creator.twitter_id}</p>
             <p className="text-xs text-gray-500">{creator.instagram_id}</p>
           </div>

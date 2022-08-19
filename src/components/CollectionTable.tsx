@@ -34,8 +34,8 @@ export const CollectionTable = ({ collections }: Props) => {
     setTotalVolumeOrder,
     oneDayChangeOrder,
     setOneDayChangeOrder,
-    threeDayChangeOrder,
-    setThreeDayChangeOrder,
+    thirtyDayChangeOrder,
+    setThirtyDayChangeOrder,
     sevenDayChangeOrder,
     setSevenDayChangeOrder,
     ownersOrder,
@@ -52,7 +52,7 @@ export const CollectionTable = ({ collections }: Props) => {
   const resetOrder = () => {
     setTotalVolumeOrder("desc");
     setOneDayChangeOrder("desc");
-    setThreeDayChangeOrder("desc");
+    setThirtyDayChangeOrder("desc");
     setSevenDayChangeOrder("desc");
     setOwnersOrder("desc");
     setItemsOrder("desc");
@@ -65,18 +65,18 @@ export const CollectionTable = ({ collections }: Props) => {
     let thClass = "";
     switch (title) {
       case collectionsSort:
-        thClass = "text-gray-600";
+        thClass = "text-gray-300";
         break;
       case "Floor Price":
         switch (collectionsSort) {
           case "Price Low to High":
           case "Price High to Low":
-            thClass = "text-gray-600";
+            thClass = "text-gray-300";
             break;
         }
         break;
       default:
-        thClass = "text-gray-300";
+        thClass = "text-gray-600";
         break;
     }
     return (
@@ -84,7 +84,9 @@ export const CollectionTable = ({ collections }: Props) => {
         {title.length > 0 ? (
           <th
             scope="col"
-            className={`py-3.5 pl-4 pr-3 text-left text-sm font-medium text-gray-400 sm:pl-6 `}
+            className={`py-3.5 pr-3 text-left text-sm font-medium text-gray-400 ${
+              title != "Collection Name" && "pl-4 sm:pl-6"
+            }`}
           >
             <button
               className="flex gap-2 items-center"
@@ -169,7 +171,7 @@ export const CollectionTable = ({ collections }: Props) => {
 
   useEffect(() => {
     if (setup) {
-      const data = Array.from(new Set(newList.current));
+      //const data = Array.from(new Set(newList.current));
       sortInitList();
       setSetup(false);
     }
@@ -262,17 +264,19 @@ export const CollectionTable = ({ collections }: Props) => {
         newList.current = Array.from(new Set(new_list));
         setList((list) => newList.current);
         break;
-      case "3d %":
+      case "30d %":
         new_list = list.sort(function (a, b) {
-          if (threeDayChangeOrder == "desc") {
-            setThreeDayChangeOrder("asc");
-            if (a.stats.three_day_change < b.stats.three_day_change) return 1;
-            if (a.stats.three_day_change > b.stats.three_day_change) return -1;
+          if (thirtyDayChangeOrder == "desc") {
+            setThirtyDayChangeOrder("asc");
+            if (a.stats.thirty_day_change < b.stats.thirty_day_change) return 1;
+            if (a.stats.thirty_day_change > b.stats.thirty_day_change)
+              return -1;
             return 0;
           } else {
-            setThreeDayChangeOrder("desc");
-            if (a.stats.three_day_change < b.stats.three_day_change) return -1;
-            if (a.stats.three_day_change > b.stats.three_day_change) return 1;
+            setThirtyDayChangeOrder("desc");
+            if (a.stats.thirty_day_change < b.stats.thirty_day_change)
+              return -1;
+            if (a.stats.thirty_day_change > b.stats.thirty_day_change) return 1;
             return 0;
           }
         });
@@ -357,20 +361,21 @@ export const CollectionTable = ({ collections }: Props) => {
       );
       newList.current = Array.from(new Set(category_filter));
     }
+    resetOrder();
     setSortAction(true);
     setList((list) => newList.current);
   }, [collectionCategory]);
 
   return (
     <div className="flex flex-col">
-      <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+      <div className="-mx-8 -mt-2 overflow-x-auto sm:-mx-6 lg:-mx-8 pb-3 -mb-3 px-8 md:px-6 lg:px-8 hide-scrollbar ">
+        <div className="inline-block min-w-full py-2 align-middle ">
           <div className="overflow-hidden">
             <table
-              className="table-sort min-w-full border-separate rounded border border-gray-200 bg-white"
+              className="table-sort min-w-full border-separate rounded border border-gray-800 bg-gray-800"
               style={{ borderSpacing: "0" }}
             >
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-900">
                 <tr>
                   <Th title="" />
                   <Th title="Collection Name" />
@@ -378,6 +383,7 @@ export const CollectionTable = ({ collections }: Props) => {
                   <Th title="Floor Price" />
                   <Th title="24h %" />
                   <Th title="7d %" />
+                  <Th title="30d %" />
                   <Th title="Owners" />
                   <Th title="Items" />
                 </tr>

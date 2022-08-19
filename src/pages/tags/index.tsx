@@ -45,13 +45,13 @@ const TagsPage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <BaseLayout>
-        <div className="mx-auto max-w-7xl mt-12 mb-5">
+        <div className="mx-auto px-5 md:px-8 mt-5 lg:mt-12 mb-5">
           <Headline
             pageTitle="Tags"
             title="Search Japanese creators and collections with tags."
           />
         </div>
-        <section className="mx-auto max-w-7xl mt-12">
+        <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-12">
           <Title property="h3" addClass="mb-5">
             Creator Tags
           </Title>
@@ -59,7 +59,7 @@ const TagsPage: NextPage = () => {
             <TagList tags={CreatorTags} type="creator" />
           </div>
         </section>
-        <section className="mx-auto max-w-7xl mt-12">
+        <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-12">
           <Title property="h3" addClass="mb-5">
             Collection Tags
           </Title>

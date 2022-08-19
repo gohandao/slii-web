@@ -11,7 +11,6 @@ export const BaseLayout = ({ children }: Props) => {
       <Header />
       <div className="bg-line"></div>
       <main>{children}</main>
-      <Footer />
     </>
   );
 };

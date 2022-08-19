@@ -69,7 +69,7 @@ const CreatorIndex: NextPage = (props: any) => {
       collection_filter.length > 0 &&
         updateCollectionSlug(collection_filter[0].slug);
     }
-  }, [collections]);
+  }, [collections, username]);
   //[username, collections]
   useEffect(() => {
     collectionSlug && getCollection();
@@ -100,7 +100,7 @@ const CreatorIndex: NextPage = (props: any) => {
         <div className="flex flex-col gap-10 pb-20">
           {creator && <CreatorProfile creator={creator} />}
           {collection && (
-            <div className="mx-auto max-w-7xl w-full">
+            <div className="mx-auto max-w-4xl w-full px-5">
               <CollectionCard username={username} collection={collection} />
             </div>
           )}
@@ -153,6 +153,7 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   /*const creator = creators.filter(
     (creator: any) => creator.fields.username === username
   );*/
+  const description = records.length > 0 ? records[0].fields.description : "";
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
@@ -165,7 +166,8 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
       // OGP画像は絶対URLで記述する必要があります
       //ogImageUrl: `${baseUrl}/api/ogp?title=${creator.username}&page=creators`,
       title: `${username}'s Gachi collections`,
-      description: `${records[0].fields.description}`,
+      description: description,
+      //description: `${records[0].fields.description}`,
       ogImageUrl: `${baseUrl}/api/ogp?title=${username}&subTitle=Creator`,
       revalidate: 10,
     },

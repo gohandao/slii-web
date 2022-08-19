@@ -22,7 +22,7 @@ export const Card = ({ creator }: Props) => {
       scroll={false}
       className="flex w-full"
     >
-      <a className="relative border-2 border-gray-900 rounded-lg flex pointer text-sm">
+      <a className="relative border-2 border-gray-900 rounded-lg flex pointer text-sm bg-white">
         <div className="relative flex justify-center items-center w-40 h-40 overflow-hidden">
           <div className="relative w-80 h-56">
             {creator.avatar && (

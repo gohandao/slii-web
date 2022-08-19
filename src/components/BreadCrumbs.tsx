@@ -11,7 +11,7 @@ type Props = {
 export const BreadCrumbs = ({ list }: Props) => {
   return (
     <ol
-      className="flex items-center justify-center gap-3 pt-3 pb-3"
+      className="relative flex items-center justify-center gap-3 pt-3 pb-3 -mb-20"
       aria-label="breadcrumb"
       itemScope
       itemType="https://schema.org/BreadcrumbList"
@@ -32,10 +32,10 @@ export const BreadCrumbs = ({ list }: Props) => {
                 </a>
               </Link>
               <meta itemProp="position" content={`${list.length}`} />
-              <span className="text-gray-900">/</span>
+              <span className="text-gray-100">/</span>
             </div>
           ) : (
-            <div className="" itemProp="item">
+            <div className="text-gray-100" itemProp="item">
               <span aria-current="page" itemProp="name">
                 {name}
               </span>

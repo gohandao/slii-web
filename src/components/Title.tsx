@@ -12,11 +12,23 @@ export const Title = ({ children, addClass, property = "h2" }: Props) => {
       break;
     }
     case "h2": {
-      return <h2 className={`font-bold text-6xl ${addClass}`}>{children}</h2>;
+      return (
+        <h2
+          className={`font-bold text-2xl text-white tracking-wider ${addClass}`}
+        >
+          {children}
+        </h2>
+      );
       break;
     }
     case "h3": {
-      return <h3 className={`font-bold text-2xl ${addClass}`}>{children}</h3>;
+      return (
+        <h3
+          className={`font-bold text-white tracking-wider text-xl ${addClass}`}
+        >
+          {children}
+        </h3>
+      );
       break;
     }
     case "h4": {

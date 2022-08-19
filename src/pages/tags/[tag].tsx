@@ -25,7 +25,7 @@ import { LinkButton } from "@/components/LinkButton";
 
 const TagPage: NextPage = () => {
   const router = useRouter();
-  const { tag, page } = router.query;
+  const { tag, type } = router.query;
   const creators = useContext(CreatorsContext);
   const collections = useContext(CollectionsContext);
 
@@ -66,29 +66,35 @@ const TagPage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <BaseLayout>
-        <section className="mx-auto max-w-7xl mt-12">
-          <h1>Resulut of {tag}</h1>
+        <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-12">
+          <h1 className="text-gray-100">
+            Resulut of <span className="text-2xl ml-1 text-bold">{tag}</span>
+          </h1>
         </section>
-
-        <section className="mx-auto max-w-7xl mt-12">
-          <Title property="h2" addClass="mb-5">
-            Creators
-          </Title>
-          <div className="mb-10">
-            {filteredCreators && <CreatorList creators={filteredCreators} />}
-          </div>
-        </section>
-        <Hr />
-        <section className="mx-auto max-w-7xl">
-          <Title property="h2" addClass="mb-5">
-            Collections
-          </Title>{" "}
-          <div className="mb-10">
-            {filteredCollection && (
-              <CollectionTable collections={filteredCollection} />
-            )}
-          </div>
-        </section>
+        {type != "collection" && (
+          <section className="mx-auto px-5 md:px-8 mt-5">
+            <Title property="h2" addClass="mb-5">
+              Creators
+            </Title>
+            <div className="mb-10">
+              {filteredCreators && <CreatorList creators={filteredCreators} />}
+            </div>
+          </section>
+        )}
+        {type != "creator" && (
+          <section className="mx-auto px-5 md:px-8">
+            <Title property="h2" addClass="mb-5">
+              Collections
+            </Title>{" "}
+            <div className="mb-10">
+              {filteredCollection.length > 0 ? (
+                <CollectionTable collections={filteredCollection} />
+              ) : (
+                <p className="text-gray-100">Not found.</p>
+              )}
+            </div>
+          </section>
+        )}
         {/*<div className="flex flex-col gap-10 px-5 mx-auto max-w-7xl">
           <div className="mx-auto">
             <ShowMore currentPage={page ? Number(page) : 1} />

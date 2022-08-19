@@ -10,7 +10,7 @@ export const CreatorsContext = createContext<Creator[]>([
     avatar: "",
     background: "",
     address: "",
-    website: "",
+    website_url: "",
     twitter_id: "",
     instagram_id: "",
     discord_url: "",

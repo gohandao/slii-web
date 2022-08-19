@@ -6,11 +6,8 @@ import { Searchbox } from "@/components/Searchbox";
 
 export const Header = () => {
   return (
-    <header
-      className="py-4 bg-white border-b border-gray-100"
-      x-data="{expanded: false}"
-    >
-      <div className="mx-auto max-w-7xl">
+    <header className="py-4 " x-data="{expanded: false}">
+      <div className="mx-auto px-5 md:px-8">
         <div className="flex items-center gap-20">
           <div className="flex-shrink-0">
             <Link href="/">
@@ -19,18 +16,20 @@ export const Header = () => {
               </a>
             </Link>
           </div>
-          <div className="w-[360px] ml-24">
+          <div className="w-[360px] ml-24 hidden lg:block">
             <Searchbox />
           </div>
-          <div className="flex gap-10">
+          <div className="gap-10 hidden lg:flex">
             <Link href="/creators">
-              <a className="font-bold">Creators</a>
+              <a className="font-bold text-gray-100 tracking-wider">Creators</a>
             </Link>
             <Link href="/collections">
-              <a className="font-bold">Collections</a>
+              <a className="font-bold text-gray-100 tracking-wider">
+                Collections
+              </a>
             </Link>
             <Link href="/tags">
-              <a className="font-bold">Tags</a>
+              <a className="font-bold text-gray-100 tracking-wider">Tags</a>
             </Link>
           </div>
         </div>

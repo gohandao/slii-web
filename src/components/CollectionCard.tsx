@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Moment from "react-moment";
 import { abbreviateNumber } from "@/utilities/abbreviateNumber";
+import { MdVerified } from "react-icons/md";
 
 type StatsProps = {
   title: string;
@@ -23,37 +24,40 @@ export const CollectionCard = ({ username, collection }: any) => {
     collection.payment_tokens && " " + collection.payment_tokens[0].symbol;
   return (
     <Link href={`/${username}/${collection.slug}`}>
-      <a className="block relative w-full overflow-hidden bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1">
-          <div className="relative overflow-hidden h-32 w-full ">
-            {collection.banner_image_url && (
+      <a className="block relative w-full overflow-hidden bg-gray-800 border border-gray-700 rounded-lg hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1">
+        <div className="relative overflow-hidden h-32 w-full ">
+          {collection.banner_image_url && (
+            <Image
+              //@ts-ignore
+              src={collection.banner_image_url}
+              layout="fill"
+              objectFit="cover"
+              alt=""
+            />
+          )}
+        </div>
+        <div className="px-6 md:px-10 -mt-10">
+          <div className="relative object-cover w-20 h-20 rounded-lg overflow-hidden mb-2 border-[5px] border-gray-800">
+            {collection.image_url && (
               <Image
                 //@ts-ignore
-                src={collection.banner_image_url}
+                src={collection.image_url}
                 layout="fill"
                 objectFit="cover"
                 alt=""
               />
             )}
           </div>
-          <div className="px-10 -mt-10">
-            <div className="relative object-cover w-20 h-20 rounded-lg overflow-hidden mb-2">
-              {collection.image_url && (
-                <Image
-                  //@ts-ignore
-                  src={collection.image_url}
-                  layout="fill"
-                  objectFit="cover"
-                  alt=""
-                />
-              )}
-            </div>
-            <p className="text-lg font-bold text-gray-900 mb-1">
-              {collection.name}
-            </p>
-            <p className="text-sm text-gray-500 mb-5">
-              {collection.description}
-            </p>
-          </div>
+          <p className="text-lg font-bold text-gray-100 mb-1 flex items-center">
+            {collection.name}
+            {collection.safelist_request_status == "verified" && (
+              <MdVerified className="text-gray-500 text-sm inline ml-2" />
+            )}
+          </p>
+          <p className="text-sm text-gray-400 mb-5 text-justify">
+            {collection.description}
+          </p>
+        </div>
       </a>
     </Link>
   );

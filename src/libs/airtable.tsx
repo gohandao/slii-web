@@ -32,7 +32,7 @@ export const getCreators = () => {
               avatar: fields.avatar,
               background: fields.background,
               address: fields.address,
-              website: fields.website,
+              website_url: fields.website_url,
               twitter_id: fields.twitter_id,
               instagram_id: fields.instagram_id,
               type: fields.type,

@@ -23,8 +23,8 @@ export type Utilities = {
   setTotalVolumeOrder: React.Dispatch<React.SetStateAction<"desc" | "asc">>;
   oneDayChangeOrder: "desc" | "asc";
   setOneDayChangeOrder: React.Dispatch<React.SetStateAction<"desc" | "asc">>;
-  threeDayChangeOrder: "desc" | "asc";
-  setThreeDayChangeOrder: React.Dispatch<React.SetStateAction<"desc" | "asc">>;
+  thirtyDayChangeOrder: "desc" | "asc";
+  setThirtyDayChangeOrder: React.Dispatch<React.SetStateAction<"desc" | "asc">>;
   sevenDayChangeOrder: "desc" | "asc";
   setSevenDayChangeOrder: React.Dispatch<React.SetStateAction<"desc" | "asc">>;
   ownersOrder: "desc" | "asc";

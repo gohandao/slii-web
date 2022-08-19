@@ -4,6 +4,7 @@ export type Collection = {
   creator_id: string;
   type: string;
   category: string;
+  verified: boolean;
   tags: [];
   createdAt: Date | null;
   updatedAt: Date | null;

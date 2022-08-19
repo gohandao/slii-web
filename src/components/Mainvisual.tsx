@@ -16,8 +16,11 @@ export const Mainvisual = () => {
     );
   };
   return (
-    <div className="mx-auto max-w-7xl pt-20 px-5 sm:px-8 xl:px-0">
-      <h2 className="text-gradient flex-inline text-3xl font-bold xl:text-7xl xl:leading-[1.2] mb-3">
+    <div className="mx-auto pt-5 px-5 sm:px-8 ">
+      <h2 className="text-gradient flex-inline text-lg font-bold leading-[1.2] mb-4">
+        Japanese NFT Creators / Collections Database
+      </h2>
+      {/*<h2 className="text-gradient flex-inline text-3xl font-bold xl:text-7xl xl:leading-[1.2] mb-3">
         Japanese NFT
         <br />
         <span className="inline">Creators / Collections</span>{" "}
@@ -28,7 +31,7 @@ export const Mainvisual = () => {
         <Button href="/creators">Creators</Button>
         <Button href="/collections">Collections</Button>
         <Button href="/tags">Tags</Button>
-      </div>
+  </div>*/}
     </div>
   );
 };

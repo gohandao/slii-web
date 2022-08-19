@@ -89,18 +89,22 @@ const Home: NextPage = () => {
       </Head>
       <BaseLayout>
         <Mainvisual />
-        <Hr />
-        <section className="mx-auto max-w-7xl">
-          <div className="flex gap-4 items-baseline mb-5">
-            <Title property="h2" addClass="">
-              Creators
-            </Title>
-            <p className="text-gray-400 text-sm">{creatorsLength} Creators</p>
+        <section className="mx-auto px-5 md:px-8">
+          <div className="flex gap-3 mb-4">
+            <div className="flex items-center">
+              <div className="animated-dot"></div>
+            </div>
+            <div className="flex gap-3 items-baseline">
+              <Title property="h2" addClass="">
+                Creators
+              </Title>
+              <p className="text-gray-400 text-sm">{creatorsLength} Creators</p>
+            </div>
           </div>
           <div className="mb-10">
             <CreatorList creators={creators} />
           </div>
-          <div className="mb-10 flex gap-5 items-baseline">
+          {/*<div className="mb-10 flex gap-5 items-baseline">
             {filteredCreatorTags && (
               <TagList tags={filteredCreatorTags} type="creator" />
             )}
@@ -110,25 +114,30 @@ const Home: NextPage = () => {
                 <span className="text-gray-400 ml-2 ">Creator Tags</span>
               </a>
             </Link>
-          </div>
+            </div>*/}
           <div className="flex justify-center">
             <LinkButton href="/creators">Check creators</LinkButton>
           </div>
         </section>
-        <Hr />
-        <section className="mx-auto max-w-7xl">
-          <div className="flex gap-4 items-baseline mb-5">
-            <Title property="h2" addClass="">
-              Collections
-            </Title>
-            <p className="text-gray-400 text-sm">
-              {collectionsLength} Collections
-            </p>
+        <div className="pb-16"></div>
+        <section className="mx-auto px-5 md:px-8">
+          <div className="flex gap-3 mb-4">
+            <div className="flex items-center">
+              <div className="animated-dot"></div>
+            </div>
+            <div className="flex gap-3 items-baseline">
+              <Title property="h2" addClass="">
+                Collections
+              </Title>
+              <p className="text-gray-400 text-sm">
+                {collectionsLength} Collections
+              </p>
+            </div>
           </div>
           <div className="mb-10">
             <CollectionTable collections={collections} />
           </div>
-          <div className="mb-10 flex gap-5 items-baseline">
+          {/*<div className="mb-10 flex gap-5 items-baseline">
             {filteredCollectionTags && (
               <TagList tags={filteredCollectionTags} type="collection" />
             )}
@@ -140,8 +149,8 @@ const Home: NextPage = () => {
                 <span className="text-gray-400 ml-2 ">Collection Tags</span>
               </a>
             </Link>
-          </div>
-          <div className="flex justify-center mb-20">
+            </div>*/}
+          <div className="flex justify-center">
             <LinkButton href="/collections">Check collections</LinkButton>
           </div>
         </section>

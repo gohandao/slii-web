@@ -26,6 +26,7 @@ import { CollectionAssets } from "@/components/CollectionAssets";
 
 import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
+import { Dropdown } from "@/components/Dropdown";
 
 const CollectionIndex: NextPage = (props: any) => {
   const OPENSEA_API_KEY = process.env.NEXT_PUBLIC_OPENSEA_API_KEY as string;
@@ -34,7 +35,7 @@ const CollectionIndex: NextPage = (props: any) => {
   const creators = useContext(CreatorsContext);
   const collections = useContext(CollectionsContext);
 
-  const [existence, setExistence] = useState<boolean>(false)
+  const [existence, setExistence] = useState<boolean>(false);
   const [creator, setCreator] = useState<Creator>();
   const [collectionAssets, setCollectionAssets] = useState<[]>([]);
   const { username, slug } = router.query;
@@ -102,14 +103,14 @@ const CollectionIndex: NextPage = (props: any) => {
         setExistence(true);
       }
       //本来ページが存在しない場合はリダイレクト
-      if (creator.length == 0 && slug && collections ) {
-        router.push("/")
+      if (creator.length == 0 && slug && collections) {
+        router.push("/");
       }
     }
-    return (() => {
+    return () => {
       setExistence(false);
-    })
-  }, [username, slug])
+    };
+  }, [username, slug]);
 
   /*useEffect(() => {
     const test = async () => {
@@ -154,16 +155,37 @@ const CollectionIndex: NextPage = (props: any) => {
                 {collection && <CollectionProfile collection={collection} />}
               </div>
               {collectionAssets && (
-                <section className="mx-auto max-w-7xl">
-                  <Title property="h2" addClass="mb-5">
-                    NFTs
-                  </Title>
-                  <div className="flex gap-5">
-                    <p>All</p>
-                    <p>Buy now</p>
-                    <p>On auction</p>
-                    <p>Price low to high</p>
+                <section className="mx-auto px-5 md:px-8">
+                  <div className="flex gap-3 mb-4">
+                    <div className="flex items-center">
+                      <div className="animated-dot"></div>
+                    </div>
+                    <div className="flex gap-3 items-baseline">
+                      <Title property="h2" addClass="">
+                        Items
+                      </Title>
+                      <p className="text-gray-400 text-sm">
+                        {collectionAssets.length} Items
+                      </p>
+                    </div>
                   </div>
+                  <div className="flex gap-5 justify-between">
+                    <Dropdown position="left" type="assetsDropdown" />
+                  </div>
+                  {/*<div className="flex gap-5 mb-4">
+                    <p className="rounded-full border border-gray-100 px-5 py-2 text-gray-100 text-sm font-bold">
+                      All
+                    </p>
+                    <p className="rounded-full border border-gray-100 px-5 py-2 text-gray-100 text-sm font-bold">
+                      Buy now
+                    </p>
+                    <p className="rounded-full border border-gray-100 px-5 py-2 text-gray-100 text-sm font-bold">
+                      On auction
+                    </p>
+                    <p className="rounded-full border border-gray-100 px-5 py-2 text-gray-100 text-sm font-bold">
+                      Price low to high
+                    </p>
+              </div>*/}
                   <CollectionAssets collectionAssets={collectionAssets} />
                 </section>
               )}
@@ -203,8 +225,8 @@ export const getStaticPaths = async () => {
       (colelction: any) =>
         `/${colelction.fields.creator_id}/${colelction.fields.slug}`
     ),
-    //fallback: false,
-    fallback: "blocking",
+    fallback: false,
+    //fallback: "blocking",
   };
 };
 

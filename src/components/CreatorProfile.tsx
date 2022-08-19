@@ -12,6 +12,7 @@ import { ProfileLinks } from "@/components/ProfileLinks";
 import { Label } from "@/components/Label";
 
 import { Creator } from "@/types/creator";
+import { MdVerified } from "react-icons/md";
 
 type Props = {
   creator: Creator;
@@ -20,7 +21,7 @@ type Props = {
 export const CreatorProfile = ({ creator }: Props) => {
   return (
     <section className="">
-      <div className="flex relative w-full h-60 overflow-hidden">
+      <div className="flex relative w-full h-32 md:h-60 overflow-hidden">
         {creator.background && (
           <Image
             //@ts-ignore
@@ -32,37 +33,49 @@ export const CreatorProfile = ({ creator }: Props) => {
           />
         )}
       </div>
-      <div className="mx-auto max-w-7xl">
-        <div className="-mt-10 relative inline-flex">
-          <div className="rounded-full border-4 border-white overflow-hidden inline-flex items center justify-center z-10">
-            {creator.avatar && (
-              <Image
-                //@ts-ignore
-                src={creator.avatar[0].thumbnails.large.url}
-                width={100}
-                height={100}
-                objectFit="cover"
-                alt=""
-              />
-            )}
+      <div className="mx-auto  max-w-2xl">
+        <div className="-mt-[60px] relative flex justify-center">
+          <div className="relative flex">
+            <div className="rounded-full border-[5px] border-gray-800 overflow-hidden flex items-center justify-center z-10 mb-2 bg-gray-800">
+              {creator.avatar && (
+                <Image
+                  //@ts-ignore
+                  src={creator.avatar[0].thumbnails.large.url}
+                  width={100}
+                  height={100}
+                  objectFit="cover"
+                  alt=""
+                />
+              )}
+            </div>
+            <p className="absolute bottom-6 left-full -ml-6 bg-yellow-500 text-white pl-5 pr-3 rounded-tr-full rounded-br-full text-sm capitalize">
+              {creator.type}
+            </p>
           </div>
-          <p className="absolute bottom-4 left-full -ml-6 bg-yellow-500 text-white pl-5 pr-3 rounded-tr-full rounded-br-full text-sm">
-            {creator.type}
-          </p>
         </div>
         <div className="flex flex-1 flex-col gap-5 px-5">
-          <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-bold line-clamp-1">
-              {creator.username}
+          <div className="flex flex-col gap-2 items-center">
+            <h1 className="text-3xl text-gray-100 font-bold inline justify-center items-center">
+              {creator.username}{" "}
+              {creator.verified == true && (
+                <MdVerified className="text-gray-500 text-xl inline ml-1" />
+              )}
             </h1>
-            <p className="flex items-center gap-1 text-xs text-gray-500">
+            <div className="flex items-center gap-1 text-xs text-gray-400">
               <Image src="/icon-eth.svg" width={16} height={16} alt="" />
-              {creator.address}
+              <Link
+                href={`https://etherscan.io/address/${creator.address}`}
+                target="_blank"
+              >
+                <a className="ellipsis max-w-[100px]">{creator.address}</a>
+              </Link>
+            </div>
+            <p className="text-gray-100 mt-1 text-justify px-3 text-sm sm:text-base">
+              {creator.description}
             </p>
-            <p className="text-gray-900 mt-1">{creator.description}</p>
           </div>
           {creator.tags && (
-            <div className="flex gap-2 justify-start w-full">
+            <div className="flex gap-2 justify-center w-full">
               {creator.tags.map((tag, index) => (
                 <Label key={index} name={tag} type="creator" />
               ))}
@@ -72,8 +85,8 @@ export const CreatorProfile = ({ creator }: Props) => {
             twitter_id={creator.twitter_id}
             instagram_id={creator.instagram_id}
             discord_url={creator.discord_url}
-            website={creator.website}
-            opensea_url={creator.username}
+            website_url={creator.website_url}
+            opensea_username={creator.username}
           />
         </div>
       </div>

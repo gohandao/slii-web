@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
+import { BsFilter } from "react-icons/bs";
 import { BiSortAlt2, BiCategory } from "react-icons/bi";
 import { TbUsers } from "react-icons/tb";
 
@@ -13,7 +14,8 @@ type Props = {
     | "sortCreators"
     | "sortCollections"
     | "creatorCategories"
-    | "collectionCategories";
+    | "collectionCategories"
+    | "assetsDropdown";
 };
 export const Dropdown = ({ position, type }: Props) => {
   const {
@@ -33,8 +35,8 @@ export const Dropdown = ({ position, type }: Props) => {
     setTotalVolumeOrder,
     oneDayChangeOrder,
     setOneDayChangeOrder,
-    threeDayChangeOrder,
-    setThreeDayChangeOrder,
+    thirtyDayChangeOrder,
+    setThirtyDayChangeOrder,
     sevenDayChangeOrder,
     setSevenDayChangeOrder,
     ownersOrder,
@@ -68,11 +70,32 @@ export const Dropdown = ({ position, type }: Props) => {
     "Earning",
     "Utilities",
   ];
+  const assetsDropdown = ["All", "Buy now", "On auction", "Price low to high"];
   let menus = [] as string[];
   let title = "" as any;
 
   //メニュー表示
   switch (type) {
+    case "assetsDropdown":
+      menus = assetsDropdown;
+      if (creatorType == "all") {
+        title = (
+          <>
+            <BsFilter className="text-gray-400" />
+            All
+          </>
+        );
+      } else {
+        title = creatorType ? (
+          <>
+            <BsFilter className="text-gray-400" />
+            {creatorType}
+          </>
+        ) : (
+          "Sort"
+        );
+      }
+      break;
     case "creatorType":
       menus = ["all", "creator", "project"];
       if (creatorType == "all") {
@@ -162,7 +185,7 @@ export const Dropdown = ({ position, type }: Props) => {
   const resetOrder = () => {
     setTotalVolumeOrder("desc");
     setOneDayChangeOrder("desc");
-    setThreeDayChangeOrder("desc");
+    setThirtyDayChangeOrder("desc");
     setSevenDayChangeOrder("desc");
     setOwnersOrder("desc");
     setItemsOrder("desc");

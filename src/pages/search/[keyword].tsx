@@ -76,7 +76,7 @@ const KeywordPage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <BaseLayout>
-        <section className="mx-auto max-w-7xl mt-12">
+        <section className="mx-auto max-w-7xl mt-5 lg:mt-12">
           <h1>Resulut of {keyword}</h1>
         </section>
 

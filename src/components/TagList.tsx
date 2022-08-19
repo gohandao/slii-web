@@ -5,14 +5,14 @@ import { Tag } from "@/types/tag";
 
 type Props = {
   tags: Tag[];
-  type: "creator" | "collection",
+  type: "creator" | "collection";
 };
 export const TagList = ({ tags, type }: Props) => {
-  let typeClass = "bg-gray-50 text-gray-400";
+  let typeClass = "bg-gray-500 text-gray-100";
   if (type == "creator") {
-    typeClass = "bg-blue-50 text-blue-400";
+    typeClass = "bg-blue-900 text-blue-100";
   } else if (type == "collection") {
-    typeClass = "bg-green-50 text-green-400";
+    typeClass = "bg-green-900 text-green-100";
   }
   return (
     <div className="flex flex-wrap gap-3">
@@ -21,7 +21,9 @@ export const TagList = ({ tags, type }: Props) => {
           <div key={index}>
             {tag && tag.name && (
               <Link href={`/tags/${tag.name}`}>
-                <a className={`inline-block rounded px-4 py-3 ${typeClass}`}>#{tag.name} ({tag.count})</a>
+                <a className={`inline-block rounded px-4 py-3 ${typeClass}`}>
+                  #{tag.name} ({tag.count})
+                </a>
               </Link>
             )}
           </div>

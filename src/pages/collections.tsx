@@ -26,6 +26,7 @@ import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
 import { Headline } from "@/components/Headline";
+import { BreadCrumbs } from "@/components/BreadCrumbs";
 const CollectionsPage: NextPage = () => {
   const router = useRouter();
   const { page } = router.query;
@@ -48,7 +49,7 @@ const CollectionsPage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <BaseLayout>
-        <section className="mx-auto max-w-7xl mt-12">
+        <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-12">
           <div className="mb-5">
             <Headline
               pageTitle="Collections"
@@ -68,6 +69,18 @@ const CollectionsPage: NextPage = () => {
             <ShowMore currentPage={page ? Number(page) : 1} />
           </div>
         </section>
+        <BreadCrumbs
+          list={[
+            {
+              name: "Home",
+              path: "/",
+            },
+            {
+              name: "Collections",
+              path: "/collections",
+            },
+          ]}
+        />
       </BaseLayout>
     </div>
   );

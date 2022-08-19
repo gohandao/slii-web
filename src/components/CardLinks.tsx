@@ -1,21 +1,27 @@
-import React from 'react'
-import Image from "next/image"
-import Link from "next/link"
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 import { FaDiscord } from "react-icons/fa";
 import { BsTwitter, BsInstagram, BsGlobe2 } from "react-icons/bs";
 
 type Props = {
-  twitter_id: string,
-  instagram_id: string,
-  discord_url: string,
-  website: string,
-  opensea_url: string,
+  twitter_id: string;
+  instagram_id: string;
+  discord_url: string;
+  website_url: string;
+  opensea_url: string;
 };
-export const CardLinks = ({twitter_id, instagram_id, discord_url, website, opensea_url}: Props) => {
+export const CardLinks = ({
+  twitter_id,
+  instagram_id,
+  discord_url,
+  website_url,
+  opensea_url,
+}: Props) => {
   return (
-    <div className="flex gap-4 mt-auto border-t w-full justify-center py-[10px] items-center">
-      {twitter_id && (
+    <div className="flex gap-4 mt-auto border-t border-gray-700 w-full justify-center py-[10px] items-center opacity-50">
+      {/*twitter_id && (
         <object>
           <Link href={`https://twitter.com/${twitter_id}`}>
             <a>
@@ -23,6 +29,17 @@ export const CardLinks = ({twitter_id, instagram_id, discord_url, website, opens
             </a>
           </Link>
         </object>
+      )*/}
+      {opensea_url && (
+        <button
+          onClick={() => {
+            //router.push(`https://twitter.com/${twitter_id}`);
+            window.open(`${opensea_url}`, "_blank");
+          }}
+          className="flex items-center"
+        >
+          <Image src="/icon-opensea.svg" width={14} height={14} className="" />
+        </button>
       )}
       {twitter_id && (
         <button
@@ -30,40 +47,44 @@ export const CardLinks = ({twitter_id, instagram_id, discord_url, website, opens
             //router.push(`https://twitter.com/${twitter_id}`);
             window.open(`https://twitter.com/${twitter_id}`, "_blank");
           }}
+          className="text-white text-sm"
         >
           <BsTwitter />
         </button>
       )}
-      {twitter_id && (
+      {instagram_id && (
         <button
           onClick={() => {
             //router.push(`https://twitter.com/${twitter_id}`);
-            window.open(`https://twitter.com/${twitter_id}`, "_blank");
+            window.open(`https://instagram.com/${instagram_id}`, "_blank");
           }}
+          className="text-white text-sm"
         >
           <BsInstagram />
         </button>
       )}
-      {twitter_id && (
+      {discord_url && (
         <button
           onClick={() => {
             //router.push(`https://twitter.com/${twitter_id}`);
-            window.open(`https://twitter.com/${twitter_id}`, "_blank");
+            window.open(`${discord_url}`, "_blank");
           }}
+          className="text-white text-sm"
         >
           <BsGlobe2 />
         </button>
       )}
-      {twitter_id && (
+      {website_url && (
         <button
           onClick={() => {
             //router.push(`https://twitter.com/${twitter_id}`);
-            window.open(`https://twitter.com/${twitter_id}`, "_blank");
+            window.open(`${website_url}`, "_blank");
           }}
+          className="text-white text-sm"
         >
           <FaDiscord />
         </button>
       )}
     </div>
   );
-}
+};

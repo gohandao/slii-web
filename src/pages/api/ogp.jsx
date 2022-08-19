@@ -67,7 +67,7 @@ const styles = `
     font-weight: 300;
     color: #545454;
     letter-spacing: 0.4em;
-    margin-top: 20px;
+    margin-top: 0;
   }
 `;
 

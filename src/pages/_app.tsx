@@ -24,6 +24,7 @@ import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
 import { Tag } from "@/types/tag";
 import { Utilities } from "@/types/utilities";
+import { Footer } from "@/components/Footer";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [search, setSearch] = useState<string | undefined>();
@@ -55,7 +56,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [oneDayChangeOrder, setOneDayChangeOrder] = useState<"desc" | "asc">(
     "desc"
   );
-  const [threeDayChangeOrder, setThreeDayChangeOrder] = useState<
+  const [thirtyDayChangeOrder, setThirtyDayChangeOrder] = useState<
     "desc" | "asc"
   >("desc");
   const [sevenDayChangeOrder, setSevenDayChangeOrder] = useState<
@@ -99,7 +100,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 avatar: fields.avatar,
                 background: fields.background,
                 address: fields.address,
-                website: fields.website,
+                website_url: fields.website_url,
                 twitter_id: fields.twitter_id,
                 instagram_id: fields.instagram_id,
                 discord_url: fields.discord_url,
@@ -149,6 +150,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 createdAt: fields.createdAt,
                 updatedAt: fields.updatedAt,
                 category: fields.category,
+                verified: fields.verified,
                 tags: fields.tags,
               } as Collection,
             ];
@@ -278,58 +280,59 @@ function MyApp({ Component, pageProps }: AppProps) {
           cardType: "summary_large_image",
         }}
       />
-      <MoralisProvider appId={MORALIS_APP_ID} serverUrl={MORALIS_SERVER_URL}>
-        <UtilitiesContext.Provider
-          value={{
-            search: search,
-            setSearch: setSearch,
-            indexTab: indexTab,
-            setIndexTab: setIndexTab,
-            page: page,
-            setPage: setPage,
-            sortAction: sortAction,
-            setSortAction: setSortAction,
-            creatorType: creatorType,
-            setCreatorType: setCreatorType,
-            creatorsSort: creatorsSort,
-            setCreatorsSort: setCreatorsSort,
-            collectionsSort: collectionsSort,
-            setCollectionsSort: setCollectionsSort,
-            creatorCategory: creatorCategory,
-            setCreatorCategory: setCreatorCategory,
-            collectionCategory: collectionCategory,
-            setCollectionCategory: setCollectionCategory,
-            totalVolumeOrder: totalVolumeOrder,
-            setTotalVolumeOrder: setTotalVolumeOrder,
-            oneDayChangeOrder: oneDayChangeOrder,
-            setOneDayChangeOrder: setOneDayChangeOrder,
-            threeDayChangeOrder: threeDayChangeOrder,
-            setThreeDayChangeOrder: setThreeDayChangeOrder,
-            sevenDayChangeOrder: sevenDayChangeOrder,
-            setSevenDayChangeOrder: setSevenDayChangeOrder,
-            ownersOrder: ownersOrder,
-            setOwnersOrder: setOwnersOrder,
-            itemsOrder: itemsOrder,
-            setItemsOrder: setItemsOrder,
-            collectionNameOrder: collectionNameOrder,
-            setCollectionNameOrder: setCollectionNameOrder,
-            //collectionsMenu: collectionsMenu,
-            //setCollectionsMenu: setCollectionsMenu,
-          }}
-        >
-          <CreatorsContext.Provider value={creators}>
-            <CollectionsContext.Provider value={collections}>
-              <CreatorTagsContext.Provider value={creatorTags}>
-                <CollectionTagsContext.Provider value={collectionTags}>
-                  <div className="font-outfit">
-                    <Component {...pageProps} />
+      <UtilitiesContext.Provider
+        value={{
+          search: search,
+          setSearch: setSearch,
+          indexTab: indexTab,
+          setIndexTab: setIndexTab,
+          page: page,
+          setPage: setPage,
+          sortAction: sortAction,
+          setSortAction: setSortAction,
+          creatorType: creatorType,
+          setCreatorType: setCreatorType,
+          creatorsSort: creatorsSort,
+          setCreatorsSort: setCreatorsSort,
+          collectionsSort: collectionsSort,
+          setCollectionsSort: setCollectionsSort,
+          creatorCategory: creatorCategory,
+          setCreatorCategory: setCreatorCategory,
+          collectionCategory: collectionCategory,
+          setCollectionCategory: setCollectionCategory,
+          totalVolumeOrder: totalVolumeOrder,
+          setTotalVolumeOrder: setTotalVolumeOrder,
+          oneDayChangeOrder: oneDayChangeOrder,
+          setOneDayChangeOrder: setOneDayChangeOrder,
+          thirtyDayChangeOrder: thirtyDayChangeOrder,
+          setThirtyDayChangeOrder: setThirtyDayChangeOrder,
+          sevenDayChangeOrder: sevenDayChangeOrder,
+          setSevenDayChangeOrder: setSevenDayChangeOrder,
+          ownersOrder: ownersOrder,
+          setOwnersOrder: setOwnersOrder,
+          itemsOrder: itemsOrder,
+          setItemsOrder: setItemsOrder,
+          collectionNameOrder: collectionNameOrder,
+          setCollectionNameOrder: setCollectionNameOrder,
+          //collectionsMenu: collectionsMenu,
+          //setCollectionsMenu: setCollectionsMenu,
+        }}
+      >
+        <CreatorsContext.Provider value={creators}>
+          <CollectionsContext.Provider value={collections}>
+            <CreatorTagsContext.Provider value={creatorTags}>
+              <CollectionTagsContext.Provider value={collectionTags}>
+                <div className="flex flex-col min-h-screen font-outfit bg-stripe">
+                  <Component {...pageProps} />
+                  <div className="mt-auto">
+                    <Footer />
                   </div>
-                </CollectionTagsContext.Provider>
-              </CreatorTagsContext.Provider>
-            </CollectionsContext.Provider>
-          </CreatorsContext.Provider>
-        </UtilitiesContext.Provider>
-      </MoralisProvider>
+                </div>
+              </CollectionTagsContext.Provider>
+            </CreatorTagsContext.Provider>
+          </CollectionsContext.Provider>
+        </CreatorsContext.Provider>
+      </UtilitiesContext.Provider>
     </>
   );
 }

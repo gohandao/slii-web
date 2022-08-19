@@ -5,6 +5,7 @@ import Link from "next/link";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 import { abbreviateNumber } from "@/utilities/abbreviateNumber";
+import { MdVerified } from "react-icons/md";
 
 type Props = {
   children: ReactNode;
@@ -58,7 +59,7 @@ export const CollectionTr = ({ item, index }: any) => {
     return (
       <td
         scope="col"
-        className="px-3 py-4 text-sm font-medium text-right text-gray-800 bg-white sm:px-6 whitespace-nowrap border-b border-gray-100"
+        className="px-3 py-4 text-sm font-medium text-right text-gray-100 sm:px-6 whitespace-nowrap"
       >
         {children}
       </td>
@@ -67,13 +68,13 @@ export const CollectionTr = ({ item, index }: any) => {
 
   return (
     <>
-      <tr key={item.slug}>
-        <td scope="col" className="border-b border-gray-100">
+      <tr key={item.slug} className="even:bg-gray-900">
+        <td scope="col" className="">
           <div className="flex item-center text-gray-400 w-7 justify-center text-sm pl-[6px]">
             {index + 1}
           </div>
         </td>
-        <td className="relative py-4 pr-3 bg-white border-b border-gray-100 ">
+        <td className="relative py-4 pr-3 ">
           <Link href={`/${item.creator_id}/${item.slug}`}>
             <a className="block">
               <div className="flex items-center">
@@ -83,10 +84,10 @@ export const CollectionTr = ({ item, index }: any) => {
                   alt=""
                 />
                 <div className="ml-4">
-                  <p className="text-base font-bold text-gray-800 line-clamp-1 pr-3">
+                  <p className="text-base text-gray-100 line-clamp-1 pr-3 flex gap-2 items-center">
                     {item.name}
                   </p>
-                  <p className="text-sm text-gray-400">{item.creator_id}</p>
+                  <p className="text-sm text-gray-500">{item.creator_id}</p>
                 </div>
               </div>
             </a>
@@ -130,6 +131,20 @@ export const CollectionTr = ({ item, index }: any) => {
           >
             {item.stats && item.stats.seven_day_change != 0
               ? (item.stats.seven_day_change * 100).toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }) + "%"
+              : "-"}
+          </span>
+        </Td>
+        <Td>
+          <span
+            className={`${
+              item.stats.thirty_day_change > 0 && "text-green-500"
+            } ${item.stats.thirty_day_change < 0 && "text-red-500"}`}
+          >
+            {item.stats && item.stats.thirty_day_change != 0
+              ? (item.stats.thirty_day_change * 100).toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 }) + "%"

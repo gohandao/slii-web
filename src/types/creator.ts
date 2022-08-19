@@ -4,7 +4,7 @@ export type Creator = {
   avatar: string;
   background: string;
   address: string;
-  website: string;
+  website_url: string;
   twitter_id: string;
   instagram_id: string;
   discord_url: string;

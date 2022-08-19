@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@alch/alchemy-sdk": "^1.2.0",
+    "@supabase/supabase-js": "^1.35.6",
     "@tailwindcss/line-clamp": "^0.4.0",
     "airtable": "^0.11.4",
     "axios": "^0.27.2",

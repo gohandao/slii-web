@@ -9,7 +9,10 @@ import { MoralisProvider } from "react-moralis";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { useRouter } from "next/router";
 
+import { supabase } from "@/libs/supabase";
 import { base } from "@/libs/airtable";
+
+import { AuthContext } from "@/contexts/AuthContext";
 
 import { CreatorsContext } from "@/contexts/CreatorsContext";
 import {
@@ -27,6 +30,8 @@ import { Utilities } from "@/types/utilities";
 import { Footer } from "@/components/Footer";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const [user, setUser] = useState<any>();
+
   const [search, setSearch] = useState<string | undefined>();
   const [indexTab, setIndexTab] = useState<"all" | "op" | "ed" | undefined>(
     "all"
@@ -218,6 +223,8 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     //getCreators();
+    const data = supabase.auth.user();
+    setUser(data);
     creators.length == 0 && getCreators();
     collections.length == 0 && getCollections();
     creatorTags.length == 0 && getAllTags("creator_tags", setCreatorTags);
@@ -280,59 +287,61 @@ function MyApp({ Component, pageProps }: AppProps) {
           cardType: "summary_large_image",
         }}
       />
-      <UtilitiesContext.Provider
-        value={{
-          search: search,
-          setSearch: setSearch,
-          indexTab: indexTab,
-          setIndexTab: setIndexTab,
-          page: page,
-          setPage: setPage,
-          sortAction: sortAction,
-          setSortAction: setSortAction,
-          creatorType: creatorType,
-          setCreatorType: setCreatorType,
-          creatorsSort: creatorsSort,
-          setCreatorsSort: setCreatorsSort,
-          collectionsSort: collectionsSort,
-          setCollectionsSort: setCollectionsSort,
-          creatorCategory: creatorCategory,
-          setCreatorCategory: setCreatorCategory,
-          collectionCategory: collectionCategory,
-          setCollectionCategory: setCollectionCategory,
-          totalVolumeOrder: totalVolumeOrder,
-          setTotalVolumeOrder: setTotalVolumeOrder,
-          oneDayChangeOrder: oneDayChangeOrder,
-          setOneDayChangeOrder: setOneDayChangeOrder,
-          thirtyDayChangeOrder: thirtyDayChangeOrder,
-          setThirtyDayChangeOrder: setThirtyDayChangeOrder,
-          sevenDayChangeOrder: sevenDayChangeOrder,
-          setSevenDayChangeOrder: setSevenDayChangeOrder,
-          ownersOrder: ownersOrder,
-          setOwnersOrder: setOwnersOrder,
-          itemsOrder: itemsOrder,
-          setItemsOrder: setItemsOrder,
-          collectionNameOrder: collectionNameOrder,
-          setCollectionNameOrder: setCollectionNameOrder,
-          //collectionsMenu: collectionsMenu,
-          //setCollectionsMenu: setCollectionsMenu,
-        }}
-      >
-        <CreatorsContext.Provider value={creators}>
-          <CollectionsContext.Provider value={collections}>
-            <CreatorTagsContext.Provider value={creatorTags}>
-              <CollectionTagsContext.Provider value={collectionTags}>
-                <div className="flex flex-col min-h-screen font-outfit bg-stripe overflow-hidden">
-                  <Component {...pageProps} />
-                  <div className="mt-auto">
-                    <Footer />
+      <AuthContext.Provider value={user}>
+        <UtilitiesContext.Provider
+          value={{
+            search: search,
+            setSearch: setSearch,
+            indexTab: indexTab,
+            setIndexTab: setIndexTab,
+            page: page,
+            setPage: setPage,
+            sortAction: sortAction,
+            setSortAction: setSortAction,
+            creatorType: creatorType,
+            setCreatorType: setCreatorType,
+            creatorsSort: creatorsSort,
+            setCreatorsSort: setCreatorsSort,
+            collectionsSort: collectionsSort,
+            setCollectionsSort: setCollectionsSort,
+            creatorCategory: creatorCategory,
+            setCreatorCategory: setCreatorCategory,
+            collectionCategory: collectionCategory,
+            setCollectionCategory: setCollectionCategory,
+            totalVolumeOrder: totalVolumeOrder,
+            setTotalVolumeOrder: setTotalVolumeOrder,
+            oneDayChangeOrder: oneDayChangeOrder,
+            setOneDayChangeOrder: setOneDayChangeOrder,
+            thirtyDayChangeOrder: thirtyDayChangeOrder,
+            setThirtyDayChangeOrder: setThirtyDayChangeOrder,
+            sevenDayChangeOrder: sevenDayChangeOrder,
+            setSevenDayChangeOrder: setSevenDayChangeOrder,
+            ownersOrder: ownersOrder,
+            setOwnersOrder: setOwnersOrder,
+            itemsOrder: itemsOrder,
+            setItemsOrder: setItemsOrder,
+            collectionNameOrder: collectionNameOrder,
+            setCollectionNameOrder: setCollectionNameOrder,
+            //collectionsMenu: collectionsMenu,
+            //setCollectionsMenu: setCollectionsMenu,
+          }}
+        >
+          <CreatorsContext.Provider value={creators}>
+            <CollectionsContext.Provider value={collections}>
+              <CreatorTagsContext.Provider value={creatorTags}>
+                <CollectionTagsContext.Provider value={collectionTags}>
+                  <div className="flex flex-col min-h-screen font-outfit bg-stripe overflow-hidden">
+                    <Component {...pageProps} />
+                    <div className="mt-auto">
+                      <Footer />
+                    </div>
                   </div>
-                </div>
-              </CollectionTagsContext.Provider>
-            </CreatorTagsContext.Provider>
-          </CollectionsContext.Provider>
-        </CreatorsContext.Provider>
-      </UtilitiesContext.Provider>
+                </CollectionTagsContext.Provider>
+              </CreatorTagsContext.Provider>
+            </CollectionsContext.Provider>
+          </CreatorsContext.Provider>
+        </UtilitiesContext.Provider>
+      </AuthContext.Provider>
     </>
   );
 }

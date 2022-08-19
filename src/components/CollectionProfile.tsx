@@ -89,7 +89,7 @@ export const CollectionProfile = ({ collection }: any) => {
       <div className="mx-auto max-w-2xl">
         <div className="relative flex justify-center">
           <div className="relative flex">
-            <div className="relative -mt-[60px] rounded border-[5px] border-gray-800 overflow-hidden inline-flex items center justify-center z-10 mb-2">
+            <div className="relative -mt-[60px] rounded border-[5px] border-gray-800 bg-gray-800 overflow-hidden inline-flex items center justify-center z-10 mb-2">
               {collection.image_url && (
                 <Image
                   //@ts-ignore
@@ -102,7 +102,13 @@ export const CollectionProfile = ({ collection }: any) => {
               )}
             </div>
             {filteredCollection && (
-              <p className="absolute bottom-6 left-full -ml-3 bg-yellow-500 text-white pl-5 pr-3 rounded-tr-full rounded-br-full text-sm">
+              <p
+                className={`absolute bottom-6 left-full -ml-3 bg-yellow-500 text-white pl-5 pr-3 rounded-tr-full rounded-br-full text-sm ${
+                  filteredCollection.type == "Handmade"
+                    ? "bg-orange-500"
+                    : "bg-sky-500"
+                }`}
+              >
                 {filteredCollection.type}
               </p>
             )}
@@ -149,7 +155,6 @@ export const CollectionProfile = ({ collection }: any) => {
                     </Moment>
                   }
                 />
-                <Stats title="Owners" element={collection.stats.num_owners} />
                 <Stats
                   title="1d Ave."
                   element={
@@ -182,6 +187,7 @@ export const CollectionProfile = ({ collection }: any) => {
                   title="Total Supply"
                   element={collection.stats.total_supply + " Items"}
                 />
+                <Stats title="Owners" element={collection.stats.num_owners} />
                 <Stats
                   title="Royalty"
                   element={collection.dev_seller_fee_basis_points / 100 + "%"}

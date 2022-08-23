@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,16 +17,28 @@ import { Creator } from "@/types/creator";
 
 type Props = {
   creators: Creator[];
+  limit?: number;
 };
-export const CreatorList = ({ creators }: Props) => {
+export const CreatorList = ({ creators, limit }: Props) => {
   //const creators = useContext(CreatorsContext);
-  //console.log(creators);
+  const [filteredCreators, setFilteredCreators] = useState(creators);
+  //console.log("creatorsaaaa");
   const router = useRouter();
+  useEffect(() => {
+    if (limit) {
+      let new_creators = [] as Creator[];
+      for (let index = 0; index < limit; index++) {
+        new_creators = [...new_creators, creators[index]];
+      }
+      setFilteredCreators(new_creators);
+    }
+  }, []);
+  const currentCreators = limit ? filteredCreators : creators;
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 w-full justify-center">
-      {creators &&
-        creators.map((creator, index) => (
+      {currentCreators.length > 0 &&
+        currentCreators.map((creator, index) => (
           <div
             className="relative flex hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1"
             key={index}
@@ -34,23 +46,42 @@ export const CreatorList = ({ creators }: Props) => {
             <Link href={`/${creator.username}`} as={`/${creator.username}`}>
               <a className="relative flex flex-col border border-gray-800 rounded-lg w-full items-center shadow-lg bg-gray-800 overflow-hidden">
                 <div
-                  className={`absolute left-0 top-0 flex py-[2px] px-3 z-10 rounded-br-lg text-xs md:text-sm text-white capitalize ${
-                    creator.type == "creator" ? "bg-yellow-500" : "bg-blue-500"
+                  className={`absolute left-0 top-0 flex py-[2px] px-3 z-10 rounded-br-lg text-xs md:text-xs capitalize ${
+                    creator.type == "creator"
+                      ? "bg-yellow-500 text-yellow-100"
+                      : "bg-blue-500 text-blue-100"
                   }`}
                 >
                   {creator.type}
                 </div>
                 <div className="flex relative w-full h-20 overflow-hidden bg-gray-100">
-                  {creator.background && (
-                    <Image
-                      //@ts-ignore
-                      src={creator.background[0].thumbnails.large.url}
-                      layout="fill"
-                      objectFit="cover"
-                      alt=""
-                      loading="lazy"
-                    />
+                  {creator.background && creator.background.length > 0 && (
+                    <>
+                      {
+                        //@ts-ignore
+                        creator.background[0].thumbnails ? (
+                          <Image
+                            //@ts-ignore
+                            src={creator.background[0].thumbnails.large.url}
+                            layout="fill"
+                            objectFit="cover"
+                            alt=""
+                            loading="lazy"
+                          />
+                        ) : (
+                          <Image
+                            //@ts-ignore
+                            src={creator.background[0].url}
+                            layout="fill"
+                            objectFit="cover"
+                            alt=""
+                            loading="lazy"
+                          />
+                        )
+                      }
+                    </>
                   )}
+                  <div className="absolute left-0 top-0 w-full h-full bg-gray-900 opacity-50"></div>
                 </div>
                 <div className="-mt-10 rounded-full border-[5px] border-gray-800 overflow-hidden flex items center justify-center z-10 bg-gray-100">
                   {creator.avatar && (

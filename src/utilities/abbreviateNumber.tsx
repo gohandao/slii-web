@@ -1,6 +1,7 @@
 import React from "react";
 
 export const abbreviateNumber = (value: number, integar = false) => {
+  //var newValue = value.toFixed(1);
   var newValue = value.toFixed(1);
   if (value >= 1000) {
     var suffixes = ["", "k", "m", "b", "t"];

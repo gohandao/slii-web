@@ -32,6 +32,8 @@ const CollectionsPage: NextPage = () => {
   const { page } = router.query;
   const creators = useContext(CreatorsContext);
   const collections = useContext(CollectionsContext);
+  const collectionsLength = collections.length;
+
   const { setCollectionsSort } = useContext(UtilitiesContext);
 
   //const [collectionsMenu, setCollectionMenu] =
@@ -54,6 +56,8 @@ const CollectionsPage: NextPage = () => {
             <Headline
               pageTitle="Collections"
               title="Japanese awesome NFT collections List."
+              length={collectionsLength}
+              label="Collections"
             />
           </div>
           {/*<button onClick={collectionSortHandler}>test sort</button>*/}

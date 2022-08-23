@@ -22,10 +22,17 @@ export const CollectionCard = ({ username, collection }: any) => {
   };
   const unit =
     collection.payment_tokens && " " + collection.payment_tokens[0].symbol;
+
+  const description = collection.description;
+  const slicedDescription =
+    description && description.length > 80
+      ? description.slice(0, 80) + "…"
+      : description;
+
   return (
     <Link href={`/${username}/${collection.slug}`}>
       <a className="block relative w-full overflow-hidden bg-gray-800 border border-gray-700 rounded-lg hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1">
-        <div className="relative overflow-hidden h-32 w-full ">
+        <div className="relative overflow-hidden h-24 md:h-32 w-full bg-gray-900">
           {collection.banner_image_url && (
             <Image
               //@ts-ignore
@@ -37,7 +44,7 @@ export const CollectionCard = ({ username, collection }: any) => {
           )}
         </div>
         <div className="px-6 md:px-10 -mt-10">
-          <div className="relative object-cover w-20 h-20 rounded-lg overflow-hidden mb-2 border-[5px] border-gray-800">
+          <div className="relative object-cover w-20 h-20 rounded-lg overflow-hidden mb-2 border-[5px] border-gray-800 bg-gray-700">
             {collection.image_url && (
               <Image
                 //@ts-ignore
@@ -54,9 +61,11 @@ export const CollectionCard = ({ username, collection }: any) => {
               <MdVerified className="text-gray-500 text-sm inline ml-2" />
             )}
           </p>
-          <p className="text-sm text-gray-400 mb-5 text-justify">
-            {collection.description}
-          </p>
+          {description && (
+            <p className="text-sm text-gray-400 mb-5 text-justify">
+              {slicedDescription}
+            </p>
+          )}
         </div>
       </a>
     </Link>

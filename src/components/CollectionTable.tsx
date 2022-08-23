@@ -14,14 +14,19 @@ import { Card } from "@/components/Card";
 import { CollectionTr } from "@/components/CollectionTr";
 
 import { Collection } from "@/types/collection";
+import { Creator } from "@/types/creator";
 
 type ThProps = {
   children: ReactNode;
 };
 type Props = {
   collections: Collection[];
+  limit?: number;
 };
-export const CollectionTable = ({ collections }: Props) => {
+export const CollectionTable = ({ collections, limit }: Props) => {
+  console.log("jjjcollections");
+  console.log(collections);
+
   const creators = useContext(CreatorsContext);
   const {
     sortAction,
@@ -208,7 +213,15 @@ export const CollectionTable = ({ collections }: Props) => {
           }
         });
         newList.current = Array.from(new Set(new_list));
-        setList((list) => newList.current);
+        if (limit) {
+          let limited_list = [] as any[];
+          for (let index = 0; index < limit; index++) {
+            limited_list = [...limited_list, newList.current[index]];
+          }
+          setList((list) => limited_list);
+        } else {
+          setList((list) => newList.current);
+        }
         break;
       case "Collection Name":
         new_list = list.sort(function (a, b) {
@@ -363,6 +376,7 @@ export const CollectionTable = ({ collections }: Props) => {
     }
     resetOrder();
     setSortAction(true);
+
     setList((list) => newList.current);
   }, [collectionCategory]);
 

@@ -89,7 +89,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     base("creators")
       .select({
         // Selecting the first 3 records in All:
-        maxRecords: 10,
+        maxRecords: 100,
         view: "All",
       })
       .eachPage(
@@ -122,7 +122,12 @@ function MyApp({ Component, pageProps }: AppProps) {
             //console.log("Retrieved", record.fields);
           });
           setCreators(new_records);
-          fetchNextPage();
+          try {
+            fetchNextPage();
+          } catch (error) {
+            console.log(error);
+            return;
+          }
           return new_records as Creator[];
         },
         function done(err: any) {
@@ -137,33 +142,43 @@ function MyApp({ Component, pageProps }: AppProps) {
     let new_records: Collection[] = [...collections];
     base("collections")
       .select({
-        maxRecords: 10,
+        maxRecords: 100,
         view: "All",
       })
       .eachPage(
         //@ts-ignore
         function page(records: any[], fetchNextPage: () => void) {
           records.forEach(function (record) {
-            const fields = record.fields;
-            new_records = [
-              ...new_records,
-              {
-                name: fields.name,
-                slug: fields.slug,
-                creator_id: fields.creator_id[0],
-                type: fields.type,
-                createdAt: fields.createdAt,
-                updatedAt: fields.updatedAt,
-                category: fields.category,
-                verified: fields.verified,
-                tags: fields.tags,
-              } as Collection,
-            ];
+            try {
+              const fields = record.fields;
+              new_records = [
+                ...new_records,
+                {
+                  name: fields.name,
+                  slug: fields.slug,
+                  creator_id: fields.creator_id[0],
+                  type: fields.type,
+                  createdAt: fields.createdAt,
+                  updatedAt: fields.updatedAt,
+                  category: fields.category,
+                  verified: fields.verified,
+                  tags: fields.tags,
+                } as Collection,
+              ];
+            } catch (error) {
+              console.log(error);
+              return;
+            }
             //console.log("collections", new_records);
             //console.log("Retrieved", record.fields);
           });
           setCollections(new_records);
-          fetchNextPage();
+          try {
+            fetchNextPage();
+          } catch (error) {
+            console.log(error);
+            return;
+          }
         },
         function done(err: any) {
           if (err) {
@@ -181,7 +196,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     base(baseName)
       .select({
         // Selecting the first 3 records in All:
-        maxRecords: 10,
+        maxRecords: 100,
         view: "All",
       })
       .eachPage(
@@ -210,7 +225,12 @@ function MyApp({ Component, pageProps }: AppProps) {
           new_records = Array.from(new Set(new_records));
 
           setState(new_records);
-          fetchNextPage();
+          try {
+            fetchNextPage();
+          } catch (error) {
+            console.log(error);
+            return;
+          }
         },
         function done(err: any) {
           if (err) {

@@ -68,92 +68,106 @@ export const CollectionTr = ({ item, index }: any) => {
 
   return (
     <>
-      <tr key={item.slug} className="even:bg-gray-900">
-        <td scope="col" className="">
-          <div className="flex item-center text-gray-400 w-7 justify-center text-sm pl-[6px]">
-            {index + 1}
-          </div>
-        </td>
-        <td className="relative py-4 pr-3 ">
-          <Link href={`/${item.creator_id}/${item.slug}`}>
-            <a className="block">
-              <div className="flex items-center">
-                <img
-                  className="object-cover w-10 h-10 rounded shadow-lg shrink-0"
-                  src={item.image_url}
-                  alt=""
-                />
-                <div className="ml-4">
-                  <p className="text-base text-gray-100 line-clamp-1 pr-3 flex gap-2 items-center">
-                    {item.name}
-                  </p>
-                  <p className="text-sm text-gray-500">{item.creator_id}</p>
+      {item && item.creator_id && (
+        <tr key={item.slug} className="even:bg-gray-900">
+          <td scope="col" className="">
+            <div className="flex item-center text-gray-400 w-7 justify-center text-sm pl-[6px]">
+              {index + 1}
+            </div>
+          </td>
+          <td className="relative py-4 pr-3 ">
+            <Link href={`/${item.creator_id}/${item.slug}`}>
+              <a className="block">
+                <div className="flex items-center">
+                  <img
+                    className="object-cover w-10 h-10 rounded shadow-lg shrink-0"
+                    src={item.image_url}
+                    alt=""
+                  />
+                  <div className="ml-4">
+                    <p className="text-base text-gray-100 line-clamp-1 pr-3 flex gap-2 items-center">
+                      {item.name}
+                    </p>
+                    <p className="text-sm text-gray-500">{item.creator_id}</p>
+                  </div>
                 </div>
-              </div>
-            </a>
-          </Link>
-        </td>
-        <Td>
-          <div className="flex item-center gap-1">
-            {item.payment_tokens && item.payment_tokens[0].symbol == "ETH" && (
-              <Image src="/icon-eth.svg" width={16} height={16} alt="" />
-            )}
-            {item.stats && abbreviateNumber(item.stats.total_volume)}{" "}
-          </div>
-        </Td>
-        <Td>
-          <div className="flex item-center gap-1">
-            {item.payment_tokens && item.payment_tokens[0].symbol == "ETH" && (
-              <Image src="/icon-eth.svg" width={16} height={16} alt="" />
-            )}
-            {item.stats && abbreviateNumber(item.stats.floor_price)}{" "}
-          </div>
-        </Td>
-        <Td>
-          <span
-            className={`${item.stats.one_day_change > 0 && "text-green-500"} ${
-              item.stats.one_day_change < 0 && "text-red-500"
-            }`}
-          >
-            {item.stats && item.stats.one_day_change != 0
-              ? (item.stats.one_day_change * 100).toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                }) + "%"
-              : "-"}
-          </span>
-        </Td>
-        <Td>
-          <span
-            className={`${
-              item.stats.seven_day_change > 0 && "text-green-500"
-            } ${item.stats.seven_day_change < 0 && "text-red-500"}`}
-          >
-            {item.stats && item.stats.seven_day_change != 0
-              ? (item.stats.seven_day_change * 100).toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                }) + "%"
-              : "-"}
-          </span>
-        </Td>
-        <Td>
-          <span
-            className={`${
-              item.stats.thirty_day_change > 0 && "text-green-500"
-            } ${item.stats.thirty_day_change < 0 && "text-red-500"}`}
-          >
-            {item.stats && item.stats.thirty_day_change != 0
-              ? (item.stats.thirty_day_change * 100).toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                }) + "%"
-              : "-"}
-          </span>
-        </Td>
-        <Td>{item.stats && item.stats.num_owners}</Td>
-        <Td>{item.stats && item.stats.total_supply}</Td>
-      </tr>
+              </a>
+            </Link>
+          </td>
+          <Td>
+            <div className="flex item-center gap-1">
+              {item.payment_tokens &&
+                item.payment_tokens[0].symbol == "ETH" && (
+                  <Image src="/icon-eth.svg" width={16} height={16} alt="" />
+                )}
+              {item.stats && item.stats.total_volume
+                ? abbreviateNumber(item.stats.total_volume)
+                : "-"}
+            </div>
+          </Td>
+          <Td>
+            <div className="flex item-center gap-1">
+              {item.payment_tokens &&
+                item.payment_tokens[0].symbol == "ETH" && (
+                  <Image src="/icon-eth.svg" width={16} height={16} alt="" />
+                )}
+              {item.stats && item.stats.floor_price
+                ? abbreviateNumber(item.stats.floor_price)
+                : "-"}
+            </div>
+          </Td>
+          <Td>
+            <span
+              className={`${
+                item.stats.one_day_change > 0 && "text-green-500"
+              } ${item.stats.one_day_change < 0 && "text-red-500"}`}
+            >
+              {item.stats && item.stats.one_day_change != 0
+                ? (item.stats.one_day_change * 100).toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }) + "%"
+                : "-"}
+            </span>
+          </Td>
+          <Td>
+            <span
+              className={`${
+                item.stats.seven_day_change > 0 && "text-green-500"
+              } ${item.stats.seven_day_change < 0 && "text-red-500"}`}
+            >
+              {item.stats && item.stats.seven_day_change != 0
+                ? (item.stats.seven_day_change * 100).toLocaleString(
+                    undefined,
+                    {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    }
+                  ) + "%"
+                : "-"}
+            </span>
+          </Td>
+          <Td>
+            <span
+              className={`${
+                item.stats.thirty_day_change > 0 && "text-green-500"
+              } ${item.stats.thirty_day_change < 0 && "text-red-500"}`}
+            >
+              {item.stats && item.stats.thirty_day_change != 0
+                ? (item.stats.thirty_day_change * 100).toLocaleString(
+                    undefined,
+                    {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    }
+                  ) + "%"
+                : "-"}
+            </span>
+          </Td>
+          <Td>{item.stats && item.stats.num_owners}</Td>
+          <Td>{item.stats && item.stats.total_supply}</Td>
+        </tr>
+      )}
     </>
   );
   /*return (

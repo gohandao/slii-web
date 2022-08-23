@@ -16,7 +16,7 @@ export const getCreators = () => {
   base("creators")
     .select({
       // Selecting the first 3 records in All:
-      maxRecords: 10,
+      maxRecords: 100,
       view: "All",
     })
     .eachPage(
@@ -44,7 +44,12 @@ export const getCreators = () => {
           //console.log("creators", new_records);
           //console.log("Retrieved", record.fields);
         });
-        fetchNextPage();
+        try {
+          fetchNextPage();
+        } catch (error) {
+          console.log(error);
+          return;
+        }
       },
       function done(err: any) {
         if (err) {
@@ -60,29 +65,39 @@ export const getCollections = () => {
   let new_records: Collection[] = [];
   base("collections")
     .select({
-      maxRecords: 10,
+      maxRecords: 100,
       view: "All",
     })
     .eachPage(
       //@ts-ignore
       function page(records: any[], fetchNextPage: () => void) {
         records.forEach(function (record) {
-          const fields = record.fields;
-          new_records = [
-            ...new_records,
-            {
-              slug: fields.slug,
-              creator_id: fields.creator_id[0],
-              type: fields.type,
-              createdAt: fields.createdAt,
-              updatedAt: fields.updatedAt,
-              tags: fields.tags,
-            } as Collection,
-          ];
-          //console.log("collections", new_records);
-          //console.log("Retrieved", record.fields);
+          try {
+            const fields = record.fields;
+            new_records = [
+              ...new_records,
+              {
+                slug: fields.slug,
+                creator_id: fields.creator_id[0],
+                type: fields.type,
+                createdAt: fields.createdAt,
+                updatedAt: fields.updatedAt,
+                tags: fields.tags,
+              } as Collection,
+            ];
+            //console.log("collections", new_records);
+            //console.log("Retrieved", record.fields);
+          } catch (error) {
+            console.log(error);
+            return;
+          }
         });
-        fetchNextPage();
+        try {
+          fetchNextPage();
+        } catch (error) {
+          console.log(error);
+          return;
+        }
       },
       function done(err: any) {
         if (err) {

@@ -102,7 +102,9 @@ const Home: NextPage = () => {
             </div>
           </div>
           <div className="mb-10">
-            <CreatorList creators={creators} />
+            {creators.length > 0 && (
+              <CreatorList creators={creators} limit={10} />
+            )}
           </div>
           {/*<div className="mb-10 flex gap-5 items-baseline">
             {filteredCreatorTags && (
@@ -135,7 +137,9 @@ const Home: NextPage = () => {
             </div>
           </div>
           <div className="mb-10">
-            <CollectionTable collections={collections} />
+            {collections.length > 0 && (
+              <CollectionTable collections={collections} limit={10} />
+            )}
           </div>
           {/*<div className="mb-10 flex gap-5 items-baseline">
             {filteredCollectionTags && (

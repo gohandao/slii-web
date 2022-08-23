@@ -116,7 +116,7 @@ export const CollectionProfile = ({ collection }: any) => {
         </div>
         <div className="flex flex-1 flex-col items-center gap-5 text-center px-5">
           <div className="flex flex-col gap-2">
-            <h1 className="text-3xl text-gray-100 font-bold inline justify-center items-center">
+            <h1 className="text-2xl sm:text-3xl text-gray-100 font-bold inline justify-center items-center">
               {collection.name}
               {collection.safelist_request_status == "verified" && (
                 <MdVerified className="text-gray-500 text-xl inline ml-1" />
@@ -144,7 +144,11 @@ export const CollectionProfile = ({ collection }: any) => {
               <>
                 <Stats
                   title="Floor Price"
-                  element={collection.stats.floor_price}
+                  element={
+                    collection.stats.floor_price
+                      ? collection.stats.floor_price
+                      : "-"
+                  }
                   symbol={unit}
                 />
                 <Stats

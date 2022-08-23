@@ -39,6 +39,8 @@ const CreatorsPage: NextPage = () => {
 
   const [filteredCreators, setFilteredCreators] = useState<Creator[]>([]);
 
+  const creatorsLength = creators.length;
+
   useEffect(() => {
     setFilteredCreators(creators);
   }, [creators]);
@@ -102,6 +104,8 @@ const CreatorsPage: NextPage = () => {
             <Headline
               pageTitle="Creators"
               title="Japanese awesome NFT creatores List."
+              length={creatorsLength}
+              label="Creators"
             />
           </div>
           <div className="relative flex gap-5 z-20 justify-between">

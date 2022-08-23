@@ -24,9 +24,6 @@ type Props = {
   limit?: number;
 };
 export const CollectionTable = ({ collections, limit }: Props) => {
-  console.log("jjjcollections");
-  console.log(collections);
-
   const creators = useContext(CreatorsContext);
   const {
     sortAction,
@@ -173,6 +170,10 @@ export const CollectionTable = ({ collections, limit }: Props) => {
   useEffect(() => {
     collections && getCollectionsData();
   }, [collections]);
+  useEffect(() => {
+    collections && !list && getCollectionsData();
+  }, []);
+  //collections && list.length == 0 && getCollectionsData();
 
   useEffect(() => {
     if (setup) {
@@ -192,7 +193,15 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     });
     newList.current = Array.from(new Set(new_list));
     //setList(new_list);
-    setList((list) => newList.current);
+    if (limit) {
+      let limited_list = [] as any[];
+      for (let index = 0; index < limit; index++) {
+        limited_list = [...limited_list, newList.current[index]];
+      }
+      setList((list) => limited_list);
+    } else {
+      setList((list) => newList.current);
+    }
   };
 
   const sortList = () => {
@@ -213,15 +222,7 @@ export const CollectionTable = ({ collections, limit }: Props) => {
           }
         });
         newList.current = Array.from(new Set(new_list));
-        if (limit) {
-          let limited_list = [] as any[];
-          for (let index = 0; index < limit; index++) {
-            limited_list = [...limited_list, newList.current[index]];
-          }
-          setList((list) => limited_list);
-        } else {
-          setList((list) => newList.current);
-        }
+        setList((list) => newList.current);
         break;
       case "Collection Name":
         new_list = list.sort(function (a, b) {
@@ -353,12 +354,12 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     }
   };
   useEffect(() => {
-    if (collectionsSort) {
+    if (collectionsSort && !limit) {
       sortList();
     }
   }, []);
   useEffect(() => {
-    if (sortAction) {
+    if (sortAction && !limit) {
       sortList();
       setSortAction(false);
     }
@@ -376,7 +377,6 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     }
     resetOrder();
     setSortAction(true);
-
     setList((list) => newList.current);
   }, [collectionCategory]);
 

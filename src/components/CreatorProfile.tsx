@@ -22,15 +22,31 @@ export const CreatorProfile = ({ creator }: Props) => {
   return (
     <section className="">
       <div className="flex relative w-full h-32 md:h-60 overflow-hidden bg-gray-800">
-        {creator.background && (
-          <Image
-            //@ts-ignore
-            src={creator.background[0].thumbnails.large.url}
-            layout="fill"
-            objectFit="cover"
-            alt=""
-            loading="lazy"
-          />
+        {creator.background && creator.background.length > 0 && (
+          <>
+            {
+              //@ts-ignore
+              creator.background[0].thumbnails ? (
+                <Image
+                  //@ts-ignore
+                  src={creator.background[0].thumbnails.large.url}
+                  layout="fill"
+                  objectFit="cover"
+                  alt=""
+                  loading="lazy"
+                />
+              ) : (
+                <Image
+                  //@ts-ignore
+                  src={creator.background[0].url}
+                  layout="fill"
+                  objectFit="cover"
+                  alt=""
+                  loading="lazy"
+                />
+              )
+            }
+          </>
         )}
       </div>
       <div className="mx-auto  max-w-2xl">

@@ -52,6 +52,8 @@ const KeywordPage: NextPage = () => {
     (item) =>
       typeof keyword == "string" &&
       //@ts-ignore
+      item.description &&
+      //@ts-ignore
       item.description.toUpperCase().includes(uppperKeyword) == true
   );
   const origin_filteredCreators = [
@@ -61,13 +63,16 @@ const KeywordPage: NextPage = () => {
   //重複削除
   const filteredCreators = Array.from(new Set(origin_filteredCreators));
 
-  const filteredCollections = collections.filter(
+  const filteredCollections01 = collections.filter(
     (item) =>
       typeof keyword == "string" &&
       //@ts-ignore
       item.name.toUpperCase().includes(uppperKeyword) == true
   );
-  console.log();
+  const filteredCollections = Array.from(new Set(filteredCollections01));
+  console.log("filteredCollections");
+  console.log(filteredCollections01);
+  console.log(filteredCollections);
   return (
     <div>
       <Head>
@@ -92,7 +97,7 @@ const KeywordPage: NextPage = () => {
         <section className="mx-auto max-w-7xl">
           <Title property="h2" addClass="mb-5">
             Collections
-          </Title>{" "}
+          </Title>
           <div className="mb-10">
             <CollectionTable collections={filteredCollections} />
           </div>

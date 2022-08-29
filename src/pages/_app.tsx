@@ -28,6 +28,7 @@ import { Collection } from "@/types/collection";
 import { Tag } from "@/types/tag";
 import { Utilities } from "@/types/utilities";
 import { Footer } from "@/components/Footer";
+import { BreadcrumbList } from "@/types/breadcrumbList";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<any>();
@@ -44,6 +45,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     setIndexTab: setIndexTab,
   })*/
 
+  const [breadcrumbList, setBreadcrumbList] = useState<BreadcrumbList>();
   const [creators, setCreators] = useState<Creator[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
   const [creatorTags, setCreatorTags] = useState<Tag[]>([]);
@@ -342,6 +344,8 @@ function MyApp({ Component, pageProps }: AppProps) {
             setItemsOrder: setItemsOrder,
             collectionNameOrder: collectionNameOrder,
             setCollectionNameOrder: setCollectionNameOrder,
+            breadcrumbList: breadcrumbList,
+            setBreadcrumbList: setBreadcrumbList,
             //collectionsMenu: collectionsMenu,
             //setCollectionsMenu: setCollectionsMenu,
           }}

@@ -19,6 +19,8 @@ import { Title } from "@/components/Title";
 
 import { Tag } from "@/types/tag";
 import { Headline } from "@/components/Headline";
+import { BreadCrumbs } from "@/components/BreadCrumbs";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 type GetAllTags = {
   baseName: string;
@@ -29,6 +31,22 @@ const TagsPage: NextPage = () => {
   const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
   const router = useRouter();
   const { page } = router.query;
+
+  const { setBreadcrumbList } = useContext(UtilitiesContext);
+  const breadcrumbList = [
+    {
+      name: "Home",
+      path: "/",
+    },
+    {
+      name: "Tags",
+      path: "/tags",
+    },
+  ];
+  useEffect(() => {
+    setBreadcrumbList(breadcrumbList);
+  }, []);
+
   const CreatorTags = useContext(CreatorTagsContext);
   const CollectionTags = useContext(CollectionTagsContext);
 
@@ -45,13 +63,13 @@ const TagsPage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <BaseLayout>
-        <div className="mx-auto px-5 md:px-8 mt-5 lg:mt-12 mb-5">
+        <div className="mx-auto px-5 md:px-8 mt-5 lg:mt-10 mb-5">
           <Headline
             pageTitle="Tags"
             title="Search Japanese creators and collections with tags."
           />
         </div>
-        <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-12">
+        <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-10">
           <Title property="h3" addClass="mb-5">
             Creator Tags
           </Title>
@@ -59,7 +77,7 @@ const TagsPage: NextPage = () => {
             <TagList tags={CreatorTags} type="creator" />
           </div>
         </section>
-        <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-12">
+        <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-10">
           <Title property="h3" addClass="mb-5">
             Collection Tags
           </Title>

@@ -17,17 +17,25 @@ export const TagList = ({ tags, type }: Props) => {
   return (
     <div className="flex flex-wrap gap-3">
       {tags &&
-        tags.map((tag, index) => (
-          <div key={index}>
-            {tag && tag.name && (
-              <Link href={`/tags/${tag.name}`}>
-                <a className={`inline-block rounded px-4 py-3 ${typeClass}`}>
-                  #{tag.name} ({tag.count})
-                </a>
-              </Link>
-            )}
-          </div>
-        ))}
+        tags.map((tag, index) => {
+          let path;
+          if (type) {
+            path = `/tags/${tag.name}?type=${type}`;
+          } else {
+            path = `/tags/${tag.name}`;
+          }
+          return (
+            <div key={index}>
+              {tag && tag.name && (
+                <Link href={path}>
+                  <a className={`inline-block rounded px-4 py-3 ${typeClass}`}>
+                    #{tag.name} ({tag.count})
+                  </a>
+                </Link>
+              )}
+            </div>
+          );
+        })}
     </div>
   );
 };

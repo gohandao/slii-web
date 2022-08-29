@@ -1,26 +1,138 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import Modal from "react-modal";
 
-import { FaReact } from "react-icons/fa";
+import { FaDiscord, FaReact, FaRegFlag } from "react-icons/fa";
 import { SiTypescript } from "react-icons/si";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { VscChecklist } from "react-icons/vsc";
 import { FaPlay } from "react-icons/fa";
+import { HiOutlineShare } from "react-icons/hi";
 
 import { ProfileLinks } from "@/components/ProfileLinks";
 import { Label } from "@/components/Label";
 
 import { Creator } from "@/types/creator";
 import { MdVerified } from "react-icons/md";
+import { LikeViews } from "@/components/LikeViews";
+import { JP } from "country-flag-icons/react/3x2";
+import { BsFillShareFill, BsThreeDots, BsTwitter } from "react-icons/bs";
+import { ProfileDropdown } from "@/components/ProfileDropdown";
+import { SocialCount } from "./SocialCount";
+import { CopyText } from "@/components/CopyText";
+import { useRouter } from "next/router";
+import { FiCopy } from "react-icons/fi";
 
 type Props = {
   creator: Creator;
 };
 
 export const CreatorProfile = ({ creator }: Props) => {
+  const router = useRouter();
+  let baseUrl = "" as string;
+  if (process.env.NODE_ENV != "test") {
+    baseUrl = {
+      production: "https://gachi.vercel.app",
+      development: "http://localhost:3000",
+    }[process.env.NODE_ENV];
+  }
+
+  const [requestDropdown, setRequestDropdown] = useState<boolean>(false);
+  const [shareDropdown, setShareDropdown] = useState<boolean>(false);
+  const twitterId = creator.twitter_id && creator.twitter_id;
+  const discordId =
+    creator.discord_url &&
+    creator.discord_url.substring(creator.discord_url.lastIndexOf("/") + 1);
+
+  const customStyles = {
+    overlay: {
+      position: "fixed",
+      top: 0,
+      left: 0,
+      backgroundColor: "rgba(0,0,0,0.3)",
+      zIndex: 9999,
+    },
+
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      width: "500px",
+      height: "300px",
+      transform: "translate(-50%, -50%)",
+    },
+  };
+  Modal.setAppElement("#__next");
+  const [modalIsOpen, setIsOpen] = useState(false);
+  // モーダルを開く処理
+  const openModal = () => {
+    setIsOpen(true);
+  };
+  const afterOpenModal = () => {
+    // モーダルが開いた後の処理
+  };
+  // モーダルを閉じる処理
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
+  /*useEffect(() => {
+    if (twitterData) {
+      const obj = JSON.parse(twitterData);
+      console.log("twitterData");
+      console.log(obj);
+      console.log("username");
+      console.log(obj.public_metrics.followers_count);
+    }
+  }, [twitterData]);*/
+
+  // シェアボタンのリンク先
+  const currentUrl = baseUrl + router.asPath;
+
+  var twitterShareUrl = "https://twitter.com/intent/tweet";
+  twitterShareUrl += "?text=" + encodeURIComponent("ツイート内容テキスト");
+  twitterShareUrl += "&url=" + encodeURIComponent(currentUrl);
+  const shareMenus = [
+    /*{
+      icon: <FiCopy />,
+      title: "Copy URL",
+      url: twitterShareUrl,
+    },*/
+    {
+      icon: <BsTwitter />,
+      title: "Share on Twitter",
+      url: twitterShareUrl,
+    },
+  ];
+  const requestMenus = [
+    {
+      icon: <FaRegFlag />,
+      title: "Kaizen idea",
+      url: "https://google.com",
+    },
+  ];
+
   return (
     <section className="">
+      <button onClick={openModal} className="text-white">
+        Open Modal
+      </button>
+      <Modal
+        // isOpenがtrueならモダールが起動する
+        isOpen={modalIsOpen}
+        // モーダルが開いた後の処理を定義
+        onAfterOpen={afterOpenModal}
+        // モーダルを閉じる処理を定義
+        onRequestClose={closeModal}
+        //@ts-ignore
+        style={customStyles}
+      >
+        <h2>Hello</h2>
+        <button onClick={closeModal}>close</button>
+      </Modal>
       <div className="flex relative w-full h-32 md:h-60 overflow-hidden bg-gray-800">
         {creator.background && creator.background.length > 0 && (
           <>
@@ -52,7 +164,7 @@ export const CreatorProfile = ({ creator }: Props) => {
       <div className="mx-auto  max-w-2xl">
         <div className="-mt-[60px] relative flex justify-center">
           <div className="relative flex">
-            <div className="rounded-full border-[5px] border-gray-800 overflow-hidden flex items-center justify-center z-10 mb-2 bg-gray-800">
+            <div className="rounded-full border-[5px] border-gray-800 overflow-hidden flex items-center justify-center z-10 mb-2 bg-gray-800 w-[110px] h-[110px]">
               {creator.avatar && creator.avatar.length > 0 ? (
                 <Image
                   //@ts-ignore
@@ -73,11 +185,28 @@ export const CreatorProfile = ({ creator }: Props) => {
                 />
               )}
             </div>
+            <div className="flex gap-3 absolute bottom-6 right-full rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
+              <ProfileDropdown
+                icon={<BsFillShareFill className="text-gray-500" />}
+                dropdown={shareDropdown}
+                setDropdown={setShareDropdown}
+                menus={shareMenus}
+              />
+              <ProfileDropdown
+                icon={<BsThreeDots className="text-gray-500 " />}
+                dropdown={requestDropdown}
+                setDropdown={setRequestDropdown}
+                menus={requestMenus}
+              />
+            </div>
             <p
-              className={`absolute bottom-6 left-full -ml-6 text-white pl-5 pr-3 rounded-tr-full rounded-br-full text-sm capitalize ${
-                creator.type == "creator" ? "bg-yellow-500" : "bg-blue-500"
+              className={`absolute bottom-6 left-full -ml-6 pl-[22px] pr-3 rounded-tr-full rounded-br-full text-sm capitalize flex justify-center items-center gap-[6px] ${
+                creator.type == "creator"
+                  ? "bg-yellow-500 text-yellow-100"
+                  : "bg-blue-500 text-blue-100"
               }`}
             >
+              <JP title="Japan" className="h-3 rounded" />
               {creator.type}
             </p>
           </div>
@@ -92,16 +221,16 @@ export const CreatorProfile = ({ creator }: Props) => {
             </h1>
             <div className="flex items-center gap-1 text-xs text-gray-400">
               <Image src="/icon-eth.svg" width={16} height={16} alt="" />
-              <Link
-                href={`https://etherscan.io/address/${creator.address}`}
-                target="_blank"
-              >
-                <a className="ellipsis max-w-[100px]">{creator.address}</a>
-              </Link>
+              <CopyText
+                text={creator.address}
+                alertText="ETH address has copied!"
+              />
             </div>
-            <p className="text-gray-100 mt-1 text-justify px-3 text-sm sm:text-base">
+            <LikeViews id={creator.username} type="creator" />
+            <p className="text-gray-100 mt-1 break-all px-3 text-sm sm:text-base">
               {creator.description}
             </p>
+            <SocialCount twitter_id={twitterId} discord_id={discordId} />
           </div>
           {creator.tags && (
             <div className="flex gap-2 justify-center w-full">
@@ -111,6 +240,7 @@ export const CreatorProfile = ({ creator }: Props) => {
             </div>
           )}
           <ProfileLinks
+            address={creator.address}
             twitter_id={creator.twitter_id}
             instagram_id={creator.instagram_id}
             discord_url={creator.discord_url}

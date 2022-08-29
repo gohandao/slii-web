@@ -5,7 +5,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { CreatorsContext } from "@/contexts/CreatorsContext";
 import { CollectionsContext } from "@/contexts/CollectionsContext";
@@ -22,21 +22,68 @@ import { IndexTab } from "@/components/IndexTab";
 import { Hr } from "@/components/Hr";
 import { Title } from "@/components/Title";
 import { LinkButton } from "@/components/LinkButton";
+import { Creator } from "@/types/creator";
+import { Collection } from "@/types/collection";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 const TagPage: NextPage = () => {
   const router = useRouter();
   const { tag, type } = router.query;
+
+  const { setBreadcrumbList } = useContext(UtilitiesContext);
+  const breadcrumbList = tag && [
+    {
+      name: "Home",
+      path: "/",
+    },
+    {
+      name: "Tags",
+      path: "/tags",
+    },
+    {
+      name: tag as string,
+      path: `/tags/${tag as string}`,
+    },
+  ];
+  useEffect(() => {
+    breadcrumbList && setBreadcrumbList(breadcrumbList);
+  }, []);
   const creators = useContext(CreatorsContext);
   const collections = useContext(CollectionsContext);
 
+  const [filteredCreators, setFilteredCreators] = useState<Creator[]>();
+  const [filteredCollections, setFilteredCollections] =
+    useState<Collection[]>();
+
+  useEffect(() => {
+    const new_creators = creators.filter(
+      //@ts-ignore
+      (item) => item.tags && item.tags.includes(tag) == true
+    );
+
+    setFilteredCreators(new_creators);
+    const new_collections = collections.filter(
+      //@ts-ignore
+      (item) => item.tags && item.tags.includes(tag) == true
+    );
+    setFilteredCollections(new_collections);
+    //const filteredCollections = Array.from(new Set(filteredCollections01));
+  }, [collections]);
+
+  /*
   const filteredCreators = creators.filter(
     //@ts-ignore
     (item) => item.tags && item.tags.includes(tag) == true
   );
-  const filteredCollection = collections.filter(
+  const filteredCollections01 = collections.filter(
     //@ts-ignore
     (item) => item.tags && item.tags.includes(tag) == true
   );
+  const filteredCollections = Array.from(new Set(filteredCollections01));
+  */
+
+  const creatorsLength = filteredCreators && filteredCreators.length;
+  const collectionsLength = filteredCollections && filteredCollections.length;
   const testasync = async () => {
     const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
 
@@ -52,9 +99,8 @@ const TagPage: NextPage = () => {
     const tags = [...json01.records, ...json02.records];
     //const { records } = (await response01.json()) + response02.json();
     //const { records02 } = await response02.json();
-
-    console.log("zoo");
-    console.log(tags);
+    //console.log("zoo");
+    //console.log(tags);
     //const tags = [records01, records02];
   };
   //testasync();
@@ -66,29 +112,53 @@ const TagPage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <BaseLayout>
-        <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-12">
+        <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-10">
           <h1 className="text-gray-100">
-            Resulut of <span className="text-2xl ml-1 text-bold">{tag}</span>
+            Resulut of <span className="text-3xl ml-1 text-bold">#{tag}</span>
           </h1>
         </section>
         {type != "collection" && (
           <section className="mx-auto px-5 md:px-8 mt-5">
-            <Title property="h2" addClass="mb-5">
-              Creators
-            </Title>
+            <div className="flex gap-3 mb-4">
+              <div className="flex items-center">
+                <div className="animated-dot"></div>
+              </div>
+              <div className="flex gap-3 items-baseline">
+                <Title property="h2" addClass="">
+                  Creators
+                </Title>
+                <p className="text-gray-400 text-sm">
+                  {creatorsLength} Creators
+                </p>
+              </div>
+            </div>
             <div className="mb-10">
-              {filteredCreators && <CreatorList creators={filteredCreators} />}
+              {filteredCreators && filteredCreators.length > 0 ? (
+                <CreatorList creators={filteredCreators} />
+              ) : (
+                <p className="text-gray-100">Not found.</p>
+              )}
             </div>
           </section>
         )}
         {type != "creator" && (
-          <section className="mx-auto px-5 md:px-8">
-            <Title property="h2" addClass="mb-5">
-              Collections
-            </Title>{" "}
+          <section className="mx-auto px-5 md:px-8 mt-5">
+            <div className="flex gap-3 mb-4">
+              <div className="flex items-center">
+                <div className="animated-dot"></div>
+              </div>
+              <div className="flex gap-3 items-baseline">
+                <Title property="h2" addClass="">
+                  Collections
+                </Title>
+                <p className="text-gray-400 text-sm">
+                  {collectionsLength} Collections
+                </p>
+              </div>
+            </div>
             <div className="mb-10">
-              {filteredCollection.length > 0 ? (
-                <CollectionTable collections={filteredCollection} />
+              {filteredCollections && filteredCollections.length > 0 ? (
+                <CollectionTable collections={filteredCollections} />
               ) : (
                 <p className="text-gray-100">Not found.</p>
               )}

@@ -31,6 +31,7 @@ import { CreatorsContext } from "@/contexts/CreatorsContext";
 import { CollectionsContext } from "@/contexts/CollectionsContext";
 
 import { Tag } from "@/types/tag";
+import { Searchbox } from "@/components/Searchbox";
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -38,6 +39,8 @@ const Home: NextPage = () => {
 
   const creators = useContext(CreatorsContext);
   const collections = useContext(CollectionsContext);
+  //console.log("index collections");
+  //console.log(collections);
 
   const CreatorTags = useContext(CreatorTagsContext);
   const CollectionTags = useContext(CollectionTagsContext);
@@ -88,6 +91,9 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <BaseLayout>
+        <div className="w-full max-w-[460px] px-5 md:px-8 lg:hidden mx-auto">
+          <Searchbox />
+        </div>
         <Mainvisual />
         <section className="mx-auto px-5 md:px-8">
           <div className="flex gap-3 mb-4">
@@ -118,7 +124,7 @@ const Home: NextPage = () => {
             </Link>
             </div>*/}
           <div className="flex justify-center">
-            <LinkButton href="/creators">Check creators</LinkButton>
+            <LinkButton href="/creators">Check all creators</LinkButton>
           </div>
         </section>
         <div className="pb-16"></div>
@@ -138,7 +144,9 @@ const Home: NextPage = () => {
           </div>
           <div className="mb-10">
             {collections.length > 0 && (
-              <CollectionTable collections={collections} limit={10} />
+              <>
+                <CollectionTable collections={collections} limit={10} />
+              </>
             )}
           </div>
           {/*<div className="mb-10 flex gap-5 items-baseline">
@@ -155,7 +163,7 @@ const Home: NextPage = () => {
             </Link>
             </div>*/}
           <div className="flex justify-center">
-            <LinkButton href="/collections">Check collections</LinkButton>
+            <LinkButton href="/collections">Check all collections</LinkButton>
           </div>
         </section>
         {/*<div className="flex flex-col gap-10 px-5 mx-auto max-w-7xl">

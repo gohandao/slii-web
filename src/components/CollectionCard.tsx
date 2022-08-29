@@ -32,6 +32,9 @@ export const CollectionCard = ({ username, collection }: any) => {
   return (
     <Link href={`/${username}/${collection.slug}`}>
       <a className="block relative w-full overflow-hidden bg-gray-800 border border-gray-700 rounded-lg hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1">
+        <div className="absolute left-0 top-0 bg-violet-500 text-violet-100 px-3 py-1 text-xs z-10 rounded-br">
+          Featured
+        </div>
         <div className="relative overflow-hidden h-24 md:h-32 w-full bg-gray-900">
           {collection.banner_image_url && (
             <Image

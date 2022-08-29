@@ -15,12 +15,11 @@ export const Label = ({ name, type }: Props) => {
   } else if (type == "collection") {
     typeClass = "bg-green-900 text-green-100";
   }
+
   return (
     <object>
-      <Link href={`/tags/${name}`}>
-        <a
-          className={`bg-blue-500 text-blue-50 rounded px-2 py-1 text-xs md:text-sm ${typeClass}`}
-        >
+      <Link href={`/tags/${name}?type=${type}`}>
+        <a className={`rounded px-2 py-1 text-xs md:text-sm ${typeClass}`}>
           #{name}
         </a>
       </Link>

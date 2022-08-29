@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 
 import { CreatorList } from "@/components/CreatorList";
 import { CollectionTable } from "@/components/CollectionTable";
@@ -30,6 +30,20 @@ import { BreadCrumbs } from "@/components/BreadCrumbs";
 const CollectionsPage: NextPage = () => {
   const router = useRouter();
   const { page } = router.query;
+  const { setBreadcrumbList } = useContext(UtilitiesContext);
+  const breadcrumbList = [
+    {
+      name: "Home",
+      path: "/",
+    },
+    {
+      name: "Collections",
+      path: "/collections",
+    },
+  ];
+  useEffect(() => {
+    setBreadcrumbList(breadcrumbList);
+  }, []);
   const creators = useContext(CreatorsContext);
   const collections = useContext(CollectionsContext);
   const collectionsLength = collections.length;
@@ -51,7 +65,7 @@ const CollectionsPage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <BaseLayout>
-        <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-12">
+        <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-10">
           <div className="mb-5">
             <Headline
               pageTitle="Collections"
@@ -66,25 +80,13 @@ const CollectionsPage: NextPage = () => {
             <Dropdown position="left" type="collectionCategories" />
             <Dropdown position="right" type="sortCollections" />
           </div>
-          <div className="mb-10">
+          <div className="">
             {collections && <CollectionTable collections={collections} />}
           </div>
-          <div className="flex justify-center mb-20">
+          {/*<div className="flex justify-center mb-20">
             <ShowMore currentPage={page ? Number(page) : 1} />
-          </div>
+  </div>*/}
         </section>
-        <BreadCrumbs
-          list={[
-            {
-              name: "Home",
-              path: "/",
-            },
-            {
-              name: "Collections",
-              path: "/collections",
-            },
-          ]}
-        />
       </BaseLayout>
     </div>
   );

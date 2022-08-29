@@ -125,7 +125,7 @@ export const Dropdown = ({ position, type }: Props) => {
       title = collectionsSort ? (
         <>
           <BiSortAlt2 className="text-gray-400" />
-          {collectionsSort}
+          <span className="ellipsis max-w-[90px]">{collectionsSort}</span>
         </>
       ) : (
         "Sort"
@@ -254,7 +254,7 @@ export const Dropdown = ({ position, type }: Props) => {
             <>
               {title}
               <svg
-                className="-mr-1 ml-2 h-5 w-5"
+                className="-mr-1 ml-2 h-5 w-5 hidden sm:block"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
                 fill="currentColor"
@@ -278,7 +278,7 @@ export const Dropdown = ({ position, type }: Props) => {
             {menus &&
               menus.map((menu, index) => (
                 <button
-                  className="text-gray-700 block px-4 py-2 text-sm capitalize"
+                  className="text-gray-700 block px-4 py-2 text-sm capitalize w-full text-left"
                   role="menuitem"
                   tabIndex={-1}
                   id="menu-item-0"

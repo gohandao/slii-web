@@ -27,21 +27,44 @@ import { CollectionAssets } from "@/components/CollectionAssets";
 import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
 import { Dropdown } from "@/components/Dropdown";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 const CollectionIndex: NextPage = (props: any) => {
   const OPENSEA_API_KEY = process.env.NEXT_PUBLIC_OPENSEA_API_KEY as string;
 
   const router = useRouter();
+  const { username, slug } = router.query;
+  const [loading, setLoading] = useState<boolean>(false);
+  const [collection, setCollection] = useState([]);
+
+  const { setBreadcrumbList } = useContext(UtilitiesContext);
+  const breadcrumbList = slug &&
+    username && [
+      {
+        name: "Home",
+        path: "/",
+      },
+      {
+        name: "Collections",
+        path: "/collections",
+      },
+      {
+        //@ts-ignore
+        name: collection.name as string,
+        //@ts-ignore
+        path: `/${slug}/${collection.name as string}`,
+      },
+    ];
+  useEffect(() => {
+    breadcrumbList && setBreadcrumbList(breadcrumbList);
+  }, [collection]);
   const creators = useContext(CreatorsContext);
   const collections = useContext(CollectionsContext);
 
   const [existence, setExistence] = useState<boolean>(false);
   const [creator, setCreator] = useState<Creator>();
   const [collectionAssets, setCollectionAssets] = useState<[]>([]);
-  const { username, slug } = router.query;
-  const [loading, setLoading] = useState<boolean>(false);
 
-  const [collection, setCollection] = useState([]);
   const options = { method: "GET" };
 
   const updateCollectionAssets = (assets: any) => {
@@ -99,7 +122,8 @@ const CollectionIndex: NextPage = (props: any) => {
       const collection =
         creator.length > 0 &&
         creator[0].collections.filter((collection) => collection === slug);
-      if (collection && collection.length > 0) {
+      //if (collection && collection.length > 0) {
+      if (creator) {
         setExistence(true);
       }
       //本来ページが存在しない場合はリダイレクト
@@ -225,8 +249,8 @@ export const getStaticPaths = async () => {
       (colelction: any) =>
         `/${colelction.fields.creator_id}/${colelction.fields.slug}`
     ),
-    fallback: false,
-    //fallback: "blocking",
+    //fallback: true,
+    fallback: "blocking",
   };
 };
 
@@ -243,8 +267,8 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   const collection = collections.filter(
     (collection: any) => collection.fields.slug === slug
   );*/
-  console.log("records");
-  console.log(records);
+  //console.log("records");
+  //console.log(records);
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {

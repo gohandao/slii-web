@@ -1,9 +1,11 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useContext } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { AiOutlineHome } from "react-icons/ai";
 import { TbUsers } from "react-icons/tb";
 import { BsCollection, BsMailbox, BsTags } from "react-icons/bs";
+import { BreadCrumbs } from "./BreadCrumbs";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 //import "https://files.coinmarketcap.com/static/widget/coinMarquee.js";
 
 type ButtonProps = {
@@ -15,6 +17,7 @@ type FixedMenuProps = {
   children: ReactNode;
 };
 export const Footer = () => {
+  const { breadcrumbList } = useContext(UtilitiesContext);
   const Button = ({ url, title }: ButtonProps) => {
     return (
       <Link href={url}>
@@ -41,7 +44,10 @@ export const Footer = () => {
           <Button url="https://google.com" title="Request" />
         </div>
   </div>*/}
-      <footer className="pt-20 pb-20 md:pb-3">
+      <div className="pt-16">
+        <BreadCrumbs list={breadcrumbList} />
+      </div>
+      <footer className="pb-20 md:pb-3">
         <div className="px-6 mx-auto sm:px-8 lg:px-12 max-w-7xl">
           {/*<div className="justify-center items-center flex text-center mb-2">
             <Link href="/">

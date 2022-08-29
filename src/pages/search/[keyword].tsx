@@ -3,7 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 
 import { CollectionsContext } from "@/contexts/CollectionsContext";
 
@@ -30,10 +30,29 @@ import { CreatorsContext } from "@/contexts/CreatorsContext";
 import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
 import { Tag } from "@/types/tag";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 const KeywordPage: NextPage = () => {
   const router = useRouter();
   const { keyword, page } = router.query;
+  const { setBreadcrumbList } = useContext(UtilitiesContext);
+  const breadcrumbList = keyword && [
+    {
+      name: "Home",
+      path: "/",
+    },
+    {
+      name: "Search",
+      path: "/",
+    },
+    {
+      name: keyword as string,
+      path: `/search/${keyword as string}`,
+    },
+  ];
+  useEffect(() => {
+    breadcrumbList && setBreadcrumbList(breadcrumbList);
+  }, []);
   const creators = useContext(CreatorsContext);
   const collections = useContext(CollectionsContext);
 
@@ -73,6 +92,10 @@ const KeywordPage: NextPage = () => {
   console.log("filteredCollections");
   console.log(filteredCollections01);
   console.log(filteredCollections);
+
+  const creatorsLength = filteredCreators && filteredCreators.length;
+  const collectionsLength = filteredCollections && filteredCollections.length;
+
   return (
     <div>
       <Head>
@@ -81,25 +104,52 @@ const KeywordPage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <BaseLayout>
-        <section className="mx-auto max-w-7xl mt-5 lg:mt-12">
-          <h1>Resulut of {keyword}</h1>
+        <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-10">
+          <h1 className="text-gray-100">
+            Resulut of{" "}
+            <span className="text-3xl ml-1 text-bold">{keyword}</span>
+          </h1>
         </section>
-
-        <section className="mx-auto max-w-7xl mt-12">
-          <Title property="h2" addClass="mb-5">
-            Creators
-          </Title>
+        <section className="mx-auto px-5 md:px-8 mt-5">
+          <div className="flex gap-3 mb-4">
+            <div className="flex items-center">
+              <div className="animated-dot"></div>
+            </div>
+            <div className="flex gap-3 items-baseline">
+              <Title property="h2" addClass="">
+                Creators
+              </Title>
+              <p className="text-gray-400 text-sm">{creatorsLength} Creators</p>
+            </div>
+          </div>
           <div className="mb-10">
-            <CreatorList creators={filteredCreators} />
+            {filteredCreators && filteredCreators.length > 0 ? (
+              <CreatorList creators={filteredCreators} />
+            ) : (
+              <p className="text-gray-100">Not found.</p>
+            )}{" "}
           </div>
         </section>
-        <Hr />
-        <section className="mx-auto max-w-7xl">
-          <Title property="h2" addClass="mb-5">
-            Collections
-          </Title>
+        <section className="mx-auto px-5 md:px-8 mt-5">
+          <div className="flex gap-3 mb-4">
+            <div className="flex items-center">
+              <div className="animated-dot"></div>
+            </div>
+            <div className="flex gap-3 items-baseline">
+              <Title property="h2" addClass="">
+                Collections
+              </Title>
+              <p className="text-gray-400 text-sm">
+                {collectionsLength} Collections
+              </p>
+            </div>
+          </div>
           <div className="mb-10">
-            <CollectionTable collections={filteredCollections} />
+            {filteredCollections && filteredCollections.length > 0 ? (
+              <CollectionTable collections={filteredCollections} />
+            ) : (
+              <p className="text-gray-100">Not found.</p>
+            )}
           </div>
         </section>
         {/*<div className="flex flex-col gap-10 px-5 mx-auto max-w-7xl">

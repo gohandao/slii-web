@@ -35,7 +35,20 @@ const CreatorsPage: NextPage = () => {
 
   const creators = useContext(CreatorsContext);
   const collections = useContext(CollectionsContext);
-  const { creatorType } = useContext(UtilitiesContext);
+  const { creatorType, setBreadcrumbList } = useContext(UtilitiesContext);
+  const breadcrumbList = [
+    {
+      name: "Home",
+      path: "/",
+    },
+    {
+      name: "Creators",
+      path: "/creators",
+    },
+  ];
+  useEffect(() => {
+    setBreadcrumbList(breadcrumbList);
+  }, []);
 
   const [filteredCreators, setFilteredCreators] = useState<Creator[]>([]);
 
@@ -99,7 +112,7 @@ const CreatorsPage: NextPage = () => {
         }}
       />
       <BaseLayout>
-        <section className="mx-auto mt-5 lg:mt-12 px-5 md:px-8">
+        <section className="mx-auto mt-5 lg:mt-10 px-5 md:px-8">
           <div className="mb-5">
             <Headline
               pageTitle="Creators"
@@ -117,12 +130,12 @@ const CreatorsPage: NextPage = () => {
           <div className="mb-10">
             <CreatorList creators={filteredCreators} />
           </div>
-          <div className="flex justify-center mb-20">
+          {/*<div className="flex justify-center mb-20">
             <ShowMore currentPage={page ? Number(page) : 1} />
-          </div>
+  </div>*/}
         </section>
-        <BreadCrumbs
-          list={[
+        {/*<BreadCrumbs
+          list=[
             {
               name: "Home",
               path: "/",
@@ -131,8 +144,8 @@ const CreatorsPage: NextPage = () => {
               name: "Creators",
               path: "/creators",
             },
-          ]}
-        />
+          ]
+        />*/}
       </BaseLayout>
     </>
   );

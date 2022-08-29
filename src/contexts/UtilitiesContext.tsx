@@ -34,4 +34,6 @@ export const UtilitiesContext = createContext<Utilities>({
   setItemsOrder: () => {},
   collectionNameOrder: "asc",
   setCollectionNameOrder: () => {},
+  breadcrumbList: undefined,
+  setBreadcrumbList: () => {},
 });

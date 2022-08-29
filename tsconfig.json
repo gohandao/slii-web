@@ -19,6 +19,12 @@
       "@*": ["./src*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/libs/supabase.jsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/libs/supabase.jsx",
+    "src/pages/api/twitter.jsx"
+  ],
   "exclude": ["node_modules"]
 }

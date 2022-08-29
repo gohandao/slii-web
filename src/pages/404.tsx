@@ -15,11 +15,27 @@ import { IndexTab } from "@/components/IndexTab";
 import { Hr } from "@/components/Hr";
 import { Title } from "@/components/Title";
 import { LinkButton } from "@/components/LinkButton";
+import { useContext, useEffect } from "react";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 export const Custom404: NextPage = () => {
   const router = useRouter();
   const { page } = router.query;
 
+  const { setBreadcrumbList } = useContext(UtilitiesContext);
+  const breadcrumbList = [
+    {
+      name: "Home",
+      path: "/",
+    },
+    {
+      name: "404",
+      path: "/",
+    },
+  ];
+  useEffect(() => {
+    setBreadcrumbList(breadcrumbList);
+  }, []);
   return (
     <div>
       <Head>

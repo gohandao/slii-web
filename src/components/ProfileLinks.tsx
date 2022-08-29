@@ -1,14 +1,15 @@
 import React, { ReactNode } from "react";
 import Image from "next/image";
 
-import { FaDiscord } from "react-icons/fa";
+import { FaDiscord, FaRegChartBar } from "react-icons/fa";
 import { BsTwitter, BsInstagram, BsGlobe2 } from "react-icons/bs";
 
 type Props = {
-  twitter_id: string;
-  instagram_id: string;
-  discord_url: string;
-  website_url: string;
+  address?: string;
+  twitter_id?: string;
+  instagram_id?: string;
+  discord_url?: string;
+  website_url?: string;
   opensea_username?: string;
   opensea_slug?: string;
 };
@@ -17,6 +18,7 @@ type ButtonProps = {
   children: ReactNode;
 };
 export const ProfileLinks = ({
+  address,
   twitter_id,
   instagram_id,
   discord_url,
@@ -31,7 +33,7 @@ export const ProfileLinks = ({
           //router.push(`https://twitter.com/${twitter_id}`);
           window.open(`${url}`, "_blank");
         }}
-        className="border rounded-full w-8 h-8 flex items-center text-sm justify-center text-white opacity-50 transition-all duration-200 transform hover:-translate-y-1"
+        className=" w-9 h-9 flex items-center text-sm justify-center text-white transition-all duration-200 transform hover:bg-gray-600 border-r border-white last:border-none"
       >
         {children}
       </button>
@@ -39,7 +41,12 @@ export const ProfileLinks = ({
   };
   return (
     <div className="flex justify-center">
-      <div className="flex gap-3 mt-auto w-auto justify-center items-center max-w-lg">
+      <div className="flex mt-auto w-auto justify-center items-center max-w-lg border border-white rounded opacity-40 overflow-hidden">
+        {address && (
+          <Button url={`https://etherscan.io/address/${address}`}>
+            <FaRegChartBar />
+          </Button>
+        )}
         {opensea_slug && (
           <Button url={`https://opensea.io/collection/${opensea_slug}`}>
             <Image src="/icon-opensea.svg" width={14} height={14} />

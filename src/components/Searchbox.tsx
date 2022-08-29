@@ -11,8 +11,8 @@ export const Searchbox = () => {
   const { search, setSearch } = useContext(UtilitiesContext);
   const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
-    console.log("search");
-    console.log(search);
+    //console.log("search");
+    //console.log(search);
   };
 
   const searchHandler = () => {
@@ -27,7 +27,7 @@ export const Searchbox = () => {
           type="text"
           name=""
           id=""
-          placeholder="Creators, collectons, NFTs"
+          placeholder="Search creators or collectons"
           value={search}
           onChange={(e) => {
             onChangeText(e);

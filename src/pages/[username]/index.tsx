@@ -27,25 +27,48 @@ import { Custom404 } from "@/pages/404";
 
 import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 const CreatorIndex: NextPage = (props: any) => {
   const router = useRouter();
-  const creators = useContext(CreatorsContext);
-  const collections = useContext(CollectionsContext);
-  const [creator, setCreator] = useState<Creator>();
-  const [collectionSlug, setCollectionSlug] = useState<string>();
   const { username } = router.query;
   const [loading, setLoading] = useState<boolean>(false);
 
+  const creators = useContext(CreatorsContext);
+  const collections = useContext(CollectionsContext);
+  const { setBreadcrumbList } = useContext(UtilitiesContext);
+  const breadcrumbList = username && [
+    {
+      name: "Home",
+      path: "/",
+    },
+    {
+      name: "Creators",
+      path: "/creators",
+    },
+    {
+      name: username as string,
+      path: `/${username as string}`,
+    },
+  ];
+  useEffect(() => {
+    breadcrumbList && setBreadcrumbList(breadcrumbList);
+  }, []);
+  useEffect(() => {
+    breadcrumbList && setBreadcrumbList(breadcrumbList);
+  }, [username]);
+  const [creator, setCreator] = useState<Creator>();
+  const [collectionSlug, setCollectionSlug] = useState<string>();
+
   const [collection, setCollection] = useState([]);
-  const options = { method: "GET" };
 
   const getCollection = () => {
+    const options = { method: "GET" };
     fetch(`https://api.opensea.io/api/v1/collection/${collectionSlug}`, options)
       .then((response) => response.json())
       .then((response) => {
-        console.log("response.collection");
-        console.log(response.collection);
+        //console.log("response.collection");
+        //console.log(response.collection);
         setCollection(response.collection);
       })
       .catch((err) => console.error(err));
@@ -56,12 +79,16 @@ const CreatorIndex: NextPage = (props: any) => {
   };
 
   useEffect(() => {
-    if (username && creators) {
+    if (username && creators && creators.length > 0) {
       //set creator
       const creator_filter = creators.filter(
         (creator) => creator.username === username
       );
-      setCreator(creator_filter[0]);
+      //console.log("creator_filter[0]");
+      //console.log(creator_filter[0]);
+      if (creator_filter[0]) {
+        setCreator(creator_filter[0]);
+      }
       //set collection
       const collection_filter = collections.filter(
         (collection) => collection.creator_id === username
@@ -69,7 +96,7 @@ const CreatorIndex: NextPage = (props: any) => {
       collection_filter.length > 0 &&
         updateCollectionSlug(collection_filter[0].slug);
     }
-  }, [collections, username]);
+  }, [username, collections]);
   //[username, collections]
   useEffect(() => {
     collectionSlug && getCollection();

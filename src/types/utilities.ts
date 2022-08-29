@@ -1,3 +1,5 @@
+import { BreadcrumbList } from "@/types/breadcrumbList";
+
 export type Utilities = {
   search?: string;
   setSearch: React.Dispatch<React.SetStateAction<string | undefined>>;
@@ -33,4 +35,6 @@ export type Utilities = {
   setItemsOrder: React.Dispatch<React.SetStateAction<"desc" | "asc">>;
   collectionNameOrder: "desc" | "asc";
   setCollectionNameOrder: React.Dispatch<React.SetStateAction<"desc" | "asc">>;
+  breadcrumbList: BreadcrumbList;
+  setBreadcrumbList: React.Dispatch<React.SetStateAction<BreadcrumbList>>;
 };

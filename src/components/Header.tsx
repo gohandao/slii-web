@@ -40,7 +40,7 @@ export const Header = () => {
             </Link>
           </div>
         </div>
-        <div className="relative">
+        <div className="relative flex items-center">
           {!user ? (
             <button
               onClick={() => {
@@ -62,7 +62,7 @@ export const Header = () => {
           )}
           {dropdown && (
             <div
-              className={`absolute origin-top-right right-0 rounded border border-gray-700 bg-gray-800 w-40 mt-2 z-20`}
+              className={`absolute top-full right-0 rounded border border-gray-700 bg-gray-800 w-40 mt-2 z-20`}
             >
               {!username && (
                 <>

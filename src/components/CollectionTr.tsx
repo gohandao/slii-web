@@ -66,12 +66,15 @@ export const CollectionTr = ({ item, index }: any) => {
     );
   };
 
+  const Hyphen = () => {
+    return <span className="text-gray-400">-</span>;
+  };
   return (
     <>
       {item && item.creator_id && (
         <tr key={item.slug} className="even:bg-gray-900">
           <td scope="col" className="">
-            <div className="flex item-center text-gray-400 w-7 justify-center text-sm pl-[6px]">
+            <div className="flex item-center text-gray-500 w-7 justify-center text-sm -ml-[2px]">
               {index + 1}
             </div>
           </td>
@@ -84,36 +87,56 @@ export const CollectionTr = ({ item, index }: any) => {
                     src={item.image_url}
                     alt=""
                   />
-                  <div className="ml-4">
+                  <div className="ml-4 grid min-w-[160px] lg:w-[320px]">
                     <p className="text-base text-gray-100 line-clamp-1 pr-3 flex gap-2 items-center">
                       {item.name}
                     </p>
-                    <p className="text-sm text-gray-500">{item.creator_id}</p>
+                    <p className="text-sm text-gray-500 ellipsis pr-3">
+                      {item.creator_id}
+                    </p>
                   </div>
                 </div>
               </a>
             </Link>
           </td>
           <Td>
-            <div className="flex item-center gap-1">
+            {item.twitter_followers ? (
+              <span className="text-blue-400">{item.twitter_followers}</span>
+            ) : (
+              <Hyphen />
+            )}
+          </Td>
+          <Td>
+            {item.discord_members ? (
+              <span className="text-violet-400">{item.discord_members}</span>
+            ) : (
+              <Hyphen />
+            )}
+          </Td>
+          <Td>
+            <div className="flex item-center gap-1 justify-end">
               {item.payment_tokens &&
                 item.payment_tokens[0].symbol == "ETH" && (
                   <Image src="/icon-eth.svg" width={16} height={16} alt="" />
                 )}
-              {item.stats && item.stats.total_volume
-                ? abbreviateNumber(item.stats.total_volume)
-                : "-"}
+              {item.stats && item.stats.total_volume ? (
+                abbreviateNumber(item.stats.total_volume)
+              ) : (
+                <Hyphen />
+              )}
             </div>
           </Td>
           <Td>
-            <div className="flex item-center gap-1">
+            <div className="flex item-center gap-1 justify-end">
               {item.payment_tokens &&
                 item.payment_tokens[0].symbol == "ETH" && (
                   <Image src="/icon-eth.svg" width={16} height={16} alt="" />
                 )}
-              {item.stats && item.stats.floor_price
-                ? abbreviateNumber(item.stats.floor_price)
-                : "-"}
+              {item.stats && item.stats.floor_price ? (
+                abbreviateNumber(item.stats.floor_price)
+              ) : (
+                <Hyphen />
+              )}
             </div>
           </Td>
           <Td>
@@ -122,12 +145,14 @@ export const CollectionTr = ({ item, index }: any) => {
                 item.stats.one_day_change > 0 && "text-green-500"
               } ${item.stats.one_day_change < 0 && "text-red-500"}`}
             >
-              {item.stats && item.stats.one_day_change != 0
-                ? (item.stats.one_day_change * 100).toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  }) + "%"
-                : "-"}
+              {item.stats && item.stats.one_day_change != 0 ? (
+                (item.stats.one_day_change * 100).toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }) + "%"
+              ) : (
+                <Hyphen />
+              )}
             </span>
           </Td>
           <Td>
@@ -136,15 +161,14 @@ export const CollectionTr = ({ item, index }: any) => {
                 item.stats.seven_day_change > 0 && "text-green-500"
               } ${item.stats.seven_day_change < 0 && "text-red-500"}`}
             >
-              {item.stats && item.stats.seven_day_change != 0
-                ? (item.stats.seven_day_change * 100).toLocaleString(
-                    undefined,
-                    {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    }
-                  ) + "%"
-                : "-"}
+              {item.stats && item.stats.seven_day_change != 0 ? (
+                (item.stats.seven_day_change * 100).toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }) + "%"
+              ) : (
+                <Hyphen />
+              )}
             </span>
           </Td>
           <Td>
@@ -153,15 +177,14 @@ export const CollectionTr = ({ item, index }: any) => {
                 item.stats.thirty_day_change > 0 && "text-green-500"
               } ${item.stats.thirty_day_change < 0 && "text-red-500"}`}
             >
-              {item.stats && item.stats.thirty_day_change != 0
-                ? (item.stats.thirty_day_change * 100).toLocaleString(
-                    undefined,
-                    {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    }
-                  ) + "%"
-                : "-"}
+              {item.stats && item.stats.thirty_day_change != 0 ? (
+                (item.stats.thirty_day_change * 100).toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }) + "%"
+              ) : (
+                <Hyphen />
+              )}
             </span>
           </Td>
           <Td>{item.stats && item.stats.num_owners}</Td>

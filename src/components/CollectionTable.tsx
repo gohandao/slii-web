@@ -5,7 +5,9 @@ import React, {
   useContext,
   ReactNode,
 } from "react";
-import { FaSort } from "react-icons/fa";
+import ReactLoading from "react-loading";
+
+import { FaDiscord, FaSort } from "react-icons/fa";
 import { CreatorsContext } from "@/contexts/CreatorsContext";
 import { CollectionsContext } from "@/contexts/CollectionsContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
@@ -15,6 +17,8 @@ import { CollectionTr } from "@/components/CollectionTr";
 
 import { Collection } from "@/types/collection";
 import { Creator } from "@/types/creator";
+import { BsTwitter } from "react-icons/bs";
+import { IconType } from "react-icons";
 
 type ThProps = {
   children: ReactNode;
@@ -48,7 +52,9 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     setCollectionNameOrder,
   } = useContext(UtilitiesContext);
 
+  const [loading, setLoading] = useState<boolean>(false);
   const [setup, setSetup] = useState<boolean>(false);
+  const [socialSetup, setSocialSetup] = useState<boolean>(false);
   const [list, setList] = useState<any[]>([]);
 
   const resetOrder = () => {
@@ -61,7 +67,7 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     setCollectionNameOrder("asc");
   };
   type ThProps = {
-    title: string;
+    title: any;
   };
   const Th = ({ title }: ThProps) => {
     let thClass = "";
@@ -83,7 +89,7 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     }
     return (
       <>
-        {title.length > 0 ? (
+        {title.length > 0 || typeof title != "string" ? (
           <th
             scope="col"
             className={`py-3.5 pr-3 text-left text-sm font-medium text-gray-400 ${
@@ -128,7 +134,7 @@ export const CollectionTable = ({ collections, limit }: Props) => {
             </button>
           </th>
         ) : (
-          <th className="py-3.5 text-left text-sm font-medium text-gray-400"></th>
+          <th className="py-3.5 text-left text-sm font-medium text-gray-400 min-w-[28px]"></th>
         )}
       </>
     );
@@ -138,41 +144,130 @@ export const CollectionTable = ({ collections, limit }: Props) => {
   const allList = useRef<any[]>([]);
   const newList = useRef<any[]>([]);
 
-  const options = { method: "GET" };
   const getCollectionsData = async () => {
+    const options = { method: "GET" };
     const getNewData = async () => {
-      await Promise.all(
-        collections.map(async (collection, index) => {
-          await fetch(
-            `https://api.opensea.io/api/v1/collection/${collection.slug}`,
-            options
-          )
-            .then((response) => response.json())
-            .then((response) => {
-              let data = response.collection;
-              data.creator_id = collection.creator_id;
-              data.category = collection.category;
+      if (newList.current.length == 0) {
+        console.log("start");
+        setLoading(true);
+        await Promise.all(
+          collections.map(async (collection, index) => {
+            await fetch(
+              `https://api.opensea.io/api/v1/collection/${collection.slug}`,
+              options
+            )
+              .then((response) => response.json())
+              .then((response) => {
+                let data = response.collection;
+                data.creator_id = collection.creator_id;
+                data.category = collection.category;
 
-              const new_data = data;
-              const new_list = [...newList.current, new_data];
-              allList.current = new_list;
-              newList.current = new_list;
-              return;
-            })
-            .catch((err) => console.error(err));
-        })
-      );
+                const new_data = data;
+                const new_list = [...newList.current, new_data];
+                allList.current = Array.from(new Set(new_list));
+                newList.current = Array.from(new Set(new_list));
+                //console.log("newList.current");
+                //console.log(newList.current);
+                return;
+              })
+              .catch((err) => console.error(err));
+          })
+        );
+        await getSocialCount();
+        setLoading(false);
+      }
     };
-    list.length == 0 && newList.current.length == 0 && (await getNewData());
+    await getNewData();
     setSetup(true);
+    setSocialSetup(true);
   };
 
+  const getSocialCount = async () => {
+    let baseUrl = "" as string;
+    if (process.env.NODE_ENV != "test") {
+      baseUrl = {
+        production: "https://gachi.vercel.app",
+        development: "http://localhost:3000",
+      }[process.env.NODE_ENV];
+    }
+    let discordData: any;
+    const getDiscordMembers = async (discord_id: string, index: number) => {
+      await fetch(
+        `https://discord.com/api/v9/invites/${discord_id}?with_counts=true&with_expiration=true`
+      )
+        .then((response) => response.json())
+        .then((response) => {
+          discordData = response;
+          const discordMembers =
+            discordData && discordData.approximate_member_count;
+          newList.current[index].discord_members = discordMembers;
+        })
+        .catch((error) => {
+          console.log("error");
+          console.log(error);
+        });
+    };
+    let twitterData: any;
+    const getTwitterFollowers = async (twitter_id: string, index: number) => {
+      if (baseUrl && twitter_id) {
+        await fetch(
+          `${baseUrl}/api/twitter?twitter_id=${twitter_id}&type=collection`
+        )
+          .then((response) => response.json())
+          .then((response) => {
+            //console.log("JSON.parse(response)");
+            //console.log(JSON.parse(response));
+            twitterData = JSON.parse(response);
+            const twitterFollowers =
+              twitterData && twitterData.public_metrics.followers_count;
+            newList.current[index].twitter_followers = twitterFollowers;
+            console.log("twitterFollowers");
+            console.log(twitterFollowers);
+          })
+          .catch((error) => {
+            console.log("error");
+            console.log(error);
+          });
+      }
+    };
+    const addSocialCount = async () => {
+      await Promise.all(
+        newList.current.map(async (item, index) => {
+          const discordId =
+            item.discord_url &&
+            item.discord_url.substring(item.discord_url.lastIndexOf("/") + 1);
+          discordId && (await getDiscordMembers(item.discordId, index));
+          const twitterUsername = item.twitter_username;
+          twitterUsername &&
+            (await getTwitterFollowers(twitterUsername, index));
+        })
+      );
+      console.log("finished");
+    };
+    console.log("start");
+
+    await addSocialCount();
+    console.log("end");
+  };
+
+  /*useEffect(() => {
+    if (socialSetup) {
+      getSocialCount();
+      setSocialSetup(false);
+    }
+  }, [socialSetup]);*/
+
+  //const [first, setfirst] = useState(0);
   useEffect(() => {
-    collections && getCollectionsData();
+    //setfirst(first + 1);
+    //console.log(first + 1);
+    if (collections && allList.current.length == 0) {
+      getCollectionsData();
+    }
   }, [collections]);
-  useEffect(() => {
-    collections && !list && getCollectionsData();
-  }, []);
+  //useEffect(() => {
+  //  collections && !list && getCollectionsData();
+  //}, []);
   //collections && list.length == 0 && getCollectionsData();
 
   useEffect(() => {
@@ -208,7 +303,7 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     let new_list = [];
     switch (collectionsSort) {
       case "Total Volume":
-        new_list = list.sort(function (a, b) {
+        new_list = newList.current.sort(function (a, b) {
           if (totalVolumeOrder == "desc") {
             setTotalVolumeOrder("asc");
             if (a.stats.total_volume < b.stats.total_volume) return 1;
@@ -225,7 +320,7 @@ export const CollectionTable = ({ collections, limit }: Props) => {
         setList((list) => newList.current);
         break;
       case "Collection Name":
-        new_list = list.sort(function (a, b) {
+        new_list = newList.current.sort(function (a, b) {
           if (collectionNameOrder == "desc") {
             setCollectionNameOrder("asc");
             if (a.name < b.name) return 1;
@@ -240,29 +335,53 @@ export const CollectionTable = ({ collections, limit }: Props) => {
         });
         newList.current = Array.from(new Set(new_list));
         //setList(new_list);
-        setList((list) => newList.current);
+        if (limit) {
+          let limited_list = [] as any[];
+          for (let index = 0; index < limit; index++) {
+            limited_list = [...limited_list, newList.current[index]];
+          }
+          setList((list) => limited_list);
+        } else {
+          setList((list) => newList.current);
+        }
         break;
       case "Price Low to High":
-        new_list = list.sort(function (a, b) {
+        new_list = newList.current.sort(function (a, b) {
           if (a.stats.floor_price < b.stats.floor_price) return -1;
           if (a.stats.floor_price > b.stats.floor_price) return 1;
           return 0;
         });
         newList.current = Array.from(new Set(new_list));
         //setList(new_list);
-        setList((list) => newList.current);
+        if (limit) {
+          let limited_list = [] as any[];
+          for (let index = 0; index < limit; index++) {
+            limited_list = [...limited_list, newList.current[index]];
+          }
+          setList((list) => limited_list);
+        } else {
+          setList((list) => newList.current);
+        }
         break;
       case "Price High to Low":
-        new_list = list.sort(function (a, b) {
+        new_list = newList.current.sort(function (a, b) {
           if (a.stats.floor_price < b.stats.floor_price) return 1;
           if (a.stats.floor_price > b.stats.floor_price) return -1;
           return 0;
         });
         newList.current = Array.from(new Set(new_list));
-        setList((list) => newList.current);
+        if (limit) {
+          let limited_list = [] as any[];
+          for (let index = 0; index < limit; index++) {
+            limited_list = [...limited_list, newList.current[index]];
+          }
+          setList((list) => limited_list);
+        } else {
+          setList((list) => newList.current);
+        }
         break;
       case "24h %":
-        new_list = list.sort(function (a, b) {
+        new_list = newList.current.sort(function (a, b) {
           if (oneDayChangeOrder == "desc") {
             setOneDayChangeOrder("asc");
             if (a.stats.one_day_change < b.stats.one_day_change) return 1;
@@ -276,10 +395,18 @@ export const CollectionTable = ({ collections, limit }: Props) => {
           }
         });
         newList.current = Array.from(new Set(new_list));
-        setList((list) => newList.current);
+        if (limit) {
+          let limited_list = [] as any[];
+          for (let index = 0; index < limit; index++) {
+            limited_list = [...limited_list, newList.current[index]];
+          }
+          setList((list) => limited_list);
+        } else {
+          setList((list) => newList.current);
+        }
         break;
       case "30d %":
-        new_list = list.sort(function (a, b) {
+        new_list = newList.current.sort(function (a, b) {
           if (thirtyDayChangeOrder == "desc") {
             setThirtyDayChangeOrder("asc");
             if (a.stats.thirty_day_change < b.stats.thirty_day_change) return 1;
@@ -295,10 +422,18 @@ export const CollectionTable = ({ collections, limit }: Props) => {
           }
         });
         newList.current = Array.from(new Set(new_list));
-        setList((list) => newList.current);
+        if (limit) {
+          let limited_list = [] as any[];
+          for (let index = 0; index < limit; index++) {
+            limited_list = [...limited_list, newList.current[index]];
+          }
+          setList((list) => limited_list);
+        } else {
+          setList((list) => newList.current);
+        }
         break;
       case "7d %":
-        new_list = list.sort(function (a, b) {
+        new_list = newList.current.sort(function (a, b) {
           if (sevenDayChangeOrder == "desc") {
             setSevenDayChangeOrder("asc");
             if (a.stats.seven_day_change < b.stats.seven_day_change) return 1;
@@ -312,10 +447,18 @@ export const CollectionTable = ({ collections, limit }: Props) => {
           }
         });
         newList.current = Array.from(new Set(new_list));
-        setList((list) => newList.current);
+        if (limit) {
+          let limited_list = [] as any[];
+          for (let index = 0; index < limit; index++) {
+            limited_list = [...limited_list, newList.current[index]];
+          }
+          setList((list) => limited_list);
+        } else {
+          setList((list) => newList.current);
+        }
         break;
       case "Owners":
-        new_list = list.sort(function (a, b) {
+        new_list = newList.current.sort(function (a, b) {
           if (ownersOrder == "desc") {
             setOwnersOrder("asc");
             if (a.stats.num_owners < b.stats.num_owners) return 1;
@@ -329,10 +472,18 @@ export const CollectionTable = ({ collections, limit }: Props) => {
           }
         });
         newList.current = Array.from(new Set(new_list));
-        setList((list) => newList.current);
+        if (limit) {
+          let limited_list = [] as any[];
+          for (let index = 0; index < limit; index++) {
+            limited_list = [...limited_list, newList.current[index]];
+          }
+          setList((list) => limited_list);
+        } else {
+          setList((list) => newList.current);
+        }
         break;
       case "Items":
-        new_list = list.sort(function (a, b) {
+        new_list = newList.current.sort(function (a, b) {
           if (itemsOrder == "desc") {
             setItemsOrder("asc");
             if (a.stats.total_supply < b.stats.total_supply) return 1;
@@ -346,7 +497,15 @@ export const CollectionTable = ({ collections, limit }: Props) => {
           }
         });
         newList.current = Array.from(new Set(new_list));
-        setList((list) => newList.current);
+        if (limit) {
+          let limited_list = [] as any[];
+          for (let index = 0; index < limit; index++) {
+            limited_list = [...limited_list, newList.current[index]];
+          }
+          setList((list) => limited_list);
+        } else {
+          setList((list) => newList.current);
+        }
         break;
 
       default:
@@ -354,12 +513,12 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     }
   };
   useEffect(() => {
-    if (collectionsSort && !limit) {
+    if (collectionsSort) {
       sortList();
     }
   }, []);
   useEffect(() => {
-    if (sortAction && !limit) {
+    if (sortAction) {
       sortList();
       setSortAction(false);
     }
@@ -377,7 +536,15 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     }
     resetOrder();
     setSortAction(true);
-    setList((list) => newList.current);
+    if (limit) {
+      let limited_list = [] as any[];
+      for (let index = 0; index < limit; index++) {
+        limited_list = [...limited_list, newList.current[index]];
+      }
+      setList((list) => limited_list);
+    } else {
+      setList((list) => newList.current);
+    }
   }, [collectionCategory]);
 
   return (
@@ -393,6 +560,8 @@ export const CollectionTable = ({ collections, limit }: Props) => {
                 <tr>
                   <Th title="" />
                   <Th title="Collection Name" />
+                  <Th title={<BsTwitter className="text-twitter" />} />
+                  <Th title={<FaDiscord className="text-discord" />} />
                   <Th title="Total Volume" />
                   <Th title="Floor Price" />
                   <Th title="24h %" />
@@ -402,19 +571,30 @@ export const CollectionTable = ({ collections, limit }: Props) => {
                   <Th title="Items" />
                 </tr>
               </thead>
-
-              <tbody className="border border-gray-200 divide-y divide-gray-200 rounded">
-                {list &&
-                  list.map((item, index) => (
-                    <CollectionTr
-                      item={item}
-                      index={index}
-                      key={collectionsSort ? collectionsSort + index : index}
-                    />
-                    //<CollectionTr collection={collection} key={index} />
-                  ))}
-              </tbody>
+              {!loading && (
+                <tbody className="border border-gray-200 divide-y divide-gray-200 rounded">
+                  {list &&
+                    list.map((item, index) => (
+                      <CollectionTr
+                        item={item}
+                        index={index}
+                        key={collectionsSort ? collectionsSort + index : index}
+                      />
+                      //<CollectionTr collection={collection} key={index} />
+                    ))}
+                </tbody>
+              )}
             </table>
+            {loading && (
+              <div className="py-5 px-5">
+                <ReactLoading
+                  type="spinningBubbles"
+                  color="#fff"
+                  height={40}
+                  width={40}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

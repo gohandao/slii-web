@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Modal from "react-modal";
@@ -23,6 +23,8 @@ import { SocialCount } from "./SocialCount";
 import { CopyText } from "@/components/CopyText";
 import { useRouter } from "next/router";
 import { FiCopy } from "react-icons/fi";
+import { Social } from "@/types/social";
+import { SocialsContext } from "@/contexts/SocialsContext";
 
 type Props = {
   creator: Creator;
@@ -37,6 +39,9 @@ export const CreatorProfile = ({ creator }: Props) => {
       development: "http://localhost:3000",
     }[process.env.NODE_ENV];
   }
+  const socials = useContext(SocialsContext);
+
+  const [social, setSocial] = useState<Social>();
 
   const [requestDropdown, setRequestDropdown] = useState<boolean>(false);
   const [shareDropdown, setShareDropdown] = useState<boolean>(false);
@@ -78,6 +83,25 @@ export const CreatorProfile = ({ creator }: Props) => {
   const closeModal = () => {
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    if (socials && creator.username) {
+      //set collection
+      const socials_filter = socials.filter(
+        (social) => creator.username === social.id
+      );
+      socials_filter.length > 0 && setSocial(socials_filter[0]);
+      if (socials_filter.length == 0) {
+        setSocial({
+          id: "",
+          type: "creator",
+          twitter_followers: null,
+          discord_members: null,
+          record_id: null,
+        });
+      }
+    }
+  }, [socials]);
 
   /*useEffect(() => {
     if (twitterData) {
@@ -230,7 +254,17 @@ export const CreatorProfile = ({ creator }: Props) => {
             <p className="text-gray-100 mt-1 break-all px-3 text-sm sm:text-base">
               {creator.description}
             </p>
-            <SocialCount twitter_id={twitterId} discord_id={discordId} />
+            {social && (
+              <SocialCount
+                record_id={social.record_id}
+                id={creator.username}
+                type="creator"
+                twitter_id={twitterId}
+                twitter_followers={social.twitter_followers}
+                discord_id={discordId}
+                discord_members={social.discord_members}
+              />
+            )}
           </div>
           {creator.tags && (
             <div className="flex gap-2 justify-center w-full">

@@ -5,6 +5,7 @@ import { Collection } from "@/types/collection";
 
 export const CollectionsContext = createContext<Collection[]>([
   {
+    record_id: "",
     name: "",
     slug: "",
     creator_id: "",
@@ -14,6 +15,8 @@ export const CollectionsContext = createContext<Collection[]>([
     category: "",
     verified: false,
     tags: [],
+    twitter_followers: null,
+    discord_members: null,
   },
 ]);
 

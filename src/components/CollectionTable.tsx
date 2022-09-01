@@ -6,6 +6,9 @@ import React, {
   ReactNode,
 } from "react";
 import ReactLoading from "react-loading";
+import { useQueryState } from "next-usequerystate";
+
+import { sortList } from "@/libs/sortList";
 
 import { FaDiscord, FaSort } from "react-icons/fa";
 import { CreatorsContext } from "@/contexts/CreatorsContext";
@@ -19,6 +22,10 @@ import { Collection } from "@/types/collection";
 import { Creator } from "@/types/creator";
 import { BsTwitter } from "react-icons/bs";
 import { IconType } from "react-icons";
+import { getDiscordMembers } from "@/libs/discord";
+import { getTwitterFollowers } from "@/libs/twitter";
+import { useRouter } from "next/router";
+import { SocialsContext } from "@/contexts/SocialsContext";
 
 type ThProps = {
   children: ReactNode;
@@ -36,28 +43,22 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     setCollectionCategory,
     collectionsSort,
     setCollectionsSort,
-    totalVolumeOrder,
-    setTotalVolumeOrder,
-    oneDayChangeOrder,
-    setOneDayChangeOrder,
-    thirtyDayChangeOrder,
-    setThirtyDayChangeOrder,
-    sevenDayChangeOrder,
-    setSevenDayChangeOrder,
-    ownersOrder,
-    setOwnersOrder,
-    itemsOrder,
-    setItemsOrder,
-    collectionNameOrder,
-    setCollectionNameOrder,
   } = useContext(UtilitiesContext);
+  const router = useRouter();
+  const [orderParam, setOrderParam] = useQueryState("order");
+  const [sortByParam, setSortByParam] = useQueryState("sortBy");
+  const [termParam, setTermParam] = useQueryState("term");
+
+  const { order, sortBy, term } = router.query;
+  const { socials } = useContext(SocialsContext);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [setup, setSetup] = useState<boolean>(false);
   const [socialSetup, setSocialSetup] = useState<boolean>(false);
   const [list, setList] = useState<any[]>([]);
+  //const [order, setOrder] = useState<"desc" | "asc">("desc");
 
-  const resetOrder = () => {
+  /*const resetOrder = () => {
     setTotalVolumeOrder("desc");
     setOneDayChangeOrder("desc");
     setThirtyDayChangeOrder("desc");
@@ -65,18 +66,18 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     setOwnersOrder("desc");
     setItemsOrder("desc");
     setCollectionNameOrder("asc");
-  };
+  };*/
   type ThProps = {
     title: any;
   };
   const Th = ({ title }: ThProps) => {
     let thClass = "";
     switch (title) {
-      case collectionsSort:
+      case sortBy:
         thClass = "text-gray-300";
         break;
       case "Floor Price":
-        switch (collectionsSort) {
+        switch (sortBy) {
           case "Price Low to High":
           case "Price High to Low":
             thClass = "text-gray-300";
@@ -87,6 +88,39 @@ export const CollectionTable = ({ collections, limit }: Props) => {
         thClass = "text-gray-600";
         break;
     }
+    const changeParams = () => {
+      switch (title) {
+        case "Floor Price":
+          switch (sortBy) {
+            case "Price Low to High":
+              setOrderParam("asc");
+              setSortByParam("Price High to Low");
+              //setSortAction(true);
+              break;
+            case "Price High to Low":
+              setOrderParam("desc");
+              setSortByParam("Price Low to High");
+              //setSortAction(true);
+              break;
+            default:
+              setOrderParam("desc");
+              setSortByParam("Price High to Low");
+              //setSortAction(true);
+              break;
+          }
+          break;
+        default:
+          setSortByParam(title);
+          break;
+      }
+      const exception =
+        title != "Price Low to High" && title != "Price High to Low" && true;
+      if (orderParam) {
+        if (title == sortBy && exception) {
+          orderParam == "desc" ? setOrderParam("asc") : setOrderParam("desc");
+        }
+      }
+    };
     return (
       <>
         {title.length > 0 || typeof title != "string" ? (
@@ -99,34 +133,7 @@ export const CollectionTable = ({ collections, limit }: Props) => {
             <button
               className="flex gap-2 items-center"
               onClick={() => {
-                //setCollectionsSort(title);
-                //setSortAction(true);
-                if (title == "Floor Price") {
-                  switch (collectionsSort) {
-                    case "Price Low to High":
-                      setCollectionsSort("Price High to Low");
-                      setSortAction(true);
-                      break;
-                    case "Price High to Low":
-                      setCollectionsSort("Price Low to High");
-                      setSortAction(true);
-                      break;
-
-                    default:
-                    case "Price Low to High":
-                      setCollectionsSort("Price High to Low");
-                      setSortAction(true);
-                      break;
-                  }
-                } else {
-                  if (collectionsSort == title) {
-                    setSortAction(true);
-                  } else {
-                    resetOrder();
-                    setSortAction(true);
-                    setCollectionsSort(title);
-                  }
-                }
+                changeParams();
               }}
             >
               {title}
@@ -152,6 +159,20 @@ export const CollectionTable = ({ collections, limit }: Props) => {
         setLoading(true);
         await Promise.all(
           collections.map(async (collection, index) => {
+            const socials_filter = socials.filter(
+              (social) => social.collection_slug === collection.slug
+            );
+            const twitter_followers = socials_filter[0]
+              ? socials_filter[0].twitter_followers
+              : null;
+            const discord_members = socials_filter[0]
+              ? socials_filter[0].discord_members
+              : null;
+            console.log("socials");
+            console.log(socials);
+            console.log(socials_filter[0]);
+            console.log(twitter_followers);
+            console.log(discord_members);
             await fetch(
               `https://api.opensea.io/api/v1/collection/${collection.slug}`,
               options
@@ -159,9 +180,11 @@ export const CollectionTable = ({ collections, limit }: Props) => {
               .then((response) => response.json())
               .then((response) => {
                 let data = response.collection;
+                data.record_id = collection.record_id;
                 data.creator_id = collection.creator_id;
                 data.category = collection.category;
-
+                data.twitter_followers = twitter_followers;
+                data.discord_members = discord_members;
                 const new_data = data;
                 const new_list = [...newList.current, new_data];
                 allList.current = Array.from(new Set(new_list));
@@ -173,7 +196,7 @@ export const CollectionTable = ({ collections, limit }: Props) => {
               .catch((err) => console.error(err));
           })
         );
-        await getSocialCount();
+        //await getSocialCount();
         setLoading(false);
       }
     };
@@ -182,82 +205,42 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     setSocialSetup(true);
   };
 
-  const getSocialCount = async () => {
-    let baseUrl = "" as string;
-    if (process.env.NODE_ENV != "test") {
-      baseUrl = {
-        production: "https://gachi.vercel.app",
-        development: "http://localhost:3000",
-      }[process.env.NODE_ENV];
-    }
-    let discordData: any;
-    const getDiscordMembers = async (discord_id: string, index: number) => {
-      await fetch(
-        `https://discord.com/api/v9/invites/${discord_id}?with_counts=true&with_expiration=true`
-      )
-        .then((response) => response.json())
-        .then((response) => {
-          discordData = response;
-          const discordMembers =
-            discordData && discordData.approximate_member_count;
-          newList.current[index].discord_members = discordMembers;
-        })
-        .catch((error) => {
-          console.log("error");
-          console.log(error);
-        });
-    };
-    let twitterData: any;
-    const getTwitterFollowers = async (twitter_id: string, index: number) => {
-      if (baseUrl && twitter_id) {
-        await fetch(
-          `${baseUrl}/api/twitter?twitter_id=${twitter_id}&type=collection`
-        )
-          .then((response) => response.json())
-          .then((response) => {
-            //console.log("JSON.parse(response)");
-            //console.log(JSON.parse(response));
-            twitterData = JSON.parse(response);
-            const twitterFollowers =
-              twitterData && twitterData.public_metrics.followers_count;
-            newList.current[index].twitter_followers = twitterFollowers;
-            console.log("twitterFollowers");
-            console.log(twitterFollowers);
-          })
-          .catch((error) => {
-            console.log("error");
-            console.log(error);
-          });
-      }
-    };
-    const addSocialCount = async () => {
-      await Promise.all(
-        newList.current.map(async (item, index) => {
-          const discordId =
-            item.discord_url &&
-            item.discord_url.substring(item.discord_url.lastIndexOf("/") + 1);
-          discordId && (await getDiscordMembers(item.discordId, index));
-          const twitterUsername = item.twitter_username;
-          twitterUsername &&
-            (await getTwitterFollowers(twitterUsername, index));
-        })
-      );
-      console.log("finished");
-    };
-    console.log("start");
+  // const getSocialCount = async () => {
+  //   const addSocialCount = async () => {
+  //     let new_List = list;
+  //     await Promise.all(
+  //       list.map(async (item, index) => {
+  //         if (!item.discord_members) {
+  //           let discordId =
+  //             item.discord_url &&
+  //             item.discord_url.substring(item.discord_url.lastIndexOf("/") + 1);
+  //           let discordMembers =
+  //             discordId && (await getDiscordMembers(discordId));
+  //           //reset discordId
+  //           console.log("discordId");
+  //           console.log(discordId);
 
-    await addSocialCount();
-    console.log("end");
-  };
-
-  /*useEffect(() => {
-    if (socialSetup) {
-      getSocialCount();
-      setSocialSetup(false);
-    }
-  }, [socialSetup]);*/
+  //           new_List[index].discord_members = discordMembers;
+  //           console.log("discordMembers");
+  //           console.log(discordMembers);
+  //         }
+  //         if (!item.twitter_followers) {
+  //           const twitterUsername = item.twitter_username;
+  //           const twitterFollowers =
+  //             twitterUsername && (await getTwitterFollowers(twitterUsername));
+  //           new_List[index].twitter_followers = twitterFollowers;
+  //         }
+  //       })
+  //     );
+  //     console.log("finished getSNSCOUNT");
+  //     console.log(new_List);
+  //     setList((list) => new_List);
+  //   };
+  //   await addSocialCount();
+  // };
 
   //const [first, setfirst] = useState(0);
+  //①get data from OpenSea
   useEffect(() => {
     //setfirst(first + 1);
     //console.log(first + 1);
@@ -270,271 +253,65 @@ export const CollectionTable = ({ collections, limit }: Props) => {
   //}, []);
   //collections && list.length == 0 && getCollectionsData();
 
+  //②set initial collections data
+  const args = {
+    list: allList.current,
+    order: order as "desc" | "asc",
+    sort: sortBy as string,
+    //category: collectionsSort,
+    limit: limit,
+  };
   useEffect(() => {
     if (setup) {
       //const data = Array.from(new Set(newList.current));
-      sortInitList();
+      const data = sortList(args);
+      setList(data);
       setSetup(false);
     }
   }, [setup]);
 
-  //初期ソート
-  const sortInitList = () => {
-    let new_list = [];
-    new_list = newList.current.sort(function (a, b) {
-      if (a.stats.total_volume < b.stats.total_volume) return 1;
-      if (a.stats.total_volume > b.stats.total_volume) return -1;
-      return 0;
-    });
-    newList.current = Array.from(new Set(new_list));
-    //setList(new_list);
-    if (limit) {
-      let limited_list = [] as any[];
-      for (let index = 0; index < limit; index++) {
-        limited_list = [...limited_list, newList.current[index]];
+  /*useEffect(() => {
+    getSocialCount();
+  }, [list]);*/
+  /*useEffect(() => {
+    if (socialSetup) {
+      getSocialCount();
+      setSocialSetup(false);
+    }
+  }, [socialSetup]);*/
+
+  //③set sorted collections data
+  useEffect(() => {
+    if (router.isReady && (order || sortBy || term)) {
+      if (args.list.length > 0) {
+        const data = sortList(args);
+        setList((list) => data);
       }
-      setList((list) => limited_list);
-    } else {
-      setList((list) => newList.current);
     }
-  };
+    //setSocialSetup(true);
+  }, [router.isReady, order, sortBy, term]);
 
-  const sortList = () => {
-    let new_list = [];
-    switch (collectionsSort) {
-      case "Total Volume":
-        new_list = newList.current.sort(function (a, b) {
-          if (totalVolumeOrder == "desc") {
-            setTotalVolumeOrder("asc");
-            if (a.stats.total_volume < b.stats.total_volume) return 1;
-            if (a.stats.total_volume > b.stats.total_volume) return -1;
-            return 0;
-          } else {
-            setTotalVolumeOrder("desc");
-            if (a.stats.total_volume < b.stats.total_volume) return -1;
-            if (a.stats.total_volume > b.stats.total_volume) return 1;
-            return 0;
-          }
-        });
-        newList.current = Array.from(new Set(new_list));
-        setList((list) => newList.current);
-        break;
-      case "Collection Name":
-        new_list = newList.current.sort(function (a, b) {
-          if (collectionNameOrder == "desc") {
-            setCollectionNameOrder("asc");
-            if (a.name < b.name) return 1;
-            if (a.name > b.name) return -1;
-            return 0;
-          } else {
-            setCollectionNameOrder("desc");
-            if (a.name < b.name) return -1;
-            if (a.name > b.name) return 1;
-            return 0;
-          }
-        });
-        newList.current = Array.from(new Set(new_list));
-        //setList(new_list);
-        if (limit) {
-          let limited_list = [] as any[];
-          for (let index = 0; index < limit; index++) {
-            limited_list = [...limited_list, newList.current[index]];
-          }
-          setList((list) => limited_list);
-        } else {
-          setList((list) => newList.current);
-        }
-        break;
-      case "Price Low to High":
-        new_list = newList.current.sort(function (a, b) {
-          if (a.stats.floor_price < b.stats.floor_price) return -1;
-          if (a.stats.floor_price > b.stats.floor_price) return 1;
-          return 0;
-        });
-        newList.current = Array.from(new Set(new_list));
-        //setList(new_list);
-        if (limit) {
-          let limited_list = [] as any[];
-          for (let index = 0; index < limit; index++) {
-            limited_list = [...limited_list, newList.current[index]];
-          }
-          setList((list) => limited_list);
-        } else {
-          setList((list) => newList.current);
-        }
-        break;
-      case "Price High to Low":
-        new_list = newList.current.sort(function (a, b) {
-          if (a.stats.floor_price < b.stats.floor_price) return 1;
-          if (a.stats.floor_price > b.stats.floor_price) return -1;
-          return 0;
-        });
-        newList.current = Array.from(new Set(new_list));
-        if (limit) {
-          let limited_list = [] as any[];
-          for (let index = 0; index < limit; index++) {
-            limited_list = [...limited_list, newList.current[index]];
-          }
-          setList((list) => limited_list);
-        } else {
-          setList((list) => newList.current);
-        }
-        break;
-      case "24h %":
-        new_list = newList.current.sort(function (a, b) {
-          if (oneDayChangeOrder == "desc") {
-            setOneDayChangeOrder("asc");
-            if (a.stats.one_day_change < b.stats.one_day_change) return 1;
-            if (a.stats.one_day_change > b.stats.one_day_change) return -1;
-            return 0;
-          } else {
-            setOneDayChangeOrder("desc");
-            if (a.stats.one_day_change < b.stats.one_day_change) return -1;
-            if (a.stats.one_day_change > b.stats.one_day_change) return 1;
-            return 0;
-          }
-        });
-        newList.current = Array.from(new Set(new_list));
-        if (limit) {
-          let limited_list = [] as any[];
-          for (let index = 0; index < limit; index++) {
-            limited_list = [...limited_list, newList.current[index]];
-          }
-          setList((list) => limited_list);
-        } else {
-          setList((list) => newList.current);
-        }
-        break;
-      case "30d %":
-        new_list = newList.current.sort(function (a, b) {
-          if (thirtyDayChangeOrder == "desc") {
-            setThirtyDayChangeOrder("asc");
-            if (a.stats.thirty_day_change < b.stats.thirty_day_change) return 1;
-            if (a.stats.thirty_day_change > b.stats.thirty_day_change)
-              return -1;
-            return 0;
-          } else {
-            setThirtyDayChangeOrder("desc");
-            if (a.stats.thirty_day_change < b.stats.thirty_day_change)
-              return -1;
-            if (a.stats.thirty_day_change > b.stats.thirty_day_change) return 1;
-            return 0;
-          }
-        });
-        newList.current = Array.from(new Set(new_list));
-        if (limit) {
-          let limited_list = [] as any[];
-          for (let index = 0; index < limit; index++) {
-            limited_list = [...limited_list, newList.current[index]];
-          }
-          setList((list) => limited_list);
-        } else {
-          setList((list) => newList.current);
-        }
-        break;
-      case "7d %":
-        new_list = newList.current.sort(function (a, b) {
-          if (sevenDayChangeOrder == "desc") {
-            setSevenDayChangeOrder("asc");
-            if (a.stats.seven_day_change < b.stats.seven_day_change) return 1;
-            if (a.stats.seven_day_change > b.stats.seven_day_change) return -1;
-            return 0;
-          } else {
-            setSevenDayChangeOrder("desc");
-            if (a.stats.seven_day_change < b.stats.seven_day_change) return -1;
-            if (a.stats.seven_day_change > b.stats.seven_day_change) return 1;
-            return 0;
-          }
-        });
-        newList.current = Array.from(new Set(new_list));
-        if (limit) {
-          let limited_list = [] as any[];
-          for (let index = 0; index < limit; index++) {
-            limited_list = [...limited_list, newList.current[index]];
-          }
-          setList((list) => limited_list);
-        } else {
-          setList((list) => newList.current);
-        }
-        break;
-      case "Owners":
-        new_list = newList.current.sort(function (a, b) {
-          if (ownersOrder == "desc") {
-            setOwnersOrder("asc");
-            if (a.stats.num_owners < b.stats.num_owners) return 1;
-            if (a.stats.num_owners > b.stats.num_owners) return -1;
-            return 0;
-          } else {
-            setOwnersOrder("desc");
-            if (a.stats.num_owners < b.stats.num_owners) return -1;
-            if (a.stats.num_owners > b.stats.num_owners) return 1;
-            return 0;
-          }
-        });
-        newList.current = Array.from(new Set(new_list));
-        if (limit) {
-          let limited_list = [] as any[];
-          for (let index = 0; index < limit; index++) {
-            limited_list = [...limited_list, newList.current[index]];
-          }
-          setList((list) => limited_list);
-        } else {
-          setList((list) => newList.current);
-        }
-        break;
-      case "Items":
-        new_list = newList.current.sort(function (a, b) {
-          if (itemsOrder == "desc") {
-            setItemsOrder("asc");
-            if (a.stats.total_supply < b.stats.total_supply) return 1;
-            if (a.stats.total_supply > b.stats.total_supply) return -1;
-            return 0;
-          } else {
-            setItemsOrder("desc");
-            if (a.stats.total_supply < b.stats.total_supply) return -1;
-            if (a.stats.total_supply > b.stats.total_supply) return 1;
-            return 0;
-          }
-        });
-        newList.current = Array.from(new Set(new_list));
-        if (limit) {
-          let limited_list = [] as any[];
-          for (let index = 0; index < limit; index++) {
-            limited_list = [...limited_list, newList.current[index]];
-          }
-          setList((list) => limited_list);
-        } else {
-          setList((list) => newList.current);
-        }
-        break;
-
-      default:
-        break;
-    }
-  };
-  useEffect(() => {
-    if (collectionsSort) {
-      sortList();
-    }
-  }, []);
-  useEffect(() => {
+  /*useEffect(() => {
     if (sortAction) {
       sortList();
       setSortAction(false);
     }
-  }, [sortAction]);
+  }, [sortAction]);*/
 
   useEffect(() => {
     //let new_list = [];
-    if (collectionCategory == "All") {
-      newList.current = Array.from(new Set(allList.current));
-    } else {
-      const category_filter = allList.current.filter(
-        (collection) => collection.category === collectionCategory
-      );
-      newList.current = Array.from(new Set(category_filter));
-    }
-    resetOrder();
+    const filterCategory = () => {
+      if (collectionCategory == "All") {
+        newList.current = Array.from(new Set(allList.current));
+      } else {
+        const category_filter = allList.current.filter(
+          (collection) => collection.category === collectionCategory
+        );
+        newList.current = Array.from(new Set(category_filter));
+      }
+    };
+    filterCategory();
+    //resetOrder();
     setSortAction(true);
     if (limit) {
       let limited_list = [] as any[];

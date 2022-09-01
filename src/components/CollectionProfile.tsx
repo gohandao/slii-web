@@ -19,6 +19,9 @@ import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 import { Label } from "@/components/Label";
 import { MdVerified } from "react-icons/md";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
+import { SocialCount } from "@/components/SocialCount";
+import { SocialsContext } from "@/contexts/SocialsContext";
+import { Social } from "@/types/social";
 
 type StatsProps = {
   title: string;
@@ -30,16 +33,25 @@ type Props = {
 };
 
 export const CollectionProfile = ({ collection }: any) => {
+  console.log("collectionprofile");
+  console.log(collection);
   const [dropdown, setDropdown] = useState<boolean>(false);
 
   //console.log("collection");
   //console.log(collection);
   const collections = useContext(CollectionsContext);
   const creators = useContext(CreatorsContext);
+  const { socials } = useContext(SocialsContext);
   const [creator, setCreator] = useState<Creator>();
+  const [social, setSocial] = useState<Social>();
   const [filteredCollection, setFilteredCollection] = useState<any>();
   const symbol =
     collection.payment_tokens && collection.payment_tokens[0].symbol;
+  const discordId =
+    collection.discord_url &&
+    collection.discord_url.substring(
+      collection.discord_url.lastIndexOf("/") + 1
+    );
 
   const Stats = ({ title, element, unit }: StatsProps) => {
     return (
@@ -77,6 +89,21 @@ export const CollectionProfile = ({ collection }: any) => {
       collection_filter.length > 0 &&
         setFilteredCollection(collection_filter[0]);
     }
+    if (socials) {
+      //set collection
+      const socials_filter = socials.filter(
+        (social) => collection.slug === social.collection_slug
+      );
+      socials_filter.length > 0 && setSocial(socials_filter[0]);
+      if (socials_filter.length == 0) {
+        setSocial({
+          collection_slug: collection.slug,
+          creator_username: null,
+          twitter_followers: null,
+          discord_members: null,
+        });
+      }
+    }
   }, [collection, collections]);
 
   return (
@@ -108,7 +135,7 @@ export const CollectionProfile = ({ collection }: any) => {
               )}
             </div>
             <div className="flex absolute bottom-6 right-full pr-[10px] rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
-              <ProfileDropdown dropdown={dropdown} setDropdown={setDropdown} />
+              {/*<ProfileDropdown dropdown={dropdown} setDropdown={setDropdown} />*/}
             </div>
             {filteredCollection && (
               <p
@@ -148,6 +175,18 @@ export const CollectionProfile = ({ collection }: any) => {
               {collection.description}
             </p>
           </div>
+          {social && (
+            <>
+              <SocialCount
+                record_id={social.record_id}
+                collection_slug={collection.slug}
+                twitter_id={collection.twitter_username}
+                twitter_followers={social.twitter_followers}
+                discord_id={discordId}
+                discord_members={collection.discord_members}
+              />
+            </>
+          )}
           {collection.stats && (
             <div className="grid grid-cols-2 md:grid-cols-5 xl:grid-cols-5 justify-center max-w-md md:max-w-2xl w-full rounded border-l border-t border-gray-700">
               {collection.stats && collection.payment_tokens && (

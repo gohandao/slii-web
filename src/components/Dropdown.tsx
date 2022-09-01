@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useQueryState } from "next-usequerystate";
+
 import Link from "next/link";
 import { BsFilter } from "react-icons/bs";
 import { BiSortAlt2, BiCategory } from "react-icons/bi";
 import { TbUsers } from "react-icons/tb";
 
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { useRouter } from "next/router";
 
 type Props = {
   position: "left" | "right";
@@ -31,21 +34,13 @@ export const Dropdown = ({ position, type }: Props) => {
     setCreatorCategory,
     collectionCategory,
     setCollectionCategory,
-    totalVolumeOrder,
-    setTotalVolumeOrder,
-    oneDayChangeOrder,
-    setOneDayChangeOrder,
-    thirtyDayChangeOrder,
-    setThirtyDayChangeOrder,
-    sevenDayChangeOrder,
-    setSevenDayChangeOrder,
-    ownersOrder,
-    setOwnersOrder,
-    itemsOrder,
-    setItemsOrder,
-    collectionNameOrder,
-    setCollectionNameOrder,
   } = useContext(UtilitiesContext);
+  const router = useRouter();
+  const [orderParam, setOrderParam] = useQueryState("order");
+  const [sortByParam, setSortByParam] = useQueryState("sortBy");
+  const [termParam, setTermParam] = useQueryState("term");
+  const { order, sortBy, term } = router.query;
+
   const [status, setStatus] = useState<boolean>(false);
   const collectionsSortMenu = [
     "Total Volume",
@@ -182,14 +177,38 @@ export const Dropdown = ({ position, type }: Props) => {
       break;
   }
 
-  const resetOrder = () => {
-    setTotalVolumeOrder("desc");
-    setOneDayChangeOrder("desc");
-    setThirtyDayChangeOrder("desc");
-    setSevenDayChangeOrder("desc");
-    setOwnersOrder("desc");
-    setItemsOrder("desc");
-    setCollectionNameOrder("asc");
+  const changeCollectionParams = (title: string) => {
+    switch (title) {
+      case "Floor Price":
+        switch (sortBy) {
+          case "Price Low to High":
+            setOrderParam("asc");
+            setSortByParam("Price High to Low");
+            //setSortAction(true);
+            break;
+          case "Price High to Low":
+            setOrderParam("desc");
+            setSortByParam("Price Low to High");
+            //setSortAction(true);
+            break;
+          default:
+            setOrderParam("desc");
+            setSortByParam("Price High to Low");
+            //setSortAction(true);
+            break;
+        }
+        break;
+      default:
+        setSortByParam(title);
+        break;
+    }
+    const exception =
+      title != "Price Low to High" && title != "Price High to Low" && true;
+    if (orderParam) {
+      if (title == sortBy && exception) {
+        orderParam == "desc" ? setOrderParam("asc") : setOrderParam("desc");
+      }
+    }
   };
   const onChangeHandler = (menu: string) => {
     switch (type) {
@@ -203,14 +222,8 @@ export const Dropdown = ({ position, type }: Props) => {
         setStatus(false);
         break;
       case "sortCollections":
-        //setCollectionsSort("");
-        if (collectionsSort == menu) {
-          setSortAction(true);
-        } else {
-          resetOrder();
-          setSortAction(true);
-          setCollectionsSort(menu);
-        }
+        changeCollectionParams(menu);
+        setSortAction(true);
         setStatus(false);
         break;
       case "creatorCategories":
@@ -241,11 +254,11 @@ export const Dropdown = ({ position, type }: Props) => {
   const dropdownClass = !status && "hidden";
   return (
     <>
-      <div className="relative inline-block text-left z-10 mb-4">
+      <div className="relative inline-block text-left z-10">
         <div>
           <button
             type="button"
-            className="inline-flex items-center  gap-2 justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 capitalize"
+            className="inline-flex items-center  gap-2 justify-center w-full rounded-md border border-gray-600 shadow-sm px-4 py-[9px] bg-gray-800 text-sm font-medium text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-600 focus:ring-indigo-500 capitalize"
             id="menu-button"
             onClick={() => {
               toggleDropdownHandler();
@@ -270,24 +283,24 @@ export const Dropdown = ({ position, type }: Props) => {
           </button>
         </div>
         <div
-          className={`absolute mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none ${dropdownClass} ${possitionClass}`}
+          className={`absolute mt-2 w-56 rounded-md shadow-lg border border-gray-700 bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none ${dropdownClass} ${possitionClass}`}
           role="menu"
           tabIndex={-1}
         >
           <div className="py-1" role="none">
             {menus &&
-              menus.map((menu, index) => (
+              menus.map((title, index) => (
                 <button
-                  className="text-gray-700 block px-4 py-2 text-sm capitalize w-full text-left"
+                  className="text-gray-300 block px-4 py-[11px] text-sm capitalize w-full text-left border-b border-gray-600 last:border-b-0"
                   role="menuitem"
                   tabIndex={-1}
                   id="menu-item-0"
                   onClick={() => {
-                    onChangeHandler(menu);
+                    onChangeHandler(title);
                   }}
                   key={index}
                 >
-                  {menu}
+                  {title}
                 </button>
               ))}
           </div>

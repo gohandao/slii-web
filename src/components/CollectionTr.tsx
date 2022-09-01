@@ -6,6 +6,7 @@ import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 import { MdVerified } from "react-icons/md";
+import { SocialsContext } from "@/contexts/SocialsContext";
 
 type Props = {
   children: ReactNode;
@@ -13,6 +14,8 @@ type Props = {
 export const CollectionTr = ({ item, index }: any) => {
   //console.log("item");
   //console.log(item);
+  const { socials } = useContext(SocialsContext);
+
   const { collectionsSort } = useContext(UtilitiesContext);
 
   /*const [list, setList] = useState<any[]>([]);

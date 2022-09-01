@@ -28,6 +28,7 @@ import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
 import { Dropdown } from "@/components/Dropdown";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { SocialCount } from "@/components/SocialCount";
 
 const CollectionIndex: NextPage = (props: any) => {
   const OPENSEA_API_KEY = process.env.NEXT_PUBLIC_OPENSEA_API_KEY as string;
@@ -35,10 +36,11 @@ const CollectionIndex: NextPage = (props: any) => {
   const router = useRouter();
   const { username, slug } = router.query;
   const [loading, setLoading] = useState<boolean>(false);
-  const [collection, setCollection] = useState([]);
+  const [collection, setCollection] = useState<Collection>();
+  const [airtableCollection, setAirtableCollection] = useState<Collection>();
 
   const { setBreadcrumbList } = useContext(UtilitiesContext);
-  const breadcrumbList = slug &&
+  const breadcrumbList = collection &&
     username && [
       {
         name: "Home",
@@ -58,6 +60,7 @@ const CollectionIndex: NextPage = (props: any) => {
   useEffect(() => {
     breadcrumbList && setBreadcrumbList(breadcrumbList);
   }, [collection]);
+
   const creators = useContext(CreatorsContext);
   const collections = useContext(CollectionsContext);
 
@@ -72,12 +75,21 @@ const CollectionIndex: NextPage = (props: any) => {
   };
 
   const getCollection = () => {
-    fetch(`https://api.opensea.io/api/v1/collection/${slug}`, options)
-      .then((response) => response.json())
-      .then((response) => {
-        setCollection(response.collection);
-      })
-      .catch((err) => console.error(err));
+    if (airtableCollection) {
+      fetch(`https://api.opensea.io/api/v1/collection/${slug}`, options)
+        .then((response) => response.json())
+        .then((response) => {
+          let data = response.collection;
+          data.record_id = airtableCollection.record_id;
+          data.creator_id = airtableCollection.creator_id;
+          data.category = airtableCollection.category;
+          // data.twitter_followers = airtableCollection.twitter_followers;
+          // data.discord_members = airtableCollection.discord_members;
+          const new_data = data;
+          setCollection(new_data);
+        })
+        .catch((err) => console.error(err));
+    }
   };
 
   const getCollectionAssets = () => {
@@ -104,10 +116,17 @@ const CollectionIndex: NextPage = (props: any) => {
       .catch((err) => console.error(err));
   };
 
+  //get opensea collection
+  //get opensea collection nfts
   useEffect(() => {
-    if (slug) {
-      collection.length == 0 && getCollection();
+    if (airtableCollection) {
+      getCollection();
     }
+  }, [airtableCollection]);
+  useEffect(() => {
+    // if (slug) {
+    //   collection && getCollection();
+    // }
     if (collection) {
       collectionAssets.length == 0 && getCollectionAssets();
     }
@@ -119,21 +138,23 @@ const CollectionIndex: NextPage = (props: any) => {
       const creator = creators.filter(
         (creator) => creator.username === username
       );
-      const collection =
-        creator.length > 0 &&
-        creator[0].collections.filter((collection) => collection === slug);
+      setCreator(creator[0]);
+      // const collection =
+      //   creator.length > 0 &&
+      //   creator[0].collections.filter((collection) => collection === slug);
+      const airtable_collection = collections.filter(
+        (collection) => collection.slug === slug
+      );
+      setAirtableCollection(airtable_collection[0]);
       //if (collection && collection.length > 0) {
       if (creator) {
         setExistence(true);
       }
       //本来ページが存在しない場合はリダイレクト
-      if (creator.length == 0 && slug && collections) {
-        router.push("/");
-      }
+      // if (creator.length == 0 && slug && collections) {
+      //   router.push("/");
+      // }
     }
-    return () => {
-      setExistence(false);
-    };
   }, [username, slug]);
 
   /*useEffect(() => {

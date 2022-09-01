@@ -76,9 +76,25 @@ const CollectionsPage: NextPage = () => {
           </div>
           {/*<button onClick={collectionSortHandler}>test sort</button>*/}
 
-          <div className="flex gap-5 justify-between">
+          <div className="flex gap-5 justify-between items-center mb-4">
             <Dropdown position="left" type="collectionCategories" />
-            <Dropdown position="right" type="sortCollections" />
+            <div className="flex gap-4">
+              <div className="flex rounded border border-gray-600 items-center overflow-hidden">
+                <button className="text-gray-300 w-10 h-10 flex justify-center items-center text-sm border-r last:border-r-0 border-gray-600 bg-gray-800">
+                  24h
+                </button>
+                <button className="text-gray-300 w-10 h-10 flex justify-center items-center text-sm border-r last:border-r-0 border-gray-600 bg-gray-800">
+                  7d
+                </button>
+                <button className="text-gray-300 w-10 h-10 flex justify-center items-center text-sm border-r last:border-r-0 border-gray-600 bg-gray-800">
+                  30d
+                </button>
+                <button className=" w-10 h-10 flex justify-center items-center text-sm border-r last:border-r-0 border-gray-600 text-gray-300 bg-gray-700">
+                  All
+                </button>
+              </div>
+            </div>
+            {/*<Dropdown position="right" type="sortCollections" />*/}
           </div>
           <div className="">
             {collections && <CollectionTable collections={collections} />}

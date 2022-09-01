@@ -1,14 +1,115 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { base } from "@/libs/airtable";
+
 import { BsTwitter } from "react-icons/bs";
 import { FaDiscord } from "react-icons/fa";
+import { SocialsContext } from "@/contexts/SocialsContext";
+import { Social } from "@/types/social";
 
 type Props = {
+  record_id?: string | null;
+  creator_username?: string;
+  collection_slug?: string;
   twitter_id?: string;
+  twitter_followers: number | null;
   discord_id?: string;
+  discord_members: number | null;
 };
-export const SocialCount = ({ twitter_id, discord_id }: Props) => {
+export const SocialCount = ({
+  record_id,
+  creator_username,
+  collection_slug,
+  twitter_id,
+  twitter_followers,
+  discord_members,
+  discord_id,
+}: Props) => {
+  console.log("start SocialCount");
+  console.log(discord_id);
+  const { socials, setSocials } = useContext(SocialsContext);
+
+  const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
+
   const [twitterData, setTwitterData] = useState<any>();
   const [discordData, setDiscordData] = useState<any>();
+  // const new_twitter_followers = twitterData
+  //   ? twitterData.public_metrics.followers_count
+  //   : twitter_followers;
+  // const new_discord_members = discordData
+  //   ? discordData.approximate_presence_count
+  //   : discord_members;
+
+  const checkExistence = () => {
+    if (socials) {
+      //set collection
+      const socials_filter = socials.filter(
+        (social) =>
+          (creator_username && social.creator_username === creator_username) ||
+          (collection_slug && social.collection_slug === collection_slug)
+      );
+      console.log("socials_filter");
+      console.log(socials_filter);
+      if (socials_filter.length > 0) {
+        return true;
+      }
+      return false;
+    }
+  };
+
+  type Props = {
+    twitter_followers: number;
+    discord_members: number;
+  };
+  const updateSocialCount = async ({
+    twitter_followers,
+    discord_members,
+  }: Props) => {
+    console.log(twitter_followers);
+    console.log(discord_members);
+    const exsistence = checkExistence();
+
+    let new_records: Social;
+
+    if (exsistence) {
+      console.log("start update");
+
+      await base("social").update([
+        {
+          id: record_id,
+          fields: {
+            creator_username: creator_username,
+            collection_slug: collection_slug,
+            twitter_followers: twitter_followers,
+            discord_members: discord_members,
+          },
+        },
+      ]);
+      console.log("end update");
+    } else {
+      console.log("start create");
+
+      await base("social").create([
+        {
+          fields: {
+            creator_username: creator_username,
+            collection_slug: collection_slug,
+            twitter_followers: twitter_followers,
+            discord_members: discord_members,
+          },
+        },
+      ]);
+      new_records = {
+        creator_username: creator_username ? creator_username : null,
+        collection_slug: collection_slug ? collection_slug : null,
+        twitter_followers: twitter_followers,
+        discord_members: discord_members,
+      };
+      const new_socials = [...socials, new_records];
+      setSocials(new_socials);
+      //setCreated(true);
+      console.log("end create");
+    }
+  };
 
   let show = false;
   if (twitterData || discordData) {
@@ -22,38 +123,88 @@ export const SocialCount = ({ twitter_id, discord_id }: Props) => {
     }[process.env.NODE_ENV];
   }
 
-  const getDiscordMembers = () => {
-    fetch(
+  const getDiscordMembers = async () => {
+    let members;
+    await fetch(
       `https://discord.com/api/v9/invites/${discord_id}?with_counts=true&with_expiration=true`
     )
       .then((response) => response.json())
       .then((response) => {
         console.log("JSON.parse(response)");
         console.log(response);
-        setDiscordData(response);
+        //setDiscordData(response);
+        members = response;
+        return members;
       })
       .catch((error) => {
         console.log("error");
         console.log(error);
       });
+    return members;
   };
-
-  useEffect(() => {
-    discord_id && !discordData && getDiscordMembers();
-    //getTwitterFollowers();
+  const getTwitterFollowers = async () => {
     if (baseUrl && twitter_id && !twitterData) {
-      fetch(`${baseUrl}/api/twitter?twitter_id=${twitter_id}&type=creator`)
+      let followers;
+      await fetch(`${baseUrl}/api/twitter?twitter_id=${twitter_id}`)
         .then((response) => response.json())
         .then((response) => {
           //console.log("JSON.parse(response)");
           //console.log(JSON.parse(response));
-          setTwitterData(JSON.parse(response));
+          followers = JSON.parse(response);
+          //setTwitterData(JSON.parse(response));
+          return followers;
         })
         .catch((error) => {
           console.log("error");
           console.log(error);
         });
+      return followers;
     }
+  };
+
+  useEffect(() => {
+    (async () => {
+      console.log("1111111");
+      //discord_id && !discordData && (await getDiscordMembers());
+      console.log("22222222");
+
+      //await getTwitterFollowers();
+
+      const discord_data: any = await getDiscordMembers();
+      const twitter_data: any = await getTwitterFollowers();
+      setDiscordData(discord_data);
+      setTwitterData(twitter_data);
+      console.log("2.5");
+      // console.log(new_twitter_followers);
+      // console.log(new_discord_members);
+      // console.log(twitterData);
+      // console.log(discordData);
+      console.log(twitter_data);
+      console.log(discord_data);
+      const new_twitter_followers = twitter_data
+        ? twitter_data.public_metrics.followers_count
+        : twitter_followers;
+      const new_discord_members = discord_data
+        ? discord_data.approximate_presence_count
+        : discord_members;
+
+      if (
+        (new_twitter_followers != twitter_followers &&
+          new_twitter_followers > 0) ||
+        (new_discord_members != discord_members && new_discord_members > 0)
+      ) {
+        console.log("3333333");
+
+        if (socials) {
+          await updateSocialCount({
+            twitter_followers: new_twitter_followers,
+            discord_members: new_discord_members,
+          });
+        }
+      }
+      console.log("44444");
+    })();
+    //getTwitterFollowers();
   }, []);
   type StatsProps = {
     icon: any;

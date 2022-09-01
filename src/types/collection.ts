@@ -1,4 +1,5 @@
 export type Collection = {
+  record_id: string;
   name: string;
   slug: string;
   creator_id: string;

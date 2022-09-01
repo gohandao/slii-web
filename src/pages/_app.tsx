@@ -21,6 +21,7 @@ import {
 } from "@/contexts/TagsContext";
 import { CollectionsContext } from "@/contexts/CollectionsContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { SocialsContext } from "@/contexts/SocialsContext";
 
 import { List } from "@/components/List";
 import { Creator } from "@/types/creator";
@@ -29,6 +30,7 @@ import { Tag } from "@/types/tag";
 import { Utilities } from "@/types/utilities";
 import { Footer } from "@/components/Footer";
 import { BreadcrumbList } from "@/types/breadcrumbList";
+import { Social } from "@/types/social";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<any>();
@@ -50,6 +52,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [collections, setCollections] = useState<Collection[]>([]);
   const [creatorTags, setCreatorTags] = useState<Tag[]>([]);
   const [collectionTags, setCollectionTags] = useState<Tag[]>([]);
+  const [socials, setSocials] = useState<Social[]>([]);
   const [sortAction, setSortAction] = useState<boolean>(false);
   const [creatorType, setCreatorType] = useState<string>("all");
   const [creatorsSort, setCreatorsSort] = useState<string>();
@@ -57,23 +60,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [collectionCategory, setCollectionCategory] = useState<string>("All");
   const [collectionsSort, setCollectionsSort] =
     useState<string>("Total Volume");
-  const [totalVolumeOrder, setTotalVolumeOrder] = useState<"desc" | "asc">(
-    "desc"
-  );
-  const [oneDayChangeOrder, setOneDayChangeOrder] = useState<"desc" | "asc">(
-    "desc"
-  );
-  const [thirtyDayChangeOrder, setThirtyDayChangeOrder] = useState<
-    "desc" | "asc"
-  >("desc");
-  const [sevenDayChangeOrder, setSevenDayChangeOrder] = useState<
-    "desc" | "asc"
-  >("desc");
-  const [ownersOrder, setOwnersOrder] = useState<"desc" | "asc">("desc");
-  const [itemsOrder, setItemsOrder] = useState<"desc" | "asc">("desc");
-  const [collectionNameOrder, setCollectionNameOrder] = useState<
-    "desc" | "asc"
-  >("asc");
 
   const router = useRouter();
   //const { page } = router.query
@@ -156,6 +142,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               new_records = [
                 ...new_records,
                 {
+                  record_id: fields.record_id,
                   name: fields.name,
                   slug: fields.slug,
                   creator_id: fields.creator_id[0],
@@ -242,6 +229,49 @@ function MyApp({ Component, pageProps }: AppProps) {
         }
       );
   };
+  const getSocials = () => {
+    let new_records = [...socials];
+    base("social")
+      .select({
+        // Selecting the first 3 records in All:
+        maxRecords: 1000,
+        view: "All",
+      })
+      .eachPage(
+        //@ts-ignore
+        function page(records: any[], fetchNextPage: () => void) {
+          records.forEach(function (record) {
+            const fields = record.fields;
+            new_records = [
+              ...new_records,
+              {
+                creator_username: fields.creator_username,
+                collection_slug: fields.collection_slug,
+                twitter_followers: fields.twitter_followers,
+                discord_members: fields.discord_members,
+                record_id: fields.record_id,
+              } as Social,
+            ];
+            //console.log("creators", new_records);
+            //console.log("Retrieved", record.fields);
+          });
+          new_records = Array.from(new Set(new_records));
+          setSocials(new_records);
+          try {
+            fetchNextPage();
+          } catch (error) {
+            console.log(error);
+            return;
+          }
+        },
+        function done(err: any) {
+          if (err) {
+            console.error(err);
+            return;
+          }
+        }
+      );
+  };
 
   useEffect(() => {
     //getCreators();
@@ -252,6 +282,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     creatorTags.length == 0 && getAllTags("creator_tags", setCreatorTags);
     collectionTags.length == 0 &&
       getAllTags("collection_tags", setCollectionTags);
+    socials.length == 0 && getSocials();
   }, []);
 
   /*
@@ -330,20 +361,6 @@ function MyApp({ Component, pageProps }: AppProps) {
             setCreatorCategory: setCreatorCategory,
             collectionCategory: collectionCategory,
             setCollectionCategory: setCollectionCategory,
-            totalVolumeOrder: totalVolumeOrder,
-            setTotalVolumeOrder: setTotalVolumeOrder,
-            oneDayChangeOrder: oneDayChangeOrder,
-            setOneDayChangeOrder: setOneDayChangeOrder,
-            thirtyDayChangeOrder: thirtyDayChangeOrder,
-            setThirtyDayChangeOrder: setThirtyDayChangeOrder,
-            sevenDayChangeOrder: sevenDayChangeOrder,
-            setSevenDayChangeOrder: setSevenDayChangeOrder,
-            ownersOrder: ownersOrder,
-            setOwnersOrder: setOwnersOrder,
-            itemsOrder: itemsOrder,
-            setItemsOrder: setItemsOrder,
-            collectionNameOrder: collectionNameOrder,
-            setCollectionNameOrder: setCollectionNameOrder,
             breadcrumbList: breadcrumbList,
             setBreadcrumbList: setBreadcrumbList,
             //collectionsMenu: collectionsMenu,
@@ -354,12 +371,14 @@ function MyApp({ Component, pageProps }: AppProps) {
             <CollectionsContext.Provider value={collections}>
               <CreatorTagsContext.Provider value={creatorTags}>
                 <CollectionTagsContext.Provider value={collectionTags}>
-                  <div className="flex flex-col min-h-screen font-outfit bg-stripe overflow-hidden">
-                    <Component {...pageProps} />
-                    <div className="mt-auto">
-                      <Footer />
+                  <SocialsContext.Provider value={{ socials, setSocials }}>
+                    <div className="flex flex-col min-h-screen font-outfit bg-stripe overflow-hidden">
+                      <Component {...pageProps} />
+                      <div className="mt-auto">
+                        <Footer />
+                      </div>
                     </div>
-                  </div>
+                  </SocialsContext.Provider>
                 </CollectionTagsContext.Provider>
               </CreatorTagsContext.Provider>
             </CollectionsContext.Provider>

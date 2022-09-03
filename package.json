@@ -14,6 +14,7 @@
     "@tailwindcss/line-clamp": "^0.4.0",
     "airtable": "^0.11.4",
     "axios": "^0.27.2",
+    "babel-plugin-styled-components": "^2.0.7",
     "country-flag-icons": "^1.5.5",
     "fs": "^0.0.1-security",
     "i": "^0.3.7",
@@ -31,6 +32,7 @@
     "react-modal": "^3.15.1",
     "react-moment": "^1.1.2",
     "react-moralis": "^1.4.0",
+    "react-scroll": "^1.8.7",
     "sass": "^1.53.0",
     "twitter-api-v2": "^1.12.5"
   },

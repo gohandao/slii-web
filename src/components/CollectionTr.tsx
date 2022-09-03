@@ -7,56 +7,45 @@ import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 import { MdVerified } from "react-icons/md";
 import { SocialsContext } from "@/contexts/SocialsContext";
+import { useQueryState } from "next-usequerystate";
+import router from "next/router";
 
 type Props = {
   children: ReactNode;
 };
 export const CollectionTr = ({ item, index }: any) => {
   //console.log("item");
+  //console.log(item.slug);
   //console.log(item);
+  const { order, sortBy, term } = router.query;
+  const [termParam, setTermParam] = useQueryState("term");
+
   const { socials } = useContext(SocialsContext);
 
-  const { collectionsSort } = useContext(UtilitiesContext);
-
-  /*const [list, setList] = useState<any[]>([]);
-  const options = { method: "GET" };
-  const getCollection = () => {
-    fetch(
-      `https://api.opensea.io/api/v1/collection/${collection.slug}`,
-      options
-    )
-      .then((response) => response.json())
-      .then((response) => {
-        setList([...list, response.collection]);
-      })
-      .catch((err) => console.error(err));
-  };
-  useEffect(() => {
-    getCollection();
-  }, []);
-
-  useEffect(() => {
-    if (collectionsSort) {
-      console.log("Start");
-
-      let new_list = [];
-      switch (collectionsSort) {
-        case "volume":
-          new_list = list.sort(function (a, b) {
-            if (a.stats.total_volume < b.stats.total_volume) return -1;
-            if (a.stats.total_volume > b.stats.total_volume) return 1;
-            return 0;
-          });
-          console.log("new_list");
-          console.log(new_list);
-          setList(new_list);
-          break;
-
-        default:
-          break;
+  let changeClass;
+  switch (term) {
+    case "24h":
+      if (item.stats.one_day_change > 0) {
+        changeClass = "text-green-500";
+      } else if (item.stats.one_day_change < 0) {
+        changeClass = "text-red-500";
       }
-    }
-  }, [collectionsSort]);*/
+      break;
+    case "7d":
+      if (item.stats.seven_day_change > 0) {
+        changeClass = "text-green-500";
+      } else if (item.stats.seven_day_change < 0) {
+        changeClass = "text-red-500";
+      }
+      break;
+    case "30d":
+      if (item.stats.thirty_day_change > 0) {
+        changeClass = "text-green-500";
+      } else if (item.stats.thirty_day_change < 0) {
+        changeClass = "text-red-500";
+      }
+      break;
+  }
 
   const Td = ({ children }: Props) => {
     return (
@@ -71,6 +60,13 @@ export const CollectionTr = ({ item, index }: any) => {
 
   const Hyphen = () => {
     return <span className="text-gray-400">-</span>;
+  };
+  const EthIcon = () => {
+    return (
+      <div className="w-4 flex items-center">
+        <Image src="/icon-eth.svg" width={16} height={16} alt="" className="" />
+      </div>
+    );
   };
   return (
     <>
@@ -102,6 +98,7 @@ export const CollectionTr = ({ item, index }: any) => {
               </a>
             </Link>
           </td>
+          {/*twitter*/}
           <Td>
             {item.twitter_followers ? (
               <span className="text-blue-400">{item.twitter_followers}</span>
@@ -109,6 +106,7 @@ export const CollectionTr = ({ item, index }: any) => {
               <Hyphen />
             )}
           </Td>
+          {/*discord*/}
           <Td>
             {item.discord_members ? (
               <span className="text-violet-400">{item.discord_members}</span>
@@ -116,71 +114,102 @@ export const CollectionTr = ({ item, index }: any) => {
               <Hyphen />
             )}
           </Td>
+          {/*total_volume*/}
           <Td>
-            <div className="flex item-center gap-1 justify-end">
-              {item.payment_tokens &&
-                item.payment_tokens[0].symbol == "ETH" && (
-                  <Image src="/icon-eth.svg" width={16} height={16} alt="" />
-                )}
-              {item.stats && item.stats.total_volume ? (
-                abbreviateNumber(item.stats.total_volume)
+            <div className="flex item-center gap-1 justify-start">
+              {term == "all" ||
+              (!term && item.stats && item.stats.total_volume > 0) ? (
+                <>
+                  {item.payment_tokens &&
+                    item.payment_tokens[0].symbol == "ETH" && <EthIcon />}
+                  {abbreviateNumber(item.stats.total_volume)}
+                </>
+              ) : term == "24h" && item.stats.one_day_volume > 0 ? (
+                <>
+                  {item.payment_tokens &&
+                    item.payment_tokens[0].symbol == "ETH" && <EthIcon />}
+                  {abbreviateNumber(item.stats.one_day_volume)}
+                </>
+              ) : term == "7d" && item.stats.seven_day_volume > 0 ? (
+                <>
+                  {item.payment_tokens &&
+                    item.payment_tokens[0].symbol == "ETH" && <EthIcon />}
+                  {abbreviateNumber(item.stats.seven_day_volume)}
+                </>
+              ) : term == "30d" && item.stats.thirty_day_volume > 0 ? (
+                <>
+                  {item.payment_tokens &&
+                    item.payment_tokens[0].symbol == "ETH" && <EthIcon />}
+                  {abbreviateNumber(item.stats.thirty_day_volume)}
+                </>
               ) : (
                 <Hyphen />
               )}
             </div>
           </Td>
+          {/*floor_price*/}
           <Td>
-            <div className="flex item-center gap-1 justify-end">
+            <div className="flex item-center gap-1 justify-start">
               {item.payment_tokens &&
-                item.payment_tokens[0].symbol == "ETH" && (
-                  <Image src="/icon-eth.svg" width={16} height={16} alt="" />
-                )}
-              {item.stats && item.stats.floor_price ? (
+                item.payment_tokens[0].symbol == "ETH" && <EthIcon />}
+              {item.stats && item.stats.floor_price > 0 ? (
                 abbreviateNumber(item.stats.floor_price)
               ) : (
                 <Hyphen />
               )}
             </div>
           </Td>
+          {/*average_price*/}
           <Td>
-            <span
-              className={`${
-                item.stats.one_day_change > 0 && "text-green-500"
-              } ${item.stats.one_day_change < 0 && "text-red-500"}`}
-            >
-              {item.stats && item.stats.one_day_change != 0 ? (
+            <div className="flex item-center gap-1 justify-start">
+              {term == "all" ||
+              (!term && item.stats && item.stats.average_price > 0) ? (
+                <>
+                  {item.payment_tokens &&
+                    item.payment_tokens[0].symbol == "ETH" && <EthIcon />}
+                  {abbreviateNumber(item.stats.average_price)}
+                </>
+              ) : term == "24h" && item.stats.one_day_average_price > 0 ? (
+                <>
+                  {item.payment_tokens &&
+                    item.payment_tokens[0].symbol == "ETH" && <EthIcon />}
+                  {abbreviateNumber(item.stats.one_day_average_price)}
+                </>
+              ) : term == "7d" && item.stats.seven_day_average_price > 0 ? (
+                <>
+                  {item.payment_tokens &&
+                    item.payment_tokens[0].symbol == "ETH" && <EthIcon />}
+                  {abbreviateNumber(item.stats.seven_day_average_price)}
+                </>
+              ) : term == "30d" && item.stats.thirty_day_average_price > 0 ? (
+                <>
+                  {item.payment_tokens &&
+                    item.payment_tokens[0].symbol == "ETH" && <EthIcon />}
+                  {abbreviateNumber(item.stats.thirty_day_average_price)}
+                </>
+              ) : (
+                <Hyphen />
+              )}
+            </div>
+          </Td>
+          {/*change*/}
+          <Td>
+            <span className={`${changeClass}`}>
+              {term != "all" &&
+              term &&
+              item.stats &&
+              term == "24h" &&
+              item.stats.one_day_change ? (
                 (item.stats.one_day_change * 100).toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 }) + "%"
-              ) : (
-                <Hyphen />
-              )}
-            </span>
-          </Td>
-          <Td>
-            <span
-              className={`${
-                item.stats.seven_day_change > 0 && "text-green-500"
-              } ${item.stats.seven_day_change < 0 && "text-red-500"}`}
-            >
-              {item.stats && item.stats.seven_day_change != 0 ? (
+              ) : term == "7d" && item.stats.seven_day_change ? (
                 (item.stats.seven_day_change * 100).toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 }) + "%"
-              ) : (
-                <Hyphen />
-              )}
-            </span>
-          </Td>
-          <Td>
-            <span
-              className={`${
-                item.stats.thirty_day_change > 0 && "text-green-500"
-              } ${item.stats.thirty_day_change < 0 && "text-red-500"}`}
-            >
-              {item.stats && item.stats.thirty_day_change != 0 ? (
+              ) : term == "30d" && item.stats.thirty_day_change ? (
                 (item.stats.thirty_day_change * 100).toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
@@ -190,7 +219,24 @@ export const CollectionTr = ({ item, index }: any) => {
               )}
             </span>
           </Td>
+          {/*sales*/}
+          <Td>
+            {term == "all" ||
+            (!term && item.stats && item.stats.total_sales > 0) ? (
+              abbreviateNumber(item.stats.total_sales)
+            ) : term == "24h" && item.stats.one_day_sales > 0 ? (
+              abbreviateNumber(item.stats.one_day_sales)
+            ) : term == "7d" && item.stats.seven_day_sales > 0 ? (
+              abbreviateNumber(item.stats.seven_day_sales)
+            ) : term == "30d" && item.stats.thirty_day_sales > 0 ? (
+              abbreviateNumber(item.stats.thirty_day_sales)
+            ) : (
+              <Hyphen />
+            )}
+          </Td>
+          {/*owners*/}
           <Td>{item.stats && item.stats.num_owners}</Td>
+          {/*items*/}
           <Td>{item.stats && item.stats.total_supply}</Td>
         </tr>
       )}

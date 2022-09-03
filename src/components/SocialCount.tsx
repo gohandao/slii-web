@@ -170,8 +170,10 @@ export const SocialCount = ({
 
       //await getTwitterFollowers();
 
-      const discord_data: any = await getDiscordMembers();
-      const twitter_data: any = await getTwitterFollowers();
+      let discord_data: any;
+      discord_data = discord_id && (await getDiscordMembers());
+      let twitter_data: any;
+      twitter_data = await getTwitterFollowers();
       setDiscordData(discord_data);
       setTwitterData(twitter_data);
       console.log("2.5");
@@ -184,9 +186,10 @@ export const SocialCount = ({
       const new_twitter_followers = twitter_data
         ? twitter_data.public_metrics.followers_count
         : twitter_followers;
-      const new_discord_members = discord_data
-        ? discord_data.approximate_presence_count
-        : discord_members;
+      const new_discord_members =
+        discord_data && discord_data.code
+          ? discord_data.approximate_presence_count
+          : discord_members;
 
       if (
         (new_twitter_followers != twitter_followers &&
@@ -251,7 +254,7 @@ export const SocialCount = ({
               stats02={twitterData.public_metrics.followers_count}
             />
           )}
-          {discordData && (
+          {discordData && discordData.approximate_member_count > 0 && (
             <SocialStats
               icon={<FaDiscord className="text-gray-500" />}
               title01="Online"

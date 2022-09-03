@@ -28,8 +28,6 @@ export const Dropdown = ({ position, type }: Props) => {
     setCreatorType,
     creatorsSort,
     setCreatorsSort,
-    collectionsSort,
-    setCollectionsSort,
     creatorCategory,
     setCreatorCategory,
     collectionCategory,
@@ -42,17 +40,6 @@ export const Dropdown = ({ position, type }: Props) => {
   const { order, sortBy, term } = router.query;
 
   const [status, setStatus] = useState<boolean>(false);
-  const collectionsSortMenu = [
-    "Total Volume",
-    "Price Low to High",
-    "Price High to Low",
-    "24h %",
-    "3d %",
-    "7d %",
-    "Owners",
-    "Items",
-    "Collection Name",
-  ];
   const categories = [
     "All",
     "PFP",
@@ -110,21 +97,6 @@ export const Dropdown = ({ position, type }: Props) => {
           "Sort"
         );
       }
-      break;
-    case "sortCreators":
-      menus = collectionsSortMenu;
-      title = creatorsSort ? "Sort: " + creatorsSort : "Sort";
-      break;
-    case "sortCollections":
-      menus = collectionsSortMenu;
-      title = collectionsSort ? (
-        <>
-          <BiSortAlt2 className="text-gray-400" />
-          <span className="ellipsis max-w-[90px]">{collectionsSort}</span>
-        </>
-      ) : (
-        "Sort"
-      );
       break;
     case "creatorCategories":
       menus = categories;
@@ -242,7 +214,6 @@ export const Dropdown = ({ position, type }: Props) => {
   useEffect(() => {
     //初期値
     setCreatorsSort("All");
-    setCollectionsSort("Total Volume");
     setCreatorCategory("All");
     setCollectionCategory("All");
   }, []);

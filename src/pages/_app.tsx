@@ -58,8 +58,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [creatorsSort, setCreatorsSort] = useState<string>();
   const [creatorCategory, setCreatorCategory] = useState<string>("All");
   const [collectionCategory, setCollectionCategory] = useState<string>("All");
-  const [collectionsSort, setCollectionsSort] =
-    useState<string>("Total Volume");
 
   const router = useRouter();
   //const { page } = router.query
@@ -355,8 +353,6 @@ function MyApp({ Component, pageProps }: AppProps) {
             setCreatorType: setCreatorType,
             creatorsSort: creatorsSort,
             setCreatorsSort: setCreatorsSort,
-            collectionsSort: collectionsSort,
-            setCollectionsSort: setCollectionsSort,
             creatorCategory: creatorCategory,
             setCreatorCategory: setCreatorCategory,
             collectionCategory: collectionCategory,

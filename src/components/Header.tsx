@@ -28,15 +28,19 @@ export const Header = () => {
           </div>
           <div className="gap-10 hidden lg:flex">
             <Link href="/creators">
-              <a className="font-bold text-gray-100 tracking-wider">Creators</a>
+              <a className="font-bold text-gray-100 tracking-wider">
+                😎<span className="ml-[6px]">Creators</span>
+              </a>
             </Link>
             <Link href="/collections">
               <a className="font-bold text-gray-100 tracking-wider">
-                Collections
+                🗂<span className="ml-[6px]">Collections</span>
               </a>
             </Link>
             <Link href="/tags">
-              <a className="font-bold text-gray-100 tracking-wider">Tags</a>
+              <a className="font-bold text-gray-100 tracking-wider">
+                📌<span className="ml-[6px]">Tags</span>
+              </a>
             </Link>
           </div>
         </div>

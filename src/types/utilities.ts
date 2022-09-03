@@ -15,8 +15,6 @@ export type Utilities = {
   setCreatorType: React.Dispatch<React.SetStateAction<string>>;
   creatorsSort?: string;
   setCreatorsSort: React.Dispatch<React.SetStateAction<string | undefined>>;
-  collectionsSort?: string;
-  setCollectionsSort: React.Dispatch<React.SetStateAction<string>>;
   creatorCategory?: string;
   setCreatorCategory: React.Dispatch<React.SetStateAction<string>>;
   collectionCategory?: string;

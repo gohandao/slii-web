@@ -53,6 +53,7 @@ const KeywordPage: NextPage = () => {
   useEffect(() => {
     breadcrumbList && setBreadcrumbList(breadcrumbList);
   }, []);
+
   const creators = useContext(CreatorsContext);
   const collections = useContext(CollectionsContext);
 

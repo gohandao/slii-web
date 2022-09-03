@@ -26,6 +26,7 @@ import { getDiscordMembers } from "@/libs/discord";
 import { getTwitterFollowers } from "@/libs/twitter";
 import { useRouter } from "next/router";
 import { SocialsContext } from "@/contexts/SocialsContext";
+import { Th } from "@/components/CollectionTh";
 
 type ThProps = {
   children: ReactNode;
@@ -35,14 +36,14 @@ type Props = {
   limit?: number;
 };
 export const CollectionTable = ({ collections, limit }: Props) => {
+  console.log("collections");
+  console.log(collections);
   const creators = useContext(CreatorsContext);
   const {
     sortAction,
     setSortAction,
     collectionCategory,
     setCollectionCategory,
-    collectionsSort,
-    setCollectionsSort,
   } = useContext(UtilitiesContext);
   const router = useRouter();
   const [orderParam, setOrderParam] = useQueryState("order");
@@ -67,135 +68,58 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     setItemsOrder("desc");
     setCollectionNameOrder("asc");
   };*/
-  type ThProps = {
-    title: any;
-  };
-  const Th = ({ title }: ThProps) => {
-    let thClass = "";
-    switch (title) {
-      case sortBy:
-        thClass = "text-gray-300";
-        break;
-      case "Floor Price":
-        switch (sortBy) {
-          case "Price Low to High":
-          case "Price High to Low":
-            thClass = "text-gray-300";
-            break;
-        }
-        break;
-      default:
-        thClass = "text-gray-600";
-        break;
-    }
-    const changeParams = () => {
-      switch (title) {
-        case "Floor Price":
-          switch (sortBy) {
-            case "Price Low to High":
-              setOrderParam("asc");
-              setSortByParam("Price High to Low");
-              //setSortAction(true);
-              break;
-            case "Price High to Low":
-              setOrderParam("desc");
-              setSortByParam("Price Low to High");
-              //setSortAction(true);
-              break;
-            default:
-              setOrderParam("desc");
-              setSortByParam("Price High to Low");
-              //setSortAction(true);
-              break;
-          }
-          break;
-        default:
-          setSortByParam(title);
-          break;
-      }
-      const exception =
-        title != "Price Low to High" && title != "Price High to Low" && true;
-      if (orderParam) {
-        if (title == sortBy && exception) {
-          orderParam == "desc" ? setOrderParam("asc") : setOrderParam("desc");
-        }
-      }
-    };
-    return (
-      <>
-        {title.length > 0 || typeof title != "string" ? (
-          <th
-            scope="col"
-            className={`py-3.5 pr-3 text-left text-sm font-medium text-gray-400 ${
-              title != "Collection Name" && "pl-4 sm:pl-6"
-            }`}
-          >
-            <button
-              className="flex gap-2 items-center"
-              onClick={() => {
-                changeParams();
-              }}
-            >
-              {title}
-              <FaSort className={`${thClass}`} />
-            </button>
-          </th>
-        ) : (
-          <th className="py-3.5 text-left text-sm font-medium text-gray-400 min-w-[28px]"></th>
-        )}
-      </>
-    );
-  };
 
   //useStateだと反映されなかったためuseRefを使用
   const allList = useRef<any[]>([]);
   const newList = useRef<any[]>([]);
 
+  const [test, setTest] = useState(0);
   const getCollectionsData = async () => {
+    setTest(test + 1);
+    console.log(test);
     const options = { method: "GET" };
     const getNewData = async () => {
       if (newList.current.length == 0) {
-        console.log("start");
         setLoading(true);
-        await Promise.all(
-          collections.map(async (collection, index) => {
-            const socials_filter = socials.filter(
-              (social) => social.collection_slug === collection.slug
-            );
-            const twitter_followers = socials_filter[0]
-              ? socials_filter[0].twitter_followers
-              : null;
-            const discord_members = socials_filter[0]
-              ? socials_filter[0].discord_members
-              : null;
-            console.log("socials");
-            console.log(socials);
-            console.log(socials_filter[0]);
-            console.log(twitter_followers);
-            console.log(discord_members);
-            await fetch(
-              `https://api.opensea.io/api/v1/collection/${collection.slug}`,
-              options
-            )
-              .then((response) => response.json())
-              .then((response) => {
-                let data = response.collection;
-                data.record_id = collection.record_id;
-                data.creator_id = collection.creator_id;
-                data.category = collection.category;
-                data.twitter_followers = twitter_followers;
-                data.discord_members = discord_members;
-                const new_data = data;
-                const new_list = [...newList.current, new_data];
-                allList.current = Array.from(new Set(new_list));
-                newList.current = Array.from(new Set(new_list));
-                //console.log("newList.current");
-                //console.log(newList.current);
-                return;
-              })
-              .catch((err) => console.error(err));
-          })
-        );
+        if (socials.length > 0 && collections) {
+          await Promise.all(
+            collections.map(async (collection, index) => {
+              const socials_filter = socials.filter(
+                (social) => social.collection_slug === collection.slug
+              );
+
+              const twitter_followers = socials_filter[0]
+                ? socials_filter[0].twitter_followers
+                : null;
+              const discord_members = socials_filter[0]
+                ? socials_filter[0].discord_members
+                : null;
+              await fetch(
+                `https://api.opensea.io/api/v1/collection/${collection.slug}`,
+                options
+              )
+                .then((response) => response.json())
+                .then((response) => {
+                  let data = response.collection;
+                  data.record_id = collection.record_id;
+                  data.creator_id = collection.creator_id;
+                  data.category = collection.category;
+                  data.twitter_followers = twitter_followers;
+                  data.discord_members = discord_members;
+                  const new_data = data;
+                  const new_list = [...newList.current, new_data];
+                  console.log("new_list");
+                  console.log(new_list);
+                  allList.current = Array.from(new Set(new_list));
+                  newList.current = Array.from(new Set(new_list));
+                  //console.log("newList.current");
+                  //console.log(newList.current);
+                  return;
+                })
+                .catch((err) => console.error(err));
+            })
+          );
+        }
         //await getSocialCount();
         setLoading(false);
       }
@@ -247,7 +171,7 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     if (collections && allList.current.length == 0) {
       getCollectionsData();
     }
-  }, [collections]);
+  }, [collections, socials]);
   //useEffect(() => {
   //  collections && !list && getCollectionsData();
   //}, []);
@@ -256,8 +180,9 @@ export const CollectionTable = ({ collections, limit }: Props) => {
   //②set initial collections data
   const args = {
     list: allList.current,
-    order: order as "desc" | "asc",
-    sort: sortBy as string,
+    order: order as "desc" | "asc" | undefined,
+    sortBy: sortBy as string | undefined,
+    term: term as "24h" | "7d" | "30d" | "all" | undefined,
     //category: collectionsSort,
     limit: limit,
   };
@@ -265,7 +190,11 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     if (setup) {
       //const data = Array.from(new Set(newList.current));
       const data = sortList(args);
-      setList(data);
+      setList((list) => data);
+      console.log("dounatteruno?");
+      console.log(args.list);
+      console.log(data);
+      console.log(newList.current);
       setSetup(false);
     }
   }, [setup]);
@@ -285,7 +214,10 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     if (router.isReady && (order || sortBy || term)) {
       if (args.list.length > 0) {
         const data = sortList(args);
-        setList((list) => data);
+        console.log("sort shiteru?");
+        console.log(data);
+        console.log(args);
+        setList((list) => [...data]);
       }
     }
     //setSocialSetup(true);
@@ -298,6 +230,7 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     }
   }, [sortAction]);*/
 
+  //filter category
   useEffect(() => {
     //let new_list = [];
     const filterCategory = () => {
@@ -335,17 +268,17 @@ export const CollectionTable = ({ collections, limit }: Props) => {
             >
               <thead className="bg-gray-900">
                 <tr>
-                  <Th title="" />
-                  <Th title="Collection Name" />
-                  <Th title={<BsTwitter className="text-twitter" />} />
-                  <Th title={<FaDiscord className="text-discord" />} />
-                  <Th title="Total Volume" />
-                  <Th title="Floor Price" />
-                  <Th title="24h %" />
-                  <Th title="7d %" />
-                  <Th title="30d %" />
-                  <Th title="Owners" />
-                  <Th title="Items" />
+                  <Th title="" sortBy={sortBy as string} />
+                  <Th title="Collection Name" sortBy={sortBy as string} />
+                  <Th title="Twitter" sortBy={sortBy as string} />
+                  <Th title="Discord" sortBy={sortBy as string} />
+                  <Th title="Volume" sortBy={sortBy as string} />
+                  <Th title="Floor Price" sortBy={sortBy as string} />
+                  <Th title="Ave. Price" sortBy={sortBy as string} />
+                  <Th title="% Change" sortBy={sortBy as string} />
+                  <Th title="Sales" sortBy={sortBy as string} />
+                  <Th title="Owners" sortBy={sortBy as string} />
+                  <Th title="Items" sortBy={sortBy as string} />
                 </tr>
               </thead>
               {!loading && (
@@ -355,7 +288,7 @@ export const CollectionTable = ({ collections, limit }: Props) => {
                       <CollectionTr
                         item={item}
                         index={index}
-                        key={collectionsSort ? collectionsSort + index : index}
+                        key={sortBy ? (sortBy as string) + index : index}
                       />
                       //<CollectionTr collection={collection} key={index} />
                     ))}

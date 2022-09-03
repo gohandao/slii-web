@@ -27,9 +27,13 @@ import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
 import { Headline } from "@/components/Headline";
 import { BreadCrumbs } from "@/components/BreadCrumbs";
+import { useQueryState } from "next-usequerystate";
+import { TermSort } from "@/components/TermSort";
 const CollectionsPage: NextPage = () => {
   const router = useRouter();
-  const { page } = router.query;
+  const { page, term } = router.query;
+  const [termParam, setTermParam] = useQueryState("term");
+
   const { setBreadcrumbList } = useContext(UtilitiesContext);
   const breadcrumbList = [
     {
@@ -48,13 +52,11 @@ const CollectionsPage: NextPage = () => {
   const collections = useContext(CollectionsContext);
   const collectionsLength = collections.length;
 
-  const { setCollectionsSort } = useContext(UtilitiesContext);
-
   //const [collectionsMenu, setCollectionMenu] =
   //useState<string[]>(collectionsMenus);
 
   const collectionSortHandler = () => {
-    setCollectionsSort("volume");
+    //setCollectionsSort("volume");
     console.log("test");
   };
   return (
@@ -79,20 +81,7 @@ const CollectionsPage: NextPage = () => {
           <div className="flex gap-5 justify-between items-center mb-4">
             <Dropdown position="left" type="collectionCategories" />
             <div className="flex gap-4">
-              <div className="flex rounded border border-gray-600 items-center overflow-hidden">
-                <button className="text-gray-300 w-10 h-10 flex justify-center items-center text-sm border-r last:border-r-0 border-gray-600 bg-gray-800">
-                  24h
-                </button>
-                <button className="text-gray-300 w-10 h-10 flex justify-center items-center text-sm border-r last:border-r-0 border-gray-600 bg-gray-800">
-                  7d
-                </button>
-                <button className="text-gray-300 w-10 h-10 flex justify-center items-center text-sm border-r last:border-r-0 border-gray-600 bg-gray-800">
-                  30d
-                </button>
-                <button className=" w-10 h-10 flex justify-center items-center text-sm border-r last:border-r-0 border-gray-600 text-gray-300 bg-gray-700">
-                  All
-                </button>
-              </div>
+              <TermSort term={term as string} />
             </div>
             {/*<Dropdown position="right" type="sortCollections" />*/}
           </div>

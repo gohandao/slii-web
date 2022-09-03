@@ -14,8 +14,6 @@ export const UtilitiesContext = createContext<Utilities>({
   setSortAction: () => {},
   creatorType: "all",
   setCreatorType: () => {},
-  collectionsSort: "",
-  setCollectionsSort: () => {},
   creatorCategory: "",
   setCreatorCategory: () => {},
   collectionCategory: "",

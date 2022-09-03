@@ -234,7 +234,7 @@ export const CollectionProfile = ({ collection }: any) => {
                     unit={symbol}
                   />
                   <Stats
-                    title="Total Volume"
+                    title="Volume"
                     element={abbreviateNumber(collection.stats.total_volume)}
                     unit={symbol}
                   />

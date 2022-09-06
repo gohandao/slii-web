@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
-import { CreatorsContext } from "@/contexts/CreatorsContext";
+import { BaseContext } from "@/contexts/BaseContext";
 import { Card } from "@/components/Card";
 
 export const List = () => {
-  const creators = useContext(CreatorsContext);
+  const { creators } = useContext(BaseContext);
   const [list, setList] = useState();
   return (
     <ul className="flex flex-wrap gap-5 w-full justify-center">

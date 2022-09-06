@@ -6,6 +6,7 @@ import { Searchbox } from "@/components/Searchbox";
 import { AuthContext } from "@/contexts/AuthContext";
 import { FaRegUser } from "react-icons/fa";
 import { FiLogIn } from "react-icons/fi";
+import { RiHeartsFill, RiHeartsLine } from "react-icons/ri";
 
 export const Header = () => {
   const user = useContext(AuthContext);
@@ -19,7 +20,7 @@ export const Header = () => {
           <div className="flex-shrink-0">
             <Link href="/">
               <a className="relative flex h-7">
-                <Image src="/logo.svg" width={98} height={28} alt="" />
+                <Image src="/logo.svg" width={142} height={20} alt="" />
               </a>
             </Link>
           </div>
@@ -29,22 +30,24 @@ export const Header = () => {
           <div className="gap-10 hidden lg:flex">
             <Link href="/creators">
               <a className="font-bold text-gray-100 tracking-wider">
-                😎<span className="ml-[6px]">Creators</span>
+                😎<span className="ml-2">Creators</span>
               </a>
             </Link>
             <Link href="/collections">
               <a className="font-bold text-gray-100 tracking-wider">
-                🗂<span className="ml-[6px]">Collections</span>
+                🗂<span className="ml-2">Collections</span>
               </a>
             </Link>
             <Link href="/tags">
               <a className="font-bold text-gray-100 tracking-wider">
-                📌<span className="ml-[6px]">Tags</span>
+                📌<span className="ml-2">Tags</span>
               </a>
             </Link>
           </div>
         </div>
-        <div className="relative flex items-center">
+        <div className="relative flex items-center gap-5">
+          <RiHeartsFill className="text-pink-500 text-xl" />
+          <RiHeartsLine className="text-gray-500 text-xl" />
           {!user ? (
             <button
               onClick={() => {

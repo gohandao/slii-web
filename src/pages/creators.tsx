@@ -22,6 +22,7 @@ import { LinkButton } from "@/components/LinkButton";
 
 import { CreatorsContext } from "@/contexts/CreatorsContext";
 import { CollectionsContext } from "@/contexts/CollectionsContext";
+import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 import { Creator } from "@/types/creator";
@@ -33,8 +34,7 @@ const CreatorsPage: NextPage = () => {
   const router = useRouter();
   const { page } = router.query;
 
-  const creators = useContext(CreatorsContext);
-  const collections = useContext(CollectionsContext);
+  const { creators, collections } = useContext(BaseContext);
   const { creatorType, setBreadcrumbList } = useContext(UtilitiesContext);
   const breadcrumbList = [
     {
@@ -121,7 +121,7 @@ const CreatorsPage: NextPage = () => {
               label="Creators"
             />
           </div>
-          <div className="relative flex gap-5 z-20 justify-between">
+          <div className="relative flex gap-5 z-20 justify-between mb-4">
             <Dropdown position="left" type="creatorType" />
             {/*<Button filter="all" />
             <Button filter="creator" />

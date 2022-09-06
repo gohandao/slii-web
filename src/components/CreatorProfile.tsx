@@ -24,7 +24,7 @@ import { CopyText } from "@/components/CopyText";
 import { useRouter } from "next/router";
 import { FiCopy } from "react-icons/fi";
 import { Social } from "@/types/social";
-import { SocialsContext } from "@/contexts/SocialsContext";
+import { BaseContext } from "@/contexts/BaseContext";
 
 type Props = {
   creator: Creator;
@@ -39,7 +39,7 @@ export const CreatorProfile = ({ creator }: Props) => {
       development: "http://localhost:3000",
     }[process.env.NODE_ENV];
   }
-  const socials = useContext(SocialsContext);
+  const { socials } = useContext(BaseContext);
 
   const [social, setSocial] = useState<Social>();
 
@@ -88,13 +88,13 @@ export const CreatorProfile = ({ creator }: Props) => {
     if (socials && creator.username) {
       //set collection
       const socials_filter = socials.filter(
-        (social) => creator.username === social.id
+        (social) => creator.username === social.creator_username
       );
       socials_filter.length > 0 && setSocial(socials_filter[0]);
       if (socials_filter.length == 0) {
         setSocial({
-          id: "",
-          type: "creator",
+          collection_slug: "",
+          creator_username: "",
           twitter_followers: null,
           discord_members: null,
           record_id: null,
@@ -223,14 +223,28 @@ export const CreatorProfile = ({ creator }: Props) => {
                 menus={requestMenus}
               />
             </div>
+            <div className="flex gap-3 absolute bottom-6 left-full rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
+              <ProfileDropdown
+                icon={<BsFillShareFill className="text-gray-500" />}
+                dropdown={shareDropdown}
+                setDropdown={setShareDropdown}
+                menus={shareMenus}
+              />
+              <ProfileDropdown
+                icon={<BsThreeDots className="text-gray-500 " />}
+                dropdown={requestDropdown}
+                setDropdown={setRequestDropdown}
+                menus={requestMenus}
+              />
+            </div>
             <p
-              className={`absolute bottom-6 left-full -ml-6 pl-[22px] pr-3 rounded-tr-full rounded-br-full text-sm capitalize flex justify-center items-center gap-[6px] ${
+              className={`absolute top-6 left-full -ml-6 pl-[24px] pr-3 rounded-tr-full rounded-br-full text-sm capitalize flex justify-center items-center gap-[6px] ${
                 creator.type == "creator"
                   ? "bg-yellow-500 text-yellow-100"
                   : "bg-blue-500 text-blue-100"
               }`}
             >
-              <JP title="Japan" className="h-3 rounded" />
+              <JP title="Japan" className="h-3 rounded-sm" />
               {creator.type}
             </p>
           </div>
@@ -257,8 +271,7 @@ export const CreatorProfile = ({ creator }: Props) => {
             {social && (
               <SocialCount
                 record_id={social.record_id}
-                id={creator.username}
-                type="creator"
+                creator_username={creator.username}
                 twitter_id={twitterId}
                 twitter_followers={social.twitter_followers}
                 discord_id={discordId}

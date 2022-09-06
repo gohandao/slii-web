@@ -9,7 +9,7 @@ import { VscChecklist } from "react-icons/vsc";
 import { FaPlay } from "react-icons/fa";
 
 import { CreatorsContext } from "@/contexts/CreatorsContext";
-import { CollectionsContext } from "@/contexts/CollectionsContext";
+import { BaseContext } from "@/contexts/BaseContext";
 
 import { ProfileLinks } from "@/components/ProfileLinks";
 
@@ -39,9 +39,9 @@ export const CollectionProfile = ({ collection }: any) => {
 
   //console.log("collection");
   //console.log(collection);
-  const collections = useContext(CollectionsContext);
-  const creators = useContext(CreatorsContext);
-  const { socials } = useContext(SocialsContext);
+  const { collections, creators, socials } = useContext(BaseContext);
+  // const creators = useContext(CreatorsContext);
+  // const { socials } = useContext(SocialsContext);
   const [creator, setCreator] = useState<Creator>();
   const [social, setSocial] = useState<Social>();
   const [filteredCollection, setFilteredCollection] = useState<any>();

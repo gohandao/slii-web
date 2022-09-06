@@ -20,6 +20,7 @@ import { Title } from "@/components/Title";
 import { Tag } from "@/types/tag";
 import { Headline } from "@/components/Headline";
 import { BreadCrumbs } from "@/components/BreadCrumbs";
+import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 type GetAllTags = {
@@ -47,8 +48,8 @@ const TagsPage: NextPage = () => {
     setBreadcrumbList(breadcrumbList);
   }, []);
 
-  const CreatorTags = useContext(CreatorTagsContext);
-  const CollectionTags = useContext(CollectionTagsContext);
+  const { creatorTags, collectionTags } = useContext(BaseContext);
+  // const  = useContext(CollectionTagsContext);
 
   return (
     <div>
@@ -74,7 +75,7 @@ const TagsPage: NextPage = () => {
             Creator Tags
           </Title>
           <div className="mb-10">
-            <TagList tags={CreatorTags} type="creator" />
+            <TagList tags={creatorTags} type="creator" />
           </div>
         </section>
         <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-10">
@@ -82,7 +83,7 @@ const TagsPage: NextPage = () => {
             Collection Tags
           </Title>
           <div className="mb-10">
-            <TagList tags={CollectionTags} type="collection" />
+            <TagList tags={collectionTags} type="collection" />
           </div>
         </section>
       </BaseLayout>

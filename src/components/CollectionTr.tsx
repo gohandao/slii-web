@@ -2,12 +2,12 @@ import React, { useState, useEffect, useContext, ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 import { MdVerified } from "react-icons/md";
 import { SocialsContext } from "@/contexts/SocialsContext";
-import { useQueryState } from "next-usequerystate";
 import router from "next/router";
 
 type Props = {
@@ -18,9 +18,8 @@ export const CollectionTr = ({ item, index }: any) => {
   //console.log(item.slug);
   //console.log(item);
   const { order, sortBy, term } = router.query;
-  const [termParam, setTermParam] = useQueryState("term");
 
-  const { socials } = useContext(SocialsContext);
+  const { socials } = useContext(BaseContext);
 
   let changeClass;
   switch (term) {
@@ -86,8 +85,8 @@ export const CollectionTr = ({ item, index }: any) => {
                     src={item.image_url}
                     alt=""
                   />
-                  <div className="ml-4 grid min-w-[160px] lg:w-[320px]">
-                    <p className="text-base text-gray-100 line-clamp-1 pr-3 flex gap-2 items-center">
+                  <div className="ml-4 grid w-[160px] md:w-[280px]">
+                    <p className="text-base text-gray-100 ellipsis pr-2 items-center">
                       {item.name}
                     </p>
                     <p className="text-sm text-gray-500 ellipsis pr-3">
@@ -113,6 +112,18 @@ export const CollectionTr = ({ item, index }: any) => {
             ) : (
               <Hyphen />
             )}
+          </Td>
+          {/*floor_price*/}
+          <Td>
+            <div className="flex item-center gap-1 justify-start">
+              {item.payment_tokens &&
+                item.payment_tokens[0].symbol == "ETH" && <EthIcon />}
+              {item.stats && item.stats.floor_price > 0 ? (
+                abbreviateNumber(item.stats.floor_price)
+              ) : (
+                <Hyphen />
+              )}
+            </div>
           </Td>
           {/*total_volume*/}
           <Td>
@@ -142,18 +153,6 @@ export const CollectionTr = ({ item, index }: any) => {
                     item.payment_tokens[0].symbol == "ETH" && <EthIcon />}
                   {abbreviateNumber(item.stats.thirty_day_volume)}
                 </>
-              ) : (
-                <Hyphen />
-              )}
-            </div>
-          </Td>
-          {/*floor_price*/}
-          <Td>
-            <div className="flex item-center gap-1 justify-start">
-              {item.payment_tokens &&
-                item.payment_tokens[0].symbol == "ETH" && <EthIcon />}
-              {item.stats && item.stats.floor_price > 0 ? (
-                abbreviateNumber(item.stats.floor_price)
               ) : (
                 <Hyphen />
               )}
@@ -223,13 +222,13 @@ export const CollectionTr = ({ item, index }: any) => {
           <Td>
             {term == "all" ||
             (!term && item.stats && item.stats.total_sales > 0) ? (
-              abbreviateNumber(item.stats.total_sales)
+              abbreviateNumber(item.stats.total_sales, true)
             ) : term == "24h" && item.stats.one_day_sales > 0 ? (
-              abbreviateNumber(item.stats.one_day_sales)
+              abbreviateNumber(item.stats.one_day_sales, true)
             ) : term == "7d" && item.stats.seven_day_sales > 0 ? (
-              abbreviateNumber(item.stats.seven_day_sales)
+              abbreviateNumber(item.stats.seven_day_sales, true)
             ) : term == "30d" && item.stats.thirty_day_sales > 0 ? (
-              abbreviateNumber(item.stats.thirty_day_sales)
+              abbreviateNumber(item.stats.thirty_day_sales, true)
             ) : (
               <Hyphen />
             )}

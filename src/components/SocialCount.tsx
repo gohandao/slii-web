@@ -3,7 +3,7 @@ import { base } from "@/libs/airtable";
 
 import { BsTwitter } from "react-icons/bs";
 import { FaDiscord } from "react-icons/fa";
-import { SocialsContext } from "@/contexts/SocialsContext";
+import { BaseContext } from "@/contexts/BaseContext";
 import { Social } from "@/types/social";
 
 type Props = {
@@ -26,7 +26,7 @@ export const SocialCount = ({
 }: Props) => {
   console.log("start SocialCount");
   console.log(discord_id);
-  const { socials, setSocials } = useContext(SocialsContext);
+  const { socials, setSocials } = useContext(BaseContext);
 
   const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
 

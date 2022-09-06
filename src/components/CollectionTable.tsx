@@ -6,13 +6,12 @@ import React, {
   ReactNode,
 } from "react";
 import ReactLoading from "react-loading";
-import { useQueryState } from "next-usequerystate";
 
 import { sortList } from "@/libs/sortList";
 
 import { FaDiscord, FaSort } from "react-icons/fa";
 import { CreatorsContext } from "@/contexts/CreatorsContext";
-import { CollectionsContext } from "@/contexts/CollectionsContext";
+import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 import { Card } from "@/components/Card";
@@ -36,9 +35,7 @@ type Props = {
   limit?: number;
 };
 export const CollectionTable = ({ collections, limit }: Props) => {
-  console.log("collections");
-  console.log(collections);
-  const creators = useContext(CreatorsContext);
+  const { creators, socials, OSCollections } = useContext(BaseContext);
   const {
     sortAction,
     setSortAction,
@@ -46,12 +43,9 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     setCollectionCategory,
   } = useContext(UtilitiesContext);
   const router = useRouter();
-  const [orderParam, setOrderParam] = useQueryState("order");
-  const [sortByParam, setSortByParam] = useQueryState("sortBy");
-  const [termParam, setTermParam] = useQueryState("term");
 
   const { order, sortBy, term } = router.query;
-  const { socials } = useContext(SocialsContext);
+  // const { socials } = useContext(SocialsContext);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [setup, setSetup] = useState<boolean>(false);
@@ -74,60 +68,60 @@ export const CollectionTable = ({ collections, limit }: Props) => {
   const newList = useRef<any[]>([]);
 
   const [test, setTest] = useState(0);
-  const getCollectionsData = async () => {
-    setTest(test + 1);
-    console.log(test);
-    const options = { method: "GET" };
-    const getNewData = async () => {
-      if (newList.current.length == 0) {
-        setLoading(true);
-        if (socials.length > 0 && collections) {
-          await Promise.all(
-            collections.map(async (collection, index) => {
-              const socials_filter = socials.filter(
-                (social) => social.collection_slug === collection.slug
-              );
+  // const getCollectionsData = async () => {
+  //   setTest(test + 1);
+  //   console.log(test);
+  //   const options = { method: "GET" };
+  //   const getNewData = async () => {
+  //     if (newList.current.length == 0) {
+  //       setLoading(true);
+  //       if (socials.length > 0 && collections) {
+  //         await Promise.all(
+  //           collections.map(async (collection, index) => {
+  //             const socials_filter = socials.filter(
+  //               (social) => social.collection_slug === collection.slug
+  //             );
 
-              const twitter_followers = socials_filter[0]
-                ? socials_filter[0].twitter_followers
-                : null;
-              const discord_members = socials_filter[0]
-                ? socials_filter[0].discord_members
-                : null;
-              await fetch(
-                `https://api.opensea.io/api/v1/collection/${collection.slug}`,
-                options
-              )
-                .then((response) => response.json())
-                .then((response) => {
-                  let data = response.collection;
-                  data.record_id = collection.record_id;
-                  data.creator_id = collection.creator_id;
-                  data.category = collection.category;
-                  data.twitter_followers = twitter_followers;
-                  data.discord_members = discord_members;
-                  const new_data = data;
-                  const new_list = [...newList.current, new_data];
-                  console.log("new_list");
-                  console.log(new_list);
-                  allList.current = Array.from(new Set(new_list));
-                  newList.current = Array.from(new Set(new_list));
-                  //console.log("newList.current");
-                  //console.log(newList.current);
-                  return;
-                })
-                .catch((err) => console.error(err));
-            })
-          );
-        }
-        //await getSocialCount();
-        setLoading(false);
-      }
-    };
-    await getNewData();
-    setSetup(true);
-    setSocialSetup(true);
-  };
+  //             const twitter_followers = socials_filter[0]
+  //               ? socials_filter[0].twitter_followers
+  //               : null;
+  //             const discord_members = socials_filter[0]
+  //               ? socials_filter[0].discord_members
+  //               : null;
+  //             await fetch(
+  //               `https://api.opensea.io/api/v1/collection/${collection.slug}`,
+  //               options
+  //             )
+  //               .then((response) => response.json())
+  //               .then((response) => {
+  //                 let data = response.collection;
+  //                 data.record_id = collection.record_id;
+  //                 data.creator_id = collection.creator_id;
+  //                 data.category = collection.category;
+  //                 data.twitter_followers = twitter_followers;
+  //                 data.discord_members = discord_members;
+  //                 const new_data = data;
+  //                 const new_list = [...newList.current, new_data];
+  //                 console.log("new_list");
+  //                 console.log(new_list);
+  //                 allList.current = Array.from(new Set(new_list));
+  //                 newList.current = Array.from(new Set(new_list));
+  //                 //console.log("newList.current");
+  //                 //console.log(newList.current);
+  //                 return;
+  //               })
+  //               .catch((err) => console.error(err));
+  //           })
+  //         );
+  //       }
+  //       //await getSocialCount();
+  //       setLoading(false);
+  //     }
+  //   };
+  //   await getNewData();
+  //   setSetup(true);
+  //   setSocialSetup(true);
+  // };
 
   // const getSocialCount = async () => {
   //   const addSocialCount = async () => {
@@ -165,13 +159,13 @@ export const CollectionTable = ({ collections, limit }: Props) => {
 
   //const [first, setfirst] = useState(0);
   //①get data from OpenSea
-  useEffect(() => {
-    //setfirst(first + 1);
-    //console.log(first + 1);
-    if (collections && allList.current.length == 0) {
-      getCollectionsData();
-    }
-  }, [collections, socials]);
+  // useEffect(() => {
+  //   //setfirst(first + 1);
+  //   //console.log(first + 1);
+  //   if (collections && allList.current.length == 0) {
+  //     getCollectionsData();
+  //   }
+  // }, [collections, socials]);
   //useEffect(() => {
   //  collections && !list && getCollectionsData();
   //}, []);
@@ -179,49 +173,54 @@ export const CollectionTable = ({ collections, limit }: Props) => {
 
   //②set initial collections data
   const args = {
-    list: allList.current,
+    list: collections,
     order: order as "desc" | "asc" | undefined,
     sortBy: sortBy as string | undefined,
     term: term as "24h" | "7d" | "30d" | "all" | undefined,
     //category: collectionsSort,
     limit: limit,
   };
-  useEffect(() => {
-    if (setup) {
-      //const data = Array.from(new Set(newList.current));
-      const data = sortList(args);
-      setList((list) => data);
-      console.log("dounatteruno?");
-      console.log(args.list);
-      console.log(data);
-      console.log(newList.current);
-      setSetup(false);
-    }
-  }, [setup]);
-
-  /*useEffect(() => {
-    getSocialCount();
-  }, [list]);*/
-  /*useEffect(() => {
-    if (socialSetup) {
-      getSocialCount();
-      setSocialSetup(false);
-    }
-  }, [socialSetup]);*/
-
-  //③set sorted collections data
+  console.log("ooooooo");
+  console.log(collections.length);
+  console.log(list.length);
+  console.log(list);
+  console.log(list[0]);
+  if (collections.length > 0 && (list.length == 0 || list[0] == undefined)) {
+    console.log("hhhhhhh");
+    setLoading(true);
+    //const data = Array.from(new Set(newList.current));
+    const data = sortList(args);
+    setList((list) => data);
+    // console.log("dounatteruno?");
+    // console.log(args.list);
+    // console.log(data);
+    //setSetup(true);
+    setLoading(false);
+  }
   useEffect(() => {
     if (router.isReady && (order || sortBy || term)) {
       if (args.list.length > 0) {
         const data = sortList(args);
-        console.log("sort shiteru?");
-        console.log(data);
-        console.log(args);
+        // console.log("sort shiteru?");
+        // console.log(data);
+        // console.log(args);
         setList((list) => [...data]);
       }
     }
-    //setSocialSetup(true);
-  }, [router.isReady, order, sortBy, term]);
+  }, [router.isReady, collections, order, sortBy, term]);
+  //③set sorted collections data
+  // useEffect(() => {
+  //   if (router.isReady && (order || sortBy || term)) {
+  //     if (args.list.length > 0) {
+  //       const data = sortList(args);
+  //       // console.log("sort shiteru?");
+  //       // console.log(data);
+  //       // console.log(args);
+  //       setList((list) => [...data]);
+  //     }
+  //   }
+  //   //setSocialSetup(true);
+  // }, [router.isReady, collections, order, sortBy, term]);
 
   /*useEffect(() => {
     if (sortAction) {
@@ -272,8 +271,8 @@ export const CollectionTable = ({ collections, limit }: Props) => {
                   <Th title="Collection Name" sortBy={sortBy as string} />
                   <Th title="Twitter" sortBy={sortBy as string} />
                   <Th title="Discord" sortBy={sortBy as string} />
-                  <Th title="Volume" sortBy={sortBy as string} />
                   <Th title="Floor Price" sortBy={sortBy as string} />
+                  <Th title="Volume" sortBy={sortBy as string} />
                   <Th title="Ave. Price" sortBy={sortBy as string} />
                   <Th title="% Change" sortBy={sortBy as string} />
                   <Th title="Sales" sortBy={sortBy as string} />
@@ -281,7 +280,7 @@ export const CollectionTable = ({ collections, limit }: Props) => {
                   <Th title="Items" sortBy={sortBy as string} />
                 </tr>
               </thead>
-              {!loading && (
+              {list.length > 0 && (
                 <tbody className="border border-gray-200 divide-y divide-gray-200 rounded">
                   {list &&
                     list.map((item, index) => (

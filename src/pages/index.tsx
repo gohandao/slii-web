@@ -28,7 +28,7 @@ import {
   CollectionTagsContext,
 } from "@/contexts/TagsContext";
 import { CreatorsContext } from "@/contexts/CreatorsContext";
-import { CollectionsContext } from "@/contexts/CollectionsContext";
+import { BaseContext } from "@/contexts/BaseContext";
 
 import { Tag } from "@/types/tag";
 import { Searchbox } from "@/components/Searchbox";
@@ -37,18 +37,19 @@ const Home: NextPage = () => {
   const router = useRouter();
   const { page } = router.query;
 
-  const creators = useContext(CreatorsContext);
-  const collections = useContext(CollectionsContext);
+  const { creators, collections, OSCollections, creatorTags, collectionTags } =
+    useContext(BaseContext);
+  // const {  } = useContext(BaseContext);
   //console.log("index collections");
   //console.log(collections);
 
-  const CreatorTags = useContext(CreatorTagsContext);
-  const CollectionTags = useContext(CollectionTagsContext);
+  // const CreatorTags = useContext(CreatorTagsContext);
+  // const CollectionTags = useContext(CollectionTagsContext);
 
   const creatorsLength = creators.length;
   const collectionsLength = collections.length;
-  const creatorTagsLength = CreatorTags.length;
-  const collectionTagsLength = CollectionTags.length;
+  const creatorTagsLength = creatorTags.length;
+  const collectionTagsLength = collectionTags.length;
   //const [filteredCreatorTags, setFilteredCreatorTags] = useState<Tag[]>([]);
   //const [filteredCollectionTags, setFilteredCollectionTags] = useState<Tag[]>([]);
 
@@ -56,7 +57,7 @@ const Home: NextPage = () => {
   for (let i = 0; i < 2; i++) {
     origin_filteredCreatorTags = [
       ...origin_filteredCreatorTags,
-      CreatorTags[i],
+      creatorTags[i],
     ];
   }
   const filteredCreatorTags = Array.from(new Set(origin_filteredCreatorTags));
@@ -65,7 +66,7 @@ const Home: NextPage = () => {
   for (let i = 0; i < 2; i++) {
     origin_filteredCollectionTags = [
       ...origin_filteredCollectionTags,
-      CollectionTags[i],
+      collectionTags[i],
     ];
   }
   const filteredCollectionTags = Array.from(
@@ -107,6 +108,25 @@ const Home: NextPage = () => {
               <p className="text-gray-400 text-sm">{creatorsLength} Creators</p>
             </div>
           </div>
+          <button
+            className="text-white text-3xl"
+            onClick={() => {
+              router.push(
+                {
+                  pathname: "/",
+                  query: {
+                    title: "inij",
+                    sort: "gdajhgoa",
+                  },
+                },
+                undefined,
+                { scroll: false }
+              );
+              return;
+            }}
+          >
+            test
+          </button>
           <div className="mb-10">
             {creators.length > 0 && (
               <CreatorList creators={creators} limit={10} />
@@ -143,9 +163,9 @@ const Home: NextPage = () => {
             </div>
           </div>
           <div className="mb-10">
-            {collections.length > 0 && (
+            {OSCollections.length > 0 && (
               <>
-                <CollectionTable collections={collections} limit={10} />
+                <CollectionTable collections={OSCollections} limit={10} />
               </>
             )}
           </div>

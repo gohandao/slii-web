@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 
 import { CreatorsContext } from "@/contexts/CreatorsContext";
-import { CollectionsContext } from "@/contexts/CollectionsContext";
+import { BaseContext } from "@/contexts/BaseContext";
 
 import { CreatorList } from "@/components/CreatorList";
 import { CollectionTable } from "@/components/CollectionTable";
@@ -48,8 +48,8 @@ const TagPage: NextPage = () => {
   useEffect(() => {
     breadcrumbList && setBreadcrumbList(breadcrumbList);
   }, []);
-  const creators = useContext(CreatorsContext);
-  const collections = useContext(CollectionsContext);
+  const { creators, collections, OSCollections } = useContext(BaseContext);
+  // const collections = useContext(CollectionsContext);
 
   const [filteredCreators, setFilteredCreators] = useState<Creator[]>();
   const [filteredCollections, setFilteredCollections] =
@@ -60,15 +60,17 @@ const TagPage: NextPage = () => {
       //@ts-ignore
       (item) => item.tags && item.tags.includes(tag) == true
     );
-
     setFilteredCreators(new_creators);
-    const new_collections = collections.filter(
+
+    const new_collections = OSCollections.filter(
       //@ts-ignore
       (item) => item.tags && item.tags.includes(tag) == true
     );
+    console.log("hhhnew_collections");
+    console.log(new_collections);
     setFilteredCollections(new_collections);
     //const filteredCollections = Array.from(new Set(filteredCollections01));
-  }, [collections]);
+  }, [OSCollections]);
 
   /*
   const filteredCreators = creators.filter(

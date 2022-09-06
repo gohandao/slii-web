@@ -20,6 +20,7 @@ import {
   CollectionTagsContext,
 } from "@/contexts/TagsContext";
 import { CollectionsContext } from "@/contexts/CollectionsContext";
+import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { SocialsContext } from "@/contexts/SocialsContext";
 
@@ -50,6 +51,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [breadcrumbList, setBreadcrumbList] = useState<BreadcrumbList>();
   const [creators, setCreators] = useState<Creator[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
+  const [OSCollections, setOSCollections] = useState<Collection[]>([]);
   const [creatorTags, setCreatorTags] = useState<Tag[]>([]);
   const [collectionTags, setCollectionTags] = useState<Tag[]>([]);
   const [socials, setSocials] = useState<Social[]>([]);
@@ -67,6 +69,8 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const [page, setPage] = useState<number | undefined>(1);
   const limit = 10;
+  const allList = useRef<any[]>([]);
+  const newList = useRef<any[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -175,7 +179,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         }
       );
   };
-  const getAllTags = (
+  const getTags = (
     baseName: string,
     setState: React.Dispatch<React.SetStateAction<Tag[]>>
   ) => {
@@ -270,6 +274,62 @@ function MyApp({ Component, pageProps }: AppProps) {
         }
       );
   };
+  const geOSCollections = async (collections: Collection[]) => {
+    const options = { method: "GET" };
+    const getNewData = async () => {
+      if (OSCollections.length == 0 && socials.length > 0) {
+        let new_list: any = [];
+        await Promise.all(
+          collections.map(async (collection, index) => {
+            const socials_filter = socials.filter(
+              (social) => social.collection_slug === collection.slug
+            );
+            const twitter_followers = socials_filter[0]
+              ? socials_filter[0].twitter_followers
+              : null;
+            const discord_members = socials_filter[0]
+              ? socials_filter[0].discord_members
+              : null;
+            await fetch(
+              `https://api.opensea.io/api/v1/collection/${collection.slug}`,
+              options
+            )
+              .then((response) => response.json())
+              .then((response) => {
+                let data = response.collection;
+                data.record_id = collection.record_id;
+                data.tags = collection.tags;
+                data.creator_id = collection.creator_id;
+                data.category = collection.category;
+                data.twitter_followers = twitter_followers;
+                data.discord_members = discord_members;
+                const new_data = data;
+                new_list = [...newList.current, new_data];
+                newList.current = Array.from(new Set(new_list));
+              })
+              .catch((err) => console.error(err));
+          })
+        );
+      }
+      //await getSocialCount();
+    };
+    await getNewData();
+    // console.log("OSnewList.current data");
+    // console.log(newList.current);
+    // console.log("OSnewList.current");
+    // console.log(collections);
+    const new_collections = Array.from(new Set(newList.current));
+    const result = newList.current.filter(
+      (element, index, self) =>
+        self.findIndex((e) => e.slug === element.slug) === index
+    );
+    setOSCollections(result);
+  };
+
+  useEffect(() => {
+    console.log("OSCollectionsuuuuuu");
+    console.log(OSCollections);
+  }, [OSCollections]);
 
   useEffect(() => {
     //getCreators();
@@ -277,27 +337,18 @@ function MyApp({ Component, pageProps }: AppProps) {
     setUser(data);
     creators.length == 0 && getCreators();
     collections.length == 0 && getCollections();
-    creatorTags.length == 0 && getAllTags("creator_tags", setCreatorTags);
-    collectionTags.length == 0 &&
-      getAllTags("collection_tags", setCollectionTags);
+    creatorTags.length == 0 && getTags("creator_tags", setCreatorTags);
+    collectionTags.length == 0 && getTags("collection_tags", setCollectionTags);
     socials.length == 0 && getSocials();
   }, []);
-
-  /*
   useEffect(() => {
-    console.log("data.records");
-    fetch(
-      `https://api.airtable.com/v0/appFYknMhbtkUTFgt/creators?api_key=${AIRTABLE_API_KEY}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("data.records");
-        console.log(data.records);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);*/
+    console.log("jjjjj");
+    if (OSCollections.length == 0 && collections && socials) {
+      (async () => {
+        await geOSCollections(collections);
+      })();
+    }
+  }, [collections, socials]);
 
   const site_name = "Gachi";
   const title = "Gachi | Japanese NFT Creators / Collections Database";
@@ -363,22 +414,24 @@ function MyApp({ Component, pageProps }: AppProps) {
             //setCollectionsMenu: setCollectionsMenu,
           }}
         >
-          <CreatorsContext.Provider value={creators}>
-            <CollectionsContext.Provider value={collections}>
-              <CreatorTagsContext.Provider value={creatorTags}>
-                <CollectionTagsContext.Provider value={collectionTags}>
-                  <SocialsContext.Provider value={{ socials, setSocials }}>
-                    <div className="flex flex-col min-h-screen font-outfit bg-stripe overflow-hidden">
-                      <Component {...pageProps} />
-                      <div className="mt-auto">
-                        <Footer />
-                      </div>
-                    </div>
-                  </SocialsContext.Provider>
-                </CollectionTagsContext.Provider>
-              </CreatorTagsContext.Provider>
-            </CollectionsContext.Provider>
-          </CreatorsContext.Provider>
+          <BaseContext.Provider
+            value={{
+              creators,
+              collections,
+              OSCollections,
+              creatorTags,
+              collectionTags,
+              socials,
+              setSocials,
+            }}
+          >
+            <div className="flex flex-col min-h-screen font-outfit bg-stripe overflow-hidden">
+              <Component {...pageProps} />
+              <div className="mt-auto">
+                <Footer />
+              </div>
+            </div>
+          </BaseContext.Provider>
         </UtilitiesContext.Provider>
       </AuthContext.Provider>
     </>

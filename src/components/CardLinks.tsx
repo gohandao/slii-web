@@ -20,7 +20,7 @@ export const CardLinks = ({
   opensea_url,
 }: Props) => {
   return (
-    <div className="flex gap-4 mt-auto border-t border-gray-700 w-full justify-center py-[10px] items-center opacity-50">
+    <div className="flex gap-4 mt-auto w-full justify-end py-1 items-center opacity-50">
       {/*twitter_id && (
         <object>
           <Link href={`https://twitter.com/${twitter_id}`}>

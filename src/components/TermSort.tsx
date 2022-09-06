@@ -1,15 +1,19 @@
+import { setParams } from "@/utilities/setParams";
 import { useQueryState } from "next-usequerystate";
+import { useRouter } from "next/router";
 import React, { ReactNode } from "react";
 
 type Props = {
   term?: string;
 };
 export const TermSort = ({ term }: Props) => {
-  const [termParam, setTermParam] = useQueryState("term");
-
+  //const [termParam, setTermParam] = useQueryState("term");
+  const router = useRouter();
+  const { order, sortBy } = router.query;
   type Props = {
     title: string;
   };
+
   const Button = ({ title }: Props) => {
     let activeClass;
     if (title == term || (!term && title == "all")) {
@@ -21,7 +25,12 @@ export const TermSort = ({ term }: Props) => {
       <button
         className={`text-gray-300 w-10 h-10 flex justify-center items-center text-sm border-r last:border-r-0 capitalize ${activeClass}`}
         onClick={() => {
-          setTermParam(title);
+          setParams({
+            sortBy: sortBy as string,
+            order: order as string,
+            term: title,
+          });
+          //setTermParam(title);
         }}
       >
         {title}

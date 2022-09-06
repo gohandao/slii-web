@@ -12,7 +12,7 @@ import { base } from "@/libs/airtable";
 
 import { useRouter } from "next/router";
 
-import { CreatorsContext } from "@/contexts/CreatorsContext";
+import { BaseContext } from "@/contexts/BaseContext";
 import { CollectionsContext } from "@/contexts/CollectionsContext";
 
 import { CollectionCard } from "@/components/CollectionCard";
@@ -34,8 +34,8 @@ const CreatorIndex: NextPage = (props: any) => {
   const { username } = router.query;
   const [loading, setLoading] = useState<boolean>(false);
 
-  const creators = useContext(CreatorsContext);
-  const collections = useContext(CollectionsContext);
+  const { creators, collections } = useContext(BaseContext);
+  // const collections = useContext(CollectionsContext);
   const { setBreadcrumbList } = useContext(UtilitiesContext);
   const breadcrumbList = username && [
     {
@@ -54,9 +54,6 @@ const CreatorIndex: NextPage = (props: any) => {
   useEffect(() => {
     breadcrumbList && setBreadcrumbList(breadcrumbList);
   }, []);
-  useEffect(() => {
-    breadcrumbList && setBreadcrumbList(breadcrumbList);
-  }, [username]);
   const [creator, setCreator] = useState<Creator>();
   const [collectionSlug, setCollectionSlug] = useState<string>();
 
@@ -98,6 +95,9 @@ const CreatorIndex: NextPage = (props: any) => {
     }
   }, [username, collections]);
   //[username, collections]
+  if (collectionSlug && !collection) {
+    getCollection();
+  }
   useEffect(() => {
     collectionSlug && getCollection();
   }, [collectionSlug]);

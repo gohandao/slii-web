@@ -11,7 +11,7 @@ import { base } from "@/libs/airtable";
 
 import { useRouter } from "next/router";
 
-import { CreatorsContext } from "@/contexts/CreatorsContext";
+import { BaseContext } from "@/contexts/BaseContext";
 import { CollectionsContext } from "@/contexts/CollectionsContext";
 
 import { List } from "@/components/List";
@@ -61,8 +61,7 @@ const CollectionIndex: NextPage = (props: any) => {
     breadcrumbList && setBreadcrumbList(breadcrumbList);
   }, [collection]);
 
-  const creators = useContext(CreatorsContext);
-  const collections = useContext(CollectionsContext);
+  const { creators, collections, OSCollections } = useContext(BaseContext);
 
   const [existence, setExistence] = useState<boolean>(false);
   const [creator, setCreator] = useState<Creator>();
@@ -214,7 +213,7 @@ const CollectionIndex: NextPage = (props: any) => {
                       </p>
                     </div>
                   </div>
-                  <div className="flex gap-5 justify-between">
+                  <div className="flex gap-5 justify-between mb-4">
                     <Dropdown position="left" type="assetsDropdown" />
                   </div>
                   {/*<div className="flex gap-5 mb-4">

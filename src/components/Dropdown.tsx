@@ -8,6 +8,7 @@ import { TbUsers } from "react-icons/tb";
 
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { useRouter } from "next/router";
+import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
 
 type Props = {
   position: "left" | "right";
@@ -34,9 +35,6 @@ export const Dropdown = ({ position, type }: Props) => {
     setCollectionCategory,
   } = useContext(UtilitiesContext);
   const router = useRouter();
-  const [orderParam, setOrderParam] = useQueryState("order");
-  const [sortByParam, setSortByParam] = useQueryState("sortBy");
-  const [termParam, setTermParam] = useQueryState("term");
   const { order, sortBy, term } = router.query;
 
   const [status, setStatus] = useState<boolean>(false);
@@ -149,38 +147,58 @@ export const Dropdown = ({ position, type }: Props) => {
       break;
   }
 
+  type setParamsProps = {
+    sortBy?: string;
+    order?: string;
+    term?: string;
+  };
+  const setParams = ({ sortBy, order, term }: setParamsProps) => {
+    const query = {
+      sortBy: sortBy,
+      order: order,
+      term: term,
+    };
+    const new_query: setParamsProps = removeUndefinedObject(query);
+    const currentUrl = location.pathname;
+    router.push(
+      {
+        pathname: currentUrl,
+        query: new_query,
+      },
+      undefined,
+      { scroll: false }
+    );
+    return;
+  };
   const changeCollectionParams = (title: string) => {
     switch (title) {
       case "Floor Price":
         switch (sortBy) {
           case "Price Low to High":
-            setOrderParam("asc");
-            setSortByParam("Price High to Low");
+            setParams({ sortBy: title, order: "asc", term: term as string });
             //setSortAction(true);
             break;
           case "Price High to Low":
-            setOrderParam("desc");
-            setSortByParam("Price Low to High");
+            setParams({ sortBy: title, order: "desc", term: term as string });
             //setSortAction(true);
             break;
           default:
-            setOrderParam("desc");
-            setSortByParam("Price High to Low");
+            setParams({ sortBy: title, order: "desc", term: term as string });
             //setSortAction(true);
             break;
         }
         break;
       default:
-        setSortByParam(title);
+        setParams({ sortBy: title, order: "asc", term: term as string });
         break;
     }
-    const exception =
-      title != "Price Low to High" && title != "Price High to Low" && true;
-    if (orderParam) {
-      if (title == sortBy && exception) {
-        orderParam == "desc" ? setOrderParam("asc") : setOrderParam("desc");
-      }
-    }
+    // const exception =
+    //   title != "Price Low to High" && title != "Price High to Low" && true;
+    // if (orderParam) {
+    //   if (title == sortBy && exception) {
+    //     orderParam == "desc" ? setOrderParam("asc") : setOrderParam("desc");
+    //   }
+    // }
   };
   const onChangeHandler = (menu: string) => {
     switch (type) {

@@ -9,4 +9,6 @@ export type Collection = {
   tags: [];
   createdAt: Date | null;
   updatedAt: Date | null;
+  twitter_followers: number | null;
+  discord_members: number | null;
 };

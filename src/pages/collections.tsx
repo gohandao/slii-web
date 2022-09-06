@@ -21,18 +21,17 @@ import { Dropdown } from "@/components/Dropdown";
 
 import { CreatorsContext } from "@/contexts/CreatorsContext";
 import { CollectionsContext } from "@/contexts/CollectionsContext";
+import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
 import { Headline } from "@/components/Headline";
 import { BreadCrumbs } from "@/components/BreadCrumbs";
-import { useQueryState } from "next-usequerystate";
 import { TermSort } from "@/components/TermSort";
 const CollectionsPage: NextPage = () => {
   const router = useRouter();
   const { page, term } = router.query;
-  const [termParam, setTermParam] = useQueryState("term");
 
   const { setBreadcrumbList } = useContext(UtilitiesContext);
   const breadcrumbList = [
@@ -48,8 +47,7 @@ const CollectionsPage: NextPage = () => {
   useEffect(() => {
     setBreadcrumbList(breadcrumbList);
   }, []);
-  const creators = useContext(CreatorsContext);
-  const collections = useContext(CollectionsContext);
+  const { creators, collections, OSCollections } = useContext(BaseContext);
   const collectionsLength = collections.length;
 
   //const [collectionsMenu, setCollectionMenu] =
@@ -86,7 +84,7 @@ const CollectionsPage: NextPage = () => {
             {/*<Dropdown position="right" type="sortCollections" />*/}
           </div>
           <div className="">
-            {collections && <CollectionTable collections={collections} />}
+            {OSCollections && <CollectionTable collections={OSCollections} />}
           </div>
           {/*<div className="flex justify-center mb-20">
             <ShowMore currentPage={page ? Number(page) : 1} />

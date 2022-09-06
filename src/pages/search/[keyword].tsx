@@ -25,7 +25,7 @@ import {
   CreatorTagsContext,
   CollectionTagsContext,
 } from "@/contexts/TagsContext";
-import { CreatorsContext } from "@/contexts/CreatorsContext";
+import { BaseContext } from "@/contexts/BaseContext";
 
 import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
@@ -54,11 +54,12 @@ const KeywordPage: NextPage = () => {
     breadcrumbList && setBreadcrumbList(breadcrumbList);
   }, []);
 
-  const creators = useContext(CreatorsContext);
-  const collections = useContext(CollectionsContext);
+  const { creators, collections, OSCollections, creatorTags, collectionTags } =
+    useContext(BaseContext);
+  // const collections = useContext(CollectionsContext);
 
-  const CreatorTags = useContext(CreatorTagsContext);
-  const CollectionTags = useContext(CollectionTagsContext);
+  // const CreatorTags = useContext(CreatorTagsContext);
+  // const CollectionTags = useContext(CollectionTagsContext);
 
   const uppperKeyword = typeof keyword == "string" && keyword.toUpperCase();
   const filteredCreators01 = creators.filter(
@@ -83,7 +84,7 @@ const KeywordPage: NextPage = () => {
   //重複削除
   const filteredCreators = Array.from(new Set(origin_filteredCreators));
 
-  const filteredCollections01 = collections.filter(
+  const filteredCollections01 = OSCollections.filter(
     (item) =>
       typeof keyword == "string" &&
       //@ts-ignore

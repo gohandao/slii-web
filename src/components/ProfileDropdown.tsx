@@ -39,12 +39,13 @@ export const ProfileDropdown = ({
         <div
           className={`absolute origin-top-right left-0 sm:origin-top-left sm:right-0 sm:left-auto rounded border border-gray-700 bg-gray-800 z-20 w-48`}
         >
-          {menus.map((menu) => (
+          {menus.map((menu, index) => (
             <button
               onClick={() => {
                 onClickHandler(menu.url);
               }}
               className="flex px-5 py-3 text-sm text-gray-400 items-center gap-3 normal-case"
+              key={index}
             >
               {menu.icon}
               {menu.title}

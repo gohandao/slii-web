@@ -183,6 +183,7 @@ export const SocialCount = ({
       // console.log(discordData);
       console.log(twitter_data);
       console.log(discord_data);
+
       const new_twitter_followers = twitter_data
         ? twitter_data.public_metrics.followers_count
         : twitter_followers;
@@ -208,7 +209,7 @@ export const SocialCount = ({
       console.log("44444");
     })();
     //getTwitterFollowers();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   type StatsProps = {
     icon: any;
     title01: string;

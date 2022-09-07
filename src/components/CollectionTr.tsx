@@ -9,6 +9,7 @@ import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 import { MdVerified } from "react-icons/md";
 import { SocialsContext } from "@/contexts/SocialsContext";
 import router from "next/router";
+import { AiOutlineHeart } from "react-icons/ai";
 
 type Props = {
   children: ReactNode;
@@ -102,13 +103,18 @@ export const CollectionTr = ({ item, index }: any) => {
                       />
                     )}
                   </div>
-                  <div className="ml-4 grid w-[160px] md:w-[280px]">
-                    <p className="text-base text-gray-100 ellipsis pr-2 items-center font-bold max-w-full min-w-[0] pr-3">
-                      {item.name}
-                      {item.safelist_request_status == "verified" && (
-                        <MdVerified className="-mt-[2px] text-gray-500 ml-2 inline-block" />
-                      )}
-                    </p>
+                  <div className="ml-4 grid w-[200px] md:w-[280px]">
+                    <div className="flex justify-between items-center">
+                      <p className="text-base text-gray-100 ellipsis pr-2 items-center font-bold max-w-full min-w-[0] pr-2">
+                        {item.name}
+                        {item.safelist_request_status == "verified" && (
+                          <MdVerified className="-mt-[2px] text-gray-500 ml-2 inline-block" />
+                        )}
+                      </p>
+                      <div className="-mr-1">
+                        <AiOutlineHeart className=" text-gray-400 opacity-50" />
+                      </div>
+                    </div>
                     <p className="text-sm text-gray-500 ellipsis pr-3">
                       {item.creator_id}
                     </p>

@@ -109,7 +109,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
                           )}
                         </h3>
                         <div className="-mr-1">
-                          <AiOutlineHeart className="text-xl text-gray-200 opacity-50" />
+                          <AiOutlineHeart className="text-xl text-gray-400 opacity-50" />
                         </div>
                       </div>
                       <div className="flex flex-between pl-3">

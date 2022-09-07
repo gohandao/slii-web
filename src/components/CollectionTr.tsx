@@ -103,8 +103,11 @@ export const CollectionTr = ({ item, index }: any) => {
                     )}
                   </div>
                   <div className="ml-4 grid w-[160px] md:w-[280px]">
-                    <p className="text-base text-gray-100 ellipsis pr-2 items-center">
+                    <p className="text-base text-gray-100 ellipsis pr-2 items-center font-bold max-w-full min-w-[0] pr-3">
                       {item.name}
+                      {item.safelist_request_status == "verified" && (
+                        <MdVerified className="-mt-[2px] text-gray-500 ml-2 inline-block" />
+                      )}
                     </p>
                     <p className="text-sm text-gray-500 ellipsis pr-3">
                       {item.creator_id}

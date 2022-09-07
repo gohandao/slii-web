@@ -187,7 +187,7 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
-      production: "https://gachi.vercel.app",
+      production: "https://gachi-collection.vercel.app",
       development: "http://localhost:3000",
     }[process.env.NODE_ENV];
   }
@@ -195,7 +195,7 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
     props: {
       // OGP画像は絶対URLで記述する必要があります
       //ogImageUrl: `${baseUrl}/api/ogp?title=${creator.username}&page=creators`,
-      title: `${username}'s Gachi collections`,
+      title: `${username}'s NFT collections`,
       description: description,
       //description: `${records[0].fields.description}`,
       ogImageUrl: `${baseUrl}/api/ogp?title=${username}&subTitle=Creator`,
@@ -222,7 +222,7 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = ({
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
-      production: "https://gachi.vercel.app",
+      production: "https://gachi-collection.vercel.app",
       development: "http://localhost:3000",
     }[process.env.NODE_ENV];
   }

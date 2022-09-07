@@ -114,12 +114,15 @@ export const CreatorList = ({ creators, limit }: Props) => {
                       </div>
                       <div className="flex flex-between pl-3">
                         <div
-                          className={`flex justify-center items-center gap-2 left-0 top-0 py-[2px] px-2 z-10 rounded text-xs md:text-xs capitalize bg-gray-700 text-gray-400 ${
-                            creator.type == "creator___"
-                              ? "bg-yellow-500 text-yellow-100"
-                              : ""
-                          }`}
+                          className={`relative flex justify-center items-center gap-2 left-0 top-0 py-[2px] px-2 z-10 rounded text-xs md:text-xs capitalize bg-gray-700 text-gray-400 `}
                         >
+                          <div
+                            className={`absolute left-[3px] top-[2px] w-2 h-2 z-10 rounded-full ${
+                              creator.type == "creator"
+                                ? "bg-yellow-500"
+                                : "bg-blue-500"
+                            }`}
+                          ></div>
                           <JP title="Japan" className="h-3 rounded-sm" />
                           {creator.type}
                         </div>

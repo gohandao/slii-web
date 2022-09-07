@@ -55,7 +55,7 @@ const TagsPage: NextPage = () => {
     <div>
       <Head>
         <title>
-          Search Japanese NFT creators and collections with tags | Gachi
+          Search Japanese NFT creators and collections with tags | NFT OTAKU
         </title>
         <meta
           name="description"

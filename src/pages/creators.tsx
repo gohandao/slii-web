@@ -75,7 +75,7 @@ const CreatorsPage: NextPage = () => {
     filterCreatorsHandler(creatorType);
   }, [creatorType]);
 
-  const title = "Japanese NFT creators list by Gachi";
+  const title = "Japanese NFT creators list by NFT OTAKU";
   const description = "Check these japanese NFT creators now.";
 
   const Button = ({ filter }: any) => {

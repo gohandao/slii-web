@@ -14,7 +14,7 @@ export const Header = () => {
   const [dropdown, setDropdown] = useState<boolean>(false);
 
   return (
-    <header className="py-4 " x-data="{expanded: false}">
+    <header className="py-3 " x-data="{expanded: false}">
       <div className="mx-auto px-5 md:px-8 flex justify-between">
         <div className="flex items-center gap-20">
           <div className="flex-shrink-0">

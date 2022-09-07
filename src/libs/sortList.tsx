@@ -55,7 +55,7 @@ export const sortList = (args: sortProps) => {
         if (a.twitter_followers === "") return 1;
         if (b.twitter_followers === "") return -1;
 
-        var sig = args.order == "desc" ? 1 : -1;
+        var sig = args.order == "desc" || !args.order ? 1 : -1;
         return a.twitter_followers < b.twitter_followers
           ? sig
           : a.twitter_followers > b.twitter_followers
@@ -82,7 +82,7 @@ export const sortList = (args: sortProps) => {
         if (a.discord_members === "") return 1;
         if (b.discord_members === "") return -1;
 
-        var sig = args.order == "desc" ? 1 : -1;
+        var sig = args.order == "desc" || !args.order ? 1 : -1;
         return a.discord_members < b.discord_members
           ? sig
           : a.discord_members > b.discord_members
@@ -116,7 +116,7 @@ export const sortList = (args: sortProps) => {
             if (a.stats.one_day_volume === "") return 1;
             if (b.stats.one_day_volume === "") return -1;
 
-            var sig = args.order == "desc" ? 1 : -1;
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
             return a.stats.one_day_volume < b.stats.one_day_volume
               ? sig
               : a.stats.one_day_volume > b.stats.one_day_volume
@@ -151,7 +151,7 @@ export const sortList = (args: sortProps) => {
             if (a.stats.seven_day_volume === "") return 1;
             if (b.stats.seven_day_volume === "") return -1;
 
-            var sig = args.order == "desc" ? 1 : -1;
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
             return a.stats.seven_day_volume < b.stats.seven_day_volume
               ? sig
               : a.stats.seven_day_volume > b.stats.seven_day_volume
@@ -187,7 +187,7 @@ export const sortList = (args: sortProps) => {
             if (a.stats.thirty_day_volume === "") return 1;
             if (b.stats.thirty_day_volume === "") return -1;
 
-            var sig = args.order == "desc" ? 1 : -1;
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
             return a.stats.thirty_day_volume < b.stats.thirty_day_volume
               ? sig
               : a.stats.thirty_day_volume > b.stats.thirty_day_volume
@@ -215,7 +215,7 @@ export const sortList = (args: sortProps) => {
             if (a.stats.total_volume === "") return 1;
             if (b.stats.total_volume === "") return -1;
 
-            var sig = args.order == "desc" ? 1 : -1;
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
             return a.stats.total_volume < b.stats.total_volume
               ? sig
               : a.stats.total_volume > b.stats.total_volume
@@ -260,7 +260,7 @@ export const sortList = (args: sortProps) => {
         if (a.stats.floor_price === "") return 1;
         if (b.stats.floor_price === "") return -1;
 
-        var sig = args.order == "desc" ? 1 : -1;
+        var sig = args.order == "desc" || !args.order ? 1 : -1;
         return a.stats.floor_price < b.stats.floor_price
           ? sig
           : a.stats.floor_price > b.stats.floor_price
@@ -300,7 +300,7 @@ export const sortList = (args: sortProps) => {
             if (a.stats.one_day_average_price === "") return 1;
             if (b.stats.one_day_average_price === "") return -1;
 
-            var sig = args.order == "desc" ? 1 : -1;
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
             return a.stats.one_day_average_price < b.stats.one_day_average_price
               ? sig
               : a.stats.one_day_average_price > b.stats.one_day_average_price
@@ -344,7 +344,7 @@ export const sortList = (args: sortProps) => {
             if (a.stats.seven_day_average_price === "") return 1;
             if (b.stats.seven_day_average_price === "") return -1;
 
-            var sig = args.order == "desc" ? 1 : -1;
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
             return a.stats.seven_day_average_price <
               b.stats.seven_day_average_price
               ? sig
@@ -390,7 +390,7 @@ export const sortList = (args: sortProps) => {
             if (a.stats.thirty_day_average_price === "") return 1;
             if (b.stats.thirty_day_average_price === "") return -1;
 
-            var sig = args.order == "desc" ? 1 : -1;
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
             return a.stats.thirty_day_average_price <
               b.stats.thirty_day_average_price
               ? sig
@@ -420,7 +420,7 @@ export const sortList = (args: sortProps) => {
             if (a.stats.average_price === "") return 1;
             if (b.stats.average_price === "") return -1;
 
-            var sig = args.order == "desc" ? 1 : -1;
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
             return a.stats.average_price < b.stats.average_price
               ? sig
               : a.stats.average_price > b.stats.average_price
@@ -456,7 +456,7 @@ export const sortList = (args: sortProps) => {
             if (a.stats.one_day_change === "") return 1;
             if (b.stats.one_day_change === "") return -1;
 
-            var sig = args.order == "desc" ? 1 : -1;
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
             return a.stats.one_day_change < b.stats.one_day_change
               ? sig
               : a.stats.one_day_change > b.stats.one_day_change
@@ -491,7 +491,7 @@ export const sortList = (args: sortProps) => {
             if (a.stats.seven_day_change === "") return 1;
             if (b.stats.seven_day_change === "") return -1;
 
-            var sig = args.order == "desc" ? 1 : -1;
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
             return a.stats.seven_day_change < b.stats.seven_day_change
               ? sig
               : a.stats.seven_day_change > b.stats.seven_day_change
@@ -527,7 +527,7 @@ export const sortList = (args: sortProps) => {
             if (a.stats.thirty_day_change === "") return 1;
             if (b.stats.thirty_day_change === "") return -1;
 
-            var sig = args.order == "desc" ? 1 : -1;
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
             return a.stats.thirty_day_change < b.stats.thirty_day_change
               ? sig
               : a.stats.thirty_day_change > b.stats.thirty_day_change
@@ -563,7 +563,7 @@ export const sortList = (args: sortProps) => {
             if (a.stats.one_day_sales === "") return 1;
             if (b.stats.one_day_sales === "") return -1;
 
-            var sig = args.order == "desc" ? 1 : -1;
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
             return a.stats.one_day_sales < b.stats.one_day_sales
               ? sig
               : a.stats.one_day_sales > b.stats.one_day_sales
@@ -597,7 +597,7 @@ export const sortList = (args: sortProps) => {
             if (a.stats.seven_day_sales === "") return 1;
             if (b.stats.seven_day_sales === "") return -1;
 
-            var sig = args.order == "desc" ? 1 : -1;
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
             return a.stats.seven_day_sales < b.stats.seven_day_sales
               ? sig
               : a.stats.seven_day_sales > b.stats.seven_day_sales
@@ -632,7 +632,7 @@ export const sortList = (args: sortProps) => {
             if (a.stats.thirty_day_sales === "") return 1;
             if (b.stats.thirty_day_sales === "") return -1;
 
-            var sig = args.order == "desc" ? 1 : -1;
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
             return a.stats.thirty_day_sales < b.stats.thirty_day_sales
               ? sig
               : a.stats.thirty_day_sales > b.stats.thirty_day_sales
@@ -660,7 +660,7 @@ export const sortList = (args: sortProps) => {
             if (a.stats.total_sales === "") return 1;
             if (b.stats.total_sales === "") return -1;
 
-            var sig = args.order == "desc" ? 1 : -1;
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
             return a.stats.total_sales < b.stats.total_sales
               ? sig
               : a.stats.total_sales > b.stats.total_sales
@@ -725,7 +725,7 @@ export const sortList = (args: sortProps) => {
             if (a.stats.one_day_volume === "") return 1;
             if (b.stats.one_day_volume === "") return -1;
 
-            var sig = args.order == "desc" ? 1 : -1;
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
             return a.stats.one_day_volume < b.stats.one_day_volume
               ? sig
               : a.stats.one_day_volume > b.stats.one_day_volume
@@ -760,7 +760,7 @@ export const sortList = (args: sortProps) => {
             if (a.stats.seven_day_volume === "") return 1;
             if (b.stats.seven_day_volume === "") return -1;
 
-            var sig = args.order == "desc" ? 1 : -1;
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
             return a.stats.seven_day_volume < b.stats.seven_day_volume
               ? sig
               : a.stats.seven_day_volume > b.stats.seven_day_volume
@@ -796,7 +796,7 @@ export const sortList = (args: sortProps) => {
             if (a.stats.thirty_day_volume === "") return 1;
             if (b.stats.thirty_day_volume === "") return -1;
 
-            var sig = args.order == "desc" ? 1 : -1;
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
             return a.stats.thirty_day_volume < b.stats.thirty_day_volume
               ? sig
               : a.stats.thirty_day_volume > b.stats.thirty_day_volume
@@ -824,7 +824,7 @@ export const sortList = (args: sortProps) => {
             if (a.stats.total_volume === "") return 1;
             if (b.stats.total_volume === "") return -1;
 
-            var sig = !args.order || args.order == "desc" ? 1 : -1;
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
             return a.stats.total_volume < b.stats.total_volume
               ? sig
               : a.stats.total_volume > b.stats.total_volume

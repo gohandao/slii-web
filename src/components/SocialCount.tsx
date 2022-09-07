@@ -118,7 +118,7 @@ export const SocialCount = ({
   let baseUrl = "" as string;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
-      production: "https://gachi.vercel.app",
+      production: "https://gachi-collection.vercel.app",
       development: "http://localhost:3000",
     }[process.env.NODE_ENV];
   }

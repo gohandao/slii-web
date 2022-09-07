@@ -25,6 +25,8 @@ import { useRouter } from "next/router";
 import { FiCopy } from "react-icons/fi";
 import { Social } from "@/types/social";
 import { BaseContext } from "@/contexts/BaseContext";
+import { LikeButton } from "@/components/LikeButton";
+import { ViewsCount } from "@/components/ViewsCount";
 
 type Props = {
   creator: Creator;
@@ -35,7 +37,7 @@ export const CreatorProfile = ({ creator }: Props) => {
   let baseUrl = "" as string;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
-      production: "https://gachi.vercel.app",
+      production: "https://gachi-collection.vercel.app",
       development: "http://localhost:3000",
     }[process.env.NODE_ENV];
   }
@@ -141,9 +143,9 @@ export const CreatorProfile = ({ creator }: Props) => {
 
   return (
     <section className="">
-      <button onClick={openModal} className="text-white">
+      {/*<button onClick={openModal} className="text-white">
         Open Modal
-      </button>
+  </button>*/}
       <Modal
         // isOpenがtrueならモダールが起動する
         isOpen={modalIsOpen}
@@ -224,18 +226,7 @@ export const CreatorProfile = ({ creator }: Props) => {
               />
             </div>
             <div className="flex gap-3 absolute bottom-6 left-full rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
-              <ProfileDropdown
-                icon={<BsFillShareFill className="text-gray-500" />}
-                dropdown={shareDropdown}
-                setDropdown={setShareDropdown}
-                menus={shareMenus}
-              />
-              <ProfileDropdown
-                icon={<BsThreeDots className="text-gray-500 " />}
-                dropdown={requestDropdown}
-                setDropdown={setRequestDropdown}
-                menus={requestMenus}
-              />
+              <LikeButton id={creator.username} />
             </div>
             <p
               className={`absolute top-6 left-full -ml-6 pl-[24px] pr-3 rounded-tr-full rounded-br-full text-sm capitalize flex justify-center items-center gap-[6px] ${
@@ -264,7 +255,7 @@ export const CreatorProfile = ({ creator }: Props) => {
                 alertText="ETH address has copied!"
               />
             </div>
-            <LikeViews id={creator.username} type="creator" />
+            <ViewsCount id={creator.username} type="creator" />
             <p className="text-gray-100 mt-1 break-all px-3 text-sm sm:text-base">
               {creator.description}
             </p>

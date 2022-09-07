@@ -40,7 +40,7 @@ export const Footer = () => {
     <>
       {/*<div className="px-6 mx-auto sm:px-8 lg:px-12 max-w-7xl flex justify-center mb-10">
         <div className="flex gap-5">
-          <Button url="https://google.com" title="Gachi DAO" />
+          <Button url="https://google.com" title="NFT OTAKU" />
           <Button url="https://google.com" title="Request" />
         </div>
   </div>*/}
@@ -57,7 +57,7 @@ export const Footer = () => {
             </Link>
 </div>*/}
           <small className="text-gray-400 text-sm text-center flex justify-center">
-            ©︎ Gachi 2022
+            ©︎ NFT OTAKU 2022
           </small>
         </div>
       </footer>

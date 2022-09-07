@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { FaReact } from "react-icons/fa";
+import { FaReact, FaRegFlag } from "react-icons/fa";
 import { SiTypescript } from "react-icons/si";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { VscChecklist } from "react-icons/vsc";
@@ -22,6 +22,9 @@ import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { SocialCount } from "@/components/SocialCount";
 import { SocialsContext } from "@/contexts/SocialsContext";
 import { Social } from "@/types/social";
+import { LikeButton } from "./LikeButton";
+import { BsFillShareFill, BsThreeDots, BsTwitter } from "react-icons/bs";
+import { useRouter } from "next/router";
 
 type StatsProps = {
   title: string;
@@ -52,6 +55,44 @@ export const CollectionProfile = ({ collection }: any) => {
     collection.discord_url.substring(
       collection.discord_url.lastIndexOf("/") + 1
     );
+
+  const [requestDropdown, setRequestDropdown] = useState<boolean>(false);
+  const [shareDropdown, setShareDropdown] = useState<boolean>(false);
+
+  // シェアボタンのリンク先
+  const router = useRouter();
+
+  let baseUrl = "" as string;
+  if (process.env.NODE_ENV != "test") {
+    baseUrl = {
+      production: "https://gachi-collection.vercel.app",
+      development: "http://localhost:3000",
+    }[process.env.NODE_ENV];
+  }
+  const currentUrl = baseUrl + router.asPath;
+
+  var twitterShareUrl = "https://twitter.com/intent/tweet";
+  twitterShareUrl += "?text=" + encodeURIComponent("ツイート内容テキスト");
+  twitterShareUrl += "&url=" + encodeURIComponent(currentUrl);
+  const shareMenus = [
+    /*{
+      icon: <FiCopy />,
+      title: "Copy URL",
+      url: twitterShareUrl,
+    },*/
+    {
+      icon: <BsTwitter />,
+      title: "Share on Twitter",
+      url: twitterShareUrl,
+    },
+  ];
+  const requestMenus = [
+    {
+      icon: <FaRegFlag />,
+      title: "Kaizen idea",
+      url: "https://google.com",
+    },
+  ];
 
   const Stats = ({ title, element, unit }: StatsProps) => {
     return (
@@ -121,8 +162,8 @@ export const CollectionProfile = ({ collection }: any) => {
       </div>
       <div className="mx-auto max-w-2xl">
         <div className="relative flex justify-center">
-          <div className="relative flex">
-            <div className="relative -mt-[60px] rounded border-[5px] border-gray-800 bg-gray-700 overflow-hidden inline-flex items center justify-center z-10 mb-2 w-[110px] h-[110px]">
+          <div className="relative flex -mt-[60px]">
+            <div className="relative rounded border-[5px] border-gray-800 bg-gray-700 overflow-hidden inline-flex items center justify-center z-10 mb-2 w-[110px] h-[110px]">
               {collection.image_url && (
                 <Image
                   //@ts-ignore
@@ -134,15 +175,31 @@ export const CollectionProfile = ({ collection }: any) => {
                 />
               )}
             </div>
-            <div className="flex absolute bottom-6 right-full pr-[10px] rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
-              {/*<ProfileDropdown dropdown={dropdown} setDropdown={setDropdown} />*/}
+            <div className="flex gap-3 absolute bottom-6 right-full mr-2 rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
+              <ProfileDropdown
+                icon={<BsFillShareFill className="text-gray-500" />}
+                dropdown={shareDropdown}
+                setDropdown={setShareDropdown}
+                menus={shareMenus}
+              />
+              <ProfileDropdown
+                icon={<BsThreeDots className="text-gray-500 " />}
+                dropdown={requestDropdown}
+                setDropdown={setRequestDropdown}
+                menus={requestMenus}
+              />
             </div>
             {filteredCollection && (
+              <div className="flex gap-3 absolute bottom-6 left-full ml-2 rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
+                <LikeButton id={filteredCollection.creator_id} />
+              </div>
+            )}
+            {filteredCollection && (
               <p
-                className={`absolute bottom-6 left-full -ml-3 bg-yellow-500 text-white pl-5 pr-3 rounded-tr-full rounded-br-full text-sm ${
+                className={`absolute top-6 left-full -ml-4 pl-[24px] pr-3 rounded-tr-full rounded-br-full text-sm capitalize flex justify-center items-center gap-[6px] ${
                   filteredCollection.type == "Handmade"
-                    ? "bg-orange-500"
-                    : "bg-sky-500"
+                    ? "bg-orange-500 text-orange-100"
+                    : "bg-sky-500 text-sky-100"
                 }`}
               >
                 {filteredCollection.type}

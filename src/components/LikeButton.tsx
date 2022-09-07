@@ -4,9 +4,8 @@ import { AiFillHeart, AiOutlineEye, AiOutlineHeart } from "react-icons/ai";
 
 type Props = {
   id: string;
-  type: "creator" | "collection";
 };
-export const LikeViews = ({ id, type }: Props) => {
+export const LikeButton = ({ id }: Props) => {
   const [followers, setFollowers] = useState<number>();
   let baseUrl = "" as string;
   if (process.env.NODE_ENV != "test") {
@@ -40,7 +39,7 @@ export const LikeViews = ({ id, type }: Props) => {
             }}
             className=""
           >
-            <AiFillHeart className="text-xl text-pink-500 opacity-90" />
+            <AiFillHeart className="text-lg text-pink-500 opacity-90" />
           </button>
         ) : (
           <button
@@ -49,14 +48,10 @@ export const LikeViews = ({ id, type }: Props) => {
             }}
             className=""
           >
-            <AiOutlineHeart className="text-xl text-white opacity-30" />
+            <AiOutlineHeart className="text-lg text-white opacity-30" />
           </button>
         )}
-        <p className="text-gray-500 text-sm">100</p>
-      </div>
-      <div className="flex gap-1 items-center">
-        <AiOutlineEye className="text-2xl text-white opacity-30 text-lg" />
-        <p className="text-gray-500 text-sm">100</p>
+        <p className="text-gray-600 text-sm">100</p>
       </div>
     </div>
   );

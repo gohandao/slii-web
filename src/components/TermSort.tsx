@@ -21,13 +21,14 @@ export const TermSort = ({ term }: Props) => {
     } else {
       activeClass = "border-gray-600 bg-gray-800";
     }
+    let new_order = order ? order : "desc";
     return (
       <button
         className={`text-gray-300 w-10 h-10 flex justify-center items-center text-sm border-r last:border-r-0 capitalize ${activeClass}`}
         onClick={() => {
           setParams({
             sortBy: sortBy as string,
-            order: order as string,
+            order: new_order as string,
             term: title,
           });
           //setTermParam(title);

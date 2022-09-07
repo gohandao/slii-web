@@ -82,7 +82,7 @@ const Content = (props) => (
 */}
       <div className="container relative w-[1200px] h-[600px] font-outfit">
         <div className="background absolute left-0 top-0 w-full h-full">
-          <img src="https://gachi.vercel.app/ogp-base.jpg" alt="" />
+          <img src="https://gachi-collection.vercel.app/ogp-base.jpg" alt="" />
         </div>
         <div className="text absolute w-full h-full flex flex-col items-center justify-center">
           <h1 className="title text-[70px] font-bold text-gradient mt-10">

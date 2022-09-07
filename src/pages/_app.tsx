@@ -350,10 +350,10 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   }, [collections, socials]);
 
-  const site_name = "Gachi";
-  const title = "Gachi | Japanese NFT Creators / Collections Database";
+  const site_name = "NFT OTAKU";
+  const title = "NFT OTAKU | Japanese NFT Creators / Collections Database";
   const description =
-    "Search creators, collections and NFTs with Gachi. We are creating special database and collaboration platform.";
+    "Search creators, collections and NFTs with NFT OTAKU. We are creating special database and collaboration platform.";
   const twitter_id = "gachi";
 
   return (

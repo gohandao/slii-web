@@ -92,10 +92,10 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <BaseLayout>
-        <div className="w-full max-w-[460px] px-5 md:px-8 lg:hidden mx-auto">
+        <Mainvisual />
+        <div className="w-full max-w-[460px] px-5 md:px-8 lg:hidden mx-auto mb-5">
           <Searchbox />
         </div>
-        <Mainvisual />
         <section className="mx-auto px-5 md:px-8">
           <div className="flex gap-3 mb-4">
             <div className="flex items-center">

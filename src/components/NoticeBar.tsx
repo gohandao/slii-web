@@ -18,7 +18,8 @@ export const NoticeBar = () => {
             Check!
           </div>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
               setShow(false);
             }}
             className="absolute right-4 h-full flex justify-center items-center"

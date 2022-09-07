@@ -46,7 +46,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
   const currentCreators = limit ? filteredCreators : creators;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 w-full justify-center">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 w-full justify-center">
       {currentCreators.length > 0 &&
         currentCreators.map((creator, index) => {
           return (
@@ -55,32 +55,60 @@ export const CreatorList = ({ creators, limit }: Props) => {
               key={index}
             >
               <Link href={`/${creator.username}`} as={`/${creator.username}`}>
-                <a className="relative flex flex-col border border-gray-800 rounded-lg w-full items-center shadow-lg bg-gray-800 overflow-hidden py-2 px-3">
-                  <div className="flex w-full">
-                    <div className="rounded-full border-[5px] overflow-hidden flex items-center justify-center z-10 bg-gray-100 border-[5px] border-gray-700">
+                <a className="relative flex flex-col border border-gray-800 rounded-lg w-full items-center shadow-lg bg-gray-800 overflow-hidden py-3 md:py-3">
+                  <div className="flex absolute left-0 top-0 w-full md:w-[47px] h-full w-full overflow-hidden mb-2 opacity-[10%] ">
+                    {creator.background && creator.background.length > 0 && (
+                      <>
+                        {
+                          //@ts-ignore
+                          creator.background[0].thumbnails ? (
+                            <Image
+                              //@ts-ignore
+                              src={creator.background[0].thumbnails.large.url}
+                              layout="fill"
+                              objectFit="cover"
+                              alt=""
+                              loading="lazy"
+                              className=""
+                            />
+                          ) : (
+                            <Image
+                              //@ts-ignore
+                              src={creator.background[0].url}
+                              layout="fill"
+                              objectFit="cover"
+                              alt=""
+                              loading="lazy"
+                              className=""
+                            />
+                          )
+                        }
+                      </>
+                    )}
+                  </div>
+                  <div className="flex w-full pl-3 pr-4 items-center">
+                    <div className="rounded-full border-[5px] overflow-hidden flex items-center justify-center z-10 bg-gray-100 border-[5px] border-gray-700 relative w-[70px] h-[70px] min-w-[70px]">
                       {creator.avatar && (
-                        <div className="relative w-[70px] h-[70px] md:w-20 md:h-20 ">
-                          <Image
-                            //@ts-ignore
-                            src={creator.avatar[0].thumbnails.large.url}
-                            // width={80}
-                            // height={80}
-                            objectFit="cover"
-                            layout="fill"
-                            alt=""
-                          />
-                        </div>
+                        <Image
+                          //@ts-ignore
+                          src={creator.avatar[0].thumbnails.large.url}
+                          // width={80}
+                          // height={80}
+                          objectFit="cover"
+                          layout="fill"
+                          alt=""
+                        />
                       )}
                     </div>
-                    <div className="flex flex-col w-full flex-1">
-                      <div className="flex items-center pl-3 py-2 relative justify-between -mr-1">
-                        <h3 className="items-center  font-bold ellipsis text-gray-100">
+                    <div className="flex flex-col w-full flex-1  max-w-full">
+                      <div className="flex items-center pl-3 py-2 relative justify-between -mr-1 max-w-full">
+                        <h3 className="items-center  font-bold ellipsis text-gray-100 ellipsis max-w-full min-w-[0] pr-3">
                           {creator.username}
                           {creator.verified == true && (
                             <MdVerified className="-mt-[2px] text-gray-500 ml-2 inline-block" />
                           )}
                         </h3>
-                        <div className="">
+                        <div className="-mr-1">
                           <AiOutlineHeart className="text-xl text-gray-200 opacity-50" />
                         </div>
                       </div>

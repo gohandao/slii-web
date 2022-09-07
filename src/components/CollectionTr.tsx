@@ -76,15 +76,32 @@ export const CollectionTr = ({ item, index }: any) => {
               {index + 1}
             </div>
           </td>
-          <td className="relative py-4 pr-3 ">
+          <td className="relative py-4 pr-3 min-w-[240px]">
             <Link href={`/${item.creator_id}/${item.slug}`}>
-              <a className="block">
-                <div className="flex items-center">
-                  <img
-                    className="object-cover w-10 h-10 rounded shadow-lg shrink-0"
-                    src={item.image_url}
-                    alt=""
-                  />
+              <a className="relative block">
+                <div className="custom-tdbg absolute left-0 right-0">
+                  {item.banner_image_url && (
+                    <Image
+                      //@ts-ignore
+                      src={item.banner_image_url}
+                      layout="fill"
+                      objectFit="cover"
+                      alt=""
+                    />
+                  )}
+                </div>
+                <div className="flex items-center relative z-10">
+                  <div className="w-[46px] h-[46px] rounded overflow-hidden relative border-[3px] border-gray-700 bg-gray-600">
+                    {item.image_url && (
+                      <Image
+                        //@ts-ignore
+                        src={item.image_url}
+                        layout="fill"
+                        objectFit="cover"
+                        alt=""
+                      />
+                    )}
+                  </div>
                   <div className="ml-4 grid w-[160px] md:w-[280px]">
                     <p className="text-base text-gray-100 ellipsis pr-2 items-center">
                       {item.name}

@@ -103,8 +103,8 @@ export const CollectionTr = ({ item, index }: any) => {
                       />
                     )}
                   </div>
-                  <div className="ml-4 grid w-[200px] md:w-[280px]">
-                    <div className="flex justify-between items-center">
+                  <div className="ml-4 grid">
+                    <div className="flex justify-between items-center w-[200px] md:w-[280px]">
                       <p className="text-base text-gray-100 ellipsis pr-2 items-center font-bold max-w-full min-w-[0] pr-2">
                         {item.name}
                         {item.safelist_request_status == "verified" && (

@@ -108,8 +108,8 @@ export const CreatorList = ({ creators, limit }: Props) => {
                             <MdVerified className="-mt-[2px] text-gray-500 ml-2 inline-block" />
                           )}
                         </h3>
-                        <div className="-mr-1">
-                          <AiOutlineHeart className="text-xl text-gray-400 opacity-50" />
+                        <div className="-mr-[2px]">
+                          <AiOutlineHeart className=" text-gray-400 opacity-50" />
                         </div>
                       </div>
                       <div className="flex flex-between pl-3">

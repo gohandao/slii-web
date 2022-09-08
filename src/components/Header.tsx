@@ -7,42 +7,59 @@ import { AuthContext } from "@/contexts/AuthContext";
 import { FaRegUser } from "react-icons/fa";
 import { FiLogIn } from "react-icons/fi";
 import { RiHeartsFill, RiHeartsLine } from "react-icons/ri";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { useRouter } from "next/router";
+import { HeaderIcon } from "./HeaderIcon";
 
 export const Header = () => {
+  const router = useRouter();
+
   const user = useContext(AuthContext);
+  const { headerIcon } = useContext(UtilitiesContext);
   const [username, setUsername] = useState<string>("");
   const [dropdown, setDropdown] = useState<boolean>(false);
+
+  const currentPath = router.pathname;
 
   return (
     <header className="py-3 " x-data="{expanded: false}">
       <div className="mx-auto px-5 md:px-8 flex justify-between">
-        <div className="flex items-center gap-20">
-          <div className="flex-shrink-0">
-            <Link href="/">
-              <a className="relative flex h-7">
-                <Image src="/logo.svg" width={142} height={20} alt="" />
-              </a>
-            </Link>
+        <div className="flex items-center gap-20 justify-between flex-1">
+          <div className="flex flex-shrink-0 gap-8 items-center">
+            <HeaderIcon />
+            <div className="w-[360px] hidden lg:block">
+              <Searchbox />
+            </div>
           </div>
-          <div className="w-[360px] ml-24 hidden lg:block">
-            <Searchbox />
-          </div>
-          <div className="gap-10 hidden lg:flex">
-            <Link href="/creators">
-              <a className="font-bold text-gray-100 tracking-wider">
-                😎<span className="ml-2">Creators</span>
-              </a>
-            </Link>
-            <Link href="/collections">
-              <a className="font-bold text-gray-100 tracking-wider">
-                🗂<span className="ml-2">Collections</span>
-              </a>
-            </Link>
-            <Link href="/tags">
-              <a className="font-bold text-gray-100 tracking-wider">
-                📌<span className="ml-2">Tags</span>
-              </a>
-            </Link>
+          <div className="gap-10 hidden lg:flex pr-16 ">
+            {currentPath != "/" && (
+              <Link href="/">
+                <a className="font-bold text-gray-100 tracking-wider">
+                  <span className="mr-2">🏠</span>Home
+                </a>
+              </Link>
+            )}
+            {currentPath != "/creators" && (
+              <Link href="/creators">
+                <a className="font-bold text-gray-100 tracking-wider">
+                  <span className="mr-2 text-sm">😎</span>Creators
+                </a>
+              </Link>
+            )}
+            {currentPath != "/collections" && (
+              <Link href="/collections">
+                <a className="font-bold text-gray-100 tracking-wider">
+                  <span className="mr-2 text-sm">🗂</span>Collections
+                </a>
+              </Link>
+            )}
+            {currentPath != "/tags" && (
+              <Link href="/tags">
+                <a className="font-bold text-gray-100 tracking-wider">
+                  <span className="mr-2 text-sm">📌</span>Tags
+                </a>
+              </Link>
+            )}
           </div>
         </div>
         <div className="relative flex items-center gap-5">

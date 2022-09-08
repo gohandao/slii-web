@@ -5,18 +5,20 @@ import { Title } from "@/components/Title";
 type Props = {
   pageTitle: string;
   title: string;
+  emoji?: string;
   length?: number;
   label?: string;
 };
-export const Headline = ({ pageTitle, title, length, label }: Props) => {
+export const Headline = ({ pageTitle, title, emoji, length, label }: Props) => {
   return (
     <div className=" mb-4">
       <div className="flex gap-3 mb-4">
-        <div className="flex items-center">
+        {/*<div className="flex items-center">
           <div className="animated-dot"></div>
-        </div>
+  </div>*/}
         <div className="flex gap-3 items-baseline">
           <Title property="h2" addClass="">
+            {emoji && <span className="text-xl mr-2">{emoji}</span>}
             {pageTitle}
           </Title>
           {label && (

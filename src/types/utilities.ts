@@ -3,6 +3,20 @@ import { BreadcrumbList } from "@/types/breadcrumbList";
 export type Utilities = {
   search?: string;
   setSearch: React.Dispatch<React.SetStateAction<string | undefined>>;
+  headerIcon: {
+    title: string;
+    emoji: string;
+    avatar: any;
+    path: string;
+  };
+  setHeaderIcon: React.Dispatch<
+    React.SetStateAction<{
+      title: string;
+      avatar: any;
+      emoji: string;
+      path: string;
+    }>
+  >;
   indexTab?: "all" | "op" | "ed";
   setIndexTab: React.Dispatch<
     React.SetStateAction<"all" | "op" | "ed" | undefined>

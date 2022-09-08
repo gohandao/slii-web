@@ -36,10 +36,24 @@ const CollectionIndex: NextPage = (props: any) => {
   const router = useRouter();
   const { username, slug } = router.query;
   const [loading, setLoading] = useState<boolean>(false);
-  const [collection, setCollection] = useState<Collection>();
+  const [collection, setCollection] = useState<any>();
   const [airtableCollection, setAirtableCollection] = useState<Collection>();
 
   const { setBreadcrumbList } = useContext(UtilitiesContext);
+
+  const { setHeaderIcon } = useContext(UtilitiesContext);
+  useEffect(() => {
+    {
+      collection &&
+        setHeaderIcon({
+          title: collection.name,
+          emoji: "",
+          avatar: collection.image_url,
+          path: `/${collection.creator_id}/${collection.slug}`,
+        });
+    }
+  }, [collection]);
+
   const breadcrumbList = collection &&
     username && [
       {
@@ -296,6 +310,7 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
       development: "http://localhost:3000",
     }[process.env.NODE_ENV];
   }
+
   return {
     props: {
       slug: records[0].fields.slug,

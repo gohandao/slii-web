@@ -100,12 +100,9 @@ const Home: NextPage = () => {
         </div>
         <section className="mx-auto px-5 md:px-8">
           <div className="flex gap-3 mb-4">
-            <div className="flex items-center">
-              <div className="animated-dot"></div>
-            </div>
             <div className="flex gap-3 items-baseline">
               <Title property="h2" addClass="">
-                Creators
+                <span className="text-xl mr-2">😎</span>Creators
               </Title>
               <p className="text-gray-400 text-sm">{creatorsLength} Creators</p>
             </div>
@@ -133,12 +130,9 @@ const Home: NextPage = () => {
         <div className="pb-16"></div>
         <section className="mx-auto px-5 md:px-8">
           <div className="flex gap-3 mb-4">
-            <div className="flex items-center">
-              <div className="animated-dot"></div>
-            </div>
             <div className="flex gap-3 items-baseline">
               <Title property="h2" addClass="">
-                Collections
+                <span className="text-xl mr-2">🗂</span>Collections
               </Title>
               <p className="text-gray-400 text-sm">
                 {collectionsLength} Collections

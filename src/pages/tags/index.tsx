@@ -67,6 +67,7 @@ const TagsPage: NextPage = () => {
         <div className="mx-auto px-5 md:px-8 mt-5 lg:mt-10 mb-5">
           <Headline
             pageTitle="Tags"
+            emoji="📌"
             title="Search Japanese creators and collections with tags."
           />
         </div>

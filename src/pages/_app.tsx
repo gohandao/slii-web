@@ -32,10 +32,22 @@ import { Utilities } from "@/types/utilities";
 import { Footer } from "@/components/Footer";
 import { BreadcrumbList } from "@/types/breadcrumbList";
 import { Social } from "@/types/social";
+import { stringify } from "querystring";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<any>();
 
+  const [headerIcon, setHeaderIcon] = useState<{
+    title: string;
+    emoji: string;
+    avatar: any;
+    path: string;
+  }>({
+    title: "",
+    emoji: "",
+    avatar: "",
+    path: "",
+  });
   const [search, setSearch] = useState<string | undefined>();
   const [indexTab, setIndexTab] = useState<"all" | "op" | "ed" | undefined>(
     "all"
@@ -398,6 +410,8 @@ function MyApp({ Component, pageProps }: AppProps) {
             setIndexTab: setIndexTab,
             page: page,
             setPage: setPage,
+            headerIcon: headerIcon,
+            setHeaderIcon: setHeaderIcon,
             sortAction: sortAction,
             setSortAction: setSortAction,
             creatorType: creatorType,

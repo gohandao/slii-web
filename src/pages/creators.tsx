@@ -35,7 +35,9 @@ const CreatorsPage: NextPage = () => {
   const { page } = router.query;
 
   const { creators, collections } = useContext(BaseContext);
-  const { creatorType, setBreadcrumbList } = useContext(UtilitiesContext);
+  const { creatorType, setBreadcrumbList, setHeaderIcon } =
+    useContext(UtilitiesContext);
+
   const breadcrumbList = [
     {
       name: "Home",
@@ -47,6 +49,12 @@ const CreatorsPage: NextPage = () => {
     },
   ];
   useEffect(() => {
+    setHeaderIcon({
+      title: "Creators",
+      emoji: "😎",
+      avatar: "",
+      path: "/creators",
+    });
     setBreadcrumbList(breadcrumbList);
   }, []);
 
@@ -112,24 +120,34 @@ const CreatorsPage: NextPage = () => {
         }}
       />
       <BaseLayout>
-        <section className="mx-auto mt-5 lg:mt-10 px-5 md:px-8">
-          <div className="mb-5">
+        <section className="mx-auto mt-3 px-5 md:px-8">
+          {/*<div className="mb-5">
             <Headline
               pageTitle="Creators"
+              emoji="😎"
               title="Japanese awesome NFT creatores List."
               length={creatorsLength}
               label="Creators"
             />
-          </div>
-          <div className="relative flex gap-5 z-20 justify-between mb-4">
+      </div>*/}
+          <h1 className="text-gray-500 text-sm tracking-[0.2em] mb-3">
+            Japanese awesome NFT creatores List.
+          </h1>
+          <div className="relative flex gap-5 z-20 justify-between mb-2">
             <Dropdown position="left" type="creatorType" />
             {/*<Button filter="all" />
             <Button filter="creator" />
       <Button filter="project" />*/}
           </div>
+          {filteredCreators && (
+            <p className="text-gray-500 mb-2 text-sm">
+              {filteredCreators.length} creators
+            </p>
+          )}
           <div className="mb-10">
             <CreatorList creators={filteredCreators} />
           </div>
+
           {/*<div className="flex justify-center mb-20">
             <ShowMore currentPage={page ? Number(page) : 1} />
   </div>*/}

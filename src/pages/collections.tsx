@@ -71,6 +71,7 @@ const CollectionsPage: NextPage = () => {
           <div className="mb-5">
             <Headline
               pageTitle="Collections"
+              emoji="🗂"
               title="Japanese awesome NFT collections List."
               length={collectionsLength}
               label="Collections"

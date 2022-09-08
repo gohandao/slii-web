@@ -337,6 +337,7 @@ export const CollectionProfile = ({ collection }: any) => {
         className="flex bg-[#1867B7] rounded px-5 py-4 text-blue-100 w-[280px] mx-auto mt-7 border-b-[6px] border-[#10467C] items-center gap-3 text-center justify-center"
         href={`https://opensea.io/collection/${collection.slug}`}
         target="_blank"
+        rel="noreferrer"
       >
         <Image src="/icon-opensea.svg" width={14} height={14} />
         Chack OpenSea Now

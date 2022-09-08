@@ -14,6 +14,7 @@ export const CollectionAssets = ({ collectionAssets }: any) => {
             <a
               target="_blank"
               className="relative border border-gray-700 rounded bg-gray-800 overflow-hidden transition-all duration-200 transform hover:-translate-y-1"
+              rel="noreferrer"
             >
               <div className="absolute right-0 top-0 rounded-bl-full bg-blue-500 z-10 w-6 h-6 flex items-center justify-center pl-[6px] pb-1">
                 <Image src="/icon-opensea.svg" width={12} height={12} />

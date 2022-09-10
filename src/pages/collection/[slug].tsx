@@ -42,24 +42,14 @@ const CollectionIndex: NextPage = (props: any) => {
   const { setBreadcrumbList } = useContext(UtilitiesContext);
 
   const { setHeaderIcon } = useContext(UtilitiesContext);
-
   useEffect(() => {
     {
-      let avatar_url;
-      if (collection && collection.avatar) {
-        avatar_url =
-          collection.crator_avatar.length > 0
-            ? //@ts-ignore
-              collection.crator_avatar[0].thumbnails.large.url
-            : //@ts-ignore
-              collection.crator_avatar[0].url;
-      }
       collection &&
         setHeaderIcon({
-          title: collection.creator_id,
+          title: collection.name,
           emoji: "",
-          avatar: avatar_url,
-          path: `/creator/${collection.creator_id}`,
+          avatar: collection.image_url,
+          path: `/collection/${collection.slug}`,
         });
     }
   }, [collection]);
@@ -78,7 +68,7 @@ const CollectionIndex: NextPage = (props: any) => {
         //@ts-ignore
         name: collection.name as string,
         //@ts-ignore
-        path: `/collection/${collection.name as string}`,
+        path: `/${slug}/${collection.name as string}`,
       },
     ];
   useEffect(() => {
@@ -290,8 +280,7 @@ export const getStaticPaths = async () => {
   //console.log(records);
   return {
     paths: collections.map(
-      (colelction: any) =>
-        `/collection/${colelction.fields.creator_id}/${colelction.fields.slug}`
+      (colelction: any) => `/collection/${colelction.fields.slug}`
     ),
     //fallback: true,
     fallback: "blocking",

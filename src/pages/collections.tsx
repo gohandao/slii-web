@@ -33,7 +33,7 @@ const CollectionsPage: NextPage = () => {
   const router = useRouter();
   const { page, term } = router.query;
 
-  const { setBreadcrumbList } = useContext(UtilitiesContext);
+  const { setBreadcrumbList, setHeaderIcon } = useContext(UtilitiesContext);
   const breadcrumbList = [
     {
       name: "Home",
@@ -45,6 +45,12 @@ const CollectionsPage: NextPage = () => {
     },
   ];
   useEffect(() => {
+    setHeaderIcon({
+      title: "Collections",
+      emoji: "🗂",
+      avatar: "",
+      path: "/collections",
+    });
     setBreadcrumbList(breadcrumbList);
   }, []);
   const { creators, collections, OSCollections } = useContext(BaseContext);
@@ -67,8 +73,8 @@ const CollectionsPage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <BaseLayout>
-        <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-10">
-          <div className="mb-5">
+        <section className="mx-auto px-5 md:px-8 mt-3">
+          {/*<div className="mb-5">
             <Headline
               pageTitle="Collections"
               emoji="🗂"
@@ -76,9 +82,16 @@ const CollectionsPage: NextPage = () => {
               length={collectionsLength}
               label="Collections"
             />
-          </div>
+  </div>*/}
           {/*<button onClick={collectionSortHandler}>test sort</button>*/}
-
+          <h1 className="text-gray-500 text-sm tracking-[0.2em] mb-3">
+            Japanese awesome NFT collections List.
+          </h1>
+          {OSCollections && (
+            <p className="text-gray-500 mb-2 text-sm">
+              {OSCollections.length} collections
+            </p>
+          )}
           <div className="flex gap-5 justify-between items-center mb-4">
             <Dropdown position="left" type="collectionCategories" />
             <div className="flex gap-4">

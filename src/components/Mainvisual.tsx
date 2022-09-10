@@ -17,7 +17,7 @@ export const Mainvisual = () => {
   };
   return (
     <div className="mx-auto pt-5 px-5 sm:px-8 ">
-      <h2 className="text-gradient flex-inline text-lg font-bold leading-[1.2] mb-4">
+      <h2 className="text-gradient flex-inline text-lg font-bold leading-[1.2] mb-4 text-center lg:text-left">
         Japanese NFT Creators / Collections Database
       </h2>
       {/*<h2 className="text-gradient flex-inline text-3xl font-bold xl:text-7xl xl:leading-[1.2] mb-3">

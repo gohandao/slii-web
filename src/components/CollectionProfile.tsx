@@ -218,7 +218,7 @@ export const CollectionProfile = ({ collection }: any) => {
             {creator && (
               <p className="text-xs text-gray-500">
                 By{" "}
-                <Link href={`/${creator.username}`}>
+                <Link href={`/creator/${creator.username}`}>
                   <a className="inline-flex gap-1 items-center">
                     {creator.username}{" "}
                     {creator.verified == true && (

@@ -30,7 +30,7 @@ export const CollectionCard = ({ username, collection }: any) => {
       : description;
 
   return (
-    <Link href={`/${username}/${collection.slug}`}>
+    <Link href={`/collection/${collection.slug}`}>
       <a className="block relative w-full overflow-hidden bg-gray-800 border border-gray-700 rounded-lg hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1">
         <div className="absolute left-0 top-0 bg-violet-500 text-violet-100 px-3 py-1 text-xs z-10 rounded-br">
           Featured

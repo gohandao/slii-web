@@ -133,17 +133,28 @@ const CreatorsPage: NextPage = () => {
           <h1 className="text-gray-500 text-sm tracking-[0.2em] mb-3">
             Japanese awesome NFT creatores List.
           </h1>
+          {/*<button
+            className="text-2xl text-white"
+            onClick={() => {
+              console.log("router");
+              console.log(router);
+
+              //router.back();
+            }}
+          >
+            test
+          </button>*/}
+          {filteredCreators && (
+            <p className="text-gray-500 mb-2 text-sm">
+              {filteredCreators.length} creators
+            </p>
+          )}
           <div className="relative flex gap-5 z-20 justify-between mb-2">
             <Dropdown position="left" type="creatorType" />
             {/*<Button filter="all" />
             <Button filter="creator" />
       <Button filter="project" />*/}
           </div>
-          {filteredCreators && (
-            <p className="text-gray-500 mb-2 text-sm">
-              {filteredCreators.length} creators
-            </p>
-          )}
           <div className="mb-10">
             <CreatorList creators={filteredCreators} />
           </div>

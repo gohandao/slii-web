@@ -54,7 +54,10 @@ export const CreatorList = ({ creators, limit }: Props) => {
               className="relative flex hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1"
               key={index}
             >
-              <Link href={`/${creator.username}`} as={`/${creator.username}`}>
+              <Link
+                href={`/creator/${creator.username}`}
+                as={`/creator/${creator.username}`}
+              >
                 <a className="relative flex flex-col border border-gray-800 rounded-lg w-full items-center shadow-lg bg-gray-800 overflow-hidden py-3 md:py-3">
                   <div className="flex absolute left-0 top-0 w-full md:w-[47px] h-full w-full overflow-hidden mb-2 opacity-[10%] ">
                     {creator.background && creator.background.length > 0 && (

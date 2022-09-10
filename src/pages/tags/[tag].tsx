@@ -30,6 +30,16 @@ const TagPage: NextPage = () => {
   const router = useRouter();
   const { tag, type } = router.query;
 
+  const { setHeaderIcon } = useContext(UtilitiesContext);
+  useEffect(() => {
+    setHeaderIcon({
+      title: ("#" + tag) as string,
+      emoji: "📌",
+      avatar: "",
+      path: `/tags`,
+    });
+  }, []);
+
   const { setBreadcrumbList } = useContext(UtilitiesContext);
   const breadcrumbList = tag && [
     {
@@ -116,20 +126,17 @@ const TagPage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <BaseLayout>
-        <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-10">
+        <section className="mx-auto px-5 md:px-8 mt-5">
           <h1 className="text-gray-100">
             Resulut of <span className="text-3xl ml-1 text-bold">#{tag}</span>
           </h1>
         </section>
         {type != "collection" && (
-          <section className="mx-auto px-5 md:px-8 mt-5">
+          <section className="mx-auto px-5 md:px-8 mt-3">
             <div className="flex gap-3 mb-4">
-              <div className="flex items-center">
-                <div className="animated-dot"></div>
-              </div>
               <div className="flex gap-3 items-baseline">
                 <Title property="h2" addClass="">
-                  Creators
+                  <span className="text-lg mr-2">😎</span>Creators
                 </Title>
                 <p className="text-gray-400 text-sm">
                   {creatorsLength} Creators
@@ -146,14 +153,14 @@ const TagPage: NextPage = () => {
           </section>
         )}
         {type != "creator" && (
-          <section className="mx-auto px-5 md:px-8 mt-5">
+          <section className="mx-auto px-5 md:px-8 mt-3">
             <div className="flex gap-3 mb-4">
               <div className="flex items-center">
                 <div className="animated-dot"></div>
               </div>
               <div className="flex gap-3 items-baseline">
                 <Title property="h2" addClass="">
-                  Collections
+                  <span className="text-lg mr-2">🗂</span>Collections
                 </Title>
                 <p className="text-gray-400 text-sm">
                   {collectionsLength} Collections

@@ -78,7 +78,7 @@ export const CollectionTr = ({ item, index }: any) => {
             </div>
           </td>
           <td className="relative py-4 pr-3 min-w-[240px]">
-            <Link href={`/${item.creator_id}/${item.slug}`}>
+            <Link href={`/collection/${item.slug}`}>
               <a className="relative block">
                 <div className="custom-tdbg absolute left-0 right-0">
                   {item.banner_image_url && (

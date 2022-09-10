@@ -33,6 +33,15 @@ const TagsPage: NextPage = () => {
   const router = useRouter();
   const { page } = router.query;
 
+  const { setHeaderIcon } = useContext(UtilitiesContext);
+  useEffect(() => {
+    setHeaderIcon({
+      title: "Tags",
+      emoji: "📌",
+      avatar: "",
+      path: `/tags`,
+    });
+  }, []);
   const { setBreadcrumbList } = useContext(UtilitiesContext);
   const breadcrumbList = [
     {
@@ -64,29 +73,36 @@ const TagsPage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <BaseLayout>
-        <div className="mx-auto px-5 md:px-8 mt-5 lg:mt-10 mb-5">
+        {/*<div className="mx-auto px-5 md:px-8 mt-5 lg:mt-10 mb-5">
           <Headline
             pageTitle="Tags"
             emoji="📌"
             title="Search Japanese creators and collections with tags."
           />
+  </div>*/}
+        <div className="">
+          <div className="mx-auto px-5 md:px-8 mt-3">
+            <h1 className="text-gray-500 text-sm tracking-[0.2em] mb-3">
+              Tags for search.
+            </h1>
+          </div>
+          <section className="mx-auto px-5 md:px-8 mt-5">
+            <Title property="h3" addClass="mb-5 flex items-center">
+              <span className="text-lg mr-2">😎</span>Creator Tags
+            </Title>
+            <div className="mb-10">
+              <TagList tags={creatorTags} type="creator" />
+            </div>
+          </section>
+          <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-10">
+            <Title property="h3" addClass="mb-5 flex items-center">
+              <span className="text-lg mr-2">🗂</span>Collection Tags
+            </Title>
+            <div className="mb-10">
+              <TagList tags={collectionTags} type="collection" />
+            </div>
+          </section>
         </div>
-        <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-10">
-          <Title property="h3" addClass="mb-5">
-            Creator Tags
-          </Title>
-          <div className="mb-10">
-            <TagList tags={creatorTags} type="creator" />
-          </div>
-        </section>
-        <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-10">
-          <Title property="h3" addClass="mb-5">
-            Collection Tags
-          </Title>
-          <div className="mb-10">
-            <TagList tags={collectionTags} type="collection" />
-          </div>
-        </section>
       </BaseLayout>
     </div>
   );

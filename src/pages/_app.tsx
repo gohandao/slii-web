@@ -36,6 +36,8 @@ import { stringify } from "querystring";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<any>();
+  console.log("user");
+  console.log(user);
 
   const [headerIcon, setHeaderIcon] = useState<{
     title: string;

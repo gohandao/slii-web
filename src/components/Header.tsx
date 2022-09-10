@@ -34,29 +34,29 @@ export const Header = () => {
           <div className="gap-10 hidden lg:flex pr-16 ">
             {currentPath != "/" && (
               <Link href="/">
-                <a className="font-bold text-gray-100 tracking-wider">
-                  <span className="mr-2">🏠</span>Home
+                <a className="text-sm font-bold text-gray-100 tracking-wider flex items-center">
+                  <span className="mr-2 text-xl -mt-[1px]">🏠</span>Home
                 </a>
               </Link>
             )}
             {currentPath != "/creators" && (
               <Link href="/creators">
-                <a className="font-bold text-gray-100 tracking-wider">
-                  <span className="mr-2 text-sm">😎</span>Creators
+                <a className="text-sm font-bold text-gray-100 tracking-wider flex items-center">
+                  <span className="mr-2 text-xl -mt-[1px]">😎</span>Creators
                 </a>
               </Link>
             )}
             {currentPath != "/collections" && (
               <Link href="/collections">
-                <a className="font-bold text-gray-100 tracking-wider">
-                  <span className="mr-2 text-sm">🗂</span>Collections
+                <a className="text-sm font-bold text-gray-100 tracking-wider flex items-center">
+                  <span className="mr-2 text-xl -mt-[1px]">🗂</span>Collections
                 </a>
               </Link>
             )}
             {currentPath != "/tags" && (
               <Link href="/tags">
-                <a className="font-bold text-gray-100 tracking-wider">
-                  <span className="mr-2 text-sm">📌</span>Tags
+                <a className="text-sm font-bold text-gray-100 tracking-wider flex items-center">
+                  <span className="mr-2 text-xl -mt-[1px]">📌</span>Tags
                 </a>
               </Link>
             )}

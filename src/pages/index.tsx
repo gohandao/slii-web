@@ -29,6 +29,7 @@ import {
 } from "@/contexts/TagsContext";
 import { CreatorsContext } from "@/contexts/CreatorsContext";
 import { BaseContext } from "@/contexts/BaseContext";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 import { Tag } from "@/types/tag";
 import { Searchbox } from "@/components/Searchbox";
@@ -39,6 +40,8 @@ const Home: NextPage = () => {
 
   const { creators, collections, OSCollections, creatorTags, collectionTags } =
     useContext(BaseContext);
+  const { setHeaderIcon } = useContext(UtilitiesContext);
+
   // const {  } = useContext(BaseContext);
   //console.log("index collections");
   //console.log(collections);
@@ -84,6 +87,15 @@ const Home: NextPage = () => {
     }
   }, []);*/
 
+  useEffect(() => {
+    setHeaderIcon({
+      title: "",
+      emoji: "",
+      avatar: "",
+      path: "/",
+    });
+  }, []);
+
   return (
     <div>
       <Head>
@@ -99,12 +111,14 @@ const Home: NextPage = () => {
           <Searchbox />
         </div>
         <section className="mx-auto px-5 md:px-8">
-          <div className="flex gap-3 mb-4">
+          <div className="flex gap-3 mb-3">
             <div className="flex gap-3 items-baseline">
               <Title property="h2" addClass="">
-                <span className="text-xl mr-2">😎</span>Creators
+                <span className="text-2xl mr-2">😎</span>Creators
               </Title>
-              <p className="text-gray-400 text-sm">{creatorsLength} Creators</p>
+              <p className="text-gray-500 text-sm -mt-4">
+                {creatorsLength} Creators
+              </p>
             </div>
           </div>
           <div className="mb-10">
@@ -132,9 +146,9 @@ const Home: NextPage = () => {
           <div className="flex gap-3 mb-4">
             <div className="flex gap-3 items-baseline">
               <Title property="h2" addClass="">
-                <span className="text-xl mr-2">🗂</span>Collections
+                <span className="text-2xl mr-2">🗂</span>Collections
               </Title>
-              <p className="text-gray-400 text-sm">
+              <p className="text-gray-500 text-sm -mt-4">
                 {collectionsLength} Collections
               </p>
             </div>

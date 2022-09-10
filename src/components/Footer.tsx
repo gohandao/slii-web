@@ -63,20 +63,22 @@ export const Footer = () => {
       </footer>
       <div className="fixed bottom-2 left-3 right-3 rounded bg-gray-800 flex md:hidden max-w-lg mx-auto border border-gray-700 z-20">
         <FixedMenu href="/">
-          <AiOutlineHome />
+          {/*<AiOutlineHome />*/}
+          🏠
         </FixedMenu>
         <FixedMenu href="/creators">
-          <TbUsers />
+          {/*<TbUsers />*/}
+          😎
         </FixedMenu>
         <FixedMenu href="/collections">
-          <BsCollection />
+          {/*<BsCollection />*/}
+          🗂
         </FixedMenu>
         <FixedMenu href="/tags">
-          <BsTags />
+          {/*<BsTags />*/}
+          📌
         </FixedMenu>
-        <FixedMenu href="/">
-          <BsMailbox />
-        </FixedMenu>
+        <FixedMenu href="/">{/*<BsMailbox />*/}📪</FixedMenu>
       </div>
     </>
   );

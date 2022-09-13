@@ -149,7 +149,7 @@ const CreatorsPage: NextPage = () => {
               {filteredCreators.length} creators
             </p>
           )}
-          <div className="relative flex gap-5 z-20 justify-between mb-2">
+          <div className="relative flex gap-5 z-20 justify-between mb-3">
             <Dropdown position="left" type="creatorType" />
             {/*<Button filter="all" />
             <Button filter="creator" />

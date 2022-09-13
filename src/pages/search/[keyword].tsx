@@ -35,6 +35,16 @@ import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 const KeywordPage: NextPage = () => {
   const router = useRouter();
   const { keyword, page } = router.query;
+  const { setHeaderIcon } = useContext(UtilitiesContext);
+
+  useEffect(() => {
+    setHeaderIcon({
+      title: "Search",
+      emoji: "🕵️",
+      avatar: "",
+      path: `/`,
+    });
+  }, []);
   const { setBreadcrumbList } = useContext(UtilitiesContext);
   const breadcrumbList = keyword && [
     {

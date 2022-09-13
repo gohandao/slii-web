@@ -38,16 +38,30 @@ const CollectionIndex: NextPage = (props: any) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [collection, setCollection] = useState<any>();
   const [airtableCollection, setAirtableCollection] = useState<Collection>();
+  const { creators, collections, OSCollections } = useContext(BaseContext);
+
+  const [existence, setExistence] = useState<boolean>(false);
+  const [creator, setCreator] = useState<Creator>();
+  const [collectionAssets, setCollectionAssets] = useState<[]>([]);
 
   const { setBreadcrumbList } = useContext(UtilitiesContext);
 
   const { setHeaderIcon } = useContext(UtilitiesContext);
+  let avatar_url = "" as string;
+  if (creator && creator.avatar) {
+    avatar_url =
+      creator.avatar.length > 0
+        ? //@ts-ignore
+          creator.avatar[0].thumbnails.large.url
+        : //@ts-ignore
+          creator.avatar[0].url;
+  }
   useEffect(() => {
     {
-      collection &&
+      creator &&
         setHeaderIcon({
-          title: collection.name,
-          emoji: "",
+          title: creator.username,
+          emoji: avatar_url,
           avatar: collection.image_url,
           path: `/collection/${collection.slug}`,
         });
@@ -74,12 +88,6 @@ const CollectionIndex: NextPage = (props: any) => {
   useEffect(() => {
     breadcrumbList && setBreadcrumbList(breadcrumbList);
   }, [collection]);
-
-  const { creators, collections, OSCollections } = useContext(BaseContext);
-
-  const [existence, setExistence] = useState<boolean>(false);
-  const [creator, setCreator] = useState<Creator>();
-  const [collectionAssets, setCollectionAssets] = useState<[]>([]);
 
   const options = { method: "GET" };
 

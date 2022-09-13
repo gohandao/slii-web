@@ -8,6 +8,7 @@ const nextConfig = {
       "lh3.googleusercontent.com",
       "openseauserdata.com",
       "gachi-collection.vercel.app",
+      "hxyufkirxytryojpqkne.supabase.co",
     ],
   },
   experimental: {

@@ -4,12 +4,12 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { DefaultSeo } from "next-seo";
 
-import { MoralisProvider } from "react-moralis";
+//import { MoralisProvider } from "react-moralis";
 
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { useRouter } from "next/router";
 
-import { supabase } from "@/libs/supabase";
+import { getImageUrl, supabase } from "@/libs/supabase";
 import { base } from "@/libs/airtable";
 
 import { AuthContext } from "@/contexts/AuthContext";
@@ -34,10 +34,15 @@ import { BreadcrumbList } from "@/types/breadcrumbList";
 import { Social } from "@/types/social";
 import { stringify } from "querystring";
 
+const shortid = require("shortid");
+
 function MyApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<any>();
+  const [profile, setProfile] = useState<any>();
   console.log("user");
   console.log(user);
+  console.log("profile");
+  console.log(profile);
 
   const [headerIcon, setHeaderIcon] = useState<{
     title: string;
@@ -87,7 +92,66 @@ function MyApp({ Component, pageProps }: AppProps) {
   const newList = useRef<any[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [avatar, setAvatar] = useState<File>();
 
+  let avatar_url;
+  let avatar_blob;
+
+  const getAvatarBlob = async () => {
+    avatar_blob =
+      profile && profile.avatar_url && (await getImageUrl(profile.avatar_url));
+    setAvatar(avatar_blob);
+  };
+  profile && !avatar && getAvatarBlob;
+
+  useEffect(() => {
+    !avatar && getAvatarBlob();
+  }, [profile]);
+
+  const createProfile = async () => {
+    // dより前の文字が欲しい
+    let init_username = shortid.generate();
+    const updates = {
+      id: user.id,
+      username: init_username,
+      updated_at: new Date(),
+    };
+    let { error } = await supabase.from("profiles").upsert(updates, {
+      returning: "minimal", // Don't return the value after inserting
+    });
+
+    if (error) {
+      throw error;
+    }
+  };
+
+  const getProfile = async () => {
+    try {
+      setLoading(true);
+      const user = supabase.auth.user();
+      if (user) {
+        let { data, error, status } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id)
+          .single();
+
+        if (error && status !== 406) {
+          throw error;
+        }
+        if (data) {
+          setProfile(data);
+        }
+        if (!profile && !data) {
+          createProfile();
+        }
+      }
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   const getCreators = () => {
     let new_records: Creator[] = [...creators];
     base("creators")
@@ -349,6 +413,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     //getCreators();
     const data = supabase.auth.user();
     setUser(data);
+    data && !profile && getProfile();
     creators.length == 0 && getCreators();
     collections.length == 0 && getCollections();
     creatorTags.length == 0 && getTags("creator_tags", setCreatorTags);
@@ -403,7 +468,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           cardType: "summary_large_image",
         }}
       />
-      <AuthContext.Provider value={user}>
+      <AuthContext.Provider value={{ user, profile, avatar, setAvatar }}>
         <UtilitiesContext.Provider
           value={{
             search: search,

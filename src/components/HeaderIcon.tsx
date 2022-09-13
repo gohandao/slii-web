@@ -24,7 +24,7 @@ export const HeaderIcon = () => {
         >
           <BsArrowLeftCircle
             className={`text-gray-500 text-xl ${
-              status && "rotate-180"
+              !status && "rotate-180"
             } transition-all duration-700`}
           />
         </button>

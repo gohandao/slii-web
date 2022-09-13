@@ -1,22 +1,38 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { supabase } from "@/libs/supabase";
 import { BaseLayout } from "@/components/BaseLayout";
 import Head from "next/head";
+import ReactCodeInput from "react-code-input";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import router from "next/router";
+import { AuthContext } from "@/contexts/AuthContext";
 
 export default function Login() {
+  const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
+  const [checking, setChecking] = useState(false);
   const [email, setEmail] = useState("");
   const [otpToken, setOtpToken] = useState("");
+  const { setHeaderIcon } = useContext(UtilitiesContext);
 
-  const [sent, setSent] = useState<boolean>(false);
+  const [sentCode, setSentCode] = useState<boolean>(false);
+
+  useEffect(() => {
+    setHeaderIcon({
+      title: "Login",
+      emoji: "📟",
+      avatar: "",
+      path: `/login`,
+    });
+  }, []);
 
   const handleLogin = async (email: string) => {
     try {
       setLoading(true);
       const { error } = await supabase.auth.signIn({ email });
       if (error) throw error;
-      setSent(true);
-      alert("Check your email for the login link!");
+      setSentCode(true);
+      alert("We sent verification code!");
     } catch (error) {
       //alert(error.error_description || error.message)
     } finally {
@@ -26,21 +42,24 @@ export default function Login() {
 
   const handleVerify = async () => {
     try {
-      setLoading(true);
+      setChecking(true);
       const { error } = await supabase.auth.verifyOTP({
         email: email,
         token: otpToken,
         type: "magiclink",
       });
       if (error) throw error;
-      setSent(true);
       alert("Login success!");
     } catch (error) {
       //alert(error.error_description || error.message)
     } finally {
-      setLoading(false);
+      setChecking(false);
     }
   };
+
+  if (user) {
+    router.push("/account");
+  }
 
   return (
     <>
@@ -50,51 +69,70 @@ export default function Login() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <BaseLayout>
-        <div className="p-5">
-          <h1 className="text-center text-2xl text-gray-100 mb-3">
-            Login with email.
-          </h1>
-          <div className="flex flex-center max-w-xl w-full mx-auto rounded bg-gray-800 py-8 px-10 flex-col gap-4">
-            <p className="text-gray-100 text-center">
-              You will be able to use like function.
-            </p>
-            <input
-              className="block px-5 py-3 rounded bg-white w-full"
-              type="email"
-              placeholder="Your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-              className="block px-5 py-3 rounded bg-white w-full"
-              type="text"
-              placeholder="One-time password"
-              value={otpToken}
-              onChange={(e) => setOtpToken(e.target.value)}
-            />
-            <div className="flex justify-center">
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleLogin(email);
-                }}
-                className="block rounded bg-blue-500 text-blue-100 text-center px-10 py-3"
-                disabled={loading}
-              >
-                <span>{loading ? "Loading" : "Send magic link"}</span>
-              </button>
-            </div>
-            <div className="flex justify-center mt-5">
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleVerify();
-                }}
-                className="block rounded bg-blue-500 text-blue-100 text-center px-10 py-3"
-                disabled={loading}
-              >
-                <span>{loading ? "Loading" : "Login"}</span>
-              </button>
+        <div className="mt-8 px-5">
+          <div className="flex flex-center max-w-xl w-full mx-auto rounded bg-gray-800 pt-8 pb-10 px-8 ">
+            <div className="w-[400px] mx-auto flex flex-col gap-4">
+              <h1 className="text-center text-2xl text-gray-100">
+                Login with email.
+              </h1>
+              <input
+                className="block px-5 py-3 rounded bg-white w-full"
+                type="email"
+                placeholder="Your email"
+                name="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              {/*<input
+                className="block px-5 py-3 rounded bg-white w-full"
+                type="text"
+                placeholder="One-time password"
+                value={otpToken}
+                onChange={(e) => setOtpToken(e.target.value)}
+  />*/}
+              <div className="flex justify-center">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleLogin(email);
+                  }}
+                  className="block rounded bg-blue-500 text-blue-100 text-center px-10 py-3"
+                  disabled={loading}
+                >
+                  <span>{loading ? "Sending" : "Send verification code"}</span>
+                </button>
+              </div>
+              {sentCode && (
+                <div>
+                  <p className="text-center text-lg text-gray-100 mt-3 mb-1">
+                    Verify code
+                  </p>
+                  <ReactCodeInput
+                    type="text"
+                    fields={6}
+                    name={""}
+                    inputMode={"email"}
+                    value={otpToken}
+                    placeholder="000000"
+                    autoFocus={false}
+                    onChange={(e) => setOtpToken(e)}
+                  />
+
+                  <div className="flex justify-center mt-4">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleVerify();
+                      }}
+                      className="block rounded bg-blue-500 text-blue-100 text-center px-10 py-3"
+                      disabled={checking}
+                    >
+                      <span>{checking ? "Checking" : "Login"}</span>
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

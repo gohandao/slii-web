@@ -32,7 +32,7 @@ export const DrowerMenu = ({ status, setStatus }: Props) => {
     },
     {
       path: "/login",
-      emoji: "🥷",
+      emoji: "📟",
       title: "Login",
     },
   ];

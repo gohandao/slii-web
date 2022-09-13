@@ -82,7 +82,7 @@ const CollectionIndex: NextPage = (props: any) => {
         //@ts-ignore
         name: collection.name as string,
         //@ts-ignore
-        path: `/${slug}/${collection.name as string}`,
+        path: `/collection/${collection.slug as string}`,
       },
     ];
   useEffect(() => {

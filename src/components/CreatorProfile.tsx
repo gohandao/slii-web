@@ -5,7 +5,7 @@ import Modal from "react-modal";
 
 import { FaDiscord, FaReact, FaRegFlag } from "react-icons/fa";
 import { SiTypescript } from "react-icons/si";
-import { AiOutlineClockCircle } from "react-icons/ai";
+import { AiOutlineClockCircle, AiOutlineTwitter } from "react-icons/ai";
 import { VscChecklist } from "react-icons/vsc";
 import { FaPlay } from "react-icons/fa";
 import { HiOutlineShare } from "react-icons/hi";
@@ -27,6 +27,7 @@ import { Social } from "@/types/social";
 import { BaseContext } from "@/contexts/BaseContext";
 import { LikeButton } from "@/components/LikeButton";
 import { ViewsCount } from "@/components/ViewsCount";
+import { VoteButton } from "./VoteButton";
 
 type Props = {
   creator: Creator;
@@ -226,7 +227,7 @@ export const CreatorProfile = ({ creator }: Props) => {
               />
             </div>
             <div className="flex gap-3 absolute bottom-6 left-full rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
-              <LikeButton id={creator.username} />
+              <LikeButton id={creator.username} type="creator" />
             </div>
             <p
               className={`absolute top-6 left-full -ml-6 pl-[24px] pr-3 rounded-tr-full rounded-br-full text-sm capitalize flex justify-center items-center gap-[6px] ${
@@ -256,6 +257,21 @@ export const CreatorProfile = ({ creator }: Props) => {
               />
             </div>
             <ViewsCount id={creator.username} type="creator" />
+            <div className="flex items-center gap-3">
+              <a
+                target="_blank"
+                href=""
+                className="text-white text-sm px-4 py-3 bg-gray-700 flex items-center justify-center gap-1 rounded gap-2"
+              >
+                <AiOutlineTwitter className="text-gray-500 text-lg" />
+                Visit
+              </a>
+              <VoteButton
+                id={creator.username}
+                property="default"
+                type="creator"
+              />
+            </div>
             <p className="text-gray-100 mt-1 break-all px-3 text-sm sm:text-base">
               {creator.description}
             </p>

@@ -16,6 +16,8 @@ import { LikeViews } from "@/components/LikeViews";
 
 import { Creator } from "@/types/creator";
 import { AiFillHeart, AiOutlineEye, AiOutlineHeart } from "react-icons/ai";
+import { VoteButton } from "./VoteButton";
+import { LikeButton } from "./LikeButton";
 
 type Props = {
   creators: Creator[];
@@ -90,20 +92,22 @@ export const CreatorList = ({ creators, limit }: Props) => {
                     )}
                   </div>
                   <div className="flex w-full pl-3 pr-4 items-center">
-                    <div className="rounded-full border-[5px] overflow-hidden flex items-center justify-center z-10 bg-gray-100 border-[5px] border-gray-700 relative w-[70px] h-[70px] min-w-[70px]">
-                      {creator.avatar && (
-                        <Image
-                          //@ts-ignore
-                          src={creator.avatar[0].thumbnails.large.url}
-                          // width={80}
-                          // height={80}
-                          objectFit="cover"
-                          layout="fill"
-                          alt=""
-                        />
-                      )}
+                    <div className="relative">
+                      <div className="rounded-full border-[5px] overflow-hidden flex items-center justify-center z-10 bg-gray-100 border-[5px] border-gray-700 relative w-[70px] h-[70px] min-w-[70px]">
+                        {creator.avatar && (
+                          <Image
+                            //@ts-ignore
+                            src={creator.avatar[0].thumbnails.large.url}
+                            // width={80}
+                            // height={80}
+                            objectFit="cover"
+                            layout="fill"
+                            alt=""
+                          />
+                        )}
+                      </div>
                     </div>
-                    <div className="flex flex-col w-full flex-1  max-w-full">
+                    <div className="flex flex-col w-full flex-1  max-w-full min-w-[0px]">
                       <div className="flex items-center pl-3 py-2 relative justify-between -mr-1 max-w-full">
                         <h3 className="items-center  font-bold ellipsis text-gray-100 ellipsis max-w-full min-w-[0] pr-3">
                           {creator.username}
@@ -111,11 +115,23 @@ export const CreatorList = ({ creators, limit }: Props) => {
                             <MdVerified className="-mt-[2px] text-gray-500 ml-2 inline-block" />
                           )}
                         </h3>
-                        <div className="-mr-[2px]">
-                          <AiOutlineHeart className=" text-gray-400 opacity-50" />
+                        <div className="flex gap-2">
+                          <LikeButton
+                            id={creator.username}
+                            type="creator"
+                            property="simple"
+                          />
+                          <div className="-mr-[2px]">
+                            <VoteButton
+                              property="simple"
+                              type="creator"
+                              id={creator.username}
+                            />
+                            {/*<AiOutlineHeart className=" text-gray-400 opacity-50" />*/}
+                          </div>
                         </div>
                       </div>
-                      <div className="flex flex-between pl-3">
+                      <div className="flex justify-between pl-3 w-full">
                         <div
                           className={`relative flex justify-center items-center gap-2 left-0 top-0 py-[2px] px-2 z-10 rounded text-xs md:text-xs capitalize bg-gray-700 text-gray-400 `}
                         >
@@ -129,7 +145,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
                           <JP title="Japan" className="h-3 rounded-sm" />
                           {creator.type}
                         </div>
-                        <div className=" bottom-0 left-0 w-full">
+                        <div className=" w-full">
                           <CardLinks
                             twitter_id={creator.twitter_id}
                             instagram_id={creator.instagram_id}

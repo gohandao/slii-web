@@ -9,6 +9,7 @@ const nextConfig = {
       "openseauserdata.com",
       "gachi-collection.vercel.app",
       "hxyufkirxytryojpqkne.supabase.co",
+      "i.seadn.io",
     ],
   },
   experimental: {

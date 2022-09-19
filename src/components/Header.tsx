@@ -45,7 +45,7 @@ export const Header = () => {
 
   const currentPath = router.pathname;
   return (
-    <header className="py-3 " x-data="{expanded: false}">
+    <header className="relative py-3 z-10" x-data="{expanded: false}">
       <div className="mx-auto px-5 md:px-8 flex justify-between">
         <div className="flex items-center gap-20 justify-between flex-1">
           <div className="flex flex-shrink-0 gap-8 items-center">
@@ -86,7 +86,7 @@ export const Header = () => {
           </div>
         </div>
         <div className="relative flex items-center gap-5">
-          <RiHeartsFill className="text-pink-500 text-xl" />
+          {/* <RiHeartsFill className="text-pink-500 text-xl" /> */}
           {/*<RiHeartsLine className="text-gray-500 text-xl" />*/}
           {!user ? (
             <Link href="/login">

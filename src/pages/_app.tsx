@@ -34,11 +34,16 @@ import { BreadcrumbList } from "@/types/breadcrumbList";
 import { Social } from "@/types/social";
 import { stringify } from "querystring";
 
+import { Like } from "@/types/like";
+import { Upvote } from "@/types/upvote";
+
 const shortid = require("shortid");
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<any>();
   const [profile, setProfile] = useState<any>();
+  const [likes, setLikes] = useState<Like[]>([]);
+  const [upvotes, setUpvotes] = useState<Upvote[]>([]);
   console.log("user");
   console.log(user);
   console.log("profile");
@@ -108,6 +113,61 @@ function MyApp({ Component, pageProps }: AppProps) {
     !avatar && getAvatarBlob();
   }, [profile]);
 
+  // user && !likes getLikes();
+  // user && !upvotes getUpvotes();
+  useEffect(() => {
+    getLikes();
+    getUpvotes();
+  }, [user]);
+
+  const getLikes = async () => {
+    try {
+      if (user) {
+        const { data, error, status } = await supabase
+          .from("likes")
+          .select("*, profiles(*)", {
+            count: "exact",
+            head: false,
+          })
+          .eq("user_id", `${user.id}`);
+        if (error && status !== 406) {
+          throw error;
+        }
+        const new_likes = data as Like[];
+        console.log("new_likes");
+        console.log(new_likes);
+        setLikes(new_likes);
+      }
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      //setLoading(false)
+    }
+  };
+  const getUpvotes = async () => {
+    try {
+      if (user) {
+        const { data, error, status } = await supabase
+          .from("upvotes")
+          .select("*, profiles(*)", {
+            count: "exact",
+            head: false,
+          })
+          .eq("user_id", `${user.id}`);
+        if (error && status !== 406) {
+          throw error;
+        }
+        const new_upvotes = data as Like[];
+        console.log("new_upvotes");
+        console.log(new_upvotes);
+        setUpvotes(new_upvotes);
+      }
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      //setLoading(false)
+    }
+  };
   const createProfile = async () => {
     // dより前の文字が欲しい
     let init_username = shortid.generate();
@@ -468,7 +528,18 @@ function MyApp({ Component, pageProps }: AppProps) {
           cardType: "summary_large_image",
         }}
       />
-      <AuthContext.Provider value={{ user, profile, avatar, setAvatar }}>
+      <AuthContext.Provider
+        value={{
+          user,
+          profile,
+          avatar,
+          setAvatar,
+          likes,
+          setLikes,
+          upvotes,
+          setUpvotes,
+        }}
+      >
         <UtilitiesContext.Provider
           value={{
             search: search,

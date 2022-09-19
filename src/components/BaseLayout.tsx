@@ -9,8 +9,8 @@ type Props = {
 export const BaseLayout = ({ children }: Props) => {
   return (
     <>
-      <Header />
       <NoticeBar />
+      <Header />
       <div className=""></div>
       <main>{children}</main>
     </>

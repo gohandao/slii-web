@@ -7,7 +7,7 @@ type Props = {
   status: boolean;
   setStatus: React.Dispatch<React.SetStateAction<boolean>>;
 };
-export const DrowerMenu = ({ status, setStatus }: Props) => {
+export const DrawerMenu = ({ status, setStatus }: Props) => {
   //setStatus(true);
   const menus = [
     {

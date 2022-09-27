@@ -29,12 +29,14 @@ import { LikeButton } from "@/components/LikeButton";
 import { ViewsCount } from "@/components/ViewsCount";
 import { VoteButton } from "./VoteButton";
 import { BookmarkButton } from "./BookmarkButton";
+import { Profile } from "@/types/profile";
+import { getImageUrl } from "@/libs/supabase";
 
 type Props = {
-  creator: Creator;
+  profile: Profile;
 };
 
-export const CreatorProfile = ({ creator }: Props) => {
+export const UserProfile = ({ profile }: Props) => {
   const router = useRouter();
   let baseUrl = "" as string;
   if (process.env.NODE_ENV != "test") {
@@ -45,14 +47,26 @@ export const CreatorProfile = ({ creator }: Props) => {
   }
   const { socials } = useContext(BaseContext);
 
+  const [avatar, setAvatar] = useState<File | Blob>();
+  let avatar_url;
+  let avatar_blob;
+
+  const getAvatarBlob = async () => {
+    avatar_blob =
+      profile && profile.avatar_url && (await getImageUrl(profile.avatar_url));
+    avatar_blob && setAvatar(avatar_blob);
+  };
+  profile && !avatar && getAvatarBlob;
+
+  useEffect(() => {
+    !avatar && getAvatarBlob();
+  }, [profile]);
+
   const [social, setSocial] = useState<Social>();
 
   const [requestDropdown, setRequestDropdown] = useState<boolean>(false);
   const [shareDropdown, setShareDropdown] = useState<boolean>(false);
-  const twitterId = creator.twitter_id && creator.twitter_id;
-  const discordId =
-    creator.discord_url &&
-    creator.discord_url.substring(creator.discord_url.lastIndexOf("/") + 1);
+  const twitterId = profile.twitter_id && profile.twitter_id;
 
   const customStyles = {
     overlay: {
@@ -89,10 +103,10 @@ export const CreatorProfile = ({ creator }: Props) => {
   };
 
   useEffect(() => {
-    if (socials && creator.username) {
+    if (socials && profile.username) {
       //set collection
       const socials_filter = socials.filter(
-        (social) => creator.username === social.creator_username
+        (social) => profile.username === social.creator_username
       );
       socials_filter.length > 0 && setSocial(socials_filter[0]);
       if (socials_filter.length == 0) {
@@ -162,7 +176,7 @@ export const CreatorProfile = ({ creator }: Props) => {
         <button onClick={closeModal}>close</button>
       </Modal>
       <div className="flex relative w-full h-32 md:h-60 overflow-hidden bg-gray-800">
-        {creator.background && creator.background.length > 0 && (
+        {profile.background && profile.background.length > 0 && (
           <>
             {
               //@ts-ignore
@@ -193,10 +207,10 @@ export const CreatorProfile = ({ creator }: Props) => {
         <div className="-mt-[60px] relative flex justify-center">
           <div className="relative flex">
             <div className="rounded-full border-[5px] border-gray-800 overflow-hidden flex items-center justify-center z-10 mb-2 bg-gray-800 w-[110px] h-[110px]">
-              {creator.avatar && creator.avatar.length > 0 ? (
+              {avatar && profile.avatar_url.length > 0 ? (
                 <Image
                   //@ts-ignore
-                  src={creator.avatar[0].thumbnails.large.url}
+                  src={URL.createObjectURL(avatar)}
                   width={100}
                   height={100}
                   objectFit="cover"
@@ -205,7 +219,7 @@ export const CreatorProfile = ({ creator }: Props) => {
               ) : (
                 <Image
                   //@ts-ignore
-                  src={creator.avatar[0].url}
+                  src="/default-avatar.jpg"
                   width={100}
                   height={100}
                   objectFit="cover"
@@ -228,36 +242,19 @@ export const CreatorProfile = ({ creator }: Props) => {
               />
             </div>
             <div className="flex gap-3 absolute bottom-6 left-full rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
-              <BookmarkButton id={creator.username} type="creator" />
+              <BookmarkButton id={profile.username} type="creator" />
             </div>
-            <p
-              className={`absolute top-6 left-full -ml-6 pl-[24px] pr-3 rounded-tr-full rounded-br-full text-sm capitalize flex justify-center items-center gap-[6px] ${
-                creator.type == "creator"
-                  ? "bg-yellow-500 text-yellow-100"
-                  : "bg-blue-500 text-blue-100"
-              }`}
-            >
-              <JP title="Japan" className="h-3 rounded-sm" />
-              {creator.type}
-            </p>
           </div>
         </div>
         <div className="flex flex-1 flex-col gap-5 px-5">
           <div className="flex flex-col gap-2 items-center">
             <h1 className="text-2xl sm:text-3xl text-gray-100 font-bold inline justify-center items-center">
-              {creator.username}{" "}
-              {creator.verified == true && (
+              {profile.username}{" "}
+              {profile.verified == true && (
                 <MdVerified className="text-gray-500 text-xl inline ml-1" />
               )}
             </h1>
-            <div className="flex items-center gap-1 text-xs text-gray-400">
-              <Image src="/icon-eth.svg" width={16} height={16} alt="" />
-              <CopyText
-                text={creator.address}
-                alertText="ETH address has copied!"
-              />
-            </div>
-            <ViewsCount id={creator.username} type="creator" />
+            <ViewsCount id={profile.username} type="creator" />
             <div className="flex items-center gap-3">
               <a
                 target="_blank"
@@ -268,39 +265,31 @@ export const CreatorProfile = ({ creator }: Props) => {
                 Visit
               </a>
               <VoteButton
-                id={creator.username}
+                id={profile.username}
                 property="default"
                 type="creator"
               />
             </div>
             <p className="text-gray-100 mt-1 break-all px-3 text-sm sm:text-base">
-              {creator.description}
+              {profile.description}
             </p>
             {social && (
               <SocialCount
                 record_id={social.record_id}
-                creator_username={creator.username}
+                creator_username={profile.username}
                 twitter_id={twitterId}
                 twitter_followers={social.twitter_followers}
-                discord_id={discordId}
                 discord_members={social.discord_members}
               />
             )}
           </div>
-          {creator.tags && (
-            <div className="flex gap-2 justify-center w-full">
-              {creator.tags.map((tag, index) => (
-                <Label key={index} name={tag} type="creator" />
-              ))}
-            </div>
-          )}
           <ProfileLinks
-            address={creator.address}
-            twitter_id={creator.twitter_id}
-            instagram_id={creator.instagram_id}
-            discord_url={creator.discord_url}
-            website_url={creator.website_url}
-            opensea_username={creator.username}
+            address={profile.address}
+            twitter_id={profile.twitter_id}
+            instagram_id={profile.instagram_id}
+            discord_url={profile.discord_url}
+            website_url={profile.website_url}
+            opensea_username={profile.username}
           />
         </div>
       </div>

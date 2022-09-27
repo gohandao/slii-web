@@ -18,6 +18,7 @@ import { Creator } from "@/types/creator";
 import { AiFillHeart, AiOutlineEye, AiOutlineHeart } from "react-icons/ai";
 import { VoteButton } from "./VoteButton";
 import { LikeButton } from "./LikeButton";
+import { BookmarkButton } from "./BookmarkButton";
 
 type Props = {
   creators: Creator[];
@@ -116,7 +117,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
                           )}
                         </h3>
                         <div className="flex gap-2">
-                          <LikeButton
+                          <BookmarkButton
                             id={creator.username}
                             type="creator"
                             property="simple"

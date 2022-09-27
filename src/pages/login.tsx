@@ -118,7 +118,6 @@ export default function Login() {
                     autoFocus={false}
                     onChange={(e) => setOtpToken(e)}
                   />
-
                   <div className="flex justify-center mt-4">
                     <button
                       onClick={(e) => {

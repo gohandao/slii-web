@@ -46,6 +46,9 @@ const CollectionIndex: NextPage = (props: any) => {
 
   const { setBreadcrumbList } = useContext(UtilitiesContext);
 
+  console.log("collection");
+  console.log(collection);
+
   const { setHeaderIcon } = useContext(UtilitiesContext);
   let avatar_url = "" as string;
   if (creator && creator.avatar) {
@@ -61,7 +64,7 @@ const CollectionIndex: NextPage = (props: any) => {
       creator &&
         setHeaderIcon({
           title: creator.username,
-          emoji: avatar_url,
+          emoji: "",
           avatar: collection.image_url,
           path: `/collection/${collection.slug}`,
         });
@@ -89,28 +92,43 @@ const CollectionIndex: NextPage = (props: any) => {
     breadcrumbList && setBreadcrumbList(breadcrumbList);
   }, [collection]);
 
-  const options = { method: "GET" };
+  if (!creator && creators && collection && creators.length > 0) {
+    //set creator
+    const creator_filter = creators.filter(
+      (creator) => creator.username === collection.creator_id
+    );
+    if (creator_filter[0]) {
+      setCreator(creator_filter[0]);
+    }
+  }
+  if (!collection && OSCollections && OSCollections.length > 0) {
+    //set collection
+    const collection_filter = OSCollections.filter(
+      (collection) => collection.slug === slug
+    );
+    collection_filter.length > 0 && setCollection(collection_filter[0]);
+  }
+  useEffect(() => {
+    if (collection && creators && creators.length > 0) {
+      //set creator
+      const creator_filter = creators.filter(
+        (creator) => creator.username === collection.slug
+      );
+      if (creator_filter[0]) {
+        setCreator(creator_filter[0]);
+      }
+    }
+    if (!collection && OSCollections && OSCollections.length > 0) {
+      //set collection
+      const collection_filter = OSCollections.filter(
+        (collection) => collection.slug === slug
+      );
+      collection_filter.length > 0 && setCollection(collection_filter[0]);
+    }
+  }, [username, OSCollections, collection]);
 
   const updateCollectionAssets = (assets: any) => {
     setCollectionAssets(assets);
-  };
-
-  const getCollection = () => {
-    if (airtableCollection) {
-      fetch(`https://api.opensea.io/api/v1/collection/${slug}`, options)
-        .then((response) => response.json())
-        .then((response) => {
-          let data = response.collection;
-          data.record_id = airtableCollection.record_id;
-          data.creator_id = airtableCollection.creator_id;
-          data.category = airtableCollection.category;
-          // data.twitter_followers = airtableCollection.twitter_followers;
-          // data.discord_members = airtableCollection.discord_members;
-          const new_data = data;
-          setCollection(new_data);
-        })
-        .catch((err) => console.error(err));
-    }
   };
 
   const getCollectionAssets = () => {
@@ -137,13 +155,6 @@ const CollectionIndex: NextPage = (props: any) => {
       .catch((err) => console.error(err));
   };
 
-  //get opensea collection
-  //get opensea collection nfts
-  useEffect(() => {
-    if (airtableCollection) {
-      getCollection();
-    }
-  }, [airtableCollection]);
   useEffect(() => {
     // if (slug) {
     //   collection && getCollection();
@@ -152,31 +163,6 @@ const CollectionIndex: NextPage = (props: any) => {
       collectionAssets.length == 0 && getCollectionAssets();
     }
   }, [slug, collection]);
-
-  //[username]が存在するかチェック
-  useEffect(() => {
-    if (existence == false) {
-      const creator = creators.filter(
-        (creator) => creator.username === username
-      );
-      setCreator(creator[0]);
-      // const collection =
-      //   creator.length > 0 &&
-      //   creator[0].collections.filter((collection) => collection === slug);
-      const airtable_collection = collections.filter(
-        (collection) => collection.slug === slug
-      );
-      setAirtableCollection(airtable_collection[0]);
-      //if (collection && collection.length > 0) {
-      if (creator) {
-        setExistence(true);
-      }
-      //本来ページが存在しない場合はリダイレクト
-      // if (creator.length == 0 && slug && collections) {
-      //   router.push("/");
-      // }
-    }
-  }, [username, slug]);
 
   /*useEffect(() => {
     const test = async () => {
@@ -194,7 +180,7 @@ const CollectionIndex: NextPage = (props: any) => {
 
   return (
     <>
-      {existence ? (
+      {collection ? (
         <>
           <NextSeo
             title={props.title}

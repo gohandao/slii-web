@@ -269,6 +269,7 @@ export const CollectionTable = ({ collections, limit }: Props) => {
                 <tr>
                   <Th title="" sortBy={sortBy as string} />
                   <Th title="Collection Name" sortBy={sortBy as string} />
+                  <Th title="Upvotes" sortBy={sortBy as string} />
                   <Th title="Twitter" sortBy={sortBy as string} />
                   <Th title="Discord" sortBy={sortBy as string} />
                   <Th title="Floor Price" sortBy={sortBy as string} />

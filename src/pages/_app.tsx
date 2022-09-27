@@ -36,6 +36,7 @@ import { stringify } from "querystring";
 
 import { Like } from "@/types/like";
 import { Upvote } from "@/types/upvote";
+import { Bookmark } from "@/types/bookmark";
 
 const shortid = require("shortid");
 
@@ -43,11 +44,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<any>();
   const [profile, setProfile] = useState<any>();
   const [likes, setLikes] = useState<Like[]>([]);
+  const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [upvotes, setUpvotes] = useState<Upvote[]>([]);
-  console.log("user");
-  console.log(user);
-  console.log("profile");
-  console.log(profile);
+  // console.log("user");
+  // console.log(user);
+  // console.log("profile");
+  // console.log(profile);
 
   const [headerIcon, setHeaderIcon] = useState<{
     title: string;
@@ -117,6 +119,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   // user && !upvotes getUpvotes();
   useEffect(() => {
     getLikes();
+    getBookmarks();
     getUpvotes();
   }, [user]);
 
@@ -137,6 +140,30 @@ function MyApp({ Component, pageProps }: AppProps) {
         console.log("new_likes");
         console.log(new_likes);
         setLikes(new_likes);
+      }
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      //setLoading(false)
+    }
+  };
+  const getBookmarks = async () => {
+    try {
+      if (user) {
+        const { data, error, status } = await supabase
+          .from("bookmarks")
+          .select("*, profiles(*)", {
+            count: "exact",
+            head: false,
+          })
+          .eq("user_id", `${user.id}`);
+        if (error && status !== 406) {
+          throw error;
+        }
+        const new_bookmarks = data as Like[];
+        console.log("new_bookmarks");
+        console.log(new_bookmarks);
+        setBookmarks(new_bookmarks);
       }
     } catch (error: any) {
       alert(error.message);
@@ -412,7 +439,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         }
       );
   };
-  const geOSCollections = async (collections: Collection[]) => {
+  const getOSCollections = async (collections: Collection[]) => {
     const options = { method: "GET" };
     const getNewData = async () => {
       if (OSCollections.length == 0 && socials.length > 0) {
@@ -484,7 +511,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     console.log("jjjjj");
     if (OSCollections.length == 0 && collections && socials) {
       (async () => {
-        await geOSCollections(collections);
+        await getOSCollections(collections);
       })();
     }
   }, [collections, socials]);
@@ -534,8 +561,8 @@ function MyApp({ Component, pageProps }: AppProps) {
           profile,
           avatar,
           setAvatar,
-          likes,
-          setLikes,
+          bookmarks,
+          setBookmarks,
           upvotes,
           setUpvotes,
         }}

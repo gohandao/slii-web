@@ -28,94 +28,125 @@ import { Custom404 } from "@/pages/404";
 import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { AuthContext } from "@/contexts/AuthContext";
+import { supabase } from "@/libs/supabase";
+import { UserProfile } from "@/components/UserProfile";
+import { Profile } from "@/types/profile";
 
-const CreatorIndex: NextPage = (props: any) => {
+const UserPage: NextPage = (props: any) => {
   const router = useRouter();
   const { username } = router.query;
+  const [userProfile, setUserProfile] = useState<Profile>();
   const [creator, setCreator] = useState<Creator>();
-  const [collectionSlug, setCollectionSlug] = useState<string>();
 
   const [collection, setCollection] = useState([]);
 
   const [loading, setLoading] = useState<boolean>(false);
 
+  const { user, profile, avatar } = useContext(AuthContext);
+
   const { creators, collections, OSCollections } = useContext(BaseContext);
   // const collections = useContext(CollectionsContext);
   const { setHeaderIcon } = useContext(UtilitiesContext);
   let avatar_url = "" as string;
-  if (creator && creator.avatar) {
+  if (userProfile && userProfile.avatar_url) {
     avatar_url =
-      creator.avatar.length > 0
-        ? //@ts-ignore
-          creator.avatar[0].thumbnails.large.url
-        : //@ts-ignore
-          creator.avatar[0].url;
+      userProfile.avatar_url.length > 0 ? userProfile.avatar_url : "";
   }
   useEffect(() => {
     {
-      creator &&
+      userProfile &&
         setHeaderIcon({
-          title: creator.username,
+          title: userProfile.username,
           emoji: "",
-          avatar: avatar_url,
-          path: `/creator/${creator.username}`,
+          avatar: avatar,
+          path: `/${userProfile.username}`,
         });
     }
-  }, [creator]);
+  }, [userProfile]);
+
   const { setBreadcrumbList } = useContext(UtilitiesContext);
-  const breadcrumbList = username && [
+  const breadcrumbList = userProfile && [
     {
       name: "Home",
       path: "/",
     },
     {
-      name: "Creators",
-      path: "/creators",
-    },
-    {
-      name: username as string,
-      path: `/creator/${username as string}`,
+      name: userProfile.username,
+      path: `/${userProfile.username}`,
     },
   ];
   useEffect(() => {
     breadcrumbList && setBreadcrumbList(breadcrumbList);
   }, []);
 
-  if (!creator && username && creators && creators.length > 0) {
+  const getUserProfile = async (username: string) => {
+    try {
+      if (user) {
+        const { data, error, status } = await supabase
+          .from("profiles")
+          .select("*", {
+            count: "exact",
+            head: false,
+          })
+          .eq("username", `${username}`)
+          .single();
+        if (error && status !== 406) {
+          throw error;
+        }
+        data && setUserProfile(data);
+      }
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      //setLoading(false)
+    }
+  };
+
+  useEffect(() => {
+    username && getUserProfile(username as string);
+  }, [username]);
+
+  if (!creator && userProfile && creators && creators.length > 0) {
     //set creator
     const creator_filter = creators.filter(
-      (creator) => creator.username === username
+      (creator) => creator.username === userProfile.username
     );
     if (creator_filter[0]) {
       setCreator(creator_filter[0]);
     }
   }
-  if (!collection && username && OSCollections && OSCollections.length > 0) {
+  if (!collection && userProfile && OSCollections && OSCollections.length > 0) {
     //set collection
     const collection_filter = OSCollections.filter(
-      (collection) => collection.creator_id === username
+      (collection) => collection.creator_id === userProfile.username
     );
     collection_filter.length > 0 && setCollection(collection_filter[0]);
   }
   useEffect(() => {
-    if (username && creators && creators.length > 0) {
+    if (userProfile && creators && creators.length > 0) {
       //set creator
       const creator_filter = creators.filter(
-        (creator) => creator.username === username
+        (creator) => creator.username === userProfile.username
       );
       if (creator_filter[0]) {
         setCreator(creator_filter[0]);
       }
+      console.log("creator_filter");
+      console.log(creator_filter);
     }
-    if (username && OSCollections && OSCollections.length > 0) {
+    if (userProfile && OSCollections && OSCollections.length > 0) {
       //set collection
       const collection_filter = OSCollections.filter(
-        (collection) => collection.creator_id === username
+        (collection) => collection.creator_id === userProfile
       );
       collection_filter.length > 0 && setCollection(collection_filter[0]);
+      console.log("collection_filter");
+      console.log(collection_filter);
     }
-  }, [username, collections]);
-  [username, collections];
+    console.log("userProfile");
+    console.log(userProfile);
+  }, [userProfile, OSCollections]);
 
   return (
     <>
@@ -140,7 +171,8 @@ const CreatorIndex: NextPage = (props: any) => {
       />
       <BaseLayout>
         <div className="flex flex-col gap-10 pb-20">
-          {creator && <CreatorProfile creator={creator} />}
+          {userProfile && <UserProfile profile={userProfile} />}
+          {/* {creator && <CreatorProfile creator={creator} />} */}
           {collection.length != 0 && (
             <div className="mx-auto max-w-4xl w-full px-5">
               <CollectionCard username={username} collection={collection} />
@@ -151,7 +183,7 @@ const CreatorIndex: NextPage = (props: any) => {
     </>
   );
 };
-export default CreatorIndex;
+export default UserPage;
 
 type PathProps = {
   title: string;
@@ -163,16 +195,12 @@ type Params = ParsedUrlQuery & {
 };
 
 export const getStaticPaths = async () => {
-  const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
-  const response = await fetch(
-    `https://api.airtable.com/v0/appFYknMhbtkUTFgt/creators?api_key=${AIRTABLE_API_KEY}`
-  );
-  const { records } = await response.json();
-  const creators = records;
+  const { data, error, status } = await supabase.from("profiles").select("*", {
+    count: "exact",
+    head: false,
+  });
   return {
-    paths: creators.map(
-      (creator: any) => `/creator/${creator.fields.username}`
-    ),
+    paths: data && data.map((user: any) => `/${user.username}`),
     //fallback: false,
     fallback: "blocking",
   };
@@ -181,15 +209,15 @@ export const getStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   params,
 }) => {
-  const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
-  /*const response = await fetch(
-    `https://api.airtable.com/v0/appFYknMhbtkUTFgt/creators?api_key=${AIRTABLE_API_KEY}`
-  );*/
   const username = params && params.username;
-  const response = await fetch(
-    `https://api.airtable.com/v0/appFYknMhbtkUTFgt/creators?api_key=${AIRTABLE_API_KEY}&filterByFormula=%7Busername%7D+%3D+%22${username}%22`
-  );
-  const { records } = await response.json();
+  const { data, error, status } = await supabase
+    .from("profiles")
+    .select("*", {
+      count: "exact",
+      head: false,
+    })
+    .eq("username", username)
+    .single();
   //const creators = records;
   //const creator = creators[0];
   //console.log("static creator");
@@ -197,10 +225,9 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   /*const creator = creators.filter(
     (creator: any) => creator.fields.username === username
   );*/
-  const description =
-    records.length > 0 && records[0].fields.description
-      ? records[0].fields.description
-      : "";
+  const description = data.description
+    ? data.description
+    : `This is ${username}'s profile page.`;
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
@@ -212,7 +239,7 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
     props: {
       // OGP画像は絶対URLで記述する必要があります
       //ogImageUrl: `${baseUrl}/api/ogp?title=${creator.username}&page=creators`,
-      title: `${username}'s NFT collections`,
+      title: `${username}'s profile`,
       description: description,
       //description: `${records[0].fields.description}`,
       ogImageUrl: `${baseUrl}/api/ogp?title=${username}&subTitle=Creator`,

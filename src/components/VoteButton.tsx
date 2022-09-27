@@ -10,7 +10,7 @@ type Props = {
   type: string;
 };
 export const VoteButton = ({ id, property = "default", type }: Props) => {
-  const { user, likes, setLikes, upvotes, setUpvotes } =
+  const { user, upvotes, setUpvotes, bookmarks, setBookmarks } =
     useContext(AuthContext);
   const [postUpvotes, setPostUpvotes] = useState<Upvote[]>([]);
   console.log("upvotes");
@@ -101,7 +101,7 @@ export const VoteButton = ({ id, property = "default", type }: Props) => {
           count: "exact",
           head: false,
         })
-        .eq("collection_slug", `${creator_id}`);
+        .eq("collection_slug", `${collection_slug}`);
       setPostUpvotes(data as Upvote[]);
     }
   };
@@ -155,13 +155,13 @@ export const VoteButton = ({ id, property = "default", type }: Props) => {
               {upvoted ? (
                 <div className={`bg-gray-700 ${propertyClass} `}>
                   <BsTriangleFill className="text-sm text-orange-500 opacity-90" />
-                  <p className="text-gray-100 text-sm">100</p>
+                  <p className="text-gray-100 text-sm">{postUpvotes.length}</p>
                 </div>
               ) : (
                 <div className={`bg-gray-700 ${propertyClass}  `}>
                   {" "}
                   <BsTriangleFill className="text-sm text-white opacity-30" />
-                  <p className="text-gray-100 text-sm">100</p>
+                  <p className="text-gray-100 text-sm">{postUpvotes.length}</p>
                 </div>
               )}
             </>

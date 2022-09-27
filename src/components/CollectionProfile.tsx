@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { FaReact, FaRegFlag } from "react-icons/fa";
 import { SiTypescript } from "react-icons/si";
-import { AiOutlineClockCircle } from "react-icons/ai";
+import { AiOutlineClockCircle, AiOutlineTwitter } from "react-icons/ai";
 import { VscChecklist } from "react-icons/vsc";
 import { FaPlay } from "react-icons/fa";
 
@@ -25,6 +25,9 @@ import { Social } from "@/types/social";
 import { LikeButton } from "./LikeButton";
 import { BsFillShareFill, BsThreeDots, BsTwitter } from "react-icons/bs";
 import { useRouter } from "next/router";
+import { BookmarkButton } from "./BookmarkButton";
+import { VoteButton } from "./VoteButton";
+import { ViewsCount } from "./ViewsCount";
 
 type StatsProps = {
   title: string;
@@ -191,7 +194,10 @@ export const CollectionProfile = ({ collection }: any) => {
             </div>
             {filteredCollection && (
               <div className="flex gap-3 absolute bottom-6 left-full ml-2 rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
-                <LikeButton id={filteredCollection.creator_id} />
+                <BookmarkButton
+                  id={filteredCollection.creator_id}
+                  type="creator"
+                />
               </div>
             )}
             {filteredCollection && (
@@ -228,6 +234,23 @@ export const CollectionProfile = ({ collection }: any) => {
                 </Link>
               </p>
             )}
+            <ViewsCount id={collection.slug} type="collection" />
+
+            <div className="flex items-center justify-center gap-3">
+              <a
+                target="_blank"
+                href=""
+                className="text-white text-sm px-4 py-3 bg-gray-700 flex items-center justify-center gap-1 rounded gap-2"
+              >
+                <AiOutlineTwitter className="text-gray-500 text-lg" />
+                Visit
+              </a>
+              <VoteButton
+                id={collection.slug}
+                property="default"
+                type="collection"
+              />
+            </div>
             <p className="text-gray-100 mt-1 text-justify break-all px-3 text-sm sm:text-base">
               {collection.description}
             </p>

@@ -143,6 +143,11 @@ export const Header = () => {
               )}
               {user && (
                 <>
+                  <Link href={`/${profile.username}`}>
+                    <a className="block px-5 py-3 border-b border-gray-700 text-sm text-gray-400">
+                      Profile
+                    </a>
+                  </Link>
                   <Link href="/account">
                     <a className="block px-5 py-3 border-b border-gray-700 text-sm text-gray-400">
                       Account

@@ -2,7 +2,7 @@ import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
 import { setParams } from "@/utilities/setParams";
 import router, { useRouter } from "next/router";
 import React from "react";
-import { BsTwitter } from "react-icons/bs";
+import { BsTriangleFill, BsTwitter } from "react-icons/bs";
 import { FaDiscord, FaSort, FaSortDown } from "react-icons/fa";
 import { TiArrowSortedDown } from "react-icons/ti";
 
@@ -110,6 +110,8 @@ export const Th = ({ title }: Props) => {
     TitleIcon = <BsTwitter className="text-twitter" />;
   } else if (title == "Discord") {
     TitleIcon = <FaDiscord className="text-discord" />;
+  } else if (title == "Upvotes") {
+    TitleIcon = <BsTriangleFill className="text-sm text-gray-500" />;
   }
 
   let termArea;

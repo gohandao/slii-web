@@ -10,6 +10,8 @@ import { MdVerified } from "react-icons/md";
 import { SocialsContext } from "@/contexts/SocialsContext";
 import router from "next/router";
 import { AiOutlineHeart } from "react-icons/ai";
+import { BookmarkButton } from "./BookmarkButton";
+import { VoteButton } from "./VoteButton";
 
 type Props = {
   children: ReactNode;
@@ -112,7 +114,8 @@ export const CollectionTr = ({ item, index }: any) => {
                         )}
                       </p>
                       <div className="-mr-1">
-                        <AiOutlineHeart className=" text-gray-400 opacity-50" />
+                        <BookmarkButton id={item.slug} type="collection" />
+                        {/* <AiOutlineHeart className=" text-gray-400 opacity-50" /> */}
                       </div>
                     </div>
                     <p className="text-sm text-gray-500 ellipsis pr-3">
@@ -123,6 +126,14 @@ export const CollectionTr = ({ item, index }: any) => {
               </a>
             </Link>
           </td>
+          {/*upvote*/}
+          <Td>
+            {item.slug ? (
+              <VoteButton id={item.slug} type="collection" property="simple" />
+            ) : (
+              <Hyphen />
+            )}
+          </Td>
           {/*twitter*/}
           <Td>
             {item.twitter_followers ? (

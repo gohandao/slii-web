@@ -12,8 +12,8 @@ type Props = {
   property?: string;
   type: string;
 };
-export const LikeButton = ({ id, property = "default", type }: Props) => {
-  const { user, likes, setLikes, upvotes } = useContext(AuthContext);
+export const BookmarkButton = ({ id, property = "default", type }: Props) => {
+  const { user, bookmarks, setBookmarks, upvotes } = useContext(AuthContext);
 
   const [followers, setFollowers] = useState<number>();
   let baseUrl = "" as string;
@@ -24,19 +24,21 @@ export const LikeButton = ({ id, property = "default", type }: Props) => {
     }[process.env.NODE_ENV];
   }
 
-  const [liked, setLiked] = useState<boolean>(false);
+  const [bookmarked, setBookmarked] = useState<boolean>(false);
 
   const creator_id = type == "creator" && id;
   const collection_slug = type == "collection" && id;
 
-  const addLikeHandler = async (
+  const addBookmarkHandler = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
     if (user) {
-      const checkLiked = likes.filter((like) => like.creator_id == id);
-      if (checkLiked.length == 0) {
-        const { data, error } = await supabase.from("likes").insert([
+      const checkBookmarked = bookmarks.filter(
+        (bookmark) => bookmark.creator_id == id
+      );
+      if (checkBookmarked.length == 0) {
+        const { data, error } = await supabase.from("bookmarks").insert([
           {
             user_id: user.id,
             creator_id: creator_id,
@@ -45,68 +47,74 @@ export const LikeButton = ({ id, property = "default", type }: Props) => {
           },
         ]);
         //@ts-ignore
-        setLikes([...likes, ...data]);
-        setLiked(true);
+        setBookmarks([...bookmarks, ...data]);
+        setBookmarked(true);
       }
     } else {
       alert("Please login.");
     }
   };
-  const removeLikeHandler = async (
+  const removeBookmarkHandler = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
     if (user) {
       if (type == "creator") {
         const { data, error } = await supabase
-          .from("likes")
+          .from("bookmarks")
           .delete()
           .match({ user_id: user.id, creator_id: creator_id });
-        const removedLikes = likes.filter(
-          (like) => like.creator_id != creator_id
+        const removedBookmarks = bookmarks.filter(
+          (bookmark) => bookmark.creator_id != creator_id
         );
-        setLikes(removedLikes);
-        setLiked(false);
+        setBookmarks(removedBookmarks);
+        setBookmarked(false);
       }
       if (type == "collection") {
         const { data, error } = await supabase
-          .from("likes")
+          .from("bookmark")
           .delete()
           .match({ user_id: user.id, collection_slug: collection_slug });
-        const removedLikes = likes.filter((like) => like.collection_slug != id);
-        setLikes(removedLikes);
-        setLiked(false);
+        const removedBookmarks = bookmarks.filter(
+          (bookmark) => bookmark.collection_slug != id
+        );
+        setBookmarks(removedBookmarks);
+        setBookmarked(false);
       }
     }
   };
-  const checkLiked = () => {
-    let filterdLikes = [];
+  const checkBookmarked = () => {
+    let filterdBookmarkes = [];
     if (type == "creator") {
-      filterdLikes = likes.filter((like) => like.creator_id === id);
+      filterdBookmarkes = bookmarks.filter(
+        (bookmark) => bookmark.creator_id === id
+      );
     }
     if (type == "collection") {
-      filterdLikes = likes.filter((like) => like.collection_slug === id);
+      filterdBookmarkes = bookmarks.filter(
+        (bookmark) => bookmark.collection_slug === id
+      );
     }
-    if (filterdLikes.length > 0) {
-      setLiked(true);
+    if (filterdBookmarkes.length > 0) {
+      setBookmarked(true);
     } else {
-      setLiked(false);
+      setBookmarked(false);
     }
   };
   useEffect(() => {
-    checkLiked();
-  }, [likes, id]);
+    checkBookmarked();
+  }, [bookmarks, id]);
   return (
     <div className="flex justify-center gap-3">
       <div className="flex gap-1 items-center">
-        {liked ? (
+        {bookmarked ? (
           <button
             onClick={(e) => {
               e.preventDefault();
-              if (liked) {
-                removeLikeHandler(e);
+              if (bookmarked) {
+                removeBookmarkHandler(e);
               } else {
-                addLikeHandler(e);
+                addBookmarkHandler(e);
               }
             }}
             className=""
@@ -117,7 +125,7 @@ export const LikeButton = ({ id, property = "default", type }: Props) => {
         ) : (
           <button
             onClick={(e) => {
-              addLikeHandler(e);
+              addBookmarkHandler(e);
             }}
             className=""
           >

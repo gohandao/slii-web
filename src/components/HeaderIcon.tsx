@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
 import { BsArrowLeftCircle } from "react-icons/bs";
-import { DrowerMenu } from "@/components/DrowerMenu";
+import { DrawerMenu } from "@/components/DrawerMenu";
 
 export const HeaderIcon = () => {
   const router = useRouter();
@@ -15,7 +15,7 @@ export const HeaderIcon = () => {
 
   return (
     <>
-      <DrowerMenu status={status} setStatus={setStatus} />
+      <DrawerMenu status={status} setStatus={setStatus} />
       <div className="lg:min-w-[160px] flex items-center gap-3">
         <button
           onClick={() => {

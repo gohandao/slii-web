@@ -117,6 +117,7 @@ export default function Account() {
             <div className="mb-5">
               <UploadImage image={avatar} setImage={setAvatar} />
             </div>
+            <p className="text-white">{profile.website}</p>
             <div>
               <Input
                 label="Email"

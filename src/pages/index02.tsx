@@ -141,6 +141,42 @@ const Home: NextPage = () => {
             <LinkButton href="/creators">Check all creators</LinkButton>
           </div>
         </section>
+        <div className="pb-16"></div>
+        <section className="mx-auto px-5 md:px-8">
+          <div className="flex gap-3 mb-4">
+            <div className="flex gap-3 items-baseline">
+              <Title property="h2" addClass="">
+                <span className="text-2xl mr-2">🗂</span>Collections
+              </Title>
+              <p className="text-gray-500 text-sm -mt-4">
+                {collectionsLength} Collections
+              </p>
+            </div>
+          </div>
+          <div className="mb-10">
+            {OSCollections.length > 0 && (
+              <>
+                <CollectionTable collections={OSCollections} limit={10} />
+              </>
+            )}
+          </div>
+          {/*<div className="mb-10 flex gap-5 items-baseline">
+            {filteredCollectionTags && (
+              <TagList tags={filteredCollectionTags} type="collection" />
+            )}
+            <Link href="/tags">
+              <a className="mb-2">
+                <span className="text-gray-900">
+                  + {collectionTagsLength - 2}
+                </span>
+                <span className="text-gray-400 ml-2 ">Collection Tags</span>
+              </a>
+            </Link>
+            </div>*/}
+          <div className="flex justify-center">
+            <LinkButton href="/collections">Check all collections</LinkButton>
+          </div>
+        </section>
         {/*<div className="flex flex-col gap-10 px-5 mx-auto max-w-7xl">
           <div className="mx-auto">
             <ShowMore currentPage={page ? Number(page) : 1} />

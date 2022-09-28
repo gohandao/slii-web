@@ -44,6 +44,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<any>();
   const [profile, setProfile] = useState<any>();
   const [likes, setLikes] = useState<Like[]>([]);
+  // const [allList, setAllList] = useState<any[]>([]);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [upvotes, setUpvotes] = useState<Upvote[]>([]);
   // console.log("user");
@@ -95,11 +96,12 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const [page, setPage] = useState<number | undefined>(1);
   const limit = 10;
-  const allList = useRef<any[]>([]);
-  const newList = useRef<any[]>([]);
+  const newOSCollections = useRef<any[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File>();
+
+  const allList = [...creators, ...OSCollections];
 
   let avatar_url;
   let avatar_blob;
@@ -469,8 +471,8 @@ function MyApp({ Component, pageProps }: AppProps) {
                 data.twitter_followers = twitter_followers;
                 data.discord_members = discord_members;
                 const new_data = data;
-                new_list = [...newList.current, new_data];
-                newList.current = Array.from(new Set(new_list));
+                new_list = [...newOSCollections.current, new_data];
+                newOSCollections.current = Array.from(new Set(new_list));
               })
               .catch((err) => console.error(err));
           })
@@ -483,8 +485,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     // console.log(newList.current);
     // console.log("OSnewList.current");
     // console.log(collections);
-    const new_collections = Array.from(new Set(newList.current));
-    const result = newList.current.filter(
+    const new_collections = Array.from(new Set(newOSCollections.current));
+    const result = newOSCollections.current.filter(
       (element, index, self) =>
         self.findIndex((e) => e.slug === element.slug) === index
     );
@@ -595,6 +597,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         >
           <BaseContext.Provider
             value={{
+              allList,
               creators,
               collections,
               OSCollections,

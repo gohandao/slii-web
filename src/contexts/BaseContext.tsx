@@ -7,6 +7,7 @@ import { Social } from "@/types/social";
 import { Tag } from "@/types/tag";
 
 type Props = {
+  allList: any[];
   creators: Creator[];
   collections: Collection[];
   OSCollections: any[];
@@ -16,6 +17,7 @@ type Props = {
   setSocials: React.Dispatch<React.SetStateAction<Social[]>>;
 };
 export const BaseContext = createContext<Props>({
+  allList: [],
   creators: [
     {
       username: "",

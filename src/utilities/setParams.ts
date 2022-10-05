@@ -1,19 +1,17 @@
 import React from "react";
 import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
 import router from "next/router";
+import { Params } from "@/types/params";
 
-type setParamsProps = {
-  sortBy?: string;
-  order?: string;
-  term?: string;
-};
-export const setParams = ({ sortBy, order, term }: setParamsProps) => {
+export const setParams = ({ sortBy, order, term, page, type }: Params) => {
   const query = {
+    type: type,
     sortBy: sortBy,
     order: order,
     term: term,
+    page: page,
   };
-  const new_query: setParamsProps = removeUndefinedObject(query);
+  const new_query: Params = removeUndefinedObject(query);
   const currentUrl = location.pathname;
   router.push(
     {

@@ -37,11 +37,13 @@ import { stringify } from "querystring";
 import { Like } from "@/types/like";
 import { Upvote } from "@/types/upvote";
 import { Bookmark } from "@/types/bookmark";
+import { isBuffer } from "util";
 
 const shortid = require("shortid");
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<any>();
+  const [creatorSocial, setCreatorSocial] = useState<boolean>(false);
   const [profile, setProfile] = useState<any>();
   const [likes, setLikes] = useState<Like[]>([]);
   // const [allList, setAllList] = useState<any[]>([]);
@@ -493,10 +495,33 @@ function MyApp({ Component, pageProps }: AppProps) {
     setOSCollections(result);
   };
 
-  useEffect(() => {
-    console.log("OSCollectionsuuuuuu");
-    console.log(OSCollections);
-  }, [OSCollections]);
+  // useEffect(() => {
+  //   console.log("OSCollectionsuuuuuu");
+  //   console.log(OSCollections);
+  // }, [OSCollections]);
+
+  const updateCreatorSocial = async () => {
+    console.log("gdjahgohdaiodghda");
+    let new_creators = [] as any[];
+    await Promise.all(
+      creators.map(async (creator, index) => {
+        let new_creator;
+        const socials_filter = socials.filter(
+          (social) => social.creator_username === creator.username
+        );
+        const twitter_followers = socials_filter[0]
+          ? socials_filter[0].twitter_followers
+          : null;
+        new_creator = creator;
+        new_creator.twitter_followers = twitter_followers
+          ? twitter_followers
+          : null;
+        new_creators = [...new_creators, new_creator];
+      })
+    );
+    setCreators(new_creators);
+    console.log(new_creators);
+  };
 
   useEffect(() => {
     //getCreators();
@@ -509,8 +534,22 @@ function MyApp({ Component, pageProps }: AppProps) {
     collectionTags.length == 0 && getTags("collection_tags", setCollectionTags);
     socials.length == 0 && getSocials();
   }, []);
+
   useEffect(() => {
-    console.log("jjjjj");
+    if (!creatorSocial) {
+      console.log("yyyy");
+
+      if (socials.length != 0 && creators.length != 0) {
+        updateCreatorSocial();
+        setCreatorSocial(true);
+        console.log("gggg");
+      }
+      console.log("uuu");
+    }
+    console.log("aaaaa");
+  }, [socials, creators]);
+
+  useEffect(() => {
     if (OSCollections.length == 0 && collections && socials) {
       (async () => {
         await getOSCollections(collections);
@@ -571,24 +610,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       >
         <UtilitiesContext.Provider
           value={{
+            creatorSocial: creatorSocial,
             search: search,
             setSearch: setSearch,
-            indexTab: indexTab,
-            setIndexTab: setIndexTab,
-            page: page,
-            setPage: setPage,
             headerIcon: headerIcon,
             setHeaderIcon: setHeaderIcon,
-            sortAction: sortAction,
-            setSortAction: setSortAction,
-            creatorType: creatorType,
-            setCreatorType: setCreatorType,
-            creatorsSort: creatorsSort,
-            setCreatorsSort: setCreatorsSort,
-            creatorCategory: creatorCategory,
-            setCreatorCategory: setCreatorCategory,
-            collectionCategory: collectionCategory,
-            setCollectionCategory: setCollectionCategory,
             breadcrumbList: breadcrumbList,
             setBreadcrumbList: setBreadcrumbList,
             //collectionsMenu: collectionsMenu,

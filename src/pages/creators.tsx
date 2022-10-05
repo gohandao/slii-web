@@ -29,6 +29,7 @@ import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
 import { BreadCrumbs } from "@/components/BreadCrumbs";
 import { Dropdown } from "@/components/Dropdown";
+import { SplitLayout } from "@/components/SplitLayout";
 
 const CreatorsPage: NextPage = () => {
   const router = useRouter();
@@ -119,7 +120,7 @@ const CreatorsPage: NextPage = () => {
           ],
         }}
       />
-      <BaseLayout>
+      <SplitLayout>
         <section className="mx-auto mt-3 px-5 md:px-8">
           {/*<div className="mb-5">
             <Headline
@@ -150,7 +151,7 @@ const CreatorsPage: NextPage = () => {
             </p>
           )}
           <div className="relative flex gap-5 z-20 justify-between mb-3">
-            <Dropdown position="left" type="creatorType" />
+            <Dropdown position="left" property="creatorType" />
             {/*<Button filter="all" />
             <Button filter="creator" />
       <Button filter="project" />*/}
@@ -175,7 +176,7 @@ const CreatorsPage: NextPage = () => {
             },
           ]
         />*/}
-      </BaseLayout>
+      </SplitLayout>
     </>
   );
 };

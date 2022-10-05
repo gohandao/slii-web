@@ -1,6 +1,7 @@
 import { BreadcrumbList } from "@/types/breadcrumbList";
 
 export type Utilities = {
+  creatorSocial: boolean;
   search?: string;
   setSearch: React.Dispatch<React.SetStateAction<string | undefined>>;
   headerIcon: {
@@ -17,22 +18,6 @@ export type Utilities = {
       path: string;
     }>
   >;
-  indexTab?: "all" | "op" | "ed";
-  setIndexTab: React.Dispatch<
-    React.SetStateAction<"all" | "op" | "ed" | undefined>
-  >;
-  page?: number;
-  setPage: React.Dispatch<React.SetStateAction<number | undefined>>;
-  sortAction?: boolean;
-  setSortAction: React.Dispatch<React.SetStateAction<boolean>>;
-  creatorType: string;
-  setCreatorType: React.Dispatch<React.SetStateAction<string>>;
-  creatorsSort?: string;
-  setCreatorsSort: React.Dispatch<React.SetStateAction<string | undefined>>;
-  creatorCategory?: string;
-  setCreatorCategory: React.Dispatch<React.SetStateAction<string>>;
-  collectionCategory?: string;
-  setCollectionCategory: React.Dispatch<React.SetStateAction<string>>;
   breadcrumbList: BreadcrumbList;
   setBreadcrumbList: React.Dispatch<React.SetStateAction<BreadcrumbList>>;
 };

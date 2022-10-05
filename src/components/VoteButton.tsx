@@ -13,8 +13,6 @@ export const VoteButton = ({ id, property = "default", type }: Props) => {
   const { user, upvotes, setUpvotes, bookmarks, setBookmarks } =
     useContext(AuthContext);
   const [postUpvotes, setPostUpvotes] = useState<Upvote[]>([]);
-  console.log("upvotes");
-  console.log(upvotes);
 
   let baseUrl = "" as string;
   if (process.env.NODE_ENV != "test") {

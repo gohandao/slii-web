@@ -156,7 +156,6 @@ export const Dropdown = ({ position, property }: Props) => {
     setStatus(!status);
   };
   const updateParamsHandler = (title: string) => {
-    let new_order;
     if (property == "creatorType") {
       let new_type;
       if (title != "all") {
@@ -165,20 +164,18 @@ export const Dropdown = ({ position, property }: Props) => {
       setParams({
         type: new_type,
         sortBy: sortBy && (sortBy as string),
-        order: order && (order as string),
+        order: order ? (order as string) : "desc",
       });
     }
     if (property == "creatorSort") {
-      let new_sortBy;
+      let new_sortBy = title;
       if (title == "newest") {
         new_sortBy = "created_at";
-      } else if (title != "popular") {
-        new_sortBy = title;
       }
       setParams({
         type: type && (type as string),
         sortBy: new_sortBy,
-        order: order && (order as string),
+        order: order ? (order as string) : "desc",
       });
     }
     if (property == "collectionType") {
@@ -189,7 +186,7 @@ export const Dropdown = ({ position, property }: Props) => {
       setParams({
         type: new_type,
         sortBy: sortBy && (sortBy as string),
-        order: order && (order as string),
+        order: order ? (order as string) : "desc",
       });
     }
     if (property == "collectionSort") {
@@ -200,7 +197,7 @@ export const Dropdown = ({ position, property }: Props) => {
       setParams({
         type: type && (type as string),
         sortBy: new_sortBy,
-        order: order && (order as string),
+        order: order ? (order as string) : "desc",
       });
     }
     setStatus(false);
@@ -209,7 +206,7 @@ export const Dropdown = ({ position, property }: Props) => {
   const dropdownClass = !status && "hidden";
   return (
     <>
-      <div className="relative inline-block text-left z-50">
+      <div className="relative inline-block text-left z-10">
         <div>
           <button
             type="button"

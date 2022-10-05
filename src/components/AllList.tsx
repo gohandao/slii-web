@@ -49,7 +49,7 @@ export const AllList = ({ creators, limit }: Props) => {
   const currentCreators = limit ? filteredCreators : creators;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 w-full justify-center">
+    <div className="grid grid-cols-1 gap-3 w-full justify-center">
       {currentCreators.length > 0 &&
         currentCreators.map((creator, index) => {
           return (

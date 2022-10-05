@@ -37,7 +37,7 @@ export const Searchbox = () => {
               searchHandler();
             }
           }}
-          className="block w-full py-2 pl-5 pr-4 text-base text-gray-900 bg-white rounded-lg border-2 border-gray-100 bg-blue-50"
+          className="block w-full py-[10px] pl-5 pr-4 text-base text-gray-900 bg-white rounded-lg border-2 border-gray-100 bg-blue-50"
         />
         <button
           className="absolute right-0 top-0 w-10 flex h-full justify-center items-center bg-blue-500"

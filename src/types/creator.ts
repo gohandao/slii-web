@@ -14,5 +14,6 @@ export type Creator = {
   updatedAt: Date | null;
   collections: [];
   category: string;
+  twitter_followers?: number | null;
   tags: [];
 };

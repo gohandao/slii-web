@@ -19,6 +19,7 @@ import { AiFillHeart, AiOutlineEye, AiOutlineHeart } from "react-icons/ai";
 import { VoteButton } from "./VoteButton";
 import { LikeButton } from "./LikeButton";
 import { BookmarkButton } from "./BookmarkButton";
+import { BsTwitter } from "react-icons/bs";
 
 type Props = {
   creators: Creator[];
@@ -49,7 +50,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
   const currentCreators = limit ? filteredCreators : creators;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 w-full justify-center">
+    <div className="grid grid-cols-1 gap-3 w-full justify-center">
       {currentCreators.length > 0 &&
         currentCreators.map((creator, index) => {
           return (
@@ -62,7 +63,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
                 as={`/creator/${creator.username}`}
               >
                 <a className="relative flex flex-col border border-gray-800 rounded-lg w-full items-center shadow-lg bg-gray-800 overflow-hidden py-3 md:py-3">
-                  <div className="flex absolute left-0 top-0 w-full md:w-[47px] h-full w-full overflow-hidden mb-2 opacity-[10%] ">
+                  <div className="flex absolute left-0 top-0 w-[87px] h-full overflow-hidden rounded-tr-full rounded-br-full mb-2 opacity-[30%] ">
                     {creator.background && creator.background.length > 0 && (
                       <>
                         {
@@ -108,8 +109,8 @@ export const CreatorList = ({ creators, limit }: Props) => {
                         )}
                       </div>
                     </div>
-                    <div className="flex flex-col w-full flex-1  max-w-full min-w-[0px]">
-                      <div className="flex items-center pl-3 py-2 relative justify-between -mr-1 max-w-full">
+                    <div className="flex flex-col w-full flex-1  max-w-full min-w-[0px] gap-1">
+                      <div className="flex items-center pl-3 pt-2 relative justify-between -mr-1 max-w-full">
                         <h3 className="items-center  font-bold ellipsis text-gray-100 ellipsis max-w-full min-w-[0] pr-3">
                           {creator.username}
                           {creator.verified == true && (
@@ -146,6 +147,16 @@ export const CreatorList = ({ creators, limit }: Props) => {
                           <JP title="Japan" className="h-3 rounded-sm" />
                           {creator.type}
                         </div>
+                      </div>
+                      <div className="flex justify-between pl-3 w-full">
+                        {creator.twitter_followers && (
+                          <div
+                            className={`relative flex justify-center items-center gap-2 left-0 top-0 py-[2px] px-1 z-10 rounded text-xs md:text-xs capitalize text-gray-400 `}
+                          >
+                            <BsTwitter />
+                            {creator.twitter_followers.toLocaleString()}
+                          </div>
+                        )}
                         <div className=" w-full">
                           <CardLinks
                             twitter_id={creator.twitter_id}

@@ -16,10 +16,15 @@ export const Mainvisual = () => {
     );
   };
   return (
-    <div className="mx-auto pt-5 px-5 sm:px-8 ">
-      <h2 className="text-gradient flex-inline text-lg font-bold leading-[1.2] mb-4 text-center lg:text-left">
-        Japanese NFT Creators / Collections Database
-      </h2>
+    <div className="pt-3">
+      <div className="flex gap-3 items-center mb-2">
+        <span className="text-2xl">🔎</span>
+        <h2 className="text-gradient flex-inline text-lg font-bold leading-[1.2]">
+          Find your favorites!!
+          {/* Welcome to NFT Otaku!! */}
+          {/* Japanese NFT Creators / Collections Database */}
+        </h2>
+      </div>
       {/*<h2 className="text-gradient flex-inline text-3xl font-bold xl:text-7xl xl:leading-[1.2] mb-3">
         Japanese NFT
         <br />

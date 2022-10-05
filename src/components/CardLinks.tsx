@@ -71,7 +71,7 @@ export const CardLinks = ({
           }}
           className="text-white text-sm"
         >
-          <BsGlobe2 />
+          <FaDiscord />
         </button>
       )}
       {website_url && (
@@ -82,7 +82,7 @@ export const CardLinks = ({
           }}
           className="text-white text-sm"
         >
-          <FaDiscord />
+          <BsGlobe2 />
         </button>
       )}
     </div>

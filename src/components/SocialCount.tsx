@@ -189,7 +189,7 @@ export const SocialCount = ({
         : twitter_followers;
       const new_discord_members =
         discord_data && discord_data.code
-          ? discord_data.approximate_presence_count
+          ? discord_data.approximate_member_count
           : discord_members;
 
       if (

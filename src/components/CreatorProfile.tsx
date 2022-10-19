@@ -177,7 +177,7 @@ export const CreatorProfile = ({ creator }: Props) => {
         <h2>Hello</h2>
         <button onClick={closeModal}>close</button>
       </Modal>
-      <div className="flex relative w-full h-32 md:h-60 overflow-hidden bg-gray-800">
+      <div className="flex relative w-full h-40 md:h-60 overflow-hidden -mt-[70px] opacity-20 border-t-[10px] border-x-[10px] border-transparent ">
         {creator.background && creator.background.length > 0 && (
           <>
             {
@@ -190,6 +190,7 @@ export const CreatorProfile = ({ creator }: Props) => {
                   objectFit="cover"
                   alt=""
                   loading="lazy"
+                  className="bg-gray-800 rounded-lg"
                 />
               ) : (
                 <Image
@@ -199,6 +200,7 @@ export const CreatorProfile = ({ creator }: Props) => {
                   objectFit="cover"
                   alt=""
                   loading="lazy"
+                  className="bg-gray-800 rounded-lg"
                 />
               )
             }
@@ -252,32 +254,32 @@ export const CreatorProfile = ({ creator }: Props) => {
             </div>
           </div>
           <div className="flex justify-between flex-1 w-full ml-3">
+            <div className=" gap-5 capitalize flex justify-center items-center">
+              {/* <ProfileDropdown
+                icon={<BsFillShareFill className="text-gray-500" />}
+                dropdown={shareDropdown}
+                setDropdown={setShareDropdown}
+                menus={shareMenus}
+              /> */}
+              <ProfileDropdown
+                icon={<BsThreeDots className="text-gray-500" />}
+                dropdown={requestDropdown}
+                setDropdown={setRequestDropdown}
+                menus={requestMenus}
+              />
+            </div>
             <div className="flex items-center gap-3">
+              <BookmarkButton id={creator.username} type="creator" />
               <VoteButton
                 id={creator.username}
                 property="default"
                 type="creator"
                 count={creator.upvotes_count}
               />
-              <BookmarkButton id={creator.username} type="creator" />
-            </div>
-            <div className=" gap-5 capitalize flex justify-center items-center">
-              <ProfileDropdown
-                icon={<BsFillShareFill className="text-gray-500" />}
-                dropdown={shareDropdown}
-                setDropdown={setShareDropdown}
-                menus={shareMenus}
-              />
-              <ProfileDropdown
-                icon={<BsThreeDots className="text-gray-500 " />}
-                dropdown={requestDropdown}
-                setDropdown={setRequestDropdown}
-                menus={requestMenus}
-              />
             </div>
           </div>
         </div>
-        <div className="flex flex-1 gap-5 justify-between">
+        <div className="flex flex-1 gap-16 justify-between">
           <div className="flex flex-col gap-2">
             <h1 className="text-2xl sm:text-3xl text-gray-100 font-bold inline justify-center items-center">
               {creator.username}{" "}
@@ -296,7 +298,7 @@ export const CreatorProfile = ({ creator }: Props) => {
               {creator.description}
             </p>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col mt-1">
             <StatsBox>
               {twitterFollowers && (
                 <Stats

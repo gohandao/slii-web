@@ -65,8 +65,8 @@ const CollectionIndex: NextPage = (props: any) => {
         setHeaderIcon({
           title: creator.username,
           emoji: "",
-          avatar: collection.image_url,
-          path: `/collection/${collection.slug}`,
+          avatar: "",
+          path: `/creator/${collection.creator_id}`,
         });
     }
   }, [collection]);

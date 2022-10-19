@@ -17,6 +17,7 @@
     "babel-plugin-styled-components": "^2.0.7",
     "browser-image-compression": "^2.0.0",
     "country-flag-icons": "^1.5.5",
+    "ethers": "^5.7.1",
     "fs": "^0.0.1-security",
     "i": "^0.3.7",
     "local-storage": "^2.0.0",

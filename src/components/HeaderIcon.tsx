@@ -13,10 +13,6 @@ export const HeaderIcon = () => {
   const { headerIcon } = useContext(UtilitiesContext);
   const currentPath = router.pathname;
 
-  type Props = {
-    to?: string;
-  };
-
   let uri;
   let uri_domain: string;
   let ref;
@@ -35,11 +31,10 @@ export const HeaderIcon = () => {
     console.log(document.referrer);
   }
 
-  const BackButton = () => {
-    // uri_domain && currentPath && uri_domain == "localhost" ? (
-    //     ) : (
-    //       currentPath != "/" && <BackButton to="top" />
-    //     )
+  type Props = {
+    property: "back" | "next";
+  };
+  const BackButton = ({ property }: Props) => {
     let showClassName = "";
     let to = "";
     if (currentPath != "/") {
@@ -70,16 +65,25 @@ export const HeaderIcon = () => {
       <button
         onClick={() => {
           // setStatus(!status);
-          if (to == "back") {
-            router.back();
-          }
-          if ((to = "top")) {
-            router.push("/");
+          if (property == "back") {
+            if (to == "back") {
+              router.back();
+            }
+            if ((to = "top")) {
+              router.push("/");
+            }
+          } else {
+            history.forward();
           }
         }}
         className={`${showClassName}`}
       >
-        <BsArrowLeftCircle className={`text-gray-500 text-xl `} />
+        {property == "back" && (
+          <BsArrowLeftCircle className={`text-gray-500 text-xl `} />
+        )}
+        {property == "next" && (
+          <BsArrowRightCircle className={`text-gray-500 text-xl `} />
+        )}
       </button>
     );
   };
@@ -87,7 +91,11 @@ export const HeaderIcon = () => {
     <>
       {/* <DrawerMenu status={status} setStatus={setStatus} /> */}
       <div className="lg:min-w-[160px] flex items-center gap-3">
-        <BackButton />
+        <div className="flex gap-3">
+          <BackButton property="back" />
+          {/* <BackButton property="next" /> */}
+        </div>
+        {/* <NextButton /> */}
         {headerIcon.emoji.length > 0 ? (
           <Link href={headerIcon.path}>
             <a className="relative h-7 font-bold text-base text-white tracking-wider flex items-center mt-[2px]">
@@ -112,7 +120,15 @@ export const HeaderIcon = () => {
                   />
                 </div>
               )}
-              <p className="text-sm ellipsis max-w-[120px]">
+              <p className="text-sm ellipsis max-w-[180px]">
+                {headerIcon.title}
+              </p>
+            </a>
+          </Link>
+        ) : currentPath != "/" ? (
+          <Link href={headerIcon.path}>
+            <a className="relative  h-7 font-bold text-2xl text-white tracking-wider flex items-center gap-2">
+              <p className="text-lg ellipsis max-w-[180px]">
                 {headerIcon.title}
               </p>
             </a>

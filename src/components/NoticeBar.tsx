@@ -11,7 +11,7 @@ export const NoticeBar = () => {
       {show && (
         <a
           href=""
-          className="relative flex justify-center items-center bg-gradient text-gray-100 py-[6px] px-5 gap-4 tracking-wider"
+          className="relative flex justify-center items-center bg-gradient text-gray-100 py-[6px] px-5 gap-4 tracking-wider z-10"
         >
           NFT OTAKU ver0.0.1 released!
           <div className="rounded px-2 py-[2px] bg-pink-500 text-pink-100">

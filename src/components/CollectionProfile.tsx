@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { FaReact, FaRegFlag } from "react-icons/fa";
+import { FaReact, FaRegFlag, FaTwitter } from "react-icons/fa";
 import { SiTypescript } from "react-icons/si";
 import { AiOutlineClockCircle, AiOutlineTwitter } from "react-icons/ai";
 import { VscChecklist } from "react-icons/vsc";
@@ -17,7 +17,11 @@ import { Creator } from "@/types/creator";
 import Moment from "react-moment";
 import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 import { Label } from "@/components/Label";
-import { MdVerified } from "react-icons/md";
+import {
+  MdKeyboardArrowDown,
+  MdKeyboardArrowUp,
+  MdVerified,
+} from "react-icons/md";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { SocialCount } from "@/components/SocialCount";
 import { SocialsContext } from "@/contexts/SocialsContext";
@@ -28,6 +32,8 @@ import { useRouter } from "next/router";
 import { BookmarkButton } from "./BookmarkButton";
 import { VoteButton } from "./VoteButton";
 import { ViewsCount } from "./ViewsCount";
+import { StatsBox } from "./StatsBox";
+import { Stats } from "./Stats";
 
 type StatsProps = {
   title: string;
@@ -97,24 +103,24 @@ export const CollectionProfile = ({ collection }: any) => {
     },
   ];
 
-  const Stats = ({ title, element, unit }: StatsProps) => {
-    return (
-      <div className="inline-flex min-w-[115px] border-r border-b border-gray-700 bg-gray-800 flex-col p-2">
-        <p className="text-xs tracking-wide text-gray-400">{title}</p>
-        <div className="mt-1 text-sm font-medium text-gray-100 tracking-wide inline-flex items-center gap-1 justify-center">
-          {unit == "ETH" && (
-            <div className="-ml-2 flex -mt-[1px]">
-              <Image src="/icon-eth.svg" width={16} height={16} alt="" />
-            </div>
-          )}
-          {element}
-          {unit != "ETH" && (
-            <span className="text-gray-400 text-xs mt-[1px]">{unit}</span>
-          )}
-        </div>
-      </div>
-    );
-  };
+  // const Stats = ({ title, element, unit }: StatsProps) => {
+  //   return (
+  //     <div className="inline-flex min-w-[115px] border-r border-b border-gray-700 bg-gray-800 flex-col p-2">
+  //       <p className="text-xs tracking-wide text-gray-400">{title}</p>
+  //       <div className="mt-1 text-sm font-medium text-gray-100 tracking-wide inline-flex items-center gap-1 justify-center">
+  //         {unit == "ETH" && (
+  //           <div className="-ml-2 flex -mt-[1px]">
+  //             <Image src="/icon-eth.svg" width={16} height={16} alt="" />
+  //           </div>
+  //         )}
+  //         {element}
+  //         {unit != "ETH" && (
+  //           <span className="text-gray-400 text-xs mt-[1px]">{unit}</span>
+  //         )}
+  //       </div>
+  //     </div>
+  //   );
+  // };
   useEffect(() => {
     if (filteredCollection) {
       //set creator
@@ -150,9 +156,15 @@ export const CollectionProfile = ({ collection }: any) => {
     }
   }, [collection, collections]);
 
+  const description = collection.description;
+  const slicedDescription =
+    description && description.length > 80
+      ? description.slice(0, 80) + "…"
+      : description;
+  const [showDescription, setShowDescription] = useState<boolean>(false);
   return (
     <section className="w-full">
-      <div className="flex relative w-full h-32 md:h-60 overflow-hidden bg-gray-800">
+      <div className="flex relative w-full h-32 md:h-60 overflow-hidden  -mt-[70px] opacity-20 border-t-[10px] border-x-[10px] border-transparent ">
         {collection.banner_image_url && (
           <Image
             //@ts-ignore
@@ -160,13 +172,14 @@ export const CollectionProfile = ({ collection }: any) => {
             layout="fill"
             objectFit="cover"
             alt=""
+            className="bg-gray-800 rounded-lg"
           />
         )}
       </div>
-      <div className="mx-auto max-w-2xl">
-        <div className="relative flex justify-center">
-          <div className="relative flex -mt-[60px]">
-            <div className="relative rounded border-[5px] border-gray-800 bg-gray-700 overflow-hidden inline-flex items center justify-center z-10 mb-2 w-[110px] h-[110px]">
+      <div className="mx-auto px-5 lg:px-8">
+        <div className="-mt-[58px] relative flex justify-between items-end mb-2">
+          <div className="relative flex">
+            <div className="relative rounded border-[5px] border-gray-800 bg-gray-700 overflow-hidden inline-flex items center justify-center z-10 w-[110px] h-[110px]">
               {collection.image_url && (
                 <Image
                   //@ts-ignore
@@ -178,29 +191,53 @@ export const CollectionProfile = ({ collection }: any) => {
                 />
               )}
             </div>
-            <div className="flex gap-3 absolute bottom-6 right-full mr-2 rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
-              <ProfileDropdown
+            <div className="absolute top-5 left-full flex items-center gap-4 ml-2">
+              {/* <p
+                className={` -ml-6 pl-[24px] pr-3 rounded-tr-full rounded-br-full text-sm capitalize flex justify-center items-center gap-[6px] ${
+                  creator.type == "creator"
+                    ? "bg-yellow-500 text-yellow-100"
+                    : "bg-blue-500 text-blue-100"
+                }`}
+              >
+                <JP title="Japan" className="h-3 rounded-sm" />
+                {creator.type}
+              </p> */}
+              {creator && (
+                <ProfileLinks
+                  twitter_id={creator.twitter_id}
+                  instagram_id={creator.instagram_id}
+                  discord_url={creator.discord_url}
+                  website_url={creator.website_url}
+                  opensea_slug={collection.slug}
+                />
+              )}
+            </div>
+          </div>
+          <div className="flex justify-between flex-1 w-full ml-3">
+            <div className=" gap-5 capitalize flex justify-center items-center">
+              {/* <ProfileDropdown
                 icon={<BsFillShareFill className="text-gray-500" />}
                 dropdown={shareDropdown}
                 setDropdown={setShareDropdown}
                 menus={shareMenus}
-              />
+              /> */}
               <ProfileDropdown
-                icon={<BsThreeDots className="text-gray-500 " />}
+                icon={<BsThreeDots className="text-gray-500" />}
                 dropdown={requestDropdown}
                 setDropdown={setRequestDropdown}
                 menus={requestMenus}
               />
             </div>
-            {filteredCollection && (
-              <div className="flex gap-3 absolute bottom-6 left-full ml-2 rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
-                <BookmarkButton
-                  id={filteredCollection.creator_id}
-                  type="creator"
-                />
-              </div>
-            )}
-            {filteredCollection && (
+            <div className="flex items-center gap-3">
+              <BookmarkButton id={collection.creator_id} type="creator" />
+              <VoteButton
+                id={collection.creator_id}
+                property="default"
+                type="collection"
+                count={collection.upvotes_count}
+              />
+            </div>
+            {/* {filteredCollection && (
               <p
                 className={`absolute top-6 left-full -ml-4 pl-[24px] pr-3 rounded-tr-full rounded-br-full text-sm capitalize flex justify-center items-center gap-[6px] ${
                   filteredCollection.type == "Handmade"
@@ -210,15 +247,15 @@ export const CollectionProfile = ({ collection }: any) => {
               >
                 {filteredCollection.type}
               </p>
-            )}
+            )} */}
           </div>
         </div>
-        <div className="flex flex-1 flex-col items-center gap-5 text-center px-5">
+        <div className="flex flex-1 gap-16 justify-between">
           <div className="flex flex-col gap-2">
-            <h1 className="text-2xl sm:text-3xl text-gray-100 font-bold inline justify-center items-center">
+            <h1 className="text-2xl sm:text-3xl text-gray-100 font-bold inline items-center">
               {collection.name}
               {collection.safelist_request_status == "verified" && (
-                <MdVerified className="text-gray-500 text-xl inline ml-1" />
+                <MdVerified className="text-gray-500 text-xl inline ml-2" />
               )}
             </h1>
             {creator && (
@@ -234,28 +271,56 @@ export const CollectionProfile = ({ collection }: any) => {
                 </Link>
               </p>
             )}
-            <ViewsCount id={collection.slug} type="collection" />
-
-            <div className="flex items-center justify-center gap-3">
-              <a
-                target="_blank"
-                href=""
-                className="text-white text-sm px-4 py-3 bg-gray-700 flex items-center justify-center gap-1 rounded gap-2"
-              >
-                <AiOutlineTwitter className="text-gray-500 text-lg" />
-                Visit
-              </a>
-              <VoteButton
-                id={collection.slug}
-                property="default"
-                type="collection"
-              />
+            <div className="flex flex-col gap-1">
+              <p className="text-gray-100 mt-1 text-justify break-all text-sm sm:text-base transition-all duration-200 ">
+                {showDescription ? description : slicedDescription}
+              </p>
+              {description.length > 80 && (
+                <>
+                  <button
+                    className="inline-flex text-gray-500 items-center gap-1"
+                    onClick={() => {
+                      showDescription
+                        ? setShowDescription(false)
+                        : setShowDescription(true);
+                    }}
+                  >
+                    {showDescription ? (
+                      <>
+                        <MdKeyboardArrowUp />
+                        Show less
+                      </>
+                    ) : (
+                      <>
+                        <MdKeyboardArrowDown />
+                        Show more
+                      </>
+                    )}
+                  </button>
+                </>
+              )}
             </div>
-            <p className="text-gray-100 mt-1 text-justify break-all px-3 text-sm sm:text-base">
-              {collection.description}
-            </p>
           </div>
-          {social && (
+          <div className="flex flex-col mt-1">
+            <StatsBox>
+              {/* {twitterFollowers && (
+                <Stats
+                  field="Followers"
+                  value={
+                    <div className="flex gap-2 items-center w-full justify-end">
+                      <FaTwitter className="text-sm opacity-60" />
+                      {twitterFollowers}
+                    </div>
+                  }
+                />
+              )}
+              <Stats field="Collections" value={twitterFollowers} />
+              <Stats field="Created" value={twitterFollowers} />
+              <Stats field="Collected" value={twitterFollowers} /> */}
+              <Stats field="Views" value="100" />
+            </StatsBox>
+          </div>
+          {/* {social && (
             <>
               <SocialCount
                 record_id={social.record_id}
@@ -266,8 +331,8 @@ export const CollectionProfile = ({ collection }: any) => {
                 discord_members={collection.discord_members}
               />
             </>
-          )}
-          {collection.stats && (
+          )} */}
+          {/* {collection.stats && (
             <div className="grid grid-cols-2 md:grid-cols-5 xl:grid-cols-5 justify-center max-w-md md:max-w-2xl w-full rounded border-l border-t border-gray-700">
               {collection.stats && collection.payment_tokens && (
                 <>
@@ -337,7 +402,7 @@ export const CollectionProfile = ({ collection }: any) => {
                 </>
               )}
             </div>
-          )}
+          )} */}
           {filteredCollection && filteredCollection.tags && (
             <div className="flex flex-wrap gap-3">
               {filteredCollection.tags.map((tag: string, index: number) => (
@@ -345,26 +410,17 @@ export const CollectionProfile = ({ collection }: any) => {
               ))}
             </div>
           )}
-          {creator && (
-            <ProfileLinks
-              twitter_id={creator.twitter_id}
-              instagram_id={creator.instagram_id}
-              discord_url={creator.discord_url}
-              website_url={creator.website_url}
-              opensea_slug={collection.slug}
-            />
-          )}
         </div>
+        <a
+          className="inline-flex bg-[#1867B7] rounded px-5 py-4 text-blue-100 w-[280px] mx-auto mt-7 border-b-[6px] border-[#10467C] items-center gap-3 text-center justify-center"
+          href={`https://opensea.io/collection/${collection.slug}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <Image src="/icon-opensea.svg" width={14} height={14} />
+          Chack OpenSea
+        </a>
       </div>
-      <a
-        className="flex bg-[#1867B7] rounded px-5 py-4 text-blue-100 w-[280px] mx-auto mt-7 border-b-[6px] border-[#10467C] items-center gap-3 text-center justify-center"
-        href={`https://opensea.io/collection/${collection.slug}`}
-        target="_blank"
-        rel="noreferrer"
-      >
-        <Image src="/icon-opensea.svg" width={14} height={14} />
-        Chack OpenSea Now
-      </a>
     </section>
   );
 };

@@ -179,7 +179,7 @@ export const VoteButton = ({
                 <div className={`bg-white ${propertyClass} border-orange-600 `}>
                   <BsTriangleFill className="text-sm text-orange-600 opacity-80" />
                   <p className="text-orange-600 px-1 text-sm">
-                    Upvote {currentCount}
+                    Upvoted {currentCount}
                   </p>
                 </div>
               ) : (

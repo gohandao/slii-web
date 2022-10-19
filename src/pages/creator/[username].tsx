@@ -33,13 +33,12 @@ const CreatorIndex: NextPage = (props: any) => {
   const router = useRouter();
   const { username } = router.query;
   const [creator, setCreator] = useState<Creator>();
-  const [collectionSlug, setCollectionSlug] = useState<string>();
 
-  const [collection, setCollection] = useState([]);
+  const [creatorCollections, setCreatorCollections] = useState<any[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { creators, collections, OSCollections } = useContext(BaseContext);
+  const { creators, OSCollections } = useContext(BaseContext);
   // const collections = useContext(CollectionsContext);
   const { setHeaderIcon } = useContext(UtilitiesContext);
   let avatar_url = "" as string;
@@ -57,7 +56,7 @@ const CreatorIndex: NextPage = (props: any) => {
         setHeaderIcon({
           title: creator.username,
           emoji: "",
-          avatar: avatar_url,
+          avatar: "",
           path: `/creator/${creator.username}`,
         });
     }
@@ -90,12 +89,17 @@ const CreatorIndex: NextPage = (props: any) => {
       setCreator(creator_filter[0]);
     }
   }
-  if (!collection && username && OSCollections && OSCollections.length > 0) {
+  if (
+    !creatorCollections &&
+    username &&
+    OSCollections &&
+    OSCollections.length > 0
+  ) {
     //set collection
     const collection_filter = OSCollections.filter(
       (collection) => collection.creator_id === username
     );
-    collection_filter.length > 0 && setCollection(collection_filter[0]);
+    collection_filter.length > 0 && setCreatorCollections(collection_filter);
   }
   useEffect(() => {
     if (username && creators && creators.length > 0) {
@@ -112,10 +116,9 @@ const CreatorIndex: NextPage = (props: any) => {
       const collection_filter = OSCollections.filter(
         (collection) => collection.creator_id === username
       );
-      collection_filter.length > 0 && setCollection(collection_filter[0]);
+      setCreatorCollections(collection_filter);
     }
-  }, [username, collections]);
-  [username, collections];
+  }, [username, OSCollections]);
 
   return (
     <>
@@ -141,9 +144,15 @@ const CreatorIndex: NextPage = (props: any) => {
       <BaseLayout>
         <div className="flex flex-col gap-10 pb-20">
           {creator && <CreatorProfile creator={creator} />}
-          {collection.length != 0 && (
-            <div className="mx-auto max-w-4xl w-full px-5">
-              <CollectionCard username={username} collection={collection} />
+          {creatorCollections.length != 0 && (
+            <div className="mx-auto w-full px-5 lg:px-8 flex gap-6">
+              {creatorCollections.map((collection, index) => (
+                <CollectionCard
+                  username={username}
+                  collection={collection}
+                  key={index}
+                />
+              ))}
             </div>
           )}
         </div>

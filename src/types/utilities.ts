@@ -2,8 +2,8 @@ import { BreadcrumbList } from "@/types/breadcrumbList";
 
 export type Utilities = {
   creatorSocial: boolean;
-  search?: string;
-  setSearch: React.Dispatch<React.SetStateAction<string | undefined>>;
+  keyword?: string;
+  setKeyword: React.Dispatch<React.SetStateAction<string | undefined>>;
   headerIcon: {
     title: string;
     emoji: string;

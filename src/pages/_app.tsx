@@ -65,7 +65,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     avatar: "",
     path: "",
   });
-  const [search, setSearch] = useState<string | undefined>();
+  const [keyword, setKeyword] = useState<string | undefined>();
   const [indexTab, setIndexTab] = useState<"all" | "op" | "ed" | undefined>(
     "all"
   );
@@ -270,11 +270,12 @@ function MyApp({ Component, pageProps }: AppProps) {
                 discord_url: fields.discord_url,
                 type: fields.type,
                 verified: fields.verified,
-                createdAt: fields.createdAt,
                 updatedAt: fields.updatedAt,
                 collections: fields.collections,
                 category: fields.category,
                 tags: fields.tags,
+                //掲載された日
+                listed_at: fields.listedAt,
               } as Creator,
             ];
             //console.log("creators", new_records);
@@ -318,7 +319,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                   slug: fields.slug,
                   creator_id: fields.creator_id[0],
                   type: fields.type,
-                  createdAt: fields.createdAt,
+                  listed_at: fields.listedAt,
                   updatedAt: fields.updatedAt,
                   category: fields.category,
                   verified: fields.verified,
@@ -450,6 +451,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         let new_list: any = [];
         await Promise.all(
           collections.map(async (collection, index) => {
+            //1.insert social
             const socials_filter = socials.filter(
               (social) => social.collection_slug === collection.slug
             );
@@ -459,6 +461,16 @@ function MyApp({ Component, pageProps }: AppProps) {
             const discord_members = socials_filter[0]
               ? socials_filter[0].discord_members
               : null;
+            //2.insert upvotes
+            let upvotes_count = 0;
+            const { data, error, status } = await supabase
+              .from("upvotes")
+              .select("id", {
+                count: "exact",
+                head: false,
+              })
+              .eq("collection_slug", collection.slug);
+            upvotes_count = data ? data.length : 0;
             await fetch(
               `https://api.opensea.io/api/v1/collection/${collection.slug}`,
               options
@@ -468,8 +480,11 @@ function MyApp({ Component, pageProps }: AppProps) {
                 let data = response.collection;
                 data.record_id = collection.record_id;
                 data.tags = collection.tags;
+                data.type = collection.type;
                 data.creator_id = collection.creator_id;
                 data.category = collection.category;
+                data.listed_at = collection.listed_at;
+                data.upvotes_count = upvotes_count;
                 data.twitter_followers = twitter_followers;
                 data.discord_members = discord_members;
                 const new_data = data;
@@ -506,6 +521,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     await Promise.all(
       creators.map(async (creator, index) => {
         let new_creator;
+        //1.add twitter followers
         const socials_filter = socials.filter(
           (social) => social.creator_username === creator.username
         );
@@ -516,6 +532,15 @@ function MyApp({ Component, pageProps }: AppProps) {
         new_creator.twitter_followers = twitter_followers
           ? twitter_followers
           : null;
+        //2.add upvotes
+        const { data, error, status } = await supabase
+          .from("upvotes")
+          .select("id", {
+            count: "exact",
+            head: false,
+          })
+          .eq("creator_id", creator.username);
+        new_creator.upvotes_count = data ? data.length : 0;
         new_creators = [...new_creators, new_creator];
       })
     );
@@ -570,6 +595,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
+        <link rel="stylesheet" href="https://use.typekit.net/xbj6ysr.css" />
       </Head>
       <DefaultSeo
         defaultTitle={title}
@@ -611,8 +637,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         <UtilitiesContext.Provider
           value={{
             creatorSocial: creatorSocial,
-            search: search,
-            setSearch: setSearch,
+            keyword: keyword,
+            setKeyword: setKeyword,
             headerIcon: headerIcon,
             setHeaderIcon: setHeaderIcon,
             breadcrumbList: breadcrumbList,

@@ -8,11 +8,18 @@ type Props = {
   id: string;
   property?: string;
   type: string;
+  count: number;
 };
-export const VoteButton = ({ id, property = "default", type }: Props) => {
+export const VoteButton = ({
+  id,
+  property = "default",
+  type,
+  count,
+}: Props) => {
   const { user, upvotes, setUpvotes, bookmarks, setBookmarks } =
     useContext(AuthContext);
   const [postUpvotes, setPostUpvotes] = useState<Upvote[]>([]);
+  let currentCount = count;
 
   let baseUrl = "" as string;
   if (process.env.NODE_ENV != "test") {
@@ -46,6 +53,7 @@ export const VoteButton = ({ id, property = "default", type }: Props) => {
         //@ts-ignore
         setUpvotes([...upvotes, ...data]);
         setUpvoted(true);
+        currentCount = currentCount + 1;
       }
     } else {
       alert("Please login.");
@@ -78,31 +86,34 @@ export const VoteButton = ({ id, property = "default", type }: Props) => {
         setUpvotes(removedUpvotes);
         setUpvoted(false);
       }
+      currentCount = currentCount + 1;
     }
   };
 
-  const getUpvotesCount = async () => {
-    if (type == "creator") {
-      const { data, error, status } = await supabase
-        .from("upvotes")
-        .select("*, profiles(*)", {
-          count: "exact",
-          head: false,
-        })
-        .eq("creator_id", `${creator_id}`);
-      setPostUpvotes(data as Upvote[]);
-    }
-    if (type == "collection") {
-      const { data, error, status } = await supabase
-        .from("upvotes")
-        .select("*, profiles(*)", {
-          count: "exact",
-          head: false,
-        })
-        .eq("collection_slug", `${collection_slug}`);
-      setPostUpvotes(data as Upvote[]);
-    }
-  };
+  // const getUpvotesCount = async () => {
+  //   if (type == "creator") {
+  //     const { data, error, status } = await supabase
+  //       .from("upvotes")
+  //       .select("*, profiles(*)", {
+  //         count: "exact",
+  //         head: false,
+  //       })
+  //       .eq("creator_id", `${creator_id}`);
+  //     setPostUpvotes(data as Upvote[]);
+  //     console.log("upvote data");
+  //     console.log(data);
+  //   }
+  //   if (type == "collection") {
+  //     const { data, error, status } = await supabase
+  //       .from("upvotes")
+  //       .select("*, profiles(*)", {
+  //         count: "exact",
+  //         head: false,
+  //       })
+  //       .eq("collection_slug", `${collection_slug}`);
+  //     setPostUpvotes(data as Upvote[]);
+  //   }
+  // };
 
   const checkUpvoted = () => {
     let filterdUpvotes = [];
@@ -123,7 +134,7 @@ export const VoteButton = ({ id, property = "default", type }: Props) => {
 
   useEffect(() => {
     checkUpvoted();
-    getUpvotesCount();
+    // getUpvotesCount();
   }, [upvotes, id]);
 
   let propertyClass;
@@ -153,13 +164,12 @@ export const VoteButton = ({ id, property = "default", type }: Props) => {
               {upvoted ? (
                 <div className={`bg-gray-700 ${propertyClass} `}>
                   <BsTriangleFill className="text-sm text-orange-500 opacity-90" />
-                  <p className="text-gray-100 text-sm">{postUpvotes.length}</p>
+                  <p className="text-gray-100 text-sm">{currentCount}</p>
                 </div>
               ) : (
                 <div className={`bg-gray-700 ${propertyClass}  `}>
-                  {" "}
                   <BsTriangleFill className="text-sm text-white opacity-30" />
-                  <p className="text-gray-100 text-sm">{postUpvotes.length}</p>
+                  <p className="text-gray-100 text-sm">{currentCount}</p>
                 </div>
               )}
             </>
@@ -169,7 +179,7 @@ export const VoteButton = ({ id, property = "default", type }: Props) => {
                 <div className={`bg-white ${propertyClass} border-orange-600 `}>
                   <BsTriangleFill className="text-sm text-orange-600 opacity-80" />
                   <p className="text-orange-600 px-1 text-sm">
-                    Upvote {postUpvotes.length}
+                    Upvote {currentCount}
                   </p>
                 </div>
               ) : (
@@ -178,7 +188,7 @@ export const VoteButton = ({ id, property = "default", type }: Props) => {
                 >
                   <BsTriangleFill className="text-sm text-white opacity-50" />
                   <p className="text-gray-100 px-1 text-sm">
-                    Upvote {postUpvotes.length}
+                    Upvote {currentCount}
                   </p>
                 </div>
               )}

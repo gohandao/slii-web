@@ -1,7 +1,8 @@
 export type Params = {
-  sortBy?: string;
+  sort?: string;
   order?: string;
   term?: string;
   page?: number;
   type?: string;
+  search?: string;
 };

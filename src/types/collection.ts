@@ -7,7 +7,7 @@ export type Collection = {
   category: string;
   verified: boolean;
   tags: [];
-  createdAt: Date | null;
+  listed_at: Date | null;
   updatedAt: Date | null;
   twitter_followers: number | null;
   discord_members: number | null;

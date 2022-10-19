@@ -33,7 +33,7 @@ export const ProfileLinks = ({
           //router.push(`https://twitter.com/${twitter_id}`);
           window.open(`${url}`, "_blank");
         }}
-        className=" w-9 h-9 flex items-center text-sm justify-center text-white transition-all duration-200 transform hover:bg-gray-600 border-r border-white last:border-none"
+        className=" w-6 h-7 flex items-center text-xs justify-center text-white opacity-80"
       >
         {children}
       </button>
@@ -41,7 +41,7 @@ export const ProfileLinks = ({
   };
   return (
     <div className="flex justify-center">
-      <div className="flex mt-auto w-auto justify-center items-center max-w-lg border border-white rounded opacity-40 overflow-hidden">
+      <div className="flex mt-auto w-auto justify-center items-center max-w-lg rounded-full opacity-70 overflow-hidden px-2 bg-gray-900">
         {address && (
           <Button url={`https://etherscan.io/address/${address}`}>
             <FaRegChartBar />

@@ -119,7 +119,7 @@ export const BookmarkButton = ({ id, property = "default", type }: Props) => {
             }}
             className=""
           >
-            <FaBookmark className="text-lg text-fuchsia-500 opacity-90" />
+            <FaBookmark className="text-xl text-fuchsia-500 opacity-90" />
             {/* <AiFillHeart className="text-lg text-pink-500 opacity-90" /> */}
           </button>
         ) : (
@@ -129,7 +129,7 @@ export const BookmarkButton = ({ id, property = "default", type }: Props) => {
             }}
             className=""
           >
-            <FiBookmark className="text-lg text-white opacity-30" />
+            <FiBookmark className="text-xl text-white opacity-30" />
             {/* <AiOutlineHeart className="text-lg text-white opacity-30" /> */}
           </button>
         )}

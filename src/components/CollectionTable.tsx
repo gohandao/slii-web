@@ -36,15 +36,11 @@ type Props = {
 };
 export const CollectionTable = ({ collections, limit }: Props) => {
   const { creators, socials, OSCollections } = useContext(BaseContext);
-  const {
-    sortAction,
-    setSortAction,
-    collectionCategory,
-    setCollectionCategory,
-  } = useContext(UtilitiesContext);
   const router = useRouter();
 
-  const { order, sortBy, term } = router.query;
+  const { order, sort, term, page } = router.query;
+  const currentPage = page ? Number(page) : 1;
+
   // const { socials } = useContext(SocialsContext);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -173,18 +169,20 @@ export const CollectionTable = ({ collections, limit }: Props) => {
 
   //②set initial collections data
   const args = {
+    property: "collections" as "creators" | "collections",
     list: collections,
+    page: currentPage,
     order: order as "desc" | "asc" | undefined,
-    sortBy: sortBy as string | undefined,
+    sort: sort as string | undefined,
     term: term as "24h" | "7d" | "30d" | "all" | undefined,
     //category: collectionsSort,
     limit: limit,
   };
-  console.log("ooooooo");
-  console.log(collections.length);
-  console.log(list.length);
-  console.log(list);
-  console.log(list[0]);
+  // console.log("ooooooo");
+  // console.log(collections.length);
+  // console.log(list.length);
+  // console.log(list);
+  // console.log(list[0]);
   if (collections.length > 0 && (list.length == 0 || list[0] == undefined)) {
     console.log("hhhhhhh");
     setLoading(true);
@@ -198,7 +196,7 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     setLoading(false);
   }
   useEffect(() => {
-    if (router.isReady && (order || sortBy || term)) {
+    if (router.isReady && (order || sort || term)) {
       if (args.list.length > 0) {
         const data = sortList(args);
         // console.log("sort shiteru?");
@@ -207,10 +205,10 @@ export const CollectionTable = ({ collections, limit }: Props) => {
         setList((list) => [...data]);
       }
     }
-  }, [router.isReady, collections, order, sortBy, term]);
+  }, [router.isReady, collections, order, sort, term]);
   //③set sorted collections data
   // useEffect(() => {
-  //   if (router.isReady && (order || sortBy || term)) {
+  //   if (router.isReady && (order || sort || term)) {
   //     if (args.list.length > 0) {
   //       const data = sortList(args);
   //       // console.log("sort shiteru?");
@@ -220,7 +218,7 @@ export const CollectionTable = ({ collections, limit }: Props) => {
   //     }
   //   }
   //   //setSocialSetup(true);
-  // }, [router.isReady, collections, order, sortBy, term]);
+  // }, [router.isReady, collections, order, sort, term]);
 
   /*useEffect(() => {
     if (sortAction) {
@@ -230,31 +228,31 @@ export const CollectionTable = ({ collections, limit }: Props) => {
   }, [sortAction]);*/
 
   //filter category
-  useEffect(() => {
-    //let new_list = [];
-    const filterCategory = () => {
-      if (collectionCategory == "All") {
-        newList.current = Array.from(new Set(allList.current));
-      } else {
-        const category_filter = allList.current.filter(
-          (collection) => collection.category === collectionCategory
-        );
-        newList.current = Array.from(new Set(category_filter));
-      }
-    };
-    filterCategory();
-    //resetOrder();
-    setSortAction(true);
-    if (limit) {
-      let limited_list = [] as any[];
-      for (let index = 0; index < limit; index++) {
-        limited_list = [...limited_list, newList.current[index]];
-      }
-      setList((list) => limited_list);
-    } else {
-      setList((list) => newList.current);
-    }
-  }, [collectionCategory]);
+  // useEffect(() => {
+  //   //let new_list = [];
+  //   const filterCategory = () => {
+  //     if (collectionCategory == "All") {
+  //       newList.current = Array.from(new Set(allList.current));
+  //     } else {
+  //       const category_filter = allList.current.filter(
+  //         (collection) => collection.category === collectionCategory
+  //       );
+  //       newList.current = Array.from(new Set(category_filter));
+  //     }
+  //   };
+  //   filterCategory();
+  //   //resetOrder();
+  //   setSortAction(true);
+  //   if (limit) {
+  //     let limited_list = [] as any[];
+  //     for (let index = 0; index < limit; index++) {
+  //       limited_list = [...limited_list, newList.current[index]];
+  //     }
+  //     setList((list) => limited_list);
+  //   } else {
+  //     setList((list) => newList.current);
+  //   }
+  // }, [collectionCategory]);
 
   return (
     <div className="flex flex-col">
@@ -267,18 +265,18 @@ export const CollectionTable = ({ collections, limit }: Props) => {
             >
               <thead className="bg-gray-900">
                 <tr>
-                  <Th title="" sortBy={sortBy as string} />
-                  <Th title="Collection Name" sortBy={sortBy as string} />
-                  <Th title="Upvotes" sortBy={sortBy as string} />
-                  <Th title="Twitter" sortBy={sortBy as string} />
-                  <Th title="Discord" sortBy={sortBy as string} />
-                  <Th title="Floor Price" sortBy={sortBy as string} />
-                  <Th title="Volume" sortBy={sortBy as string} />
-                  <Th title="Ave. Price" sortBy={sortBy as string} />
-                  <Th title="% Change" sortBy={sortBy as string} />
-                  <Th title="Sales" sortBy={sortBy as string} />
-                  <Th title="Owners" sortBy={sortBy as string} />
-                  <Th title="Items" sortBy={sortBy as string} />
+                  <Th title="" sort={sort as string} />
+                  <Th title="Collection Name" sort={sort as string} />
+                  <Th title="Upvotes" sort={sort as string} />
+                  <Th title="Twitter" sort={sort as string} />
+                  <Th title="Discord" sort={sort as string} />
+                  <Th title="Floor Price" sort={sort as string} />
+                  <Th title="Volume" sort={sort as string} />
+                  <Th title="Ave. Price" sort={sort as string} />
+                  <Th title="% Change" sort={sort as string} />
+                  <Th title="Sales" sort={sort as string} />
+                  <Th title="Owners" sort={sort as string} />
+                  <Th title="Items" sort={sort as string} />
                 </tr>
               </thead>
               {list.length > 0 && (
@@ -288,7 +286,7 @@ export const CollectionTable = ({ collections, limit }: Props) => {
                       <CollectionTr
                         item={item}
                         index={index}
-                        key={sortBy ? (sortBy as string) + index : index}
+                        key={sort ? (sort as string) + index : index}
                       />
                       //<CollectionTr collection={collection} key={index} />
                     ))}

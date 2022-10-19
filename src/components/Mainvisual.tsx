@@ -18,7 +18,7 @@ export const Mainvisual = () => {
   return (
     <div className="pt-3">
       <div className="flex gap-3 items-center mb-2">
-        <span className="text-2xl">🔎</span>
+        <span className="text-2xl">👀</span>
         <h2 className="text-gradient flex-inline text-lg font-bold leading-[1.2]">
           Find your favorites!!
           {/* Welcome to NFT Otaku!! */}

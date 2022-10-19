@@ -8,18 +8,21 @@ import { TiArrowSortedDown } from "react-icons/ti";
 
 type Props = {
   title: string;
-  sortBy: string;
+  sort: string;
 };
 
 export const Th = ({ title }: Props) => {
   const router = useRouter();
-  const { order, sortBy, term } = router.query;
+  const { order, sort, term, search } = router.query;
 
   const titleToParam = (title: string) => {
     let sortParam;
     switch (title) {
       case "Twitter":
         sortParam = "twitter";
+        break;
+      case "Upvotes":
+        sortParam = "upvotes";
         break;
       case "Discord":
         sortParam = "discord";
@@ -57,50 +60,69 @@ export const Th = ({ title }: Props) => {
     return sortParam;
   };
   const changeParams = async () => {
-    const test = window.scrollY;
+    // const test = window.scrollY;
     let titleParam = null;
     titleParam = titleToParam(title) as string;
-    if (!order && sortBy == "volume") {
-      setParams({ sortBy: titleParam, order: "asc", term: term as string });
-    } else if (titleParam != sortBy && titleParam == "name") {
+    if (!order && sort == "volume") {
       setParams({
-        sortBy: titleParam as string,
+        sort: titleParam,
         order: "asc",
         term: term as string,
+        search: search as string,
       });
-    } else if (!sortBy && titleParam == "volume") {
+    } else if (titleParam != sort && titleParam == "name") {
       setParams({
-        sortBy: titleParam as string,
+        sort: titleParam as string,
         order: "asc",
         term: term as string,
+        search: search as string,
       });
-    } else if (titleParam != sortBy) {
+    } else if (!sort && titleParam == "volume") {
       setParams({
-        sortBy: titleParam as string,
+        sort: titleParam as string,
+        order: "asc",
+        term: term as string,
+        search: search as string,
+      });
+    } else if (titleParam != sort) {
+      setParams({
+        sort: titleParam as string,
         order: "desc",
         term: term as string,
+        search: search as string,
       });
-    } else if (order && titleParam == sortBy) {
+    } else if (order && titleParam == sort) {
       order == "desc"
-        ? setParams({ sortBy: titleParam, order: "asc", term: term as string })
+        ? setParams({
+            sort: titleParam,
+            order: "asc",
+            term: term as string,
+            search: search as string,
+          })
         : setParams({
-            sortBy: titleParam,
+            sort: titleParam,
             order: "desc",
             term: term as string,
+            search: search as string,
           });
     } else {
-      setParams({ sortBy: titleParam, order: "desc", term: term as string });
+      setParams({
+        sort: titleParam,
+        order: "desc",
+        term: term as string,
+        search: search as string,
+      });
     }
-    //setParams({ sortBy: titleParam, order: "desc", term: term as string });
+    //setParams({ sort: titleParam, order: "desc", term: term as string });
     //window.scrollTo({ top: test, behavior: "smooth" });
   };
 
   let thClass = "";
   let active = false;
-  if (sortBy == titleToParam(title)) {
+  if (sort == titleToParam(title)) {
     thClass = "text-gray-300";
     active = true;
-  } else if (!sortBy && titleToParam(title) == "volume") {
+  } else if (!sort && titleToParam(title) == "volume") {
     thClass = "text-gray-300";
   } else {
     thClass = "text-gray-500";
@@ -154,7 +176,7 @@ export const Th = ({ title }: Props) => {
             )}
             <p className="flex gap-2 items-center whitespace-nowrap">
               {TitleIcon ? TitleIcon : title}
-              {(!sortBy && title == "Volume") || (active && order == "desc") ? (
+              {(!sort && title == "Volume") || (active && order == "desc") ? (
                 <TiArrowSortedDown className="transition-all duration-300 text-gray-300" />
               ) : active && order == "asc" ? (
                 <TiArrowSortedDown className="transition-all duration-300 rotate-180 text-gray-300" />

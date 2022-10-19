@@ -37,69 +37,82 @@ import { AllList } from "@/components/AllList";
 import { Tab } from "@/components/Tab";
 import { SplitLayout } from "@/components/SplitLayout";
 import { Dropdown } from "@/components/Dropdown";
-import { CollectionList } from "@/components/CollectionList";
 import { OrderButton } from "@/components/OrderButton";
+import { CollectionList } from "@/components/CollectionList";
+import { Collection } from "@/types/collection";
+import { sortList } from "@/libs/sortList";
 
 const CollectionsPage: NextPage = () => {
   const router = useRouter();
-  const { page } = router.query;
+  const { order, sort, term, page, type, search } = router.query;
+  const currentPage = page ? Number(page) : 1;
+  const limit = 10;
+  const [sortedCollections, setSortedCollections] = useState<Collection[]>([]);
 
   const { creators, collections, OSCollections, creatorTags, collectionTags } =
     useContext(BaseContext);
-  const { setHeaderIcon } = useContext(UtilitiesContext);
+  const { setHeaderIcon, setBreadcrumbList } = useContext(UtilitiesContext);
 
-  // const {  } = useContext(BaseContext);
-  //console.log("index collections");
-  //console.log(collections);
+  const filteredCollections =
+    type && type != "all"
+      ? OSCollections.filter((collection) => collection.type === type)
+      : OSCollections;
 
-  // const CreatorTags = useContext(CreatorTagsContext);
-  // const CollectionTags = useContext(CollectionTagsContext);
-
-  const creatorsLength = creators.length;
-  const collectionsLength = collections.length;
-  const creatorTagsLength = creatorTags.length;
-  const collectionTagsLength = collectionTags.length;
-  //const [filteredCreatorTags, setFilteredCreatorTags] = useState<Tag[]>([]);
-  //const [filteredCollectionTags, setFilteredCollectionTags] = useState<Tag[]>([]);
-
-  let origin_filteredCreatorTags: Tag[] = [];
-  for (let i = 0; i < 2; i++) {
-    origin_filteredCreatorTags = [
-      ...origin_filteredCreatorTags,
-      creatorTags[i],
-    ];
-  }
-  const filteredCreatorTags = Array.from(new Set(origin_filteredCreatorTags));
-
-  let origin_filteredCollectionTags: Tag[] = [];
-  for (let i = 0; i < 2; i++) {
-    origin_filteredCollectionTags = [
-      ...origin_filteredCollectionTags,
-      collectionTags[i],
-    ];
-  }
-  const filteredCollectionTags = Array.from(
-    new Set(origin_filteredCollectionTags)
+  const uppperKeyword = typeof search == "string" && search.toUpperCase();
+  //1.match username
+  const searchedCollections01 = filteredCollections.filter(
+    (collection) =>
+      typeof search == "string" &&
+      //すべて大文字にして大文字小文字の区別をなくす
+      //@ts-ignore
+      collection.name.toUpperCase().includes(uppperKeyword) == true
   );
+  const origin_searchedCollections = [
+    ...searchedCollections01,
+    // ...searchedCreators02,
+  ];
+  //重複削除
+  let searchedCollections = [] as Collection[];
+  if (search && search.length > 0) {
+    searchedCollections = Array.from(new Set(origin_searchedCollections));
+  } else {
+    searchedCollections = filteredCollections;
+  }
 
-  //const collectionTagLength = CreatorTags.length;
-
-  //const filteredCreatorTags = CreatorTags.splice(0, 2);
-  //const filteredCollectionTags = CreatorTags && CreatorTags.splice(0, 2);
-
-  /*useEffect(() => {
-    for (let i = 0; i < 2; i++) {
-      setFilteredCreatorTags([...filteredCreatorTags, CreatorTags[i]]);
-    }
-  }, []);*/
+  const args = {
+    property: "collections" as "creators" | "collections",
+    list: searchedCollections,
+    page: currentPage,
+    order: order as "desc" | "asc" | undefined,
+    sort: sort as string | undefined,
+    term: term as "24h" | "7d" | "30d" | "all" | undefined,
+    //category: collectionsSort,
+    limit: limit,
+  };
 
   useEffect(() => {
-    setHeaderIcon({
-      title: "Collections",
-      emoji: "🗂",
-      avatar: "",
+    const data = sortList(args);
+    setSortedCollections((sortedCollections) => data);
+  }, [OSCollections, order, sort, term, page, type, search]);
+
+  const breadcrumbList = [
+    {
+      name: "Home",
+      path: "/",
+    },
+    {
+      name: "Collections",
       path: "/collections",
+    },
+  ];
+  useEffect(() => {
+    setHeaderIcon({
+      title: "",
+      emoji: "",
+      avatar: "",
+      path: "/",
     });
+    setBreadcrumbList(breadcrumbList);
   }, []);
 
   return (
@@ -119,46 +132,27 @@ const CollectionsPage: NextPage = () => {
               <Dropdown position="right" property="collectionSort" />
               <OrderButton />
             </div>
-            {/*<Button filter="all" />
-            <Button filter="creator" />
-      <Button filter="project" />*/}
           </div>
           <div className="flex gap-3 mb-2">
             <div className="flex gap-3 items-baseline">
-              {/* <Title property="h2" addClass="">
-                  <span className="text-2xl mr-2">🔎</span>Find now!!
-                </Title> */}
               <p className="text-gray-500 text-sm">
-                {collectionsLength} Collections
+                {searchedCollections.length} Collections
               </p>
             </div>
           </div>
           <div className="mb-6">
-            {OSCollections.length > 0 && (
-              <CollectionList collections={OSCollections} limit={10} />
+            {searchedCollections.length > 0 && (
+              <CollectionList collections={sortedCollections} limit={limit} />
             )}
           </div>
-          {/*<div className="mb-10 flex gap-5 items-baseline">
-            {filteredCreatorTags && (
-              <TagList tags={filteredCreatorTags} type="creator" />
-            )}
-            <Link href="/tags">
-              <a className="mb-2">
-                <span className="text-gray-900">+ {creatorTagsLength - 2}</span>
-                <span className="text-gray-400 ml-2 ">Creator Tags</span>
-              </a>
-            </Link>
-            </div>*/}
           <div className="flex justify-center">
-            <Pagination currentPage={1} />
-            {/* <LinkButton href="/creators">Check all creators</LinkButton> */}
+            <Pagination
+              currentPage={currentPage}
+              length={searchedCollections.length}
+              limit={limit}
+            />
           </div>
         </section>
-        {/*<div className="flex flex-col gap-10 px-5 mx-auto max-w-7xl">
-          <div className="mx-auto">
-            <ShowMore currentPage={page ? Number(page) : 1} />
-          </div>
-  </div>*/}
       </SplitLayout>
     </div>
   );

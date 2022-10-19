@@ -2,10 +2,11 @@ import React, { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
+import Moment from "react-moment";
 
 import { JP } from "country-flag-icons/react/3x2";
-import { FaEthereum } from "react-icons/fa";
-import { MdVerified } from "react-icons/md";
+import { FaClipboardList, FaEthereum } from "react-icons/fa";
+import { MdChecklist, MdVerified } from "react-icons/md";
 
 import { CreatorsContext } from "@/contexts/CreatorsContext";
 
@@ -15,17 +16,28 @@ import { Label } from "@/components/Label";
 import { LikeViews } from "@/components/LikeViews";
 
 import { Creator } from "@/types/creator";
-import { AiFillHeart, AiOutlineEye, AiOutlineHeart } from "react-icons/ai";
+import {
+  AiFillHeart,
+  AiOutlineEye,
+  AiOutlineHeart,
+  AiTwotoneCalendar,
+} from "react-icons/ai";
 import { VoteButton } from "./VoteButton";
 import { LikeButton } from "./LikeButton";
 import { BookmarkButton } from "./BookmarkButton";
 import { BsTwitter } from "react-icons/bs";
+import { TbChecklist } from "react-icons/tb";
+import { IoMdListBox } from "react-icons/io";
 
 type Props = {
   creators: Creator[];
   limit?: number;
 };
 export const CreatorList = ({ creators, limit }: Props) => {
+  const router = useRouter();
+  const { page } = router.query;
+  const currentPage = page ? Number(page) : 1;
+
   const [liked, setLiked] = useState<boolean>(false);
   const addLikeHandler = async () => {
     setLiked(true);
@@ -35,33 +47,47 @@ export const CreatorList = ({ creators, limit }: Props) => {
   };
 
   //const creators = useContext(CreatorsContext);
-  const [filteredCreators, setFilteredCreators] = useState(creators);
+  // const [filteredCreators, setFilteredCreators] = useState(creators);
   //console.log("creatorsaaaa");
-  const router = useRouter();
-  useEffect(() => {
-    if (limit) {
-      let new_creators = [] as Creator[];
-      for (let index = 0; index < limit; index++) {
-        new_creators = [...new_creators, creators[index]];
-      }
-      setFilteredCreators(new_creators);
-    }
-  }, []);
-  const currentCreators = limit ? filteredCreators : creators;
+  // useEffect(() => {
+  //   if (limit) {
+  //     let start;
+  //     let end;
+  //     if (!currentPage || currentPage == 1) {
+  //       start = 0;
+  //       end = limit - 1;
+  //     } else {
+  //       start = limit * (currentPage - 1);
+  //       end = limit * currentPage - 1;
+  //     }
+  //     if (limit) {
+  //       let new_creators = [] as Creator[];
+  //       for (let index = start; index < end; index++) {
+  //         if (creators[index]) {
+  //           new_creators = [...new_creators, creators[index]];
+  //         }
+  //       }
+  //       setFilteredCreators(new_creators);
+  //     }
+  //   }
+  // }, [creators, page]);
+
+  // const currentCreators = limit ? filteredCreators : creators;
 
   return (
     <div className="grid grid-cols-1 gap-3 w-full justify-center">
-      {currentCreators.length > 0 &&
-        currentCreators.map((creator, index) => {
+      {creators.length > 0 &&
+        creators.map((creator, index) => {
+          const upvotes_count = creator.upvotes_count
+            ? creator.upvotes_count
+            : 0;
+
           return (
             <div
               className="relative flex hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1"
               key={index}
             >
-              <Link
-                href={`/creator/${creator.username}`}
-                as={`/creator/${creator.username}`}
-              >
+              <Link href={`/creator/${creator.username}`}>
                 <a className="relative flex flex-col border border-gray-800 rounded-lg w-full items-center shadow-lg bg-gray-800 overflow-hidden py-3 md:py-3">
                   <div className="flex absolute left-0 top-0 w-[87px] h-full overflow-hidden rounded-tr-full rounded-br-full mb-2 opacity-[30%] ">
                     {creator.background && creator.background.length > 0 && (
@@ -95,7 +121,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
                   </div>
                   <div className="flex w-full pl-3 pr-4 items-center">
                     <div className="relative">
-                      <div className="rounded-full border-[5px] overflow-hidden flex items-center justify-center z-10 bg-gray-100 border-[5px] border-gray-700 relative w-[70px] h-[70px] min-w-[70px]">
+                      <div className="rounded-full border-[5px] overflow-hidden flex items-center justify-center z-10 bg-gray-100 border-gray-700 relative w-[70px] h-[70px] min-w-[70px]">
                         {creator.avatar && (
                           <Image
                             //@ts-ignore
@@ -128,12 +154,13 @@ export const CreatorList = ({ creators, limit }: Props) => {
                               property="simple"
                               type="creator"
                               id={creator.username}
+                              count={upvotes_count}
                             />
                             {/*<AiOutlineHeart className=" text-gray-400 opacity-50" />*/}
                           </div>
                         </div>
                       </div>
-                      <div className="flex justify-between pl-3 w-full">
+                      <div className="flex pl-3 w-full gap-2 ">
                         <div
                           className={`relative flex justify-center items-center gap-2 left-0 top-0 py-[2px] px-2 z-10 rounded text-xs md:text-xs capitalize bg-gray-700 text-gray-400 `}
                         >
@@ -147,17 +174,35 @@ export const CreatorList = ({ creators, limit }: Props) => {
                           <JP title="Japan" className="h-3 rounded-sm" />
                           {creator.type}
                         </div>
+                        <p className="text-gray-500 text-sm">
+                          #{" "}
+                          {limit
+                            ? index + 1 + (currentPage - 1) * limit
+                            : index + 1}
+                        </p>
                       </div>
                       <div className="flex justify-between pl-3 w-full">
-                        {creator.twitter_followers && (
-                          <div
-                            className={`relative flex justify-center items-center gap-2 left-0 top-0 py-[2px] px-1 z-10 rounded text-xs md:text-xs capitalize text-gray-400 `}
-                          >
-                            <BsTwitter />
-                            {creator.twitter_followers.toLocaleString()}
-                          </div>
-                        )}
-                        <div className=" w-full">
+                        <div
+                          className={`relative flex justify-start items-center gap-4 py-[2px] z-10 rounded text-xs md:text-xs capitalize text-gray-400 flex-1`}
+                        >
+                          {creator.twitter_followers && (
+                            <div
+                              className={`relative flex justify-center items-center gap-2 left-0 top-0 py-[2px] px-[2px] z-10 rounded text-xs md:text-xs capitalize text-gray-400 `}
+                            >
+                              <BsTwitter />
+                              {creator.twitter_followers.toLocaleString()}
+                            </div>
+                          )}
+                          {creator.listed_at && (
+                            <div className="flex items-center gap-2">
+                              <IoMdListBox />
+                              <Moment format="DD.MM.YYYY">
+                                {creator.listed_at}
+                              </Moment>
+                            </div>
+                          )}
+                        </div>
+                        <div className="">
                           <CardLinks
                             twitter_id={creator.twitter_id}
                             instagram_id={creator.instagram_id}
@@ -169,13 +214,6 @@ export const CreatorList = ({ creators, limit }: Props) => {
                       </div>
                     </div>
                   </div>
-                  {/*creator.tags && (
-                    <div className="flex gap-2 justify-start w-full flex-wrap pt-1 pb-2">
-                      {creator.tags.map((tag, index) => (
-                        <Label key={index} name={tag} type="creator" />
-                      ))}
-                    </div>
-                      )*/}
                 </a>
               </Link>
             </div>

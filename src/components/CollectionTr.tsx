@@ -20,7 +20,7 @@ export const CollectionTr = ({ item, index }: any) => {
   //console.log("item");
   //console.log(item.slug);
   //console.log(item);
-  const { order, sortBy, term } = router.query;
+  const { order, sort, term } = router.query;
 
   const { socials } = useContext(BaseContext);
 
@@ -129,7 +129,12 @@ export const CollectionTr = ({ item, index }: any) => {
           {/*upvote*/}
           <Td>
             {item.slug ? (
-              <VoteButton id={item.slug} type="collection" property="simple" />
+              <VoteButton
+                id={item.slug}
+                type="collection"
+                property="simple"
+                count={item.upvotes_count}
+              />
             ) : (
               <Hyphen />
             )}

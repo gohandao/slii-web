@@ -55,13 +55,15 @@ export const Header = () => {
             </div> */}
           </div>
           <div className="gap-10 hidden lg:flex pr-16 ">
-            {currentPath != "/" && (
-              <Link href="/">
-                <a className="text-sm font-bold text-gray-100 tracking-wider flex items-center">
-                  <span className="mr-2 text-xl -mt-[1px]">🔎</span>Search
-                </a>
-              </Link>
-            )}
+            {currentPath != "/" &&
+              currentPath != "/collections" &&
+              currentPath != "/login" && (
+                <Link href="/">
+                  <a className="text-sm font-bold text-gray-100 tracking-wider flex items-center">
+                    <span className="mr-2 text-xl -mt-[1px]">🏠</span>Home
+                  </a>
+                </Link>
+              )}
             {currentPath != "/stats" && (
               <Link href="/stats">
                 <a className="text-sm font-bold text-gray-100 tracking-wider flex items-center">

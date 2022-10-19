@@ -1,5 +1,7 @@
 export const removeUndefinedObject = (object) => {
   return Object.fromEntries(
-    Object.entries(object).filter(([k, v]) => v !== undefined)
+    Object.entries(object).filter(
+      ([k, v]) => v !== undefined && v !== null && v !== ""
+    )
   );
 };

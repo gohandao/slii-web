@@ -10,10 +10,11 @@ export type Creator = {
   discord_url: string;
   type: string;
   verified: boolean;
-  createdAt: Date | null;
+  listed_at: Date | null;
   updatedAt: Date | null;
   collections: [];
   category: string;
   twitter_followers?: number | null;
+  upvotes_count: number;
   tags: [];
 };

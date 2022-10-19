@@ -25,17 +25,98 @@ type sortInitProps = {
 };*/
 
 type sortProps = {
+  page: number;
+  property: "creators" | "collections";
   list: any[];
   order?: "desc" | "asc";
   term?: "24h" | "7d" | "30d" | "all";
-  sortBy?: string;
+  sort?: string;
   limit?: number;
 };
 export const sortList = (args: sortProps) => {
   console.log("kkkkkkk");
   let new_list = [];
   let new_order = args.order == "desc" ? "asc" : "desc";
-  switch (args.sortBy) {
+  switch (args.sort) {
+    case "upvotes":
+    case "popular":
+      new_list = args.list.sort(function (a: any, b: any) {
+        if (
+          a.upvotes_count !== a.upvotes_count &&
+          b.upvotes_count !== b.upvotes_count
+        )
+          return 0;
+        if (a.upvotes_count !== a.upvotes_count) return 1;
+        if (b.upvotes_count !== b.upvotes_count) return -1;
+
+        if (a.upvotes_count == null && b.upvotes_count == null) return 0;
+        if (a.upvotes_count == null) return 1;
+        if (b.upvotes_count == null) return -1;
+
+        if (a.upvotes_count === "" && b.upvotes_count === "") return 0;
+        if (a.upvotes_count === "") return 1;
+        if (b.upvotes_count === "") return -1;
+
+        var sig = args.order == "desc" || !args.order ? 1 : -1;
+        return a.upvotes_count < b.upvotes_count
+          ? sig
+          : a.upvotes_count > b.upvotes_count
+          ? -sig
+          : 0;
+      });
+      new_list = Array.from(new Set(new_list));
+      break;
+    case "listed_at":
+      new_list = args.list.sort(function (a: any, b: any) {
+        if (a.listed_at !== a.listed_at && b.listed_at !== b.listed_at)
+          return 0;
+        if (a.listed_at !== a.listed_at) return 1;
+        if (b.listed_at !== b.listed_at) return -1;
+
+        if (a.listed_at == null && b.listed_at == null) return 0;
+        if (a.listed_at == null) return 1;
+        if (b.listed_at == null) return -1;
+
+        if (a.listed_at === "" && b.listed_at === "") return 0;
+        if (a.listed_at === "") return 1;
+        if (b.listed_at === "") return -1;
+
+        var sig = args.order == "desc" || !args.order ? 1 : -1;
+        return a.listed_at < b.listed_at
+          ? sig
+          : a.listed_at > b.listed_at
+          ? -sig
+          : 0;
+      });
+      new_list = Array.from(new Set(new_list));
+      break;
+    case "created_at":
+      new_list = args.list.sort(function (a: any, b: any) {
+        if (
+          a.created_date !== a.created_date &&
+          b.created_date !== b.created_date
+        )
+          return 0;
+        if (a.created_date !== a.created_date) return 1;
+        if (b.created_date !== b.created_date) return -1;
+
+        if (a.created_date == null && b.created_date == null) return 0;
+        if (a.created_date == null) return 1;
+        if (b.created_date == null) return -1;
+
+        if (a.created_date === "" && b.created_date === "") return 0;
+        if (a.created_date === "") return 1;
+        if (b.created_date === "") return -1;
+
+        var sig = args.order == "desc" || !args.order ? 1 : -1;
+        return a.created_date < b.created_date
+          ? sig
+          : a.created_date > b.created_date
+          ? -sig
+          : 0;
+      });
+      new_list = Array.from(new Set(new_list));
+      break;
     case "twitter":
       new_list = args.list.sort(function (a: any, b: any) {
         if (
@@ -227,17 +308,32 @@ export const sortList = (args: sortProps) => {
       new_list = Array.from(new Set(new_list));
       break;
     case "name":
-      new_list = args.list.sort(function (a: any, b: any) {
-        if (args.order == "desc") {
-          if (a.name < b.name) return 1;
-          if (a.name > b.name) return -1;
-          return 0;
-        } else {
-          if (a.name < b.name) return -1;
-          if (a.name > b.name) return 1;
-          return 0;
-        }
-      });
+      if (args.property == "collections") {
+        new_list = args.list.sort(function (a: any, b: any) {
+          if (args.order == "desc") {
+            if (a.name < b.name) return 1;
+            if (a.name > b.name) return -1;
+            return 0;
+          } else {
+            if (a.name < b.name) return -1;
+            if (a.name > b.name) return 1;
+            return 0;
+          }
+        });
+      }
+      if (args.property == "creators") {
+        new_list = args.list.sort(function (a: any, b: any) {
+          if (args.order == "desc") {
+            if (a.username < b.username) return 1;
+            if (a.username > b.username) return -1;
+            return 0;
+          } else {
+            if (a.username < b.username) return -1;
+            if (a.username > b.username) return 1;
+            return 0;
+          }
+        });
+      }
       new_list = Array.from(new Set(new_list));
       //setList(new_list);
       break;
@@ -805,40 +901,87 @@ export const sortList = (args: sortProps) => {
           });
           break;
         default:
-          new_list = args.list.sort(function (a: any, b: any) {
-            if (
-              a.stats.total_volume !== a.stats.total_volume &&
-              b.stats.total_volume !== b.stats.total_volume
-            )
-              return 0;
-            if (a.stats.total_volume !== a.stats.total_volume) return 1;
-            if (b.stats.total_volume !== b.stats.total_volume) return -1;
+          if (args.property == "collections") {
+            new_list = args.list.sort(function (a: any, b: any) {
+              if (
+                a.stats.total_volume !== a.stats.total_volume &&
+                b.stats.total_volume !== b.stats.total_volume
+              )
+                return 0;
+              if (a.stats.total_volume !== a.stats.total_volume) return 1;
+              if (b.stats.total_volume !== b.stats.total_volume) return -1;
 
-            if (a.stats.total_volume == null && b.stats.total_volume == null)
-              return 0;
-            if (a.stats.total_volume == null) return 1;
-            if (b.stats.total_volume == null) return -1;
+              if (a.stats.total_volume == null && b.stats.total_volume == null)
+                return 0;
+              if (a.stats.total_volume == null) return 1;
+              if (b.stats.total_volume == null) return -1;
 
-            if (a.stats.total_volume === "" && b.stats.total_volume === "")
-              return 0;
-            if (a.stats.total_volume === "") return 1;
-            if (b.stats.total_volume === "") return -1;
+              if (a.stats.total_volume === "" && b.stats.total_volume === "")
+                return 0;
+              if (a.stats.total_volume === "") return 1;
+              if (b.stats.total_volume === "") return -1;
 
-            var sig = args.order == "desc" || !args.order ? 1 : -1;
-            return a.stats.total_volume < b.stats.total_volume
-              ? sig
-              : a.stats.total_volume > b.stats.total_volume
-              ? -sig
-              : 0;
-          });
+              var sig = args.order == "desc" || !args.order ? 1 : -1;
+              return a.stats.total_volume < b.stats.total_volume
+                ? sig
+                : a.stats.total_volume > b.stats.total_volume
+                ? -sig
+                : 0;
+            });
+          }
+          if (args.property == "creators") {
+            new_list = args.list.sort(function (a: any, b: any) {
+              if (
+                a.upvotes_count !== a.upvotes_count &&
+                b.upvotes_count !== b.upvotes_count
+              )
+                return 0;
+              if (a.upvotes_count !== a.upvotes_count) return 1;
+              if (b.upvotes_count !== b.upvotes_count) return -1;
+
+              if (a.upvotes_count == null && b.upvotes_count == null) return 0;
+              if (a.upvotes_count == null) return 1;
+              if (b.upvotes_count == null) return -1;
+
+              if (a.upvotes_count === "" && b.upvotes_count === "") return 0;
+              if (a.upvotes_count === "") return 1;
+              if (b.upvotes_count === "") return -1;
+
+              var sig = args.order == "desc" || !args.order ? 1 : -1;
+              return a.upvotes_count < b.upvotes_count
+                ? sig
+                : a.upvotes_count > b.upvotes_count
+                ? -sig
+                : 0;
+            });
+            new_list = Array.from(new Set(new_list));
+          }
           break;
       }
   }
+  console.log("new_list");
+  console.log(new_list);
   if (args.limit) {
     let limited_list = [] as any[];
-    for (let index = 0; index < args.limit; index++) {
-      limited_list = [...limited_list, new_list[index]];
+    let start;
+    let end;
+    if (!args.page || args.page == 1) {
+      start = 0;
+      end = args.limit;
+    } else {
+      start = args.limit * (args.page - 1);
+      end = args.limit * args.page;
     }
+    for (let index = start; index < end; index++) {
+      if (new_list[index]) {
+        limited_list = [...limited_list, new_list[index]];
+      }
+    }
+    // if (args.list.length > 0) {
+    //   for (let index = 0; index < args.limit; index++) {
+    //     limited_list = [...limited_list, new_list[index]];
+    //   }
+    // }
     return limited_list;
   } else {
     return new_list;

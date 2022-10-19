@@ -37,7 +37,7 @@ export const SplitLayout = ({ children }: Props) => {
     <>
       <NoticeBar />
       <Header />
-      <div className="flex gap-16 max-w-screen-xl mx-auto max-w-full">
+      <div className="flex gap-16 max-w-screen-xl mx-auto">
         <main className="flex-1 px-5 md:px-8 lg:px-0 mx-auto w-full">
           <Mainvisual />
           <div className="w-full mb-4">
@@ -46,29 +46,36 @@ export const SplitLayout = ({ children }: Props) => {
           <div className="flex gap-3 mb-3 overscroll-x-auto">
             <Tab title="Creators" path="/" emoji="🎨" />
             <Tab title="Collections" path="/collections" emoji="🗂" />
-            <Tab title="Users" path="/users" emoji="😎" />
+            {/* <Tab title="Users" path="/users" emoji="😎" /> */}
           </div>
           {children}
         </main>
         <div className="w-[280px]">
-          <p>sidebar</p>
-          <div className="flex flex-col gap-4 sticky">
+          <div className="flex flex-col gap-4 pt-5">
             <Button
               title="Join our Discord"
               icon={<FaDiscord className="text-white" />}
-              link="https://google.com"
+              link="https://docs.google.com/forms/d/e/1FAIpQLSems7nn8p_Ki_u-y7KBDbNb4IoltypQ0tWvnyoayNjdcxMfNA/viewform"
               className="bg-purple-600 text-white"
             />
             <Button
               title="Request form"
               icon={<BsMailbox2 className="text-white" />}
-              link="https://google.com"
+              link="https://docs.google.com/forms/d/e/1FAIpQLSfd0_agN6SLqM0PlYxjL4E9HiLdq6_9KN3i65Z2byNWCBj11w/viewform"
               className="bg-green-600 text-white"
             />
             <p className="text-gray-400 text-xs leading-loose">
-              NFT
-              OTAKUは個人開発アプリです。ご意見やアイデア等あったらぜひお聞かせください!!
-              コラボレーションなどもお気軽にご提案いただけると幸いです。
+              NFT OTAKUは
+              <a
+                href="https://twitter.com/ik_takagishi"
+                target="_blank"
+                className="text-blue-400 underline"
+              >
+                @ik_takagishi
+              </a>
+              の個人開発アプリです。今後さまざまな機能を追加していきます!!
+              お気軽にご意見・ご要望などDMください。
+              また、一緒に活動いただける方を絶賛募集中です。ジェネラティブNFTなどに興味あるクリエイターさんもいたらぜひ！！
             </p>
           </div>
         </div>

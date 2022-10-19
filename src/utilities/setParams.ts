@@ -3,16 +3,27 @@ import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
 import router from "next/router";
 import { Params } from "@/types/params";
 
-export const setParams = ({ sortBy, order, term, page, type }: Params) => {
+export const setParams = ({
+  sort,
+  order,
+  term,
+  page,
+  type,
+  search,
+}: Params) => {
   const query = {
     type: type,
-    sortBy: sortBy,
+    sort: sort,
     order: order,
     term: term,
     page: page,
+    search: search,
   };
   const new_query: Params = removeUndefinedObject(query);
   const currentUrl = location.pathname;
+  console.log("new_query");
+  console.log(query);
+  console.log(new_query);
   router.push(
     {
       pathname: currentUrl,

@@ -23,7 +23,7 @@ type Props = {
 };
 export const Dropdown = ({ position, property }: Props) => {
   const router = useRouter();
-  const { order, sortBy, term, page, type } = router.query;
+  const { order, sort, term, page, type, search } = router.query;
 
   const [status, setStatus] = useState<boolean>(false);
   const assetsDropdown = ["All", "Buy now", "On auction", "Price low to high"];
@@ -71,19 +71,26 @@ export const Dropdown = ({ position, property }: Props) => {
       }
       break;
     case "creatorSort":
-      menus = ["popular", "newest", "name", "twitter"];
-      if (!sortBy) {
+      menus = ["popular", "new listed", "name", "twitter"];
+      if (!sort) {
         title = (
           <>
             <BiFilterAlt className="text-gray-400" />
             Popular
           </>
         );
+      } else if (sort == "listed_at") {
+        title = (
+          <>
+            <BiFilterAlt className="text-gray-400" />
+            NewListed
+          </>
+        );
       } else {
         title = (
           <>
             <BiFilterAlt className="text-gray-400 capitalize" />
-            {sortBy}
+            {sort}
           </>
         );
       }
@@ -110,6 +117,7 @@ export const Dropdown = ({ position, property }: Props) => {
       menus = [
         "popular",
         "newest",
+        "new listed",
         "name",
         "floor price",
         "total volume",
@@ -117,22 +125,43 @@ export const Dropdown = ({ position, property }: Props) => {
         "7d volume",
         "24h volume",
         "owners",
-        "itens",
+        "items",
         "twitter",
         "duscord",
       ];
-      if (!sortBy) {
+      if (!sort) {
         title = (
           <>
             <BiFilterAlt className="text-gray-400" />
             Popular
           </>
         );
+      } else if (sort == "created_at") {
+        title = (
+          <>
+            <BiFilterAlt className="text-gray-400" />
+            Newest
+          </>
+        );
+      } else if (sort == "listed_at") {
+        title = (
+          <>
+            <BiFilterAlt className="text-gray-400" />
+            New Listed
+          </>
+        );
+      } else if (sort == "volume" && !term) {
+        title = (
+          <>
+            <BiFilterAlt className="text-gray-400" />
+            Total Volume
+          </>
+        );
       } else {
         title = (
           <>
             <BiFilterAlt className="text-gray-400 capitalize" />
-            {sortBy}
+            {term ? (term as string) + " " + sort : sort}
           </>
         );
       }
@@ -164,21 +193,23 @@ export const Dropdown = ({ position, property }: Props) => {
       }
       setParams({
         type: new_type,
-        sortBy: sortBy && (sortBy as string),
+        sort: sort && (sort as string),
         order: order && (order as string),
+        search: search && (search as string),
       });
     }
     if (property == "creatorSort") {
-      let new_sortBy;
-      if (title == "newest") {
-        new_sortBy = "created_at";
+      let new_sort;
+      if (title == "new listed") {
+        new_sort = "listed_at";
       } else if (title != "popular") {
-        new_sortBy = title;
+        new_sort = title;
       }
       setParams({
         type: type && (type as string),
-        sortBy: new_sortBy,
+        sort: new_sort,
         order: order && (order as string),
+        search: search && (search as string),
       });
     }
     if (property == "collectionType") {
@@ -188,19 +219,44 @@ export const Dropdown = ({ position, property }: Props) => {
       }
       setParams({
         type: new_type,
-        sortBy: sortBy && (sortBy as string),
+        sort: sort && (sort as string),
         order: order && (order as string),
+        search: search && (search as string),
       });
     }
     if (property == "collectionSort") {
-      let new_sortBy = title;
+      let new_sort = title;
+      let new_term;
       if (title == "newest") {
-        new_sortBy = "created_at";
+        new_sort = "created_at";
+      }
+      if (title == "new listed") {
+        new_sort = "listed_at";
+      }
+      if (title == "floor price") {
+        new_sort = "floor_price";
+      }
+      if (title == "total volume") {
+        new_sort = "volume";
+      }
+      if (title == "30d volume") {
+        new_sort = "volume";
+        new_term = "30d";
+      }
+      if (title == "7d volume") {
+        new_sort = "volume";
+        new_term = "7d";
+      }
+      if (title == "24h volume") {
+        new_sort = "volume";
+        new_term = "24h";
       }
       setParams({
         type: type && (type as string),
-        sortBy: new_sortBy,
+        sort: new_sort,
         order: order && (order as string),
+        term: new_term && (new_term as string),
+        search: search && (search as string),
       });
     }
     setStatus(false);

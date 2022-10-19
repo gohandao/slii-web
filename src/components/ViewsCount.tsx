@@ -31,7 +31,7 @@ export const ViewsCount = ({ id, type }: Props) => {
     setLiked(false);
   };
   return (
-    <div className="flex justify-center gap-3">
+    <div className="flex gap-3">
       <div className="flex gap-1 items-center">
         {/*<AiOutlineEye className="text-2xl text-white opacity-30 text-lg" />*/}
         <p className="text-gray-500 text-sm">100 Views</p>

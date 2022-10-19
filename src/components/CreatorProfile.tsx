@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Modal from "react-modal";
 
-import { FaDiscord, FaReact, FaRegFlag } from "react-icons/fa";
+import { FaDiscord, FaReact, FaRegFlag, FaTwitter } from "react-icons/fa";
 import { SiTypescript } from "react-icons/si";
 import { AiOutlineClockCircle, AiOutlineTwitter } from "react-icons/ai";
 import { VscChecklist } from "react-icons/vsc";
@@ -29,6 +29,10 @@ import { LikeButton } from "@/components/LikeButton";
 import { ViewsCount } from "@/components/ViewsCount";
 import { VoteButton } from "./VoteButton";
 import { BookmarkButton } from "./BookmarkButton";
+import { StatsBox } from "./StatsBox";
+import { Stats } from "./Stats";
+import { getTwitterFollowers } from "@/libs/twitter";
+import { updateSocial } from "@/utilities/updateSocial";
 
 type Props = {
   creator: Creator;
@@ -43,7 +47,7 @@ export const CreatorProfile = ({ creator }: Props) => {
       development: "http://localhost:3000",
     }[process.env.NODE_ENV];
   }
-  const { socials } = useContext(BaseContext);
+  const { socials, setSocials } = useContext(BaseContext);
 
   const [social, setSocial] = useState<Social>();
 
@@ -88,6 +92,29 @@ export const CreatorProfile = ({ creator }: Props) => {
     setIsOpen(false);
   };
 
+  const [twitterFollowers, setTwitterFollowers] = useState<number>();
+  const [discordMembers, setDiscordMembers] = useState<number>();
+  const [checkSocial, setCheckSocial] = useState<boolean>(false);
+  const getSocialCounts = async () => {
+    const data =
+      social &&
+      (await updateSocial({
+        record_id: social.record_id,
+        creator_username: creator.username,
+        twitter_id: twitterId,
+        twitter_followers: social.twitter_followers,
+        discord_id: discordId,
+        discord_members: social.discord_members,
+        socials: socials,
+        setSocials: setSocials,
+      }));
+    setTwitterFollowers(data && data.twitter_followers);
+    setDiscordMembers(data && data.discord_members);
+
+    setCheckSocial(true);
+  };
+  !checkSocial && social && getSocialCounts();
+
   useEffect(() => {
     if (socials && creator.username) {
       //set collection
@@ -107,19 +134,8 @@ export const CreatorProfile = ({ creator }: Props) => {
     }
   }, [socials]);
 
-  /*useEffect(() => {
-    if (twitterData) {
-      const obj = JSON.parse(twitterData);
-      console.log("twitterData");
-      console.log(obj);
-      console.log("username");
-      console.log(obj.public_metrics.followers_count);
-    }
-  }, [twitterData]);*/
-
   // シェアボタンのリンク先
   const currentUrl = baseUrl + router.asPath;
-
   var twitterShareUrl = "https://twitter.com/intent/tweet";
   twitterShareUrl += "?text=" + encodeURIComponent("ツイート内容テキスト");
   twitterShareUrl += "&url=" + encodeURIComponent(currentUrl);
@@ -144,7 +160,7 @@ export const CreatorProfile = ({ creator }: Props) => {
   ];
 
   return (
-    <section className="">
+    <section className="ttt">
       {/*<button onClick={openModal} className="text-white">
         Open Modal
   </button>*/}
@@ -189,10 +205,10 @@ export const CreatorProfile = ({ creator }: Props) => {
           </>
         )}
       </div>
-      <div className="mx-auto  max-w-2xl">
-        <div className="-mt-[60px] relative flex justify-center">
+      <div className="mx-auto px-5 lg:px-8">
+        <div className="-mt-[58px] relative flex justify-between items-end mb-2">
           <div className="relative flex">
-            <div className="rounded-full border-[5px] border-gray-800 overflow-hidden flex items-center justify-center z-10 mb-2 bg-gray-800 w-[110px] h-[110px]">
+            <div className="rounded-full border-[5px] border-gray-800 overflow-hidden flex items-center justify-center z-10 bg-gray-800 w-[110px] h-[110px]">
               {creator.avatar && creator.avatar.length > 0 ? (
                 <Image
                   //@ts-ignore
@@ -213,7 +229,39 @@ export const CreatorProfile = ({ creator }: Props) => {
                 />
               )}
             </div>
-            <div className="flex gap-3 absolute bottom-6 right-full rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
+
+            <div className="absolute top-5 left-full flex items-center gap-4 ml-2">
+              {/* <p
+                className={` -ml-6 pl-[24px] pr-3 rounded-tr-full rounded-br-full text-sm capitalize flex justify-center items-center gap-[6px] ${
+                  creator.type == "creator"
+                    ? "bg-yellow-500 text-yellow-100"
+                    : "bg-blue-500 text-blue-100"
+                }`}
+              >
+                <JP title="Japan" className="h-3 rounded-sm" />
+                {creator.type}
+              </p> */}
+              <ProfileLinks
+                address={creator.address}
+                twitter_id={creator.twitter_id}
+                instagram_id={creator.instagram_id}
+                discord_url={creator.discord_url}
+                website_url={creator.website_url}
+                opensea_username={creator.username}
+              />
+            </div>
+          </div>
+          <div className="flex justify-between flex-1 w-full ml-3">
+            <div className="flex items-center gap-3">
+              <VoteButton
+                id={creator.username}
+                property="default"
+                type="creator"
+                count={creator.upvotes_count}
+              />
+              <BookmarkButton id={creator.username} type="creator" />
+            </div>
+            <div className=" gap-5 capitalize flex justify-center items-center">
               <ProfileDropdown
                 icon={<BsFillShareFill className="text-gray-500" />}
                 dropdown={shareDropdown}
@@ -227,23 +275,10 @@ export const CreatorProfile = ({ creator }: Props) => {
                 menus={requestMenus}
               />
             </div>
-            <div className="flex gap-3 absolute bottom-6 left-full rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
-              <BookmarkButton id={creator.username} type="creator" />
-            </div>
-            <p
-              className={`absolute top-6 left-full -ml-6 pl-[24px] pr-3 rounded-tr-full rounded-br-full text-sm capitalize flex justify-center items-center gap-[6px] ${
-                creator.type == "creator"
-                  ? "bg-yellow-500 text-yellow-100"
-                  : "bg-blue-500 text-blue-100"
-              }`}
-            >
-              <JP title="Japan" className="h-3 rounded-sm" />
-              {creator.type}
-            </p>
           </div>
         </div>
-        <div className="flex flex-1 flex-col gap-5 px-5">
-          <div className="flex flex-col gap-2 items-center">
+        <div className="flex flex-1 gap-5 justify-between">
+          <div className="flex flex-col gap-2">
             <h1 className="text-2xl sm:text-3xl text-gray-100 font-bold inline justify-center items-center">
               {creator.username}{" "}
               {creator.verified == true && (
@@ -257,51 +292,41 @@ export const CreatorProfile = ({ creator }: Props) => {
                 alertText="ETH address has copied!"
               />
             </div>
-            <ViewsCount id={creator.username} type="creator" />
-            <div className="flex items-center gap-3">
-              <a
-                target="_blank"
-                href=""
-                className="text-white text-sm px-4 py-3 bg-gray-700 flex items-center justify-center gap-1 rounded gap-2"
-              >
-                <AiOutlineTwitter className="text-gray-500 text-lg" />
-                Visit
-              </a>
-              <VoteButton
-                id={creator.username}
-                property="default"
-                type="creator"
-              />
-            </div>
-            <p className="text-gray-100 mt-1 break-all px-3 text-sm sm:text-base">
+            <p className="text-gray-100 mt-1 break-all text-sm sm:text-base">
               {creator.description}
             </p>
-            {social && (
-              <SocialCount
-                record_id={social.record_id}
-                creator_username={creator.username}
-                twitter_id={twitterId}
-                twitter_followers={social.twitter_followers}
-                discord_id={discordId}
-                discord_members={social.discord_members}
-              />
-            )}
           </div>
-          {creator.tags && (
-            <div className="flex gap-2 justify-center w-full">
-              {creator.tags.map((tag, index) => (
-                <Label key={index} name={tag} type="creator" />
-              ))}
-            </div>
-          )}
-          <ProfileLinks
-            address={creator.address}
-            twitter_id={creator.twitter_id}
-            instagram_id={creator.instagram_id}
-            discord_url={creator.discord_url}
-            website_url={creator.website_url}
-            opensea_username={creator.username}
-          />
+          <div className="flex flex-col">
+            <StatsBox>
+              {twitterFollowers && (
+                <Stats
+                  field="Followers"
+                  value={
+                    <div className="flex gap-2 items-center w-full justify-end">
+                      <FaTwitter className="text-sm opacity-60" />
+                      {twitterFollowers}
+                    </div>
+                  }
+                />
+              )}
+              <Stats field="Collections" value={twitterFollowers} />
+              <Stats field="Created" value={twitterFollowers} />
+              <Stats field="Collected" value={twitterFollowers} />
+              <Stats field="Views" value="100" />
+              {creator.tags && (
+                <Stats
+                  field="Tags"
+                  value={
+                    <div className="flex gap-2 justify-end w-full">
+                      {creator.tags.map((tag, index) => (
+                        <Label key={index} name={tag} type="creator" />
+                      ))}
+                    </div>
+                  }
+                />
+              )}
+            </StatsBox>
+          </div>
         </div>
       </div>
     </section>

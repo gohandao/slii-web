@@ -31,7 +31,7 @@ export const ProfileDropdown = ({
         onClick={() => {
           setDropdown(!dropdown);
         }}
-        className="flex h-5 items-center"
+        className="flex h-5 items-center text-xl"
       >
         {icon}
       </button>

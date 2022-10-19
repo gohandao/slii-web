@@ -18,9 +18,9 @@ type ItemProps = {
 export const Pagination = ({ currentPage, length, limit }: Props) => {
   const prevPage = currentPage - 1;
   const nextPage = currentPage + 1;
-  const maxPage = limit % length;
+  const lastPage = Math.floor(length / limit) + 1;
   const router = useRouter();
-  const { order, sortBy, term, page, type } = router.query;
+  const { order, sort, term, page, type, search } = router.query;
 
   const PaginationItem = ({ count }: ItemProps) => {
     let activeClass;
@@ -35,9 +35,11 @@ export const Pagination = ({ currentPage, length, limit }: Props) => {
         onClick={() => {
           setParams({
             type: type && (type as string),
-            sortBy: sortBy && (sortBy as string),
+            sort: sort && (sort as string),
             order: order && (order as string),
+            term: term && (term as string),
             page: count,
+            search: search && (search as string),
           });
         }}
       >
@@ -50,8 +52,9 @@ export const Pagination = ({ currentPage, length, limit }: Props) => {
       {currentPage != 1 && <PaginationItem count={1} />}
       {prevPage > 1 && <PaginationItem count={prevPage} />}
       <PaginationItem count={currentPage} />
-      <PaginationItem count={nextPage} />
-      <PaginationItem count={nextPage + 1} />
+      {nextPage < lastPage && <PaginationItem count={nextPage} />}
+      {nextPage + 1 < lastPage && <PaginationItem count={nextPage + 1} />}
+      {currentPage != lastPage && <PaginationItem count={lastPage} />}
     </div>
   );
 };

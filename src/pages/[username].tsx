@@ -32,10 +32,16 @@ import { AuthContext } from "@/contexts/AuthContext";
 import { supabase } from "@/libs/supabase";
 import { UserProfile } from "@/components/UserProfile";
 import { Profile } from "@/types/profile";
+import { CreatorList } from "@/components/CreatorList";
+import { Dropdown } from "@/components/Dropdown";
+import { OrderButton } from "@/components/OrderButton";
+import { Tab } from "@/components/Tab";
 
 const UserPage: NextPage = (props: any) => {
   const router = useRouter();
-  const { username } = router.query;
+  const { username, order, sort, term, page, type, search } = router.query;
+  const currentPage = page ? Number(page) : 1;
+  const limit = 10;
   const [userProfile, setUserProfile] = useState<Profile>();
   const [creator, setCreator] = useState<Creator>();
 
@@ -172,12 +178,32 @@ const UserPage: NextPage = (props: any) => {
       <BaseLayout>
         <div className="flex flex-col gap-10 pb-20">
           {userProfile && <UserProfile profile={userProfile} />}
-          {/* {creator && <CreatorProfile creator={creator} />} */}
-          {collection.length != 0 && (
-            <div className="mx-auto max-w-4xl w-full px-5">
-              <CollectionCard username={username} collection={collection} />
+          <section className="mx-auto w-full max-w-4xl">
+            <div className="flex gap-3 mb-3 overscroll-x-auto">
+              <Tab title="Creators" path="/" emoji="🎨" />
+              <Tab title="Collections" path="/collections" emoji="🗂" />
+              {/* <Tab title="Users" path="/users" emoji="😎" /> */}
             </div>
-          )}
+            <div className="relative flex gap-5 z-20 justify-between mb-3">
+              <Dropdown position="left" property="creatorType" />
+              <div className="flex items-center gap-3">
+                <Dropdown position="right" property="creatorSort" />
+                <OrderButton />
+              </div>
+            </div>
+            <div className="mb-6">
+              {creators.length > 0 && (
+                <CreatorList creators={creators} limit={limit} />
+              )}
+            </div>
+            <div className="flex justify-center">
+              <Pagination
+                currentPage={currentPage}
+                length={creators.length}
+                limit={limit}
+              />
+            </div>
+          </section>
         </div>
       </BaseLayout>
     </>

@@ -19,10 +19,10 @@ export default function Login() {
 
   useEffect(() => {
     setHeaderIcon({
-      title: "Login",
-      emoji: "📟",
+      title: "",
+      emoji: "",
       avatar: "",
-      path: `/login`,
+      path: "/",
     });
   }, []);
 

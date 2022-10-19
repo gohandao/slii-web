@@ -9,7 +9,7 @@ type Props = {
 export const TermSort = ({ term }: Props) => {
   //const [termParam, setTermParam] = useQueryState("term");
   const router = useRouter();
-  const { order, sortBy } = router.query;
+  const { order, sort, page, type, search } = router.query;
   type Props = {
     title: string;
   };
@@ -27,9 +27,11 @@ export const TermSort = ({ term }: Props) => {
         className={`text-gray-300 w-10 h-10 flex justify-center items-center text-sm border-r last:border-r-0 capitalize ${activeClass}`}
         onClick={() => {
           setParams({
-            sortBy: sortBy as string,
+            sort: sort as string,
             order: new_order as string,
             term: title,
+            type: type as string,
+            search: search as string,
           });
           //setTermParam(title);
         }}

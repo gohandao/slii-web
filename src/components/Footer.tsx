@@ -6,6 +6,7 @@ import { TbUsers } from "react-icons/tb";
 import { BsCollection, BsMailbox, BsTags } from "react-icons/bs";
 import { BreadCrumbs } from "./BreadCrumbs";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { useRouter } from "next/router";
 //import "https://files.coinmarketcap.com/static/widget/coinMarquee.js";
 
 type ButtonProps = {
@@ -17,6 +18,9 @@ type FixedMenuProps = {
   children: ReactNode;
 };
 export const Footer = () => {
+  const router = useRouter();
+  const currentPath = router.pathname;
+
   const { breadcrumbList } = useContext(UtilitiesContext);
   const Button = ({ url, title }: ButtonProps) => {
     return (
@@ -45,8 +49,9 @@ export const Footer = () => {
         </div>
   </div>*/}
       <div className="pt-16">
-        <BreadCrumbs list={breadcrumbList} />
+        {/* {currentPath != "/" && <BreadCrumbs list={breadcrumbList} />} */}
       </div>
+
       <footer className="pb-20 md:pb-3">
         <div className="px-6 mx-auto sm:px-8 lg:px-12 max-w-7xl">
           {/*<div className="justify-center items-center flex text-center mb-2">

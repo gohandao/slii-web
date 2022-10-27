@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, ReactNode } from "react";
 import { useQueryState } from "next-usequerystate";
 
 import Link from "next/link";
-import { BsFilter } from "react-icons/bs";
+import { BsCheck, BsFilter } from "react-icons/bs";
 import { BiSortAlt2, BiCategory, BiFilterAlt } from "react-icons/bi";
 import { TbUsers } from "react-icons/tb";
 
@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
 import { Params } from "@/types/params";
 import { setParams } from "@/utilities/setParams";
+import { AiOutlineClockCircle } from "react-icons/ai";
 
 type Props = {
   position: "left" | "right";
@@ -19,7 +20,8 @@ type Props = {
     | "collectionType"
     | "creatorSort"
     | "collectionSort"
-    | "assetsDropdown";
+    | "assetsDropdown"
+    | "term";
 };
 export const Dropdown = ({ position, property }: Props) => {
   const router = useRouter();
@@ -29,7 +31,16 @@ export const Dropdown = ({ position, property }: Props) => {
   const assetsDropdown = ["All", "Buy now", "On auction", "Price low to high"];
   let menus = [] as string[];
   let title = "" as any;
+  let icon = "" as any;
 
+  type TitleProps = {
+    children: ReactNode;
+  };
+  const Title = ({ children }: TitleProps) => {
+    return (
+      <span className="hidden sm:inline-block capitalize">{children}</span>
+    );
+  };
   //メニュー表示
   switch (property) {
     case "assetsDropdown":
@@ -38,77 +49,99 @@ export const Dropdown = ({ position, property }: Props) => {
         title = (
           <>
             <BsFilter className="text-gray-400" />
-            All
+            <Title>all</Title>
           </>
         );
       } else {
         title = type ? (
           <>
-            <BsFilter className="text-gray-400 capitalize" />
-            {type}
+            <BsFilter className="text-gray-400" />
+            <Title>{type}</Title>
           </>
         ) : (
           "Sort"
         );
       }
       break;
-    case "creatorType":
-      menus = ["all", "creator", "project"];
-      if (!type) {
+    case "term":
+      menus = ["all", "30d", "7d", "24h", "6h", "1h"];
+      icon = <AiOutlineClockCircle className="text-gray-400" />;
+      if (!term) {
         title = (
           <>
-            <TbUsers className="text-gray-400" />
-            All
+            {icon}
+            <Title>all</Title>
           </>
         );
       } else {
         title = (
           <>
-            <TbUsers className="text-gray-400 capitalize" />
-            {type}
+            {icon}
+            <Title>{term}</Title>
+          </>
+        );
+      }
+      break;
+    case "creatorType":
+      menus = ["all", "creator", "project"];
+      icon = <TbUsers className="text-gray-400" />;
+      if (!type) {
+        title = (
+          <>
+            {icon}
+            <Title>all</Title>
+          </>
+        );
+      } else {
+        title = (
+          <>
+            {icon}
+            <Title>{type}</Title>
           </>
         );
       }
       break;
     case "creatorSort":
       menus = ["popular", "new listed", "name", "twitter"];
+      icon = <BiFilterAlt className="text-gray-400" />;
       if (!sort) {
         title = (
           <>
-            <BiFilterAlt className="text-gray-400" />
-            Popular
+            {icon}
+            <Title>popular</Title>
           </>
         );
       } else if (sort == "listed_at") {
         title = (
           <>
-            <BiFilterAlt className="text-gray-400" />
-            NewListed
+            {icon}
+            <Title>new listed</Title>
           </>
         );
       } else {
         title = (
           <>
-            <BiFilterAlt className="text-gray-400 capitalize" />
-            {sort}
+            {icon}
+            <Title>{sort}</Title>
           </>
         );
       }
       break;
     case "collectionType":
       menus = ["all", "handmade", "generative", "utilities"];
+      icon = <BiCategory className="text-gray-400" />;
       if (!type) {
         title = (
           <>
-            <BiCategory className="text-gray-400" />
-            All
+            {icon}
+            <Title>all</Title>
           </>
         );
       } else {
         title = (
           <>
-            <BiCategory className="text-gray-400 capitalize" />
-            {type}
+            {icon}
+            <Title>{type}</Title>
           </>
         );
       }
@@ -129,39 +162,40 @@ export const Dropdown = ({ position, property }: Props) => {
         "twitter",
         "duscord",
       ];
+      icon = <BiFilterAlt className="text-gray-400" />;
       if (!sort) {
         title = (
           <>
-            <BiFilterAlt className="text-gray-400" />
-            Popular
+            {icon}
+            <Title>popular</Title>
           </>
         );
       } else if (sort == "created_at") {
         title = (
           <>
-            <BiFilterAlt className="text-gray-400" />
-            Newest
+            {icon}
+            <Title>newest</Title>
           </>
         );
       } else if (sort == "listed_at") {
         title = (
           <>
-            <BiFilterAlt className="text-gray-400" />
-            New Listed
+            {icon}
+            <Title>new listed</Title>
           </>
         );
       } else if (sort == "volume" && !term) {
         title = (
           <>
-            <BiFilterAlt className="text-gray-400" />
-            Total Volume
+            {icon}
+            <Title>total volume</Title>
           </>
         );
       } else {
         title = (
           <>
-            <BiFilterAlt className="text-gray-400 capitalize" />
-            {term ? (term as string) + " " + sort : sort}
+            {icon}
+            <Title>{term ? (term as string) + " " + sort : sort}</Title>
           </>
         );
       }
@@ -186,6 +220,19 @@ export const Dropdown = ({ position, property }: Props) => {
   };
   const updateParamsHandler = (title: string) => {
     let new_order;
+    if (property == "term") {
+      let new_term;
+      if (title != "all") {
+        new_term = title;
+      }
+      setParams({
+        type: type && (type as string),
+        sort: sort && (sort as string),
+        term: new_term,
+        order: order && (order as string),
+        search: search && (search as string),
+      });
+    }
     if (property == "creatorType") {
       let new_type;
       if (title != "all") {
@@ -263,13 +310,14 @@ export const Dropdown = ({ position, property }: Props) => {
   };
 
   const dropdownClass = !status && "hidden";
+
   return (
     <>
       <div className="relative inline-block text-left z-50">
         <div>
           <button
             type="button"
-            className="inline-flex items-center  gap-2 justify-center w-full rounded-md border border-gray-600 shadow-sm px-4 py-[9px] bg-gray-800 text-sm font-medium text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-600 focus:ring-indigo-500 capitalize"
+            className="inline-flex h-[46px] items-center  gap-2 justify-center w-full rounded-md border border-gray-600 shadow-sm px-4 py-[11px] bg-gray-800 text-sm font-medium text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-600 focus:ring-indigo-500 capitalize"
             id="menu-button"
             onClick={() => {
               toggleDropdownHandler();
@@ -300,20 +348,78 @@ export const Dropdown = ({ position, property }: Props) => {
         >
           <div className="py-1" role="none">
             {menus &&
-              menus.map((menu, index) => (
-                <button
-                  className="text-gray-300 block px-4 py-[11px] text-sm capitalize w-full text-left border-b border-gray-600 last:border-b-0"
-                  role="menuitem"
-                  tabIndex={-1}
-                  id="menu-item-0"
-                  onClick={() => {
-                    updateParamsHandler(menu);
-                  }}
-                  key={index}
-                >
-                  {menu}
-                </button>
-              ))}
+              menus.map((menu, index) => {
+                const checkCurrentParam = () => {
+                  // property:
+                  // | "creatorType"
+                  // | "collectionType"
+                  // | "creatorSort"
+                  // | "collectionSort"
+                  // | "assetsDropdown";
+                  switch (menu) {
+                    case sort:
+                    case type:
+                      return true;
+                      break;
+                    case property == "term" && term == undefined && "all":
+                    case property == "term" && term == "1h" && "1h":
+                    case property == "term" && term == "6h" && "6h":
+                    case property == "term" && term == "24h" && "24h":
+                    case property == "term" && term == "1d" && "1d":
+                    case property == "term" && term == "7d" && "7d":
+                    case property == "term" && term == "30d" && "30d":
+                    case property == "collectionSort" &&
+                      sort == undefined &&
+                      "popular":
+                    case property == "collectionSort" &&
+                      sort == undefined &&
+                      "popular":
+                    case property == "creatorSort" &&
+                      sort == undefined &&
+                      "popular":
+                    case property == "collectionType" &&
+                      type == undefined &&
+                      "all":
+                    case property == "creatorType" &&
+                      type == undefined &&
+                      "all":
+                      return true;
+                      break;
+                    case sort == "created_at" && "newest":
+                    case sort == "listed_at" && "new listed":
+                    case sort == "volume" &&
+                      term == undefined &&
+                      "total volume":
+                      return true;
+                    case sort == "volume" && term == "24h" && "24h volume":
+                    case sort == "volume" && term == "7d" && "7d volume":
+                    case sort == "volume" && term == "30d" && "30d volume":
+                      return true;
+                      break;
+                    default:
+                      return false;
+                      break;
+                  }
+                };
+                const iconCheck = checkCurrentParam();
+                return (
+                  <button
+                    className="relative text-gray-300 block pl-8 pr-4 py-[11px] text-sm capitalize w-full text-left border-b border-gray-600 last:border-b-0 gap-2"
+                    role="menuitem"
+                    tabIndex={-1}
+                    id="menu-item-0"
+                    onClick={() => {
+                      updateParamsHandler(menu);
+                    }}
+                    key={index}
+                  >
+                    {iconCheck && (
+                      <BsCheck className="absolute left-3 flex h-full top-0 items-center text-green-500" />
+                    )}
+                    {menu}
+                  </button>
+                );
+              })}
           </div>
         </div>
       </div>

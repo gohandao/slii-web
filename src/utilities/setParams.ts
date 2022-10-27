@@ -14,8 +14,8 @@ export const setParams = ({
   const query = {
     type: type,
     sort: sort,
-    order: order,
     term: term,
+    order: order,
     page: page,
     search: search,
   };

@@ -29,9 +29,13 @@ import { Collection } from "@/types/collection";
 import { Headline } from "@/components/Headline";
 import { BreadCrumbs } from "@/components/BreadCrumbs";
 import { TermSort } from "@/components/TermSort";
+import { Searchbox } from "@/components/Searchbox";
+import { TbDiamond } from "react-icons/tb";
 const StatsPage: NextPage = () => {
   const router = useRouter();
-  const { page, term } = router.query;
+  const { order, sort, term, page, type, search } = router.query;
+  const currentPage = page ? Number(page) : 1;
+  const limit = 10;
 
   const { setBreadcrumbList, setHeaderIcon } = useContext(UtilitiesContext);
   const breadcrumbList = [
@@ -47,22 +51,43 @@ const StatsPage: NextPage = () => {
   useEffect(() => {
     setHeaderIcon({
       title: "Collection stats",
-      emoji: "💎",
+      emoji: "",
+      element: <TbDiamond />,
       avatar: "",
       path: "/stats",
     });
     setBreadcrumbList(breadcrumbList);
   }, []);
   const { creators, collections, OSCollections } = useContext(BaseContext);
-  const collectionsLength = collections.length;
 
+  const filteredCollections =
+    type && type != "all"
+      ? OSCollections.filter((collection) => collection.type === type)
+      : OSCollections;
+
+  const uppperKeyword = typeof search == "string" && search.toUpperCase();
+  //1.match username
+  const searchedCollections01 = filteredCollections.filter(
+    (collection) =>
+      typeof search == "string" &&
+      //すべて大文字にして大文字小文字の区別をなくす
+      //@ts-ignore
+      collection.name.toUpperCase().includes(uppperKeyword) == true
+  );
+  const origin_searchedCollections = [
+    ...searchedCollections01,
+    // ...searchedCreators02,
+  ];
+  //重複削除
+  let searchedCollections = [] as Collection[];
+  if (search && search.length > 0) {
+    searchedCollections = Array.from(new Set(origin_searchedCollections));
+  } else {
+    searchedCollections = filteredCollections;
+  }
   //const [collectionsMenu, setCollectionMenu] =
   //useState<string[]>(collectionsMenus);
 
-  const collectionSortHandler = () => {
-    //setCollectionsSort("volume");
-    console.log("test");
-  };
   return (
     <div>
       <Head>
@@ -74,16 +99,6 @@ const StatsPage: NextPage = () => {
       </Head>
       <BaseLayout>
         <section className="mx-auto px-5 md:px-8 mt-3">
-          {/*<div className="mb-5">
-            <Headline
-              pageTitle="Collections"
-              emoji="🗂"
-              title="Japanese awesome NFT collections List."
-              length={collectionsLength}
-              label="Collections"
-            />
-  </div>*/}
-          {/*<button onClick={collectionSortHandler}>test sort</button>*/}
           <h1 className="text-gray-500 text-sm tracking-[0.2em] mb-3">
             Japanese awesome NFT collections List.
           </h1>
@@ -92,15 +107,30 @@ const StatsPage: NextPage = () => {
               {OSCollections.length} collections
             </p>
           )}
-          <div className="flex gap-5 justify-between items-center mb-4">
+          <div className="flex gap-3 sm:gap-5 justify-between items-center mb-4">
             <Dropdown position="left" property="collectionType" />
-            <div className="flex gap-4">
+            <Searchbox />
+            <div className="hidden md:flex">
               <TermSort term={term as string} />
             </div>
-            {/*<Dropdown position="right" type="sortCollections" />*/}
+            <div className="flex md:hidden">
+              <Dropdown position="right" property="term" />
+            </div>
           </div>
-          <div className="">
-            {OSCollections && <CollectionTable collections={OSCollections} />}
+          <div className="mb-10">
+            {searchedCollections && (
+              <CollectionTable
+                collections={searchedCollections}
+                limit={limit}
+              />
+            )}
+          </div>
+          <div className="flex justify-center">
+            <Pagination
+              currentPage={currentPage}
+              length={searchedCollections.length}
+              limit={limit}
+            />
           </div>
           {/*<div className="flex justify-center mb-20">
             <ShowMore currentPage={page ? Number(page) : 1} />

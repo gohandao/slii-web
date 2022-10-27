@@ -19,7 +19,8 @@ export const VoteButton = ({
   const { user, upvotes, setUpvotes, bookmarks, setBookmarks } =
     useContext(AuthContext);
   const [postUpvotes, setPostUpvotes] = useState<Upvote[]>([]);
-  let currentCount = count;
+  const [currentCount, setCurrenTCount] = useState<number>(count);
+  // let currentCount = count;
 
   let baseUrl = "" as string;
   if (process.env.NODE_ENV != "test") {
@@ -31,8 +32,8 @@ export const VoteButton = ({
 
   const [upvoted, setUpvoted] = useState<boolean>(false);
 
-  const creator_id = type == "creator" && id;
-  const collection_slug = type == "collection" && id;
+  const creator_id = type == "creator" ? id : "";
+  const collection_slug = type == "collection" ? id : "";
 
   const addLikeHandler = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -53,7 +54,8 @@ export const VoteButton = ({
         //@ts-ignore
         setUpvotes([...upvotes, ...data]);
         setUpvoted(true);
-        currentCount = currentCount + 1;
+        setCurrenTCount(currentCount + 1);
+        // currentCount = currentCount + 1;
       }
     } else {
       alert("Please login.");
@@ -86,7 +88,8 @@ export const VoteButton = ({
         setUpvotes(removedUpvotes);
         setUpvoted(false);
       }
-      currentCount = currentCount + 1;
+      setCurrenTCount(currentCount - 1);
+      // currentCount = currentCount - 1;
     }
   };
 

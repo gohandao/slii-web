@@ -29,7 +29,7 @@ type sortProps = {
   property: "creators" | "collections";
   list: any[];
   order?: "desc" | "asc";
-  term?: "24h" | "7d" | "30d" | "all";
+  term?: "1h" | "6h" | "24h" | "7d" | "30d" | "all";
   sort?: string;
   limit?: number;
 };
@@ -174,6 +174,74 @@ export const sortList = (args: sortProps) => {
       break;
     case "volume":
       switch (args.term) {
+        case "1h":
+          new_list = args.list.sort(function (a: any, b: any) {
+            if (
+              a.stats.one_hour_volume !== a.stats.one_hour_volume &&
+              b.stats.one_hour_volume !== b.stats.one_hour_volume
+            )
+              return 0;
+            if (a.stats.one_hour_volume !== a.stats.one_hour_volume) return 1;
+            if (b.stats.one_hour_volume !== b.stats.one_hour_volume) return -1;
+
+            if (
+              a.stats.one_hour_volume == null &&
+              b.stats.one_hour_volume == null
+            )
+              return 0;
+            if (a.stats.one_hour_volume == null) return 1;
+            if (b.stats.one_hour_volume == null) return -1;
+
+            if (
+              a.stats.one_hour_volume === "" &&
+              b.stats.one_hour_volume === ""
+            )
+              return 0;
+            if (a.stats.one_hour_volume === "") return 1;
+            if (b.stats.one_hour_volume === "") return -1;
+
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
+            return a.stats.one_hour_volume < b.stats.one_hour_volume
+              ? sig
+              : a.stats.one_hour_volume > b.stats.one_hour_volume
+              ? -sig
+              : 0;
+          });
+          break;
+        case "6h":
+          new_list = args.list.sort(function (a: any, b: any) {
+            if (
+              a.stats.six_hour_volume !== a.stats.six_hour_volume &&
+              b.stats.six_hour_volume !== b.stats.six_hour_volume
+            )
+              return 0;
+            if (a.stats.six_hour_volume !== a.stats.six_hour_volume) return 1;
+            if (b.stats.six_hour_volume !== b.stats.six_hour_volume) return -1;
+
+            if (
+              a.stats.six_hour_volume == null &&
+              b.stats.six_hour_volume == null
+            )
+              return 0;
+            if (a.stats.six_hour_volume == null) return 1;
+            if (b.stats.six_hour_volume == null) return -1;
+
+            if (
+              a.stats.six_hour_volume === "" &&
+              b.stats.six_hour_volume === ""
+            )
+              return 0;
+            if (a.stats.six_hour_volume === "") return 1;
+            if (b.stats.six_hour_volume === "") return -1;
+
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
+            return a.stats.six_hour_volume < b.stats.six_hour_volume
+              ? sig
+              : a.stats.six_hour_volume > b.stats.six_hour_volume
+              ? -sig
+              : 0;
+          });
+          break;
         case "24h":
           new_list = args.list.sort(function (a: any, b: any) {
             if (
@@ -368,6 +436,90 @@ export const sortList = (args: sortProps) => {
       break;
     case "average_price":
       switch (args.term) {
+        case "1h":
+          new_list = args.list.sort(function (a: any, b: any) {
+            if (
+              a.stats.one_hour_average_price !==
+                a.stats.one_hour_average_price &&
+              b.stats.one_hour_average_price !== b.stats.one_hour_average_price
+            )
+              return 0;
+            if (
+              a.stats.one_hour_average_price !== a.stats.one_hour_average_price
+            )
+              return 1;
+            if (
+              b.stats.one_hour_average_price !== b.stats.one_hour_average_price
+            )
+              return -1;
+
+            if (
+              a.stats.one_hour_average_price == null &&
+              b.stats.one_hour_average_price == null
+            )
+              return 0;
+            if (a.stats.one_hour_average_price == null) return 1;
+            if (b.stats.one_hour_average_price == null) return -1;
+
+            if (
+              a.stats.one_hour_average_price === "" &&
+              b.stats.one_hour_average_price === ""
+            )
+              return 0;
+            if (a.stats.one_hour_average_price === "") return 1;
+            if (b.stats.one_hour_average_price === "") return -1;
+
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
+            return a.stats.one_hour_average_price <
+              b.stats.one_hour_average_price
+              ? sig
+              : a.stats.one_hour_average_price > b.stats.one_hour_average_price
+              ? -sig
+              : 0;
+          });
+          break;
+        case "6h":
+          new_list = args.list.sort(function (a: any, b: any) {
+            if (
+              a.stats.six_hour_average_price !==
+                a.stats.six_hour_average_price &&
+              b.stats.six_hour_average_price !== b.stats.six_hour_average_price
+            )
+              return 0;
+            if (
+              a.stats.six_hour_average_price !== a.stats.six_hour_average_price
+            )
+              return 1;
+            if (
+              b.stats.six_hour_average_price !== b.stats.six_hour_average_price
+            )
+              return -1;
+
+            if (
+              a.stats.six_hour_average_price == null &&
+              b.stats.six_hour_average_price == null
+            )
+              return 0;
+            if (a.stats.six_hour_average_price == null) return 1;
+            if (b.stats.six_hour_average_price == null) return -1;
+
+            if (
+              a.stats.six_hour_average_price === "" &&
+              b.stats.six_hour_average_price === ""
+            )
+              return 0;
+            if (a.stats.six_hour_average_price === "") return 1;
+            if (b.stats.six_hour_average_price === "") return -1;
+
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
+            return a.stats.six_hour_average_price <
+              b.stats.six_hour_average_price
+              ? sig
+              : a.stats.six_hour_average_price > b.stats.six_hour_average_price
+              ? -sig
+              : 0;
+          });
+          break;
         case "24h":
           new_list = args.list.sort(function (a: any, b: any) {
             if (
@@ -529,6 +681,74 @@ export const sortList = (args: sortProps) => {
       break;
     case "change":
       switch (args.term) {
+        case "1h":
+          new_list = args.list.sort(function (a: any, b: any) {
+            if (
+              a.stats.one_hour_change !== a.stats.one_hour_change &&
+              b.stats.one_hour_change !== b.stats.one_hour_change
+            )
+              return 0;
+            if (a.stats.one_hour_change !== a.stats.one_hour_change) return 1;
+            if (b.stats.one_hour_change !== b.stats.one_hour_change) return -1;
+
+            if (
+              a.stats.one_hour_change == null &&
+              b.stats.one_hour_change == null
+            )
+              return 0;
+            if (a.stats.one_hour_change == null) return 1;
+            if (b.stats.one_hour_change == null) return -1;
+
+            if (
+              a.stats.one_hour_change === "" &&
+              b.stats.one_hour_change === ""
+            )
+              return 0;
+            if (a.stats.one_hour_change === "") return 1;
+            if (b.stats.one_hour_change === "") return -1;
+
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
+            return a.stats.one_hour_change < b.stats.one_hour_change
+              ? sig
+              : a.stats.one_hour_change > b.stats.one_hour_change
+              ? -sig
+              : 0;
+          });
+          break;
+        case "6h":
+          new_list = args.list.sort(function (a: any, b: any) {
+            if (
+              a.stats.six_hour_change !== a.stats.six_hour_change &&
+              b.stats.six_hour_change !== b.stats.six_hour_change
+            )
+              return 0;
+            if (a.stats.six_hour_change !== a.stats.six_hour_change) return 1;
+            if (b.stats.six_hour_change !== b.stats.six_hour_change) return -1;
+
+            if (
+              a.stats.six_hour_change == null &&
+              b.stats.six_hour_change == null
+            )
+              return 0;
+            if (a.stats.six_hour_change == null) return 1;
+            if (b.stats.six_hour_change == null) return -1;
+
+            if (
+              a.stats.six_hour_change === "" &&
+              b.stats.six_hour_change === ""
+            )
+              return 0;
+            if (a.stats.six_hour_change === "") return 1;
+            if (b.stats.six_hour_change === "") return -1;
+
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
+            return a.stats.six_hour_change < b.stats.six_hour_change
+              ? sig
+              : a.stats.six_hour_change > b.stats.six_hour_change
+              ? -sig
+              : 0;
+          });
+          break;
         case "24h":
           new_list = args.list.sort(function (a: any, b: any) {
             if (
@@ -798,6 +1018,74 @@ export const sortList = (args: sortProps) => {
 
     default:
       switch (args.term) {
+        case "1h":
+          new_list = args.list.sort(function (a: any, b: any) {
+            if (
+              a.stats.one_hour_volume !== a.stats.one_hour_volume &&
+              b.stats.one_hour_volume !== b.stats.one_hour_volume
+            )
+              return 0;
+            if (a.stats.one_hour_volume !== a.stats.one_hour_volume) return 1;
+            if (b.stats.one_hour_volume !== b.stats.one_hour_volume) return -1;
+
+            if (
+              a.stats.one_hour_volume == null &&
+              b.stats.one_hour_volume == null
+            )
+              return 0;
+            if (a.stats.one_hour_volume == null) return 1;
+            if (b.stats.one_hour_volume == null) return -1;
+
+            if (
+              a.stats.one_hour_volume === "" &&
+              b.stats.one_hour_volume === ""
+            )
+              return 0;
+            if (a.stats.one_hour_volume === "") return 1;
+            if (b.stats.one_hour_volume === "") return -1;
+
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
+            return a.stats.one_hour_volume < b.stats.one_hour_volume
+              ? sig
+              : a.stats.one_hour_volume > b.stats.one_hour_volume
+              ? -sig
+              : 0;
+          });
+          break;
+        case "6h":
+          new_list = args.list.sort(function (a: any, b: any) {
+            if (
+              a.stats.six_hour_volume !== a.stats.six_hour_volume &&
+              b.stats.six_hour_volume !== b.stats.six_hour_volume
+            )
+              return 0;
+            if (a.stats.six_hour_volume !== a.stats.six_hour_volume) return 1;
+            if (b.stats.six_hour_volume !== b.stats.six_hour_volume) return -1;
+
+            if (
+              a.stats.six_hour_volume == null &&
+              b.stats.six_hour_volume == null
+            )
+              return 0;
+            if (a.stats.six_hour_volume == null) return 1;
+            if (b.stats.six_hour_volume == null) return -1;
+
+            if (
+              a.stats.six_hour_volume === "" &&
+              b.stats.six_hour_volume === ""
+            )
+              return 0;
+            if (a.stats.six_hour_volume === "") return 1;
+            if (b.stats.six_hour_volume === "") return -1;
+
+            var sig = args.order == "desc" || !args.order ? 1 : -1;
+            return a.stats.six_hour_volume < b.stats.six_hour_volume
+              ? sig
+              : a.stats.six_hour_volume > b.stats.six_hour_volume
+              ? -sig
+              : 0;
+          });
+          break;
         case "24h":
           new_list = args.list.sort(function (a: any, b: any) {
             if (
@@ -904,30 +1192,29 @@ export const sortList = (args: sortProps) => {
           if (args.property == "collections") {
             new_list = args.list.sort(function (a: any, b: any) {
               if (
-                a.stats.total_volume !== a.stats.total_volume &&
-                b.stats.total_volume !== b.stats.total_volume
+                a.upvotes_count !== a.upvotes_count &&
+                b.upvotes_count !== b.upvotes_count
               )
                 return 0;
-              if (a.stats.total_volume !== a.stats.total_volume) return 1;
-              if (b.stats.total_volume !== b.stats.total_volume) return -1;
+              if (a.upvotes_count !== a.upvotes_count) return 1;
+              if (b.upvotes_count !== b.upvotes_count) return -1;
 
-              if (a.stats.total_volume == null && b.stats.total_volume == null)
-                return 0;
-              if (a.stats.total_volume == null) return 1;
-              if (b.stats.total_volume == null) return -1;
+              if (a.upvotes_count == null && b.upvotes_count == null) return 0;
+              if (a.upvotes_count == null) return 1;
+              if (b.upvotes_count == null) return -1;
 
-              if (a.stats.total_volume === "" && b.stats.total_volume === "")
-                return 0;
-              if (a.stats.total_volume === "") return 1;
-              if (b.stats.total_volume === "") return -1;
+              if (a.upvotes_count === "" && b.upvotes_count === "") return 0;
+              if (a.upvotes_count === "") return 1;
+              if (b.upvotes_count === "") return -1;
 
               var sig = args.order == "desc" || !args.order ? 1 : -1;
-              return a.stats.total_volume < b.stats.total_volume
+              return a.upvotes_count < b.upvotes_count
                 ? sig
-                : a.stats.total_volume > b.stats.total_volume
+                : a.upvotes_count > b.upvotes_count
                 ? -sig
                 : 0;
             });
+            new_list = Array.from(new Set(new_list));
           }
           if (args.property == "creators") {
             new_list = args.list.sort(function (a: any, b: any) {

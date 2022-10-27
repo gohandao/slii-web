@@ -19,6 +19,8 @@ import { VscSignIn } from "react-icons/vsc";
 import { BsDoorOpen } from "react-icons/bs";
 import { IoMdLogIn } from "react-icons/io";
 import { getImageUrl, supabase } from "@/libs/supabase";
+import { BiHomeAlt, BiPurchaseTagAlt } from "react-icons/bi";
+import { TbDiamond } from "react-icons/tb";
 
 export const Header = () => {
   const router = useRouter();
@@ -54,27 +56,39 @@ export const Header = () => {
               <Searchbox />
             </div> */}
           </div>
+          <a className="absolute left-0 right-0 top-0 mx-auto inline-flex justify-center h-6 bg-gray-800 w-[100px] rounded-b-lg py-2 opacity-90">
+            <Image src="/logo.svg" width={100} height={14} alt="" />
+          </a>
           <div className="gap-10 hidden lg:flex pr-16 ">
             {currentPath != "/" &&
               currentPath != "/collections" &&
               currentPath != "/login" && (
                 <Link href="/">
                   <a className="text-sm font-bold text-gray-100 tracking-wider flex items-center">
-                    <span className="mr-2 text-xl -mt-[1px]">🏠</span>Home
+                    <span className="mr-2 text-xl -mt-[1px]">
+                      <BiHomeAlt />
+                    </span>
+                    Home
                   </a>
                 </Link>
               )}
             {currentPath != "/stats" && (
               <Link href="/stats">
                 <a className="text-sm font-bold text-gray-100 tracking-wider flex items-center">
-                  <span className="mr-2 text-xl -mt-[1px]">💎</span>Stats
+                  <span className="mr-2 text-xl -mt-[1px]">
+                    <TbDiamond />
+                  </span>
+                  Stats
                 </a>
               </Link>
             )}
             {currentPath != "/tags" && (
               <Link href="/tags">
                 <a className="text-sm font-bold text-gray-100 tracking-wider flex items-center">
-                  <span className="mr-2 text-xl -mt-[1px]">📌</span>Tags
+                  <span className="mr-2 text-xl -mt-[1px]">
+                    <BiPurchaseTagAlt />
+                  </span>
+                  Tags
                 </a>
               </Link>
             )}

@@ -32,6 +32,7 @@ import { BsTwitter, BsXDiamondFill } from "react-icons/bs";
 import { RiBubbleChartFill } from "react-icons/ri";
 import Moment from "react-moment";
 import { IoMdListBox } from "react-icons/io";
+import { ProfileLinks } from "./ProfileLinks";
 
 type Props = {
   collections: any[];
@@ -91,7 +92,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
     );
   };
   return (
-    <div className="grid grid-cols-1 gap-3 w-full justify-center">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3 w-full justify-center">
       {collections.length > 0 &&
         collections.map((collection, index) => {
           return (
@@ -100,39 +101,81 @@ export const CollectionList = ({ collections, limit }: Props) => {
               key={index}
             >
               <Link href={`/collection/${collection.slug}`}>
-                <a className="relative flex flex-col border border-gray-800 rounded-lg w-full items-center shadow-lg bg-gray-800 overflow-hidden py-3 md:py-3">
-                  <div className="flex absolute left-0 top-0 w-[87px] h-full overflow-hidden rounded-tr-3xl rounded-br-3xl mb-2 opacity-[30%]">
-                    {collection.banner_image_url && (
-                      <Image
-                        //@ts-ignore
-                        src={collection.banner_image_url}
-                        layout="fill"
-                        objectFit="cover"
-                        alt=""
-                      />
-                    )}
+                <a className="relative flex flex-col border border-gray-800 rounded-lg w-full items-center shadow-lg bg-gray-800 overflow-hidden pb-2">
+                  <div className="absolute top-0 right-0 z-20  text-gray-400 opacity-60 flex gap-1 items-center">
+                    <p className="text-gray-400 text-xs text-center mt-[2px]">
+                      {collection.stats && collection.stats.num_owners} /
+                      {collection.stats && collection.stats.total_supply}
+                    </p>
+                    <div className="flex justify-center items-center gap-2 py-[2px] px-2 rounded-bl-lg text-xs md:text-xs capitalize bg-gray-900">
+                      {collection.type}
+                      <JP title="Japan" className="h-3 rounded-sm" />
+                    </div>
                   </div>
-                  <div className="flex w-full pl-3 pr-4 items-center">
-                    <div className="relative">
-                      <div className="rounded border-[5px] overflow-hidden flex items-center justify-center z-10 bg-gray-100 border-gray-700 relative w-[70px] h-[70px] min-w-[70px]">
-                        {collection.image_url && (
-                          <Image
-                            //@ts-ignore
-                            src={collection.image_url}
-                            layout="fill"
-                            objectFit="cover"
-                            alt=""
-                          />
+                  <div className="absolute -left-[1px] -top-[1px] z-10 opacity-60">
+                    <div className="lt-triangle"></div>
+                  </div>
+                  <div className="flex absolute left-[6px] top-1 z-20">
+                    <p className="text-gray-500 text-xs">
+                      #{" "}
+                      {limit
+                        ? index + 1 + (currentPage - 1) * limit
+                        : index + 1}
+                    </p>
+                  </div>
+                  <div className="flex w-full h-20 overflow-hidden opacity-[30%] relative border-4 border-transparent">
+                    <div className="w-full h-full bg-gray-500 rounded">
+                      {collection.banner_image_url && (
+                        <Image
+                          //@ts-ignore
+                          src={collection.banner_image_url}
+                          layout="fill"
+                          objectFit="cover"
+                          alt=""
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <div className="px-4 w-full">
+                    <div className="flex w-full gap-2 items-center">
+                      <div className="relative -mt-[60px]">
+                        <div className="rounded border-[5px] overflow-hidden flex items-center justify-center z-10 bg-gray-100 border-gray-700 relative w-[70px] h-[70px] min-w-[70px]">
+                          {collection.image_url && (
+                            <Image
+                              //@ts-ignore
+                              src={collection.image_url}
+                              layout="fill"
+                              objectFit="cover"
+                              alt=""
+                            />
+                          )}
+                        </div>
+                        {collection && (
+                          <div className="absolute bottom-[22px] left-full flex items-start gap-0 ml-2 z-10 flex-col w-full">
+                            {/* <ProfileLinks
+                              twitter_id={collection.twitter_username}
+                              instagram_id={collection.instagram_username}
+                              discord_url={collection.discord_url}
+                              website_url={collection.external_url}
+                              opensea_slug={collection.slug}
+                            /> */}
+                            <div className="flex bg-gray-900 gap-2 rounded-full px-3 py-[2px] opacity-80">
+                              <Stats
+                                icon={<BsTwitter />}
+                                text={collection.twitter_followers}
+                              />
+                              <Stats
+                                icon={<FaDiscord />}
+                                text={collection.discord_members}
+                              />
+                            </div>
+                          </div>
                         )}
                       </div>
-                      <p className="text-gray-400 pt-1 text-xs text-center">
-                        {collection.stats && collection.stats.num_owners} /
-                        {collection.stats && collection.stats.total_supply}
-                      </p>
                     </div>
                     <div className="flex flex-col w-full flex-1  max-w-full min-w-[0px] gap-1">
-                      <div className="flex items-center pl-3 pt-2 relative justify-between -mr-1 max-w-full">
-                        <h3 className="items-center  font-bold ellipsis text-gray-100 ellipsis max-w-full min-w-[0] pr-3">
+                      <div className="flex items-center pt-[6px] relative justify-between -mr-1 max-w-full">
+                        <h3 className="text-sm items-center  font-bold ellipsis text-gray-100 ellipsis max-w-full min-w-[0] pr-3">
                           {collection.name}
                           {collection.safelist_request_status == "verified" && (
                             <MdVerified className="-mt-[2px] text-gray-500 ml-2 inline-block" />
@@ -155,148 +198,87 @@ export const CollectionList = ({ collections, limit }: Props) => {
                           </div>
                         </div>
                       </div>
-                      <div className="flex pl-3 w-full gap-2">
-                        <div
-                          className={`relative flex justify-center items-center gap-2 left-0 top-0 py-[2px] px-2 z-10 rounded text-xs md:text-xs capitalize bg-gray-700 text-gray-400 `}
-                        >
-                          <div
-                            className={`absolute left-[3px] top-[2px] w-2 h-2 z-10 rounded-full ${
-                              collection.type == "creator"
-                                ? "bg-yellow-500"
-                                : "bg-blue-500"
-                            }`}
-                          ></div>
-                          <JP title="Japan" className="h-3 rounded-sm" />
-                          {collection.type}
-                        </div>
-                        <p className="text-gray-500 text-sm">
-                          #{" "}
-                          {limit
-                            ? index + 1 + (currentPage - 1) * limit
-                            : index + 1}
-                        </p>
-                      </div>
-                      <div className="flex justify-between pl-3 w-full">
-                        <div
-                          className={`relative flex justify-center items-center gap-4 py-[2px] px-2 z-10 rounded text-xs md:text-xs capitalize text-gray-400`}
-                        >
-                          {(sort == "created_at" || sort == "listed_at") && (
-                            <>
-                              <Stats
-                                icon={<AiOutlineDotChart />}
-                                text={
-                                  <Moment format="DD.MM.YYYY">
-                                    {collection.listed_at}
-                                  </Moment>
-                                }
-                              />
-                              <Stats
-                                icon={<AiOutlineDotChart />}
-                                text={
-                                  <Moment format="DD.MM.YYYY">
-                                    {collection.listed_at}
-                                  </Moment>
-                                }
-                              />
-                            </>
-                          )}
-                          <Stats
-                            icon={<BsTwitter />}
-                            text={collection.twitter_followers}
-                          />
-                          <Stats
-                            icon={<FaDiscord />}
-                            text={collection.discord_members}
-                          />
-                        </div>
-                        <div className="hidden md:block">
-                          {collection.listed_at && (
-                            <Stats
-                              icon={<IoMdListBox />}
-                              text={
-                                <Moment format="DD.MM.YYYY">
-                                  {collection.listed_at}
-                                </Moment>
-                              }
-                            />
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex justify-between pl-3 w-full -mt-1">
-                        <div
-                          className={`relative flex justify-center items-center gap-4 py-[2px] px-2 z-10 rounded text-xs md:text-xs capitalize text-gray-500`}
-                        >
-                          <div className="flex items-center gap-1 justify-start">
-                            <AiOutlineDotChart />
-                            {collection.payment_tokens &&
-                              collection.payment_tokens[0].symbol == "ETH" && (
-                                <EthIcon />
+                      <div className="flex gap-5 justify-between items-end">
+                        <div className="flex gap-5">
+                          <div className="">
+                            <p className="text-gray-500 text-xs sp:text-sm font-bold">
+                              Floor Proce
+                            </p>
+                            <div className="flex items-center gap-1 text-gray-400 font-bold -ml-1">
+                              {collection.payment_tokens &&
+                                collection.payment_tokens[0].symbol ==
+                                  "ETH" && <EthIcon />}
+                              {collection.stats &&
+                              collection.stats.floor_price > 0 ? (
+                                abbreviateNumber(collection.stats.floor_price)
+                              ) : (
+                                <Hyphen />
                               )}
-                            {collection.stats &&
-                            collection.stats.floor_price > 0 ? (
-                              abbreviateNumber(collection.stats.floor_price)
-                            ) : (
-                              <Hyphen />
-                            )}
+                            </div>
                           </div>
-                          <div className="flex items-center gap-1 justify-start">
-                            <AiOutlineAreaChart />
-                            {term == "all" ||
-                            (!term &&
-                              collection.stats &&
-                              collection.stats.total_volume > 0) ? (
-                              <>
-                                {collection.payment_tokens &&
-                                  collection.payment_tokens[0].symbol ==
-                                    "ETH" && <EthIcon />}
-                                {abbreviateNumber(
-                                  collection.stats.total_volume
-                                )}
-                              </>
-                            ) : term == "24h" &&
-                              collection.stats.one_day_volume > 0 ? (
-                              <>
-                                {collection.payment_tokens &&
-                                  collection.payment_tokens[0].symbol ==
-                                    "ETH" && <EthIcon />}
-                                {abbreviateNumber(
-                                  collection.stats.one_day_volume
-                                )}
-                              </>
-                            ) : term == "7d" &&
-                              collection.stats.seven_day_volume > 0 ? (
-                              <>
-                                {collection.payment_tokens &&
-                                  collection.payment_tokens[0].symbol ==
-                                    "ETH" && <EthIcon />}
-                                {abbreviateNumber(
-                                  collection.stats.seven_day_volume
-                                )}
-                              </>
-                            ) : term == "30d" &&
-                              collection.stats.thirty_day_volume > 0 ? (
-                              <>
-                                {collection.payment_tokens &&
-                                  collection.payment_tokens[0].symbol ==
-                                    "ETH" && <EthIcon />}
-                                {abbreviateNumber(
-                                  collection.stats.thirty_day_volume
-                                )}
-                              </>
-                            ) : (
-                              <Hyphen />
-                            )}
+                          <div className="">
+                            <p className="text-gray-500 text-xs sp:text-sm font-bold">
+                              Total Proce
+                            </p>
+                            <div className="flex items-center gap-1 text-gray-400 font-bold -ml-1">
+                              {term == "all" ||
+                              (!term &&
+                                collection.stats &&
+                                collection.stats.total_volume > 0) ? (
+                                <>
+                                  {collection.payment_tokens &&
+                                    collection.payment_tokens[0].symbol ==
+                                      "ETH" && <EthIcon />}
+                                  {abbreviateNumber(
+                                    collection.stats.total_volume
+                                  )}
+                                </>
+                              ) : term == "24h" &&
+                                collection.stats.one_day_volume > 0 ? (
+                                <>
+                                  {collection.payment_tokens &&
+                                    collection.payment_tokens[0].symbol ==
+                                      "ETH" && <EthIcon />}
+                                  {abbreviateNumber(
+                                    collection.stats.one_day_volume
+                                  )}
+                                </>
+                              ) : term == "7d" &&
+                                collection.stats.seven_day_volume > 0 ? (
+                                <>
+                                  {collection.payment_tokens &&
+                                    collection.payment_tokens[0].symbol ==
+                                      "ETH" && <EthIcon />}
+                                  {abbreviateNumber(
+                                    collection.stats.seven_day_volume
+                                  )}
+                                </>
+                              ) : term == "30d" &&
+                                collection.stats.thirty_day_volume > 0 ? (
+                                <>
+                                  {collection.payment_tokens &&
+                                    collection.payment_tokens[0].symbol ==
+                                      "ETH" && <EthIcon />}
+                                  {abbreviateNumber(
+                                    collection.stats.thirty_day_volume
+                                  )}
+                                </>
+                              ) : (
+                                <Hyphen />
+                              )}
+                            </div>
                           </div>
                         </div>
-                        <div className="hidden md:block">
-                          <CardLinks
-                            twitter_id={collection.twitter_username}
-                            instagram_id={collection.instagram_username}
-                            discord_url={collection.discord_url}
-                            website_url={collection.external_url}
-                            opensea_url={collection.slug}
+                        {collection.listed_at && (
+                          <Stats
+                            icon={<IoMdListBox />}
+                            text={
+                              <Moment format="DD.MM.YYYY">
+                                {collection.listed_at}
+                              </Moment>
+                            }
                           />
-                        </div>
+                        )}
                       </div>
                     </div>
                   </div>

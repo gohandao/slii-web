@@ -29,6 +29,9 @@ import { Collection } from "@/types/collection";
 import { Dropdown } from "@/components/Dropdown";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { SocialCount } from "@/components/SocialCount";
+import { JP } from "country-flag-icons/react/3x2";
+import { ProfileHeader } from "@/components/ProfileHeader";
+import { MdVerified } from "react-icons/md";
 
 const CollectionIndex: NextPage = (props: any) => {
   const OPENSEA_API_KEY = process.env.NEXT_PUBLIC_OPENSEA_API_KEY as string;
@@ -50,20 +53,17 @@ const CollectionIndex: NextPage = (props: any) => {
   console.log(collection);
 
   const { setHeaderIcon } = useContext(UtilitiesContext);
-  let avatar_url = "" as string;
-  if (creator && creator.avatar) {
-    avatar_url =
-      creator.avatar.length > 0
-        ? //@ts-ignore
-          creator.avatar[0].thumbnails.large.url
-        : //@ts-ignore
-          creator.avatar[0].url;
-  }
   useEffect(() => {
     {
       creator &&
         setHeaderIcon({
           title: creator.username,
+          subTitle: (
+            <div className="flex gap-1 text-[10px] items-center text-gray-400 leading-none">
+              <JP title="Japan" className="h-[10px] rounded-sm" />
+              {creator.type}
+            </div>
+          ),
           emoji: "",
           avatar: "",
           path: `/creator/${collection.creator_id}`,
@@ -71,26 +71,26 @@ const CollectionIndex: NextPage = (props: any) => {
     }
   }, [collection]);
 
-  const breadcrumbList = collection &&
-    username && [
-      {
-        name: "Home",
-        path: "/",
-      },
-      {
-        name: "Collections",
-        path: "/collections",
-      },
-      {
-        //@ts-ignore
-        name: collection.name as string,
-        //@ts-ignore
-        path: `/collection/${collection.slug as string}`,
-      },
-    ];
-  useEffect(() => {
-    breadcrumbList && setBreadcrumbList(breadcrumbList);
-  }, [collection]);
+  // const breadcrumbList = collection &&
+  //   username && [
+  //     {
+  //       name: "Home",
+  //       path: "/",
+  //     },
+  //     {
+  //       name: "Collections",
+  //       path: "/collections",
+  //     },
+  //     {
+  //       //@ts-ignore
+  //       name: collection.name as string,
+  //       //@ts-ignore
+  //       path: `/collection/${collection.slug as string}`,
+  //     },
+  //   ];
+  // useEffect(() => {
+  //   breadcrumbList && setBreadcrumbList(breadcrumbList);
+  // }, [collection]);
 
   if (!creator && creators && collection && creators.length > 0) {
     //set creator
@@ -178,6 +178,58 @@ const CollectionIndex: NextPage = (props: any) => {
     test();
   }, []);*/
 
+  //props
+  const title = collection && (
+    <>
+      {collection.name}
+      {collection.safelist_request_status == "verified" && (
+        <MdVerified className="text-gray-500 text-xl inline ml-2" />
+      )}
+    </>
+  );
+  const sub_title = creator && (
+    <>
+      <p className="text-xs text-gray-500">
+        By{" "}
+        <Link href={`/creator/${creator.username}`}>
+          <a className="inline-flex gap-1 items-center">
+            {creator.username}{" "}
+            {creator.verified == true && (
+              <MdVerified className="mt-[2px] text-gray-500" />
+            )}
+          </a>
+        </Link>
+      </p>
+    </>
+  );
+
+  let avatar_url = "" as string;
+  if (collection && collection.image_url) {
+    avatar_url = collection.image_url;
+  }
+  const getBackground = () => {
+    let data;
+    if (collection && collection.banner_image_url) {
+      data = collection.banner_image_url;
+    }
+    return data;
+  };
+  const background_url = getBackground() as string;
+
+  const links = {
+    twitter_id: collection?.twitter_id,
+    instagram_id: collection?.instagram_id,
+    discord_url: collection?.discord_url,
+    website_url: collection?.website_url,
+    opensea_username: collection?.slug,
+  };
+
+  const stats = [
+    {
+      field: "twitter",
+      value: "twitter",
+    },
+  ];
   return (
     <>
       {collection ? (
@@ -202,12 +254,27 @@ const CollectionIndex: NextPage = (props: any) => {
             }}
           />
           <BaseLayout>
-            <div className="">
-              <div className="flex justify-center w-full mb-6">
-                {collection && <CollectionProfile collection={collection} />}
-              </div>
+            <div className="flex flex-col gap-10 pb-20">
+              {/* {collection && <CollectionProfile collection={collection} />} */}
+              {collection && (
+                <ProfileHeader
+                  page="collection"
+                  id={collection.slug}
+                  title={title}
+                  sub_title={sub_title}
+                  avatar_url={avatar_url}
+                  background_url={background_url}
+                  description={collection.description}
+                  links={links}
+                  tags={collection.tags}
+                  stats={stats}
+                  twitter_id={collection.twitter_id}
+                  discord_url={collection.discord_url}
+                  upvotes_count={collection.upvotes_count}
+                />
+              )}
               {collectionAssets && (
-                <section className="mx-auto px-5 md:px-8">
+                <section className="mx-auto w-full px-5 md:px-8">
                   <div className="flex gap-3 mb-4">
                     <div className="flex items-center">
                       <div className="animated-dot"></div>
@@ -222,7 +289,7 @@ const CollectionIndex: NextPage = (props: any) => {
                     </div>
                   </div>
                   <div className="flex gap-5 justify-between mb-4">
-                    <Dropdown position="left" type="assetsDropdown" />
+                    {/* <Dropdown position="left" type="assetsDropdown" /> */}
                   </div>
                   {/*<div className="flex gap-5 mb-4">
                     <p className="rounded-full border border-gray-100 px-5 py-2 text-gray-100 text-sm font-bold">

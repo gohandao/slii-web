@@ -53,7 +53,7 @@ export const Searchbox = () => {
   // };
   return (
     <>
-      <div className="relative w-full rounded-lg overflow-hidden">
+      <div className="relative w-full rounded-lg overflow-hidden flex-1">
         <input
           type="text"
           name=""
@@ -68,9 +68,9 @@ export const Searchbox = () => {
           //     searchHandler();
           //   }
           // }}
-          className="block w-full py-3 pl-10 pr-4 text-base text-gray-900 rounded-lg bg-blue-50"
+          className="block w-full py-[11px] pl-4 sm:pl-12 pr-4 text-base text-gray-400 rounded-lg bg-gray-800"
         />
-        <BiSearchAlt2 className="absolute left-[14px] top-[14px] text-gray-400 text-xl" />
+        <BiSearchAlt2 className="absolute left-[16px] top-[14px] text-gray-400 text-xl hidden sm:inline-block" />
         {/* <button
           className="absolute right-0 top-0 w-10 flex h-full justify-center items-center bg-blue-500"
           onClick={() => {

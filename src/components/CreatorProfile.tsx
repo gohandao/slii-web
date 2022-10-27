@@ -14,7 +14,11 @@ import { ProfileLinks } from "@/components/ProfileLinks";
 import { Label } from "@/components/Label";
 
 import { Creator } from "@/types/creator";
-import { MdVerified } from "react-icons/md";
+import {
+  MdKeyboardArrowDown,
+  MdKeyboardArrowUp,
+  MdVerified,
+} from "react-icons/md";
 import { LikeViews } from "@/components/LikeViews";
 import { JP } from "country-flag-icons/react/3x2";
 import { BsFillShareFill, BsThreeDots, BsTwitter } from "react-icons/bs";
@@ -159,6 +163,12 @@ export const CreatorProfile = ({ creator }: Props) => {
     },
   ];
 
+  const description = creator.description;
+  const slicedDescription =
+    description && description.length > 80
+      ? description.slice(0, 80) + "…"
+      : description;
+  const [showDescription, setShowDescription] = useState<boolean>(false);
   return (
     <section className="ttt">
       {/*<button onClick={openModal} className="text-white">
@@ -294,9 +304,35 @@ export const CreatorProfile = ({ creator }: Props) => {
                 alertText="ETH address has copied!"
               />
             </div>
-            <p className="text-gray-100 mt-1 break-all text-sm sm:text-base">
-              {creator.description}
-            </p>
+            <div className="flex flex-col gap-1">
+              <p className="text-gray-100 mt-1 text-justify break-all text-sm sm:text-base transition-all duration-200 ">
+                {showDescription ? description : slicedDescription}
+              </p>
+              {description.length > 80 && (
+                <>
+                  <button
+                    className="inline-flex text-gray-500 items-center gap-1"
+                    onClick={() => {
+                      showDescription
+                        ? setShowDescription(false)
+                        : setShowDescription(true);
+                    }}
+                  >
+                    {showDescription ? (
+                      <>
+                        <MdKeyboardArrowUp />
+                        Show less
+                      </>
+                    ) : (
+                      <>
+                        <MdKeyboardArrowDown />
+                        Show more
+                      </>
+                    )}
+                  </button>
+                </>
+              )}
+            </div>
           </div>
           <div className="flex flex-col mt-1">
             <StatsBox>

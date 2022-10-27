@@ -22,6 +22,7 @@ import { Headline } from "@/components/Headline";
 import { BreadCrumbs } from "@/components/BreadCrumbs";
 import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { BiPurchaseTagAlt } from "react-icons/bi";
 
 type GetAllTags = {
   baseName: string;
@@ -37,8 +38,9 @@ const TagsPage: NextPage = () => {
   useEffect(() => {
     setHeaderIcon({
       title: "Tags",
-      emoji: "📌",
+      emoji: "",
       avatar: "",
+      element: <BiPurchaseTagAlt />,
       path: `/tags`,
     });
   }, []);
@@ -87,17 +89,9 @@ const TagsPage: NextPage = () => {
             </h1>
           </div>
           <section className="mx-auto px-5 md:px-8 mt-5">
-            <Title property="h3" addClass="mb-5 flex items-center">
-              <span className="text-lg mr-2">😎</span>Creator Tags
-            </Title>
-            <div className="mb-10">
+            <div className="mb-2">
               <TagList tags={creatorTags} type="creator" />
             </div>
-          </section>
-          <section className="mx-auto px-5 md:px-8 mt-5 lg:mt-10">
-            <Title property="h3" addClass="mb-5 flex items-center">
-              <span className="text-lg mr-2">🗂</span>Collection Tags
-            </Title>
             <div className="mb-10">
               <TagList tags={collectionTags} type="collection" />
             </div>

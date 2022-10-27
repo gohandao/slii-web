@@ -24,7 +24,7 @@ export const TermSort = ({ term }: Props) => {
     let new_order = order ? order : "desc";
     return (
       <button
-        className={`text-gray-300 w-10 h-10 flex justify-center items-center text-sm border-r last:border-r-0 capitalize ${activeClass}`}
+        className={`text-gray-300 w-[44px] h-[46px] flex justify-center items-center text-sm border-r last:border-r-0 capitalize ${activeClass}`}
         onClick={() => {
           setParams({
             sort: sort as string,
@@ -42,6 +42,8 @@ export const TermSort = ({ term }: Props) => {
   };
   return (
     <div className="flex rounded border border-gray-600 items-center overflow-hidden">
+      <Button title="1h" />
+      <Button title="6h" />
       <Button title="24h" />
       <Button title="7d" />
       <Button title="30d" />

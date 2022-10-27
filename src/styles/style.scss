@@ -94,6 +94,14 @@
         background-position: 0 50%;
     }
 }
+.lt-triangle {
+    opacity: .8;
+    width: 0;
+    height: 0;
+    border-width: 40px 40px 0 0;
+    border-style: solid;
+    border-color: #000000 transparent transparent transparent;
+}
 
 .ellipsis {
     overflow: hidden;

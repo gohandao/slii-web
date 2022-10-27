@@ -2,11 +2,15 @@ import React, { ReactNode, useContext } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { AiOutlineHome } from "react-icons/ai";
-import { TbUsers } from "react-icons/tb";
+import { TbDiamond, TbUsers } from "react-icons/tb";
 import { BsCollection, BsMailbox, BsTags } from "react-icons/bs";
 import { BreadCrumbs } from "./BreadCrumbs";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { useRouter } from "next/router";
+import { BiHomeAlt, BiPurchaseTagAlt } from "react-icons/bi";
+import { FaRegUserCircle } from "react-icons/fa";
+import { AuthContext } from "@/contexts/AuthContext";
+import { RiLoginBoxLine } from "react-icons/ri";
 //import "https://files.coinmarketcap.com/static/widget/coinMarquee.js";
 
 type ButtonProps = {
@@ -22,6 +26,7 @@ export const Footer = () => {
   const currentPath = router.pathname;
 
   const { breadcrumbList } = useContext(UtilitiesContext);
+  const { user, avatar } = useContext(AuthContext);
   const Button = ({ url, title }: ButtonProps) => {
     return (
       <Link href={url}>
@@ -34,7 +39,7 @@ export const Footer = () => {
   const FixedMenu = ({ href, children }: FixedMenuProps) => {
     return (
       <Link href={href}>
-        <a className="flex items-center justify-center px-3 py-4 text-xl w-full text-gray-400 border-r border-gray-700 last:border-none">
+        <a className="flex items-center justify-center px-3 py-[14px] text-2xl w-full text-gray-400 border-r border-gray-700 last:border-none">
           {children}
         </a>
       </Link>
@@ -66,24 +71,31 @@ export const Footer = () => {
           </small>
         </div>
       </footer>
-      <div className="fixed bottom-2 left-3 right-3 rounded bg-gray-800 flex md:hidden max-w-lg mx-auto border border-gray-700 z-20">
+      <div className="fixed bottom-0 left-0 w-full bg-gray-800 flex md:hidden mx-auto border-t border-gray-700 z-20">
         <FixedMenu href="/">
           {/*<AiOutlineHome />*/}
-          🏠
+          <BiHomeAlt />
         </FixedMenu>
-        <FixedMenu href="/creators">
+        <FixedMenu href="/stats">
           {/*<TbUsers />*/}
-          😎
-        </FixedMenu>
-        <FixedMenu href="/collections">
-          {/*<BsCollection />*/}
-          🗂
+          <TbDiamond />
         </FixedMenu>
         <FixedMenu href="/tags">
-          {/*<BsTags />*/}
-          📌
+          {/*<BsCollection />*/}
+          <BiPurchaseTagAlt />
         </FixedMenu>
-        <FixedMenu href="/">{/*<BsMailbox />*/}📪</FixedMenu>
+        <FixedMenu href="/">
+          <BsMailbox />
+        </FixedMenu>
+        {user ? (
+          <FixedMenu href="/account">
+            <FaRegUserCircle />
+          </FixedMenu>
+        ) : (
+          <FixedMenu href="/login">
+            <RiLoginBoxLine />
+          </FixedMenu>
+        )}
       </div>
     </>
   );

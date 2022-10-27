@@ -38,135 +38,16 @@ export const CollectionTable = ({ collections, limit }: Props) => {
   const { creators, socials, OSCollections } = useContext(BaseContext);
   const router = useRouter();
 
-  const { order, sort, term, page } = router.query;
+  const { order, sort, term, page, type, search } = router.query;
   const currentPage = page ? Number(page) : 1;
 
   // const { socials } = useContext(SocialsContext);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [setup, setSetup] = useState<boolean>(false);
-  const [socialSetup, setSocialSetup] = useState<boolean>(false);
-  const [list, setList] = useState<any[]>([]);
   //const [order, setOrder] = useState<"desc" | "asc">("desc");
-
-  /*const resetOrder = () => {
-    setTotalVolumeOrder("desc");
-    setOneDayChangeOrder("desc");
-    setThirtyDayChangeOrder("desc");
-    setSevenDayChangeOrder("desc");
-    setOwnersOrder("desc");
-    setItemsOrder("desc");
-    setCollectionNameOrder("asc");
-  };*/
-
-  //useStateだと反映されなかったためuseRefを使用
-  const allList = useRef<any[]>([]);
-  const newList = useRef<any[]>([]);
+  const [sortedCollections, setSortedCollections] = useState<Collection[]>([]);
 
   const [test, setTest] = useState(0);
-  // const getCollectionsData = async () => {
-  //   setTest(test + 1);
-  //   console.log(test);
-  //   const options = { method: "GET" };
-  //   const getNewData = async () => {
-  //     if (newList.current.length == 0) {
-  //       setLoading(true);
-  //       if (socials.length > 0 && collections) {
-  //         await Promise.all(
-  //           collections.map(async (collection, index) => {
-  //             const socials_filter = socials.filter(
-  //               (social) => social.collection_slug === collection.slug
-  //             );
-
-  //             const twitter_followers = socials_filter[0]
-  //               ? socials_filter[0].twitter_followers
-  //               : null;
-  //             const discord_members = socials_filter[0]
-  //               ? socials_filter[0].discord_members
-  //               : null;
-  //             await fetch(
-  //               `https://api.opensea.io/api/v1/collection/${collection.slug}`,
-  //               options
-  //             )
-  //               .then((response) => response.json())
-  //               .then((response) => {
-  //                 let data = response.collection;
-  //                 data.record_id = collection.record_id;
-  //                 data.creator_id = collection.creator_id;
-  //                 data.category = collection.category;
-  //                 data.twitter_followers = twitter_followers;
-  //                 data.discord_members = discord_members;
-  //                 const new_data = data;
-  //                 const new_list = [...newList.current, new_data];
-  //                 console.log("new_list");
-  //                 console.log(new_list);
-  //                 allList.current = Array.from(new Set(new_list));
-  //                 newList.current = Array.from(new Set(new_list));
-  //                 //console.log("newList.current");
-  //                 //console.log(newList.current);
-  //                 return;
-  //               })
-  //               .catch((err) => console.error(err));
-  //           })
-  //         );
-  //       }
-  //       //await getSocialCount();
-  //       setLoading(false);
-  //     }
-  //   };
-  //   await getNewData();
-  //   setSetup(true);
-  //   setSocialSetup(true);
-  // };
-
-  // const getSocialCount = async () => {
-  //   const addSocialCount = async () => {
-  //     let new_List = list;
-  //     await Promise.all(
-  //       list.map(async (item, index) => {
-  //         if (!item.discord_members) {
-  //           let discordId =
-  //             item.discord_url &&
-  //             item.discord_url.substring(item.discord_url.lastIndexOf("/") + 1);
-  //           let discordMembers =
-  //             discordId && (await getDiscordMembers(discordId));
-  //           //reset discordId
-  //           console.log("discordId");
-  //           console.log(discordId);
-
-  //           new_List[index].discord_members = discordMembers;
-  //           console.log("discordMembers");
-  //           console.log(discordMembers);
-  //         }
-  //         if (!item.twitter_followers) {
-  //           const twitterUsername = item.twitter_username;
-  //           const twitterFollowers =
-  //             twitterUsername && (await getTwitterFollowers(twitterUsername));
-  //           new_List[index].twitter_followers = twitterFollowers;
-  //         }
-  //       })
-  //     );
-  //     console.log("finished getSNSCOUNT");
-  //     console.log(new_List);
-  //     setList((list) => new_List);
-  //   };
-  //   await addSocialCount();
-  // };
-
-  //const [first, setfirst] = useState(0);
-  //①get data from OpenSea
-  // useEffect(() => {
-  //   //setfirst(first + 1);
-  //   //console.log(first + 1);
-  //   if (collections && allList.current.length == 0) {
-  //     getCollectionsData();
-  //   }
-  // }, [collections, socials]);
-  //useEffect(() => {
-  //  collections && !list && getCollectionsData();
-  //}, []);
-  //collections && list.length == 0 && getCollectionsData();
-
   //②set initial collections data
   const args = {
     property: "collections" as "creators" | "collections",
@@ -178,81 +59,10 @@ export const CollectionTable = ({ collections, limit }: Props) => {
     //category: collectionsSort,
     limit: limit,
   };
-  // console.log("ooooooo");
-  // console.log(collections.length);
-  // console.log(list.length);
-  // console.log(list);
-  // console.log(list[0]);
-  if (collections.length > 0 && (list.length == 0 || list[0] == undefined)) {
-    console.log("hhhhhhh");
-    setLoading(true);
-    //const data = Array.from(new Set(newList.current));
-    const data = sortList(args);
-    setList((list) => data);
-    // console.log("dounatteruno?");
-    // console.log(args.list);
-    // console.log(data);
-    //setSetup(true);
-    setLoading(false);
-  }
   useEffect(() => {
-    if (router.isReady && (order || sort || term)) {
-      if (args.list.length > 0) {
-        const data = sortList(args);
-        // console.log("sort shiteru?");
-        // console.log(data);
-        // console.log(args);
-        setList((list) => [...data]);
-      }
-    }
-  }, [router.isReady, collections, order, sort, term]);
-  //③set sorted collections data
-  // useEffect(() => {
-  //   if (router.isReady && (order || sort || term)) {
-  //     if (args.list.length > 0) {
-  //       const data = sortList(args);
-  //       // console.log("sort shiteru?");
-  //       // console.log(data);
-  //       // console.log(args);
-  //       setList((list) => [...data]);
-  //     }
-  //   }
-  //   //setSocialSetup(true);
-  // }, [router.isReady, collections, order, sort, term]);
-
-  /*useEffect(() => {
-    if (sortAction) {
-      sortList();
-      setSortAction(false);
-    }
-  }, [sortAction]);*/
-
-  //filter category
-  // useEffect(() => {
-  //   //let new_list = [];
-  //   const filterCategory = () => {
-  //     if (collectionCategory == "All") {
-  //       newList.current = Array.from(new Set(allList.current));
-  //     } else {
-  //       const category_filter = allList.current.filter(
-  //         (collection) => collection.category === collectionCategory
-  //       );
-  //       newList.current = Array.from(new Set(category_filter));
-  //     }
-  //   };
-  //   filterCategory();
-  //   //resetOrder();
-  //   setSortAction(true);
-  //   if (limit) {
-  //     let limited_list = [] as any[];
-  //     for (let index = 0; index < limit; index++) {
-  //       limited_list = [...limited_list, newList.current[index]];
-  //     }
-  //     setList((list) => limited_list);
-  //   } else {
-  //     setList((list) => newList.current);
-  //   }
-  // }, [collectionCategory]);
+    const data = sortList(args);
+    setSortedCollections((sortedCollections) => data);
+  }, [OSCollections, order, sort, term, page, type, search]);
 
   return (
     <div className="flex flex-col">
@@ -279,13 +89,14 @@ export const CollectionTable = ({ collections, limit }: Props) => {
                   <Th title="Items" sort={sort as string} />
                 </tr>
               </thead>
-              {list.length > 0 && (
+              {sortedCollections.length > 0 && (
                 <tbody className="border border-gray-200 divide-y divide-gray-200 rounded">
-                  {list &&
-                    list.map((item, index) => (
+                  {sortedCollections &&
+                    sortedCollections.map((item, index) => (
                       <CollectionTr
                         item={item}
                         index={index}
+                        limit={limit}
                         key={sort ? (sort as string) + index : index}
                       />
                       //<CollectionTr collection={collection} key={index} />

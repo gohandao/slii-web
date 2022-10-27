@@ -8,7 +8,7 @@ import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 import { MdVerified } from "react-icons/md";
 import { SocialsContext } from "@/contexts/SocialsContext";
-import router from "next/router";
+import router, { useRouter } from "next/router";
 import { AiOutlineHeart } from "react-icons/ai";
 import { BookmarkButton } from "./BookmarkButton";
 import { VoteButton } from "./VoteButton";
@@ -16,11 +16,13 @@ import { VoteButton } from "./VoteButton";
 type Props = {
   children: ReactNode;
 };
-export const CollectionTr = ({ item, index }: any) => {
+export const CollectionTr = ({ item, index, limit }: any) => {
   //console.log("item");
   //console.log(item.slug);
   //console.log(item);
-  const { order, sort, term } = router.query;
+  const router = useRouter();
+  const { order, sort, term, page } = router.query;
+  const currentPage = page ? Number(page) : 1;
 
   const { socials } = useContext(BaseContext);
 
@@ -75,8 +77,8 @@ export const CollectionTr = ({ item, index }: any) => {
       {item && item.creator_id && (
         <tr key={item.slug} className="even:bg-gray-900">
           <td scope="col" className="">
-            <div className="flex item-center text-gray-500 w-7 justify-center text-sm -ml-[2px]">
-              {index + 1}
+            <div className="flex item-center text-gray-500 w-7 justify-center text-sm -ml-[2px] rotate-90 whitespace-nowrap">
+              # {limit ? index + 1 + (currentPage - 1) * limit : index + 1}{" "}
             </div>
           </td>
           <td className="relative py-4 pr-3 min-w-[240px]">
@@ -177,6 +179,18 @@ export const CollectionTr = ({ item, index }: any) => {
                     item.payment_tokens[0].symbol == "ETH" && <EthIcon />}
                   {abbreviateNumber(item.stats.total_volume)}
                 </>
+              ) : term == "1h" && item.stats.one_hour_volume > 0 ? (
+                <>
+                  {item.payment_tokens &&
+                    item.payment_tokens[0].symbol == "ETH" && <EthIcon />}
+                  {abbreviateNumber(item.stats.one_hour_volume)}
+                </>
+              ) : term == "6h" && item.stats.six_hour_volume > 0 ? (
+                <>
+                  {item.payment_tokens &&
+                    item.payment_tokens[0].symbol == "ETH" && <EthIcon />}
+                  {abbreviateNumber(item.stats.six_hour_volume)}
+                </>
               ) : term == "24h" && item.stats.one_day_volume > 0 ? (
                 <>
                   {item.payment_tokens &&
@@ -210,6 +224,18 @@ export const CollectionTr = ({ item, index }: any) => {
                     item.payment_tokens[0].symbol == "ETH" && <EthIcon />}
                   {abbreviateNumber(item.stats.average_price)}
                 </>
+              ) : term == "1h" && item.stats.one_hour_average_price > 0 ? (
+                <>
+                  {item.payment_tokens &&
+                    item.payment_tokens[0].symbol == "ETH" && <EthIcon />}
+                  {abbreviateNumber(item.stats.one_hour_average_price)}
+                </>
+              ) : term == "6h" && item.stats.six_hour_average_price > 0 ? (
+                <>
+                  {item.payment_tokens &&
+                    item.payment_tokens[0].symbol == "ETH" && <EthIcon />}
+                  {abbreviateNumber(item.stats.six_hour_average_price)}
+                </>
               ) : term == "24h" && item.stats.one_day_average_price > 0 ? (
                 <>
                   {item.payment_tokens &&
@@ -242,6 +268,16 @@ export const CollectionTr = ({ item, index }: any) => {
               term == "24h" &&
               item.stats.one_day_change ? (
                 (item.stats.one_day_change * 100).toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }) + "%"
+              ) : term == "1h" && item.stats.one_hour_change ? (
+                (item.stats.one_hour_change * 100).toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }) + "%"
+              ) : term == "6h" && item.stats.six_hour_change ? (
+                (item.stats.six_hour_change * 100).toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 }) + "%"

@@ -25,62 +25,177 @@ import { LinkButton } from "@/components/LinkButton";
 import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { TabIndex } from "@/components/TabIndex";
+import { CollectionList } from "@/components/CollectionList";
+import { Dropdown } from "@/components/Dropdown";
+import { Searchbox } from "@/components/Searchbox";
+import { OrderButton } from "@/components/OrderButton";
+import { sortList } from "@/libs/sortList";
 
 const TagPage: NextPage = () => {
   const router = useRouter();
-  const { tag, type } = router.query;
+  const { tag, tab, order, sort, term, page, type, search } = router.query;
+  const currentPage = page ? Number(page) : 1;
+  const limit = 10;
+
+  const { creators, collections, OSCollections } = useContext(BaseContext);
+
+  const [sortedCreators, setSortedCreators] = useState<Creator[]>([]);
+  const [sortedCollections, setSortedCollections] = useState<Collection[]>([]);
 
   const { setHeaderIcon } = useContext(UtilitiesContext);
   useEffect(() => {
     setHeaderIcon({
-      title: ("#" + tag) as string,
-      emoji: "📌",
+      // title: ("#" + tag) as string,
+      title: "Tags",
+      emoji: "",
       avatar: "",
       path: `/tags`,
     });
   }, []);
 
-  const { setBreadcrumbList } = useContext(UtilitiesContext);
-  const breadcrumbList = tag && [
-    {
-      name: "Home",
-      path: "/",
-    },
-    {
-      name: "Tags",
-      path: "/tags",
-    },
-    {
-      name: tag as string,
-      path: `/tags/${tag as string}`,
-    },
+  // 1.filtered creators
+  const uppperKeyword = typeof search == "string" && search.toUpperCase();
+
+  const filteredCreators01 = creators.filter(
+    //@ts-ignore
+    (item) => item.tags && item.tags.includes(tag) == true
+  );
+  const filteredCreators02 =
+    type && type != "all"
+      ? filteredCreators01.filter((creator) => creator.type === type)
+      : filteredCreators01;
+
+  const filteredCreators = filteredCreators02;
+
+  //1.match username
+  const searchedCreators01 = filteredCreators.filter(
+    (creator) =>
+      typeof search == "string" &&
+      //すべて大文字にして大文字小文字の区別をなくす
+      //@ts-ignore
+      creator.username.toUpperCase().includes(uppperKeyword) == true
+  );
+  const origin_searchedCreators = [
+    ...searchedCreators01,
+    // ...searchedCreators02,
   ];
+  //重複削除
+  let searchedCreators = [] as Creator[];
+  if (search && search.length > 0) {
+    searchedCreators = Array.from(new Set(origin_searchedCreators));
+  } else {
+    searchedCreators = filteredCreators;
+  }
+
+  const creators_args = {
+    property: "creators" as "creators" | "collections",
+    list: searchedCreators,
+    page: currentPage,
+    order: order as "desc" | "asc" | undefined,
+    sort: sort as string | undefined,
+    term: term as "24h" | "7d" | "30d" | "all" | undefined,
+    //category: collectionsSort,
+    limit: limit,
+  };
+
+  // 2.filtered collections
+  const filteredCollections01 = OSCollections.filter(
+    //@ts-ignore
+    (item) => item.tags && item.tags.includes(tag) == true
+  );
+  const filteredCollections02 =
+    type && type != "all"
+      ? filteredCollections01.filter((collection) => collection.type === type)
+      : filteredCollections01;
+  const filteredCollections = filteredCollections02;
+
+  //1.match name
+  const searchedCollections01 = filteredCollections.filter(
+    (collection) =>
+      typeof search == "string" &&
+      //すべて大文字にして大文字小文字の区別をなくす
+      //@ts-ignore
+      collection.name.toUpperCase().includes(uppperKeyword) == true
+  );
+  //1.match creator username
+  const searchedCollections02 = filteredCollections.filter(
+    (collection) =>
+      typeof search == "string" &&
+      //すべて大文字にして大文字小文字の区別をなくす
+      //@ts-ignore
+      collection.creator_id.toUpperCase().includes(uppperKeyword) == true
+  );
+  const origin_searchedCollections = [
+    ...searchedCollections01,
+    ...searchedCollections02,
+  ];
+  //重複削除
+  let searchedCollections = [] as Collection[];
+  if (search && search.length > 0) {
+    searchedCollections = Array.from(new Set(origin_searchedCollections));
+  } else {
+    searchedCollections = filteredCollections;
+  }
+
+  const collections_args = {
+    property: "collections" as "creators" | "collections",
+    list: searchedCollections,
+    page: currentPage,
+    order: order as "desc" | "asc" | undefined,
+    sort: sort as string | undefined,
+    term: term as "24h" | "7d" | "30d" | "all" | undefined,
+    //category: collectionsSort,
+    limit: limit,
+  };
+
   useEffect(() => {
-    breadcrumbList && setBreadcrumbList(breadcrumbList);
-  }, []);
-  const { creators, collections, OSCollections } = useContext(BaseContext);
+    if (tab != "collection") {
+      const data = sortList(creators_args);
+      setSortedCreators((sortedCreators) => data);
+    } else {
+      const data = sortList(collections_args);
+      setSortedCollections((sortedCollections) => data);
+    }
+  }, [OSCollections, creators, order, sort, term, page, type, search]);
+  // const { setBreadcrumbList } = useContext(UtilitiesContext);
+  // const breadcrumbList = tag && [
+  //   {
+  //     name: "Home",
+  //     path: "/",
+  //   },
+  //   {
+  //     name: "Tags",
+  //     path: "/tags",
+  //   },
+  //   {
+  //     name: tag as string,
+  //     path: `/tags/${tag as string}`,
+  //   },
+  // ];
+  // useEffect(() => {
+  //   breadcrumbList && setBreadcrumbList(breadcrumbList);
+  // }, []);
   // const collections = useContext(CollectionsContext);
 
-  const [filteredCreators, setFilteredCreators] = useState<Creator[]>();
-  const [filteredCollections, setFilteredCollections] =
-    useState<Collection[]>();
+  // const [filteredCreators, setFilteredCreators] = useState<Creator[]>();
+  // const [filteredCollections, setFilteredCollections] =
+  //   useState<Collection[]>();
 
-  useEffect(() => {
-    const new_creators = creators.filter(
-      //@ts-ignore
-      (item) => item.tags && item.tags.includes(tag) == true
-    );
-    setFilteredCreators(new_creators);
+  // useEffect(() => {
+  //   const new_creators = creators.filter(
+  //     //@ts-ignore
+  //     (item) => item.tags && item.tags.includes(tag) == true
+  //   );
+  //   setFilteredCreators(new_creators);
 
-    const new_collections = OSCollections.filter(
-      //@ts-ignore
-      (item) => item.tags && item.tags.includes(tag) == true
-    );
-    console.log("hhhnew_collections");
-    console.log(new_collections);
-    setFilteredCollections(new_collections);
-    //const filteredCollections = Array.from(new Set(filteredCollections01));
-  }, [OSCollections]);
+  //   const new_collections = OSCollections.filter(
+  //     //@ts-ignore
+  //     (item) => item.tags && item.tags.includes(tag) == true
+  //   );
+  //   setFilteredCollections(new_collections);
+  //   //const filteredCollections = Array.from(new Set(filteredCollections01));
+  // }, [OSCollections]);
 
   /*
   const filteredCreators = creators.filter(
@@ -94,27 +209,6 @@ const TagPage: NextPage = () => {
   const filteredCollections = Array.from(new Set(filteredCollections01));
   */
 
-  const creatorsLength = filteredCreators && filteredCreators.length;
-  const collectionsLength = filteredCollections && filteredCollections.length;
-  const testasync = async () => {
-    const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
-
-    const response01 = await fetch(
-      `https://api.airtable.com/v0/appFYknMhbtkUTFgt/creator_tags?api_key=${AIRTABLE_API_KEY}`
-    );
-    const response02 = await fetch(
-      `https://api.airtable.com/v0/appFYknMhbtkUTFgt/collection_tags?api_key=${AIRTABLE_API_KEY}`
-    );
-    //const { records } = await response01.json();
-    const json01 = await response01.json();
-    const json02 = await response02.json();
-    const tags = [...json01.records, ...json02.records];
-    //const { records } = (await response01.json()) + response02.json();
-    //const { records02 } = await response02.json();
-    //console.log("zoo");
-    //console.log(tags);
-    //const tags = [records01, records02];
-  };
   //testasync();
   return (
     <div>
@@ -127,55 +221,50 @@ const TagPage: NextPage = () => {
       </Head>
       <BaseLayout>
         <section className="mx-auto px-5 md:px-8 mt-5">
-          <h1 className="text-gray-100">
+          <h1 className="text-gray-500 text-sm tracking-[0.2em] mb-3">
             Resulut of <span className="text-3xl ml-1 text-bold">#{tag}</span>
           </h1>
+          <div className="flex gap-3 mb-">
+            <div className="flex gap-3 items-baseline">
+              <p className="text-gray-400 text-sm">
+                {searchedCreators.length} Creators, {searchedCollections.length}{" "}
+                Collections
+              </p>
+            </div>
+          </div>
+          <div className="mb-2">
+            <TabIndex property="tag" />
+          </div>
+          {tab != "collection" && (
+            <div className="">
+              <div className="relative flex gap-3 sm:gap-5 z-20 justify-between mb-3">
+                <Dropdown position="left" property="collectionType" />
+                <Searchbox />
+                <div className="flex items-center gap-3">
+                  <Dropdown position="right" property="collectionSort" />
+                  <OrderButton />
+                </div>
+              </div>
+              <div className="mb-10">
+                {sortedCreators && sortedCreators.length > 0 ? (
+                  <CreatorList creators={sortedCreators} />
+                ) : (
+                  <p className="text-gray-100">Not found.</p>
+                )}
+              </div>
+            </div>
+          )}
+          {tab == "collection" && (
+            <div>
+              {sortedCollections && sortedCollections.length > 0 ? (
+                <CollectionList collections={sortedCollections} />
+              ) : (
+                <p className="text-gray-100">Not found.</p>
+              )}
+            </div>
+          )}
         </section>
-        {type != "collection" && (
-          <section className="mx-auto px-5 md:px-8 mt-3">
-            <div className="flex gap-3 mb-4">
-              <div className="flex gap-3 items-baseline">
-                <Title property="h2" addClass="">
-                  <span className="text-lg mr-2">😎</span>Creators
-                </Title>
-                <p className="text-gray-400 text-sm">
-                  {creatorsLength} Creators
-                </p>
-              </div>
-            </div>
-            <div className="mb-10">
-              {filteredCreators && filteredCreators.length > 0 ? (
-                <CreatorList creators={filteredCreators} />
-              ) : (
-                <p className="text-gray-100">Not found.</p>
-              )}
-            </div>
-          </section>
-        )}
-        {type != "creator" && (
-          <section className="mx-auto px-5 md:px-8 mt-3">
-            <div className="flex gap-3 mb-4">
-              <div className="flex items-center">
-                <div className="animated-dot"></div>
-              </div>
-              <div className="flex gap-3 items-baseline">
-                <Title property="h2" addClass="">
-                  <span className="text-lg mr-2">🗂</span>Collections
-                </Title>
-                <p className="text-gray-400 text-sm">
-                  {collectionsLength} Collections
-                </p>
-              </div>
-            </div>
-            <div className="mb-10">
-              {filteredCollections && filteredCollections.length > 0 ? (
-                <CollectionTable collections={filteredCollections} />
-              ) : (
-                <p className="text-gray-100">Not found.</p>
-              )}
-            </div>
-          </section>
-        )}
+
         {/*<div className="flex flex-col gap-10 px-5 mx-auto max-w-7xl">
           <div className="mx-auto">
             <ShowMore currentPage={page ? Number(page) : 1} />

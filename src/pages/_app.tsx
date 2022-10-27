@@ -38,6 +38,7 @@ import { Like } from "@/types/like";
 import { Upvote } from "@/types/upvote";
 import { Bookmark } from "@/types/bookmark";
 import { isBuffer } from "util";
+import { IconType } from "react-icons";
 
 const shortid = require("shortid");
 
@@ -56,13 +57,17 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const [headerIcon, setHeaderIcon] = useState<{
     title: string;
+    subTitle?: any;
     emoji: string;
     avatar: any;
+    element?: any;
     path: string;
   }>({
     title: "",
+    subTitle: "",
     emoji: "",
     avatar: "",
+    element: "",
     path: "",
   });
   const [keyword, setKeyword] = useState<string | undefined>();
@@ -659,8 +664,10 @@ function MyApp({ Component, pageProps }: AppProps) {
               setSocials,
             }}
           >
-            <div className="flex flex-col min-h-screen font-outfit bg-stripe overflow-hidden">
-              <Component {...pageProps} />
+            <div className="flex flex-col min-h-screen font-digital -font-outfit bg-stripe overflow-hidden">
+              <div className="min-h-[860px]">
+                <Component {...pageProps} />
+              </div>
               <div className="mt-auto">
                 <Footer />
               </div>

@@ -16,6 +16,15 @@ type UpdateProps = {
 };
 import { v4 as uuidv4 } from "uuid";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { UploadBackground } from "@/components/UploadBackground";
+import { HiOutlineUserCircle } from "react-icons/hi";
+import { RiMapPinUserLine, RiUser3Line } from "react-icons/ri";
+import { BiUser } from "react-icons/bi";
+import { TbUser } from "react-icons/tb";
+import { FaRegUser } from "react-icons/fa";
+import { Textarea } from "@/components/Textarea";
+import { CgUserlane } from "react-icons/cg";
+import router, { Router } from "next/router";
 
 export default function Account() {
   const { setHeaderIcon } = useContext(UtilitiesContext);
@@ -23,13 +32,18 @@ export default function Account() {
   useEffect(() => {
     setHeaderIcon({
       title: "Account",
-      emoji: "🧑‍💻",
+      emoji: "",
+      element: <CgUserlane />,
       avatar: "",
       path: `/account`,
     });
   }, []);
 
   const { user, profile, avatar, setAvatar } = useContext(AuthContext);
+  const [newAvatar, setNewAvatar] = useState<File>();
+  const [label, setLabel] = useState<string>();
+  const [description, setDescription] = useState<string>();
+  const [background, setBackground] = useState<File>();
   const [loading, setLoading] = useState(false);
   // const [avatar, setAvatar] = useState<File>();
   const [email, setEmail] = useState<string>("");
@@ -51,9 +65,6 @@ export default function Account() {
       setUsername(profile.username);
       setAvatarUrl(profile.avatar_url);
     }
-
-    //console.log('session')
-    //console.log(user)
   }, [user, profile]);
 
   const uploadImage = async (image: File) => {
@@ -65,9 +76,6 @@ export default function Account() {
         cacheControl: "3600",
         upsert: false,
       });
-    // console.log("uploadImage");
-    // console.log(avatar);
-    // console.log(data);
     return data;
   };
   const updateProfile = async () => {
@@ -75,14 +83,22 @@ export default function Account() {
       setLoading(true);
       const user = supabase.auth.user();
       let new_avatar_url;
+      let new_background_url;
       if (user) {
         if (avatar) {
           new_avatar_url = await uploadImage(avatar);
           new_avatar_url = new_avatar_url?.Key;
         }
+        if (background) {
+          new_background_url = await uploadImage(background);
+          new_background_url = new_background_url?.Key;
+        }
         const updates = {
           id: user.id,
           username: username,
+          label: label,
+          description: description,
+          background_url: new_background_url,
           avatar_url: new_avatar_url,
           updated_at: new Date(),
         };
@@ -113,47 +129,117 @@ export default function Account() {
       </Head>
       <BaseLayout>
         <div className="mt-8 px-5">
-          <div className="bg-gray-800 max-w-lg mx-auto pt-8 pb-8 px-8 rounded ">
-            <div className="mb-5">
-              <UploadImage image={avatar} setImage={setAvatar} />
+          <div className="relative bg-gray-800 max-w-3xl mx-auto pt-16 pb-10 px-5 md:px-20 lg:px-28 rounded overflow-hidden">
+            <div className="absolute w-full left-0 top-0 h-[120px] flex justify-center items-center">
+              <UploadBackground image={background} setImage={setBackground} />
             </div>
-            <p className="text-white">{profile.website}</p>
-            <div>
+            <div className="mb-3 flex">
+              <UploadImage
+                image={avatar}
+                newImage={newAvatar}
+                setNewImage={setNewAvatar}
+              />
+            </div>
+            <div className="mb-5">
               <Input
                 label="Email"
                 id="email"
                 type="email"
-                value={email || ""}
+                placeholder="sample@nftotaku.xyz"
+                value={email}
                 onChange={setEmail}
               />
             </div>
-            <div>
+            <div className="mb-5">
               <Input
                 label="Username"
                 id="username"
                 type="text"
-                value={username || ""}
+                value={username}
+                placeholder="Minimum 4 characters"
                 onChange={setUsername}
               />
-            </div>
-            <div className="mb-5">
-              <p className="text-gray-100">Liked songs</p>
-              <Link href={`https://anisonar.vercel.app/${username}`}>
-                <a className="text-blue-500 underline hover:no-underline">
-                  https://anisonar.vercel.app/{username}
+              <Link href={`https://nftotaku.xyz/${username}`}>
+                <a className="inline-block text-blue-500 underline hover:no-underline mt-1 text-sm">
+                  https://nftotaku.xyz/{username}
                 </a>
               </Link>
             </div>
-            <div className="flex flex-col gap-3 justify-center items-center">
-              <div>
-                <button
-                  className="py-2 px-5 rounded bg-blue-800 text-blue-100"
-                  onClick={() => updateProfile()}
-                  disabled={loading}
-                >
-                  {loading ? "Loading ..." : "Update"}
-                </button>
+            <div className="mb-5">
+              <Input
+                label="Label"
+                id="label"
+                type="text"
+                value={label}
+                placeholder="NFT Collecter"
+                onChange={setLabel}
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <p className="text-gray-100">Description</p>
+              <Textarea
+                id="description"
+                required={false}
+                maxLength={200}
+                text={description}
+                setText={setDescription}
+              />
+            </div>
+            {/* <div className="">
+              <div className="bg-gray-700 px-5 py-2 rounded mt-8 mb-4">
+                <p className="text-gray-200 text-center ">Verified user only</p>
               </div>
+              <div className="mb-5">
+                <Input
+                  label="Twitter ID"
+                  id="email"
+                  type="email"
+                  value={email || ""}
+                  onChange={setEmail}
+                />
+              </div>
+              <div className="mb-5">
+                <Input
+                  label="Instagram ID"
+                  id="email"
+                  type="email"
+                  value={email || ""}
+                  onChange={setEmail}
+                />
+              </div>
+              <div className="mb-5">
+                <Input
+                  label="Discord URL"
+                  id="email"
+                  type="email"
+                  value={email || ""}
+                  onChange={setEmail}
+                />
+              </div>
+              <div className="mb-5">
+                <Input
+                  label="Website URL"
+                  id="email"
+                  type="email"
+                  value={email || ""}
+                  onChange={setEmail}
+                />
+              </div>
+            </div> */}
+            <div className="flex gap-5 justify-center items-center mt-6">
+              <button
+                className="w-[120px] sm:w-[200px] py-3 px-5 rounded bg-gray-600 text-gray-300 border-b-[6px] border-gray-700"
+                onClick={() => router.back()}
+              >
+                Back
+              </button>
+              <button
+                className="w-[120px] sm:w-[200px] py-3 px-5 rounded bg-green-600 text-green-100  border-b-[6px] border-green-800"
+                onClick={() => updateProfile()}
+                disabled={loading}
+              >
+                {loading ? "Loading ..." : "Update"}
+              </button>
             </div>
           </div>
         </div>

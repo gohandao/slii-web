@@ -175,39 +175,43 @@ export const UserProfile = ({ profile }: Props) => {
         <h2>Hello</h2>
         <button onClick={closeModal}>close</button>
       </Modal>
-      <div className="flex relative w-full h-32 md:h-60 overflow-hidden bg-gray-800">
-        {profile.background && profile.background.length > 0 && (
-          <>
-            {
-              //@ts-ignore
-              creator.background[0].thumbnails ? (
-                <Image
-                  //@ts-ignore
-                  src={creator.background[0].thumbnails.large.url}
-                  layout="fill"
-                  objectFit="cover"
-                  alt=""
-                  loading="lazy"
-                />
-              ) : (
-                <Image
-                  //@ts-ignore
-                  src={creator.background[0].url}
-                  layout="fill"
-                  objectFit="cover"
-                  alt=""
-                  loading="lazy"
-                />
-              )
-            }
-          </>
-        )}
+      <div className="flex relative w-full h-40 md:h-60 overflow-hidden -mt-[70px] opacity-20 border-t-[10px] border-x-[10px] border-transparent">
+        <div className="w-full h-full bg-gray-800 rounded-lg overflow-hidden">
+          {profile.background_url && profile.background_url.length > 0 && (
+            <>
+              {
+                //@ts-ignore
+                creator.background[0].thumbnails ? (
+                  <Image
+                    //@ts-ignore
+                    src={creator.background[0].thumbnails.large.url}
+                    layout="fill"
+                    objectFit="cover"
+                    alt=""
+                    loading="lazy"
+                  />
+                ) : (
+                  <Image
+                    //@ts-ignore
+                    src={creator.background[0].url}
+                    layout="fill"
+                    objectFit="cover"
+                    alt=""
+                    loading="lazy"
+                  />
+                )
+              }
+            </>
+          )}
+        </div>
       </div>
       <div className="mx-auto  max-w-2xl">
         <div className="-mt-[60px] relative flex justify-center">
           <div className="relative flex">
             <div className="rounded-full border-[5px] border-gray-800 overflow-hidden flex items-center justify-center z-10 mb-2 bg-gray-800 w-[110px] h-[110px]">
-              {avatar && profile.avatar_url.length > 0 ? (
+              {profile &&
+              profile.avatar_url &&
+              profile.avatar_url.length > 0 ? (
                 <Image
                   //@ts-ignore
                   src={URL.createObjectURL(avatar)}

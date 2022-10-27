@@ -10,17 +10,17 @@ type Props = {
 export const TagList = ({ tags, type }: Props) => {
   let typeClass = "bg-gray-500 text-gray-100";
   if (type == "creator") {
-    typeClass = "bg-blue-900 text-blue-100";
+    typeClass = "bg-indigo-900 text-indigo-100";
   } else if (type == "collection") {
-    typeClass = "bg-green-900 text-green-100";
+    typeClass = "bg-teal-900 text-teal-100";
   }
   return (
-    <div className="flex flex-wrap gap-3">
+    <div className="flex flex-wrap gap-2">
       {tags &&
         tags.map((tag, index) => {
           let path;
-          if (type) {
-            path = `/tags/${tag.name}?type=${type}`;
+          if (type == "collection") {
+            path = `/tags/${tag.name}?tab=${type}`;
           } else {
             path = `/tags/${tag.name}`;
           }
@@ -28,7 +28,9 @@ export const TagList = ({ tags, type }: Props) => {
             <div key={index}>
               {tag && tag.name && (
                 <Link href={path}>
-                  <a className={`inline-block rounded px-4 py-3 ${typeClass}`}>
+                  <a
+                    className={`inline-block rounded px-3 py-2 text-sm ${typeClass}`}
+                  >
                     #{tag.name} ({tag.count})
                   </a>
                 </Link>

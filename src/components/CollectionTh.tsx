@@ -63,9 +63,9 @@ export const Th = ({ title }: Props) => {
     // const test = window.scrollY;
     let titleParam = null;
     titleParam = titleToParam(title) as string;
-    if (!order && sort == "volume") {
+    if (!order && sort == "upvotes") {
       setParams({
-        sort: titleParam,
+        sort: "",
         order: "asc",
         term: term as string,
         search: search as string,
@@ -77,10 +77,17 @@ export const Th = ({ title }: Props) => {
         term: term as string,
         search: search as string,
       });
-    } else if (!sort && titleParam == "volume") {
+    } else if (!sort && titleParam == "upvotes") {
       setParams({
-        sort: titleParam as string,
-        order: "asc",
+        sort: "",
+        order: order == "desc" ? "asc" : "desc",
+        term: term as string,
+        search: search as string,
+      });
+    } else if (titleParam == "upvotes") {
+      setParams({
+        sort: "",
+        order: order == "desc" ? "asc" : "desc",
         term: term as string,
         search: search as string,
       });
@@ -122,7 +129,7 @@ export const Th = ({ title }: Props) => {
   if (sort == titleToParam(title)) {
     thClass = "text-gray-300";
     active = true;
-  } else if (!sort && titleToParam(title) == "volume") {
+  } else if (!sort && titleToParam(title) == "Upvotes") {
     thClass = "text-gray-300";
   } else {
     thClass = "text-gray-500";
@@ -176,7 +183,7 @@ export const Th = ({ title }: Props) => {
             )}
             <p className="flex gap-2 items-center whitespace-nowrap">
               {TitleIcon ? TitleIcon : title}
-              {(!sort && title == "Volume") || (active && order == "desc") ? (
+              {(!sort && title == "Upvotes") || (active && order == "desc") ? (
                 <TiArrowSortedDown className="transition-all duration-300 text-gray-300" />
               ) : active && order == "asc" ? (
                 <TiArrowSortedDown className="transition-all duration-300 rotate-180 text-gray-300" />

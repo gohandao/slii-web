@@ -28,6 +28,10 @@ import { Custom404 } from "@/pages/404";
 import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { JP } from "country-flag-icons/react/3x2";
+import { ProfileHeader } from "@/components/ProfileHeader";
+import { CopyText } from "@/components/CopyText";
+import { MdVerified } from "react-icons/md";
 
 const CreatorIndex: NextPage = (props: any) => {
   const router = useRouter();
@@ -41,44 +45,23 @@ const CreatorIndex: NextPage = (props: any) => {
   const { creators, OSCollections } = useContext(BaseContext);
   // const collections = useContext(CollectionsContext);
   const { setHeaderIcon } = useContext(UtilitiesContext);
-  let avatar_url = "" as string;
-  if (creator && creator.avatar) {
-    avatar_url =
-      creator.avatar.length > 0
-        ? //@ts-ignore
-          creator.avatar[0].thumbnails.large.url
-        : //@ts-ignore
-          creator.avatar[0].url;
-  }
   useEffect(() => {
     {
       creator &&
         setHeaderIcon({
           title: creator.username,
+          subTitle: (
+            <div className="flex gap-1 text-[10px] items-center text-gray-400 leading-none">
+              <JP title="Japan" className="h-[10px] rounded-sm" />
+              {creator.username}
+            </div>
+          ),
           emoji: "",
           avatar: "",
           path: `/creator/${creator.username}`,
         });
     }
   }, [creator]);
-  const { setBreadcrumbList } = useContext(UtilitiesContext);
-  const breadcrumbList = username && [
-    {
-      name: "Home",
-      path: "/",
-    },
-    {
-      name: "Creators",
-      path: "/creators",
-    },
-    {
-      name: username as string,
-      path: `/creator/${username as string}`,
-    },
-  ];
-  useEffect(() => {
-    breadcrumbList && setBreadcrumbList(breadcrumbList);
-  }, []);
 
   if (!creator && username && creators && creators.length > 0) {
     //set creator
@@ -120,6 +103,61 @@ const CreatorIndex: NextPage = (props: any) => {
     }
   }, [username, OSCollections]);
 
+  //props
+  const title = creator && (
+    <>
+      {creator.username}{" "}
+      {creator.verified == true && (
+        <MdVerified className="text-gray-500 text-xl inline ml-1" />
+      )}
+    </>
+  );
+  const sub_title = creator && (
+    <>
+      <Image src="/icon-eth.svg" width={16} height={16} alt="" />
+      <CopyText text={creator.address} alertText="ETH address has copied!" />
+    </>
+  );
+
+  let avatar_url = "" as string;
+  if (creator && creator.avatar) {
+    avatar_url =
+      creator.avatar.length > 0
+        ? //@ts-ignore
+          creator.avatar[0].thumbnails.large.url
+        : //@ts-ignore
+          creator.avatar[0].url;
+  }
+
+  const getBackground = () => {
+    let data;
+    if (creator) {
+      creator.avatar && creator.avatar.length > 0
+        ? //@ts-ignore
+          (data = creator.avatar[0].thumbnails.large.url)
+        : //@ts-ignore
+          (data = creator.avatar[0].url);
+    }
+    return data;
+  };
+  const background_url = getBackground() as string;
+
+  const links = {
+    address: creator?.address,
+    twitter_id: creator?.twitter_id,
+    instagram_id: creator?.instagram_id,
+    discord_url: creator?.discord_url,
+    website_url: creator?.website_url,
+    opensea_username: creator?.username,
+  };
+
+  const stats = [
+    {
+      field: "twitter",
+      value: "twitter",
+    },
+  ];
+
   return (
     <>
       <NextSeo
@@ -143,7 +181,23 @@ const CreatorIndex: NextPage = (props: any) => {
       />
       <BaseLayout>
         <div className="flex flex-col gap-10 pb-20">
-          {creator && <CreatorProfile creator={creator} />}
+          {creator && (
+            <ProfileHeader
+              page="creator"
+              id={creator.username}
+              title={title}
+              sub_title={sub_title}
+              avatar_url={avatar_url}
+              background_url={background_url}
+              description={creator.description}
+              links={links}
+              tags={creator.tags}
+              stats={stats}
+              twitter_id={creator.twitter_id}
+              discord_url={creator.discord_url}
+              upvotes_count={creator.upvotes_count}
+            />
+          )}
           {creatorCollections.length != 0 && (
             <div className="mx-auto w-full px-5 lg:px-8 flex gap-6">
               {creatorCollections.map((collection, index) => (

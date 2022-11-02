@@ -58,12 +58,12 @@ const StatsPage: NextPage = () => {
     });
     setBreadcrumbList(breadcrumbList);
   }, []);
-  const { creators, collections, OSCollections } = useContext(BaseContext);
+  const { creators, collections } = useContext(BaseContext);
 
   const filteredCollections =
     type && type != "all"
-      ? OSCollections.filter((collection) => collection.type === type)
-      : OSCollections;
+      ? collections.filter((collection) => collection.type === type)
+      : collections;
 
   const uppperKeyword = typeof search == "string" && search.toUpperCase();
   //1.match username
@@ -102,9 +102,9 @@ const StatsPage: NextPage = () => {
           <h1 className="text-gray-500 text-sm tracking-[0.2em] mb-3">
             Japanese awesome NFT collections List.
           </h1>
-          {OSCollections && (
+          {collections && (
             <p className="text-gray-500 mb-2 text-sm">
-              {OSCollections.length} collections
+              {collections.length} collections
             </p>
           )}
           <div className="flex gap-3 sm:gap-5 justify-between items-center mb-4">

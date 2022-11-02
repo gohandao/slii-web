@@ -59,7 +59,7 @@ const TagsPage: NextPage = () => {
     setBreadcrumbList(breadcrumbList);
   }, []);
 
-  const { creatorTags, collectionTags } = useContext(BaseContext);
+  const { tags } = useContext(BaseContext);
   // const  = useContext(CollectionTagsContext);
 
   return (
@@ -89,11 +89,14 @@ const TagsPage: NextPage = () => {
             </h1>
           </div>
           <section className="mx-auto px-5 md:px-8 mt-5">
-            <div className="mb-2">
+            {/* <div className="mb-2">
               <TagList tags={creatorTags} type="creator" />
             </div>
             <div className="mb-10">
               <TagList tags={collectionTags} type="collection" />
+            </div> */}
+            <div className="mb-10">
+              <TagList tags={tags} type="creator" />
             </div>
           </section>
         </div>

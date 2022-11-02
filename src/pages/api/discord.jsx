@@ -19,8 +19,6 @@ const getDiscordMembers = async (req, res) => {
       console.log("error");
       console.log(error);
     });
-  console.log("discord data");
-  console.log(response);
   res.json(JSON.stringify(response.approximate_member_count));
 };
 export default getDiscordMembers;

@@ -25,7 +25,9 @@
     "**/*.tsx",
     "src/libs/supabase.jsx",
     "src/pages/api/twitter.jsx",
-    "src/utilities/removeUndefinedObject.jsx"
+    "src/utilities/removeUndefinedObject.jsx",
+    "src/libs/discord.jsx",
+    "src/libs/twitter.jsx"
   ],
   "exclude": ["node_modules"]
 }

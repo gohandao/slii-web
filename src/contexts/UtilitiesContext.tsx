@@ -2,8 +2,8 @@ import React, { createContext, useState } from "react";
 import { Utilities } from "@/types/utilities";
 
 export const UtilitiesContext = createContext<Utilities>({
-  search: "",
-  setSearch: () => {},
+  keyword: "",
+  setKeyword: () => {},
   headerIcon: {
     title: "",
     emoji: "",
@@ -11,20 +11,6 @@ export const UtilitiesContext = createContext<Utilities>({
     path: "",
   },
   setHeaderIcon: () => {},
-  indexTab: undefined,
-  setIndexTab: () => {},
-  page: 1,
-  setPage: () => {},
-  creatorsSort: "",
-  setCreatorsSort: () => {},
-  sortAction: false,
-  setSortAction: () => {},
-  creatorType: "all",
-  setCreatorType: () => {},
-  creatorCategory: "",
-  setCreatorCategory: () => {},
-  collectionCategory: "",
-  setCollectionCategory: () => {},
   breadcrumbList: undefined,
   setBreadcrumbList: () => {},
 });

@@ -50,14 +50,13 @@ const CollectionsPage: NextPage = () => {
   const limit = 10;
   const [sortedCollections, setSortedCollections] = useState<Collection[]>([]);
 
-  const { creators, collections, OSCollections, creatorTags, collectionTags } =
-    useContext(BaseContext);
+  const { creators, collections, tags } = useContext(BaseContext);
   const { setHeaderIcon, setBreadcrumbList } = useContext(UtilitiesContext);
 
   const filteredCollections =
     type && type != "all"
-      ? OSCollections.filter((collection) => collection.type === type)
-      : OSCollections;
+      ? collections.filter((collection) => collection.type === type)
+      : collections;
 
   const uppperKeyword = typeof search == "string" && search.toUpperCase();
   //1.match username
@@ -94,7 +93,7 @@ const CollectionsPage: NextPage = () => {
   useEffect(() => {
     const data = sortList(args);
     setSortedCollections((sortedCollections) => data);
-  }, [OSCollections, order, sort, term, page, type, search]);
+  }, [collections, order, sort, term, page, type, search]);
 
   const breadcrumbList = [
     {

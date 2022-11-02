@@ -12,7 +12,7 @@ type Tab = {
 export const Tab = ({ title, path, param }: Tab) => {
   const router = useRouter();
   // const currentPath = router.pathname;
-  const { tab } = router.query;
+  const { tab, search } = router.query;
   const removeParams = (asPath: string) => {
     return asPath.split("?")[0];
   };
@@ -34,6 +34,11 @@ export const Tab = ({ title, path, param }: Tab) => {
     passiveClass = "text-gray-100";
   }
 
+  let new_query = { tab: param };
+  if (typeof search == "string" && search.length > 0) {
+    //@ts-ignore
+    new_query = { tab: param, search: search };
+  }
   return (
     <>
       {path && (
@@ -53,9 +58,7 @@ export const Tab = ({ title, path, param }: Tab) => {
               router.push(
                 {
                   pathname: currentPath,
-                  query: {
-                    tab: param,
-                  },
+                  query: new_query,
                 },
                 undefined,
                 { scroll: false }
@@ -64,6 +67,7 @@ export const Tab = ({ title, path, param }: Tab) => {
               router.push(
                 {
                   pathname: currentPath,
+                  query: new_query,
                 },
                 undefined,
                 { scroll: false }

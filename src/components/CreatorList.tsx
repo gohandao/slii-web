@@ -38,6 +38,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
   const router = useRouter();
   const { page } = router.query;
   const currentPage = page ? Number(page) : 1;
+  const [currentCreators, setCurrentCreators] = useState<Creator[]>(creators);
 
   const [liked, setLiked] = useState<boolean>(false);
   const addLikeHandler = async () => {
@@ -46,6 +47,13 @@ export const CreatorList = ({ creators, limit }: Props) => {
   const removeLikeHandler = async () => {
     setLiked(false);
   };
+
+  useEffect(() => {
+    setCurrentCreators(creators);
+    console.log("uuu currnet creators");
+    console.log(currentCreators);
+    console.log(creators);
+  }, [creators]);
 
   //const creators = useContext(CreatorsContext);
   // const [filteredCreators, setFilteredCreators] = useState(creators);
@@ -77,12 +85,8 @@ export const CreatorList = ({ creators, limit }: Props) => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3 w-full justify-center">
-      {creators.length > 0 &&
-        creators.map((creator, index) => {
-          const upvotes_count = creator.upvotes_count
-            ? creator.upvotes_count
-            : 0;
-
+      {currentCreators.length > 0 &&
+        currentCreators.map((creator, index) => {
           return (
             <div
               className="relative flex hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1"
@@ -103,33 +107,16 @@ export const CreatorList = ({ creators, limit }: Props) => {
                   </div>
                   <div className="flex w-full h-20 overflow-hidden opacity-[30%] relative border-4 border-transparent">
                     <div className="w-full h-full bg-gray-500 rounded">
-                      {creator.background && creator.background.length > 0 && (
-                        <>
-                          {
-                            //@ts-ignore
-                            creator.background[0].thumbnails ? (
-                              <Image
-                                //@ts-ignore
-                                src={creator.background[0].thumbnails.large.url}
-                                layout="fill"
-                                objectFit="cover"
-                                alt=""
-                                loading="lazy"
-                                className="rounded"
-                              />
-                            ) : (
-                              <Image
-                                //@ts-ignore
-                                src={creator.background[0].url}
-                                layout="fill"
-                                objectFit="cover"
-                                alt=""
-                                loading="lazy"
-                                className="rounded"
-                              />
-                            )
-                          }
-                        </>
+                      {creator.background && (
+                        <Image
+                          //@ts-ignore
+                          src={creator.background}
+                          layout="fill"
+                          objectFit="cover"
+                          alt=""
+                          loading="lazy"
+                          className="rounded"
+                        />
                       )}
                     </div>
                   </div>
@@ -140,7 +127,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
                           {creator.avatar && (
                             <Image
                               //@ts-ignore
-                              src={creator.avatar[0].thumbnails.large.url}
+                              src={creator.avatar}
                               // width={80}
                               // height={80}
                               objectFit="cover"
@@ -193,7 +180,11 @@ export const CreatorList = ({ creators, limit }: Props) => {
                               property="simple"
                               type="creator"
                               id={creator.username}
-                              count={upvotes_count}
+                              count={
+                                creator.upvotes_count
+                                  ? creator.upvotes_count
+                                  : 0
+                              }
                             />
                             {/*<AiOutlineHeart className=" text-gray-400 opacity-50" />*/}
                           </div>

@@ -38,7 +38,7 @@ const TagPage: NextPage = () => {
   const currentPage = page ? Number(page) : 1;
   const limit = 10;
 
-  const { creators, collections, OSCollections } = useContext(BaseContext);
+  const { creators, collections } = useContext(BaseContext);
 
   const [sortedCreators, setSortedCreators] = useState<Creator[]>([]);
   const [sortedCollections, setSortedCollections] = useState<Collection[]>([]);
@@ -100,7 +100,7 @@ const TagPage: NextPage = () => {
   };
 
   // 2.filtered collections
-  const filteredCollections01 = OSCollections.filter(
+  const filteredCollections01 = collections.filter(
     //@ts-ignore
     (item) => item.tags && item.tags.includes(tag) == true
   );
@@ -157,59 +157,8 @@ const TagPage: NextPage = () => {
       const data = sortList(collections_args);
       setSortedCollections((sortedCollections) => data);
     }
-  }, [OSCollections, creators, order, sort, term, page, type, search]);
-  // const { setBreadcrumbList } = useContext(UtilitiesContext);
-  // const breadcrumbList = tag && [
-  //   {
-  //     name: "Home",
-  //     path: "/",
-  //   },
-  //   {
-  //     name: "Tags",
-  //     path: "/tags",
-  //   },
-  //   {
-  //     name: tag as string,
-  //     path: `/tags/${tag as string}`,
-  //   },
-  // ];
-  // useEffect(() => {
-  //   breadcrumbList && setBreadcrumbList(breadcrumbList);
-  // }, []);
-  // const collections = useContext(CollectionsContext);
+  }, [collections, creators, order, sort, term, page, type, search, tab]);
 
-  // const [filteredCreators, setFilteredCreators] = useState<Creator[]>();
-  // const [filteredCollections, setFilteredCollections] =
-  //   useState<Collection[]>();
-
-  // useEffect(() => {
-  //   const new_creators = creators.filter(
-  //     //@ts-ignore
-  //     (item) => item.tags && item.tags.includes(tag) == true
-  //   );
-  //   setFilteredCreators(new_creators);
-
-  //   const new_collections = OSCollections.filter(
-  //     //@ts-ignore
-  //     (item) => item.tags && item.tags.includes(tag) == true
-  //   );
-  //   setFilteredCollections(new_collections);
-  //   //const filteredCollections = Array.from(new Set(filteredCollections01));
-  // }, [OSCollections]);
-
-  /*
-  const filteredCreators = creators.filter(
-    //@ts-ignore
-    (item) => item.tags && item.tags.includes(tag) == true
-  );
-  const filteredCollections01 = collections.filter(
-    //@ts-ignore
-    (item) => item.tags && item.tags.includes(tag) == true
-  );
-  const filteredCollections = Array.from(new Set(filteredCollections01));
-  */
-
-  //testasync();
   return (
     <div>
       <Head>

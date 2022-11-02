@@ -1,0 +1,24 @@
+export const getTwitterFollowers = async (twitter_id: string) => {
+  let baseUrl = "" as string;
+  if (process.env.NODE_ENV != "test") {
+    baseUrl = {
+      production: "https://gachi-collection.vercel.app",
+      development: "http://localhost:3000",
+    }[process.env.NODE_ENV];
+  }
+  let twitter_followers;
+  await fetch(`${baseUrl}/api/twitter?twitter_id=${twitter_id}`)
+    .then((response) => response.json())
+    .then((response) => {
+      //console.log("JSON.parse(response)");
+      //console.log(JSON.parse(response));
+      twitter_followers = JSON.parse(response);
+      //setTwitterData(JSON.parse(response));
+      return twitter_followers;
+    })
+    .catch((error) => {
+      console.log("error");
+      console.log(error);
+    });
+  return twitter_followers;
+};

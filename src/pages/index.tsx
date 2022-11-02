@@ -53,8 +53,7 @@ const Home: NextPage = () => {
   const limit = 10;
   const [sortedCreators, setSortedCreators] = useState<Creator[]>([]);
 
-  const { creators, collections, OSCollections, creatorTags, collectionTags } =
-    useContext(BaseContext);
+  const { creators, collections, tags } = useContext(BaseContext);
   const { setHeaderIcon, setBreadcrumbList } = useContext(UtilitiesContext);
 
   // const filteredCreators = creators;

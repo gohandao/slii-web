@@ -7,17 +7,17 @@ import { Social } from "@/types/social";
 import { Tag } from "@/types/tag";
 
 type Props = {
-  allList: any[];
-  creators: Creator[];
-  collections: Collection[];
-  OSCollections: any[];
-  creatorTags: Tag[];
-  collectionTags: Tag[];
-  socials: Social[];
-  setSocials: React.Dispatch<React.SetStateAction<Social[]>>;
+  creators: any[];
+  collections: any[];
+  // collections: Collection[];
+  // OSCollections: any[];
+  tags: any[];
+  // creatorTags: Tag[];
+  // collectionTags: Tag[];
+  // socials: Social[];
+  // setSocials: React.Dispatch<React.SetStateAction<Social[]>>;
 };
 export const BaseContext = createContext<Props>({
-  allList: [],
   creators: [
     {
       username: "",
@@ -31,56 +31,67 @@ export const BaseContext = createContext<Props>({
       discord_url: "",
       verified: false,
       type: "",
-      createdAt: null,
+      listed_at: null,
       updatedAt: null,
       collections: [],
       category: "",
       tags: [],
     },
   ],
-  collections: [
+  // collections: [
+  //   {
+  //     record_id: "",
+  //     name: "",
+  //     slug: "",
+  //     creator_id: "",
+  //     type: "",
+  //     listed_at: null,
+  //     updatedAt: null,
+  //     category: "",
+  //     verified: false,
+  //     tags: [],
+  //     twitter_followers: null,
+  //     discord_members: null,
+  //   },
+  // ],
+  collections: [],
+  // creatorTags: [
+  //   {
+  //     name: "",
+  //     createdAt: null,
+  //     collections_slug: [],
+  //     count: 0,
+  //   },
+  // ],
+  // collectionTags: [
+  //   {
+  //     name: "",
+  //     createdAt: null,
+  //     collections_slug: [],
+  //     count: 0,
+  //   },
+  // ],
+  tags: [
     {
-      record_id: "",
-      name: "",
-      slug: "",
-      creator_id: "",
-      type: "",
-      createdAt: null,
-      updatedAt: null,
-      category: "",
-      verified: false,
-      tags: [],
-      twitter_followers: null,
-      discord_members: null,
-    },
-  ],
-  OSCollections: [],
-  creatorTags: [
-    {
       name: "",
       createdAt: null,
-      collections_slug: [],
+      creators: [],
+      collections: [],
+      creators_count: 0,
+      collections_count: 0,
       count: 0,
     },
   ],
-  collectionTags: [
-    {
-      name: "",
-      createdAt: null,
-      collections_slug: [],
-      count: 0,
-    },
-  ],
-  socials: [
-    {
-      creator_username: "",
-      collection_slug: "",
-      twitter_followers: null,
-      discord_members: null,
-      record_id: "",
-    },
-  ],
-  setSocials: () => {},
+  // socials: [
+  //   {
+  //     creator_username: "",
+  //     collection_slug: "",
+  //     twitter_followers: null,
+  //     discord_members: null,
+  //     record_id: "",
+  //   },
+  // ],
+  // setSocials: () => {},
 });
 
 /*

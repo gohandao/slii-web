@@ -46,12 +46,21 @@ import { TabIndex } from "@/components/TabIndex";
 import { Like } from "@/types/like";
 import { Upvote } from "@/types/upvote";
 import { getUserId } from "@/utilities/getUserId";
+import { getNFTs } from "@/utilities/getNFTs";
 
 const UserPage: NextPage = (props: any) => {
+  getNFTs(["test"]);
   const router = useRouter();
   const { username, order, sort, term, page, type, search, tab } = router.query;
   const currentPage = page ? Number(page) : 1;
   const limit = 10;
+  // const { user, profile, avatar, upvotes } = useContext(AuthContext);
+  const { creators, collections } = useContext(BaseContext);
+
+  // useEffect(() => {
+  //   console.log(" yyyyyyyyy creators");
+  //   console.log(creators);
+  // }, [creators]);
 
   const [userAvatar, setUserAvatar] = useState<Blob>();
   const [userProfile, setUserProfile] = useState<Profile>();
@@ -66,72 +75,15 @@ const UserPage: NextPage = (props: any) => {
     avatar_blob && setUserAvatar(avatar_blob);
   };
   userProfile && !userAvatar && getAvatarBlob;
-  useEffect(() => {
-    !avatar && getAvatarBlob();
-  }, [userProfile]);
+
+  !userAvatar && getAvatarBlob();
+
+  // useEffect(() => {
+  //   !avatar && getAvatarBlob();
+  // }, [userProfile]);
 
   const [userUpvotes, setUserUpvotes] = useState<Upvote[] | undefined>([]);
   // const [userId, setUserId] = useState<string>();
-
-  const getUserUpvotes = async (username: string) => {
-    const userId =
-      username && ((await getUserId(username as string)) as string);
-    let new_upvotes;
-    try {
-      const { data, error, status } = await supabase
-        .from("upvotes")
-        .select("*, profiles(*)", {
-          count: "exact",
-          head: false,
-        })
-        .eq("user_id", `${userId}`);
-      if (error && status !== 406) {
-        throw error;
-      }
-      new_upvotes = data as Upvote[];
-      console.log("new_upvotes");
-      console.log(new_upvotes);
-    } catch (error: any) {
-      alert(error.message);
-    } finally {
-      //setLoading(false)
-    }
-    return new_upvotes;
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const new_userUpvotes = await getUserUpvotes(username as string);
-      console.log("new_userUpvotes");
-      console.log(new_userUpvotes);
-
-      if (new_userUpvotes) {
-        setUserUpvotes(new_userUpvotes);
-      }
-    };
-    if (username) {
-      fetchData();
-    }
-  }, [username]);
-
-  const { user, profile, avatar, upvotes } = useContext(AuthContext);
-
-  const creator_upvotes =
-    userUpvotes &&
-    userUpvotes.filter(
-      (upvote) => upvote.creator_id && upvote.creator_id.length > 0
-    );
-  const collection_upvotes =
-    userUpvotes &&
-    userUpvotes.filter(
-      (upvote) => upvote.collection_slug && upvote.collection_slug.length > 0
-    );
-  console.log("upvotesupvotes");
-  console.log(upvotes);
-  console.log(creator_upvotes);
-  console.log(collection_upvotes);
-
-  const { creators, collections, OSCollections } = useContext(BaseContext);
 
   const [sortedCreators, setSortedCreators] = useState<Creator[]>([]);
   const [sortedCollections, setSortedCollections] = useState<Collection[]>([]);
@@ -151,21 +103,6 @@ const UserPage: NextPage = (props: any) => {
     }
   }, [userProfile]);
 
-  // const { setBreadcrumbList } = useContext(UtilitiesContext);
-  // const breadcrumbList = userProfile && [
-  //   {
-  //     name: "Home",
-  //     path: "/",
-  //   },
-  //   {
-  //     name: userProfile.username,
-  //     path: `/${userProfile.username}`,
-  //   },
-  // ];
-  // useEffect(() => {
-  //   breadcrumbList && setBreadcrumbList(breadcrumbList);
-  // }, []);
-
   const getUserProfile = async (username: string) => {
     let new_userProfile;
     try {
@@ -184,6 +121,7 @@ const UserPage: NextPage = (props: any) => {
         throw error;
       }
       new_userProfile = data;
+      setUserProfile(new_userProfile);
     } catch (error: any) {
       alert(error.message);
     } finally {
@@ -193,20 +131,69 @@ const UserPage: NextPage = (props: any) => {
   };
   username && !userProfile && getUserProfile(username as string);
 
-  useEffect(() => {
-    console.log("start");
+  const getUserUpvotes = async (username: string) => {
+    const userId =
+      username && ((await getUserId(username as string)) as string);
+    let new_upvotes;
+    try {
+      const { data, error, status } = await supabase
+        .from("upvotes")
+        .select("*, profiles(*)", {
+          count: "exact",
+          head: false,
+        })
+        .eq("user_id", `${userId}`);
+      if (error && status !== 406) {
+        throw error;
+      }
+      new_upvotes = data as Upvote[];
+      setUserUpvotes(new_upvotes);
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      //setLoading(false)
+    }
+    return new_upvotes;
+  };
 
+  useEffect(() => {
     const fetchData = async () => {
-      const data = await getUserProfile(username as string);
-      setUserProfile(data);
+      const new_userUpvotes = await getUserUpvotes(username as string);
+      if (new_userUpvotes) {
+        setUserUpvotes(new_userUpvotes);
+      }
+      console.log("new_userUpvotes");
+      console.log(new_userUpvotes);
     };
-    if (username && !userProfile) {
+    if (username) {
       fetchData();
     }
   }, [username]);
+  username && !userUpvotes && getUserUpvotes(username as string);
 
-  console.log("userprofileeee");
-  console.log(userProfile);
+  const creator_upvotes =
+    userUpvotes &&
+    userUpvotes.filter(
+      (upvote) => upvote.creator_id && upvote.creator_id.length > 0
+    );
+
+  const collection_upvotes =
+    userUpvotes &&
+    userUpvotes.filter(
+      (upvote) => upvote.collection_slug && upvote.collection_slug.length > 0
+    );
+
+  // useEffect(() => {
+  //   console.log("start");
+
+  //   const fetchData = async () => {
+  //     const data = await getUserProfile(username as string);
+  //     setUserProfile(data);
+  //   };
+  //   if (username && !userProfile) {
+  //     fetchData();
+  //   }
+  // }, [username]);
 
   // 1.filtered creators
   const uppperKeyword = typeof search == "string" && search.toUpperCase();
@@ -248,7 +235,7 @@ const UserPage: NextPage = (props: any) => {
     page: currentPage,
     order: order as "desc" | "asc" | undefined,
     sort: sort as string | undefined,
-    term: term as "24h" | "7d" | "30d" | "all" | undefined,
+    // term: term as "24h" | "7d" | "30d" | "all" | undefined,
     //category: collectionsSort,
     limit: limit,
   };
@@ -259,7 +246,7 @@ const UserPage: NextPage = (props: any) => {
   // );
   // console.log(notSameAges);
 
-  const filteredCollections01 = OSCollections.filter(
+  const filteredCollections01 = collections.filter(
     (collection) =>
       collection_upvotes &&
       collection_upvotes.some(
@@ -317,15 +304,21 @@ const UserPage: NextPage = (props: any) => {
     //category: collectionsSort,
     limit: limit,
   };
+
+  const default_creators =
+    sortedCreators.length == 0 ? sortList(creators_args) : sortedCreators;
+
+  const default_collections =
+    sortedCollections.length == 0
+      ? sortList(collections_args)
+      : sortedCollections;
+
   useEffect(() => {
-    if (tab != "collection") {
-      const data = sortList(creators_args);
-      setSortedCreators((sortedCreators) => data);
-    } else {
-      const data = sortList(collections_args);
-      setSortedCollections((sortedCollections) => data);
-    }
-  }, [OSCollections, creators, order, sort, term, page, type, search, tab]);
+    const data_creators = sortList(creators_args);
+    setSortedCreators((sortedCreators) => data_creators);
+    const data_collections = sortList(collections_args);
+    setSortedCollections((sortedCollections) => data_collections);
+  }, [order, sort, term, page, type, search]);
 
   //props
   const title = userProfile && (
@@ -415,11 +408,18 @@ const UserPage: NextPage = (props: any) => {
                   </div>
                 </div>
                 <div className="mb-10">
-                  {sortedCreators && sortedCreators.length > 0 ? (
-                    <CreatorList creators={sortedCreators} />
+                  {default_creators && default_creators.length > 0 ? (
+                    <CreatorList creators={default_creators} />
                   ) : (
                     <p className="text-gray-100">Not found.</p>
                   )}
+                </div>
+                <div className="flex justify-center">
+                  <Pagination
+                    currentPage={currentPage}
+                    length={default_creators.length}
+                    limit={limit}
+                  />
                 </div>
               </div>
             )}
@@ -434,21 +434,21 @@ const UserPage: NextPage = (props: any) => {
                   </div>
                 </div>
                 <div className="mb-10">
-                  {sortedCollections && sortedCollections.length > 0 ? (
-                    <CollectionList collections={sortedCollections} />
+                  {default_collections && default_collections.length > 0 ? (
+                    <CollectionList collections={default_collections} />
                   ) : (
                     <p className="text-gray-100">Not found.</p>
                   )}
                 </div>
+                <div className="flex justify-center">
+                  <Pagination
+                    currentPage={currentPage}
+                    length={default_collections.length}
+                    limit={limit}
+                  />
+                </div>
               </div>
             )}
-            <div className="flex justify-center">
-              <Pagination
-                currentPage={currentPage}
-                length={creators.length}
-                limit={limit}
-              />
-            </div>
           </section>
         </div>
       </BaseLayout>
@@ -497,9 +497,10 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   /*const creator = creators.filter(
     (creator: any) => creator.fields.username === username
   );*/
-  const description = data.description
-    ? data.description
-    : `This is ${username}'s profile page.`;
+  const description =
+    data && data.description
+      ? data.description
+      : `This is ${username}'s profile page.`;
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {

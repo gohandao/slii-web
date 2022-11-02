@@ -5,4 +5,5 @@ export type Params = {
   page?: number;
   type?: string;
   search?: string;
+  tab?: string;
 };

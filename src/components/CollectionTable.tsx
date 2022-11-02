@@ -35,7 +35,7 @@ type Props = {
   limit?: number;
 };
 export const CollectionTable = ({ collections, limit }: Props) => {
-  const { creators, socials, OSCollections } = useContext(BaseContext);
+  const { creators, tags } = useContext(BaseContext);
   const router = useRouter();
 
   const { order, sort, term, page, type, search } = router.query;
@@ -62,7 +62,7 @@ export const CollectionTable = ({ collections, limit }: Props) => {
   useEffect(() => {
     const data = sortList(args);
     setSortedCollections((sortedCollections) => data);
-  }, [OSCollections, order, sort, term, page, type, search]);
+  }, [collections, order, sort, term, page, type, search]);
 
   return (
     <div className="flex flex-col">

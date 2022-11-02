@@ -64,8 +64,7 @@ const KeywordPage: NextPage = () => {
     breadcrumbList && setBreadcrumbList(breadcrumbList);
   }, []);
 
-  const { creators, collections, OSCollections, creatorTags, collectionTags } =
-    useContext(BaseContext);
+  const { creators, collections, tags } = useContext(BaseContext);
   // const collections = useContext(CollectionsContext);
 
   // const CreatorTags = useContext(CreatorTagsContext);
@@ -94,7 +93,7 @@ const KeywordPage: NextPage = () => {
   //重複削除
   const filteredCreators = Array.from(new Set(origin_filteredCreators));
 
-  const filteredCollections01 = OSCollections.filter(
+  const filteredCollections01 = collections.filter(
     (item) =>
       typeof keyword == "string" &&
       //@ts-ignore

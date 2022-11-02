@@ -9,7 +9,7 @@ import { IoSearchCircleSharp } from "react-icons/io5";
 
 export const Searchbox = () => {
   const router = useRouter();
-  const { order, sort, term, page, type, search } = router.query;
+  const { order, sort, term, page, type, search, tab } = router.query;
 
   const { keyword, setKeyword } = useContext(UtilitiesContext);
 
@@ -23,6 +23,7 @@ export const Searchbox = () => {
       order: order && (order as string),
       term: term && (term as string),
       search: keyword && (keyword as string),
+      tab: tab && (tab as string),
     });
   }, [keyword]);
 

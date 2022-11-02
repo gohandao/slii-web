@@ -2,7 +2,7 @@ import { BreadcrumbList } from "@/types/breadcrumbList";
 import { IconType } from "react-icons";
 
 export type Utilities = {
-  creatorSocial: boolean;
+  // creatorSocial: boolean;
   keyword?: string;
   setKeyword: React.Dispatch<React.SetStateAction<string | undefined>>;
   headerIcon: {

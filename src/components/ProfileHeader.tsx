@@ -38,7 +38,9 @@ type Props = {
   tags?: any[];
   stats?: { field: string; value: string }[];
   twitter_id?: string;
+  twitter_followers?: number | null;
   discord_url?: string;
+  discord_members?: number | null;
   instagram_id?: string;
   upvotes_count?: number;
 };
@@ -54,17 +56,19 @@ export const ProfileHeader = ({
   tags,
   stats,
   twitter_id,
+  twitter_followers,
   discord_url,
+  discord_members,
   upvotes_count,
 }: Props) => {
   const router = useRouter();
-  const { socials, setSocials } = useContext(BaseContext);
+  // const { socials, setSocials } = useContext(BaseContext);
 
-  const [social, setSocial] = useState<Social>();
+  // const [social, setSocial] = useState<Social>();
 
-  const [twitterFollowers, setTwitterFollowers] = useState<number>();
-  const [discordMembers, setDiscordMembers] = useState<number>();
-  const [checkSocial, setCheckSocial] = useState<boolean>(false);
+  // const [twitterFollowers, setTwitterFollowers] = useState<number>();
+  // const [discordMembers, setDiscordMembers] = useState<number>();
+  // const [checkSocial, setCheckSocial] = useState<boolean>(false);
   const [requestDropdown, setRequestDropdown] = useState<boolean>(false);
   const [shareDropdown, setShareDropdown] = useState<boolean>(false);
 
@@ -107,59 +111,59 @@ export const ProfileHeader = ({
   const [showDescription, setShowDescription] = useState<boolean>(false);
 
   //discord_id
-  const discord_id =
-    discord_url && discord_url.substring(discord_url.lastIndexOf("/") + 1);
+  // const discord_id =
+  //   discord_url && discord_url.substring(discord_url.lastIndexOf("/") + 1);
 
-  useEffect(() => {
-    if (socials && page) {
-      //set collection
-      let socials_filter = [] as any[];
-      if (page == "creator") {
-        socials_filter = socials.filter(
-          (social) => id === social.creator_username
-        );
-      }
-      if (page == "collection") {
-        socials_filter = socials.filter(
-          (social) => id === social.collection_slug
-        );
-      }
-      socials_filter.length > 0 && setSocial(socials_filter[0]);
-      if (socials_filter.length == 0) {
-        setSocial({
-          collection_slug: "",
-          creator_username: "",
-          twitter_followers: null,
-          discord_members: null,
-          record_id: null,
-        });
-      }
-    }
-  }, [socials]);
+  // useEffect(() => {
+  //   if (socials && page) {
+  //     //set collection
+  //     let socials_filter = [] as any[];
+  //     if (page == "creator") {
+  //       socials_filter = socials.filter(
+  //         (social) => id === social.creator_username
+  //       );
+  //     }
+  //     if (page == "collection") {
+  //       socials_filter = socials.filter(
+  //         (social) => id === social.collection_slug
+  //       );
+  //     }
+  //     socials_filter.length > 0 && setSocial(socials_filter[0]);
+  //     if (socials_filter.length == 0) {
+  //       setSocial({
+  //         collection_slug: "",
+  //         creator_username: "",
+  //         twitter_followers: null,
+  //         discord_members: null,
+  //         record_id: null,
+  //       });
+  //     }
+  //   }
+  // }, [socials]);
 
   // update social
-  const getSocialCounts = async () => {
-    const data =
-      social &&
-      (await updateSocial({
-        record_id: social.record_id,
-        creator_username: page == "creator" ? "id" : undefined,
-        collection_slug: page == "collection" ? "id" : undefined,
-        twitter_id: twitter_id,
-        twitter_followers: social.twitter_followers,
-        discord_id: discord_id,
-        discord_members: social.discord_members,
-        socials: socials,
-        setSocials: setSocials,
-      }));
-    setTwitterFollowers(data && data.twitter_followers);
-    setDiscordMembers(data && data.discord_members);
-    setCheckSocial(true);
-  };
-  !checkSocial && social && getSocialCounts();
+  // const getSocialCounts = async () => {
+  //   const data =
+  //     social &&
+  //     (await updateSocial({
+  //       record_id: social.record_id,
+  //       creator_username: page == "creator" ? "id" : undefined,
+  //       collection_slug: page == "collection" ? "id" : undefined,
+  //       twitter_id: twitter_id,
+  //       twitter_followers: social.twitter_followers,
+  //       discord_id: discord_id,
+  //       discord_members: social.discord_members,
+  //       socials: socials,
+  //       setSocials: setSocials,
+  //     }));
+  //   setTwitterFollowers(data && data.twitter_followers);
+  //   setDiscordMembers(data && data.discord_members);
+  //   setCheckSocial(true);
+  // };
+  // !checkSocial && social && getSocialCounts();
   return (
     <section>
-      <div className="flex relative w-full h-40 md:h-60 overflow-hidden -mt-[70px] border-t-[10px] border-x-[10px] border-transparent ">
+      <div className="flex relative w-full h-40 md:h-60 overflow-hidden -mt-[68px] border-t-[10px] border-x-[10px] border-transparent ">
         <div className="w-full h-full bg-gray-800 rounded-lg overflow-hidden opacity-50">
           <div className="opacity-40">
             {background_url && (
@@ -277,20 +281,20 @@ export const ProfileHeader = ({
               stats.map(() => (
                 <>
                   <StatsBox>
-                    {twitterFollowers && (
+                    {twitter_followers && (
                       <Stats
                         field="Followers"
                         value={
                           <div className="flex gap-2 items-center w-full justify-end">
                             <FaTwitter className="text-sm opacity-60" />
-                            {twitterFollowers}
+                            {twitter_followers}
                           </div>
                         }
                       />
                     )}
-                    <Stats field="Collections" value={twitterFollowers} />
-                    <Stats field="Created" value={twitterFollowers} />
-                    <Stats field="Collected" value={twitterFollowers} />
+                    <Stats field="Collections" value={twitter_followers} />
+                    <Stats field="Created" value={twitter_followers} />
+                    <Stats field="Collected" value={twitter_followers} />
                     <Stats field="Views" value="100" />
                     {tags && (
                       <Stats

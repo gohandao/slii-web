@@ -19,7 +19,11 @@ export const VoteButton = ({
   const { user, upvotes, setUpvotes, bookmarks, setBookmarks } =
     useContext(AuthContext);
   const [postUpvotes, setPostUpvotes] = useState<Upvote[]>([]);
-  const [currentCount, setCurrenTCount] = useState<number>(count);
+  const [currentCount, setCurrentCount] = useState<number>(count);
+  useEffect(() => {
+    setCurrentCount(count);
+  }, [count]);
+
   // let currentCount = count;
 
   let baseUrl = "" as string;
@@ -54,7 +58,7 @@ export const VoteButton = ({
         //@ts-ignore
         setUpvotes([...upvotes, ...data]);
         setUpvoted(true);
-        setCurrenTCount(currentCount + 1);
+        setCurrentCount(currentCount + 1);
         // currentCount = currentCount + 1;
       }
     } else {
@@ -88,7 +92,7 @@ export const VoteButton = ({
         setUpvotes(removedUpvotes);
         setUpvoted(false);
       }
-      setCurrenTCount(currentCount - 1);
+      setCurrentCount(currentCount - 1);
       // currentCount = currentCount - 1;
     }
   };

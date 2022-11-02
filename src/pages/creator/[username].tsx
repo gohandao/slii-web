@@ -42,7 +42,7 @@ const CreatorIndex: NextPage = (props: any) => {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { creators, OSCollections } = useContext(BaseContext);
+  const { creators, collections } = useContext(BaseContext);
   // const collections = useContext(CollectionsContext);
   const { setHeaderIcon } = useContext(UtilitiesContext);
   useEffect(() => {
@@ -75,11 +75,11 @@ const CreatorIndex: NextPage = (props: any) => {
   if (
     !creatorCollections &&
     username &&
-    OSCollections &&
-    OSCollections.length > 0
+    collections &&
+    collections.length > 0
   ) {
     //set collection
-    const collection_filter = OSCollections.filter(
+    const collection_filter = collections.filter(
       (collection) => collection.creator_id === username
     );
     collection_filter.length > 0 && setCreatorCollections(collection_filter);
@@ -94,14 +94,14 @@ const CreatorIndex: NextPage = (props: any) => {
         setCreator(creator_filter[0]);
       }
     }
-    if (username && OSCollections && OSCollections.length > 0) {
+    if (username && collections && collections.length > 0) {
       //set collection
-      const collection_filter = OSCollections.filter(
+      const collection_filter = collections.filter(
         (collection) => collection.creator_id === username
       );
       setCreatorCollections(collection_filter);
     }
-  }, [username, OSCollections]);
+  }, [username, collections]);
 
   //props
   const title = creator && (
@@ -119,28 +119,28 @@ const CreatorIndex: NextPage = (props: any) => {
     </>
   );
 
-  let avatar_url = "" as string;
-  if (creator && creator.avatar) {
-    avatar_url =
-      creator.avatar.length > 0
-        ? //@ts-ignore
-          creator.avatar[0].thumbnails.large.url
-        : //@ts-ignore
-          creator.avatar[0].url;
-  }
+  // let avatar_url = "" as string;
+  // if (creator && creator.avatar) {
+  //   avatar_url =
+  //     creator.avatar.length > 0
+  //       ? //@ts-ignore
+  //         creator.avatar[0].thumbnails.large.url
+  //       : //@ts-ignore
+  //         creator.avatar[0].url;
+  // }
 
-  const getBackground = () => {
-    let data;
-    if (creator) {
-      creator.avatar && creator.avatar.length > 0
-        ? //@ts-ignore
-          (data = creator.avatar[0].thumbnails.large.url)
-        : //@ts-ignore
-          (data = creator.avatar[0].url);
-    }
-    return data;
-  };
-  const background_url = getBackground() as string;
+  // const getBackground = () => {
+  //   let data;
+  //   if (creator) {
+  //     creator.avatar && creator.avatar.length > 0
+  //       ? //@ts-ignore
+  //         (data = creator.avatar[0].thumbnails.large.url)
+  //       : //@ts-ignore
+  //         (data = creator.avatar[0].url);
+  //   }
+  //   return data;
+  // };
+  // const background_url = getBackground() as string;
 
   const links = {
     address: creator?.address,
@@ -187,13 +187,14 @@ const CreatorIndex: NextPage = (props: any) => {
               id={creator.username}
               title={title}
               sub_title={sub_title}
-              avatar_url={avatar_url}
-              background_url={background_url}
+              avatar_url={creator.avatar}
+              background_url={creator.background}
               description={creator.description}
               links={links}
               tags={creator.tags}
               stats={stats}
               twitter_id={creator.twitter_id}
+              twitter_followers={creator.twitter_followers}
               discord_url={creator.discord_url}
               upvotes_count={creator.upvotes_count}
             />

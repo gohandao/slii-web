@@ -25,7 +25,7 @@ type sortInitProps = {
 };*/
 
 type sortProps = {
-  page: number;
+  page?: number;
   property: "creators" | "collections";
   list: any[];
   order?: "desc" | "asc";

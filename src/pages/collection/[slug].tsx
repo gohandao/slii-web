@@ -41,7 +41,7 @@ const CollectionIndex: NextPage = (props: any) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [collection, setCollection] = useState<any>();
   const [airtableCollection, setAirtableCollection] = useState<Collection>();
-  const { creators, collections, OSCollections } = useContext(BaseContext);
+  const { creators, collections } = useContext(BaseContext);
 
   const [existence, setExistence] = useState<boolean>(false);
   const [creator, setCreator] = useState<Creator>();
@@ -101,9 +101,9 @@ const CollectionIndex: NextPage = (props: any) => {
       setCreator(creator_filter[0]);
     }
   }
-  if (!collection && OSCollections && OSCollections.length > 0) {
+  if (!collection && collections && collections.length > 0) {
     //set collection
-    const collection_filter = OSCollections.filter(
+    const collection_filter = collections.filter(
       (collection) => collection.slug === slug
     );
     collection_filter.length > 0 && setCollection(collection_filter[0]);
@@ -118,14 +118,14 @@ const CollectionIndex: NextPage = (props: any) => {
         setCreator(creator_filter[0]);
       }
     }
-    if (!collection && OSCollections && OSCollections.length > 0) {
+    if (!collection && collections && collections.length > 0) {
       //set collection
-      const collection_filter = OSCollections.filter(
+      const collection_filter = collections.filter(
         (collection) => collection.slug === slug
       );
       collection_filter.length > 0 && setCollection(collection_filter[0]);
     }
-  }, [username, OSCollections, collection]);
+  }, [username, collections, collection]);
 
   const updateCollectionAssets = (assets: any) => {
     setCollectionAssets(assets);

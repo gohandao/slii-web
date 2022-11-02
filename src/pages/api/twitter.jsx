@@ -55,8 +55,6 @@ const getTwitterFollowers = async (req, res) => {
       console.log("error");
       console.log(error);
     });
-  console.log("twitter data");
-  console.log(response.data);
   res.json(JSON.stringify(response.data));
 };
 export default getTwitterFollowers;

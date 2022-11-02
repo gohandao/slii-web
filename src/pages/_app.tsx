@@ -31,6 +31,10 @@ import { Tag } from "@/types/tag";
 import { Utilities } from "@/types/utilities";
 import { Footer } from "@/components/Footer";
 import { BreadcrumbList } from "@/types/breadcrumbList";
+import creators from "@/json/creators.json";
+
+import collections from "@/json/collections.json";
+import tags from "@/json/tags.json";
 import { Social } from "@/types/social";
 import { stringify } from "querystring";
 
@@ -43,8 +47,9 @@ import { IconType } from "react-icons";
 const shortid = require("shortid");
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const test = creators as Creator[];
   const [user, setUser] = useState<any>();
-  const [creatorSocial, setCreatorSocial] = useState<boolean>(false);
+  // const [creatorSocial, setCreatorSocial] = useState<boolean>(false);
   const [profile, setProfile] = useState<any>();
   const [likes, setLikes] = useState<Like[]>([]);
   // const [allList, setAllList] = useState<any[]>([]);
@@ -83,17 +88,13 @@ function MyApp({ Component, pageProps }: AppProps) {
   })*/
 
   const [breadcrumbList, setBreadcrumbList] = useState<BreadcrumbList>();
-  const [creators, setCreators] = useState<Creator[]>([]);
-  const [collections, setCollections] = useState<Collection[]>([]);
-  const [OSCollections, setOSCollections] = useState<Collection[]>([]);
-  const [creatorTags, setCreatorTags] = useState<Tag[]>([]);
-  const [collectionTags, setCollectionTags] = useState<Tag[]>([]);
-  const [socials, setSocials] = useState<Social[]>([]);
-  const [sortAction, setSortAction] = useState<boolean>(false);
-  const [creatorType, setCreatorType] = useState<string>("all");
-  const [creatorsSort, setCreatorsSort] = useState<string>();
-  const [creatorCategory, setCreatorCategory] = useState<string>("All");
-  const [collectionCategory, setCollectionCategory] = useState<string>("All");
+  // const [creators, setCreators] = useState<Creator[]>();
+  // const [collections, setCollections] = useState<any[]>([]);
+  // const [OSCollections, setOSCollections] = useState<Collection[]>([]);
+  // const [tags, setTags] = useState<Tag[]>([]);
+  // const [creatorTags, setCreatorTags] = useState<Tag[]>([]);
+  // const [collectionTags, setCollectionTags] = useState<Tag[]>([]);
+  // const [socials, setSocials] = useState<Social[]>([]);
 
   const router = useRouter();
   //const { page } = router.query
@@ -103,12 +104,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const [page, setPage] = useState<number | undefined>(1);
   const limit = 10;
-  const newOSCollections = useRef<any[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File>();
-
-  const allList = [...creators, ...OSCollections];
 
   let avatar_url;
   let avatar_blob;
@@ -127,35 +125,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   // user && !likes getLikes();
   // user && !upvotes getUpvotes();
   useEffect(() => {
-    getLikes();
     getBookmarks();
     getUpvotes();
   }, [user]);
 
-  const getLikes = async () => {
-    try {
-      if (user) {
-        const { data, error, status } = await supabase
-          .from("likes")
-          .select("*, profiles(*)", {
-            count: "exact",
-            head: false,
-          })
-          .eq("user_id", `${user.id}`);
-        if (error && status !== 406) {
-          throw error;
-        }
-        const new_likes = data as Like[];
-        console.log("new_likes");
-        console.log(new_likes);
-        setLikes(new_likes);
-      }
-    } catch (error: any) {
-      alert(error.message);
-    } finally {
-      //setLoading(false)
-    }
-  };
   const getBookmarks = async () => {
     try {
       if (user) {
@@ -220,7 +193,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       throw error;
     }
   };
-
   const getProfile = async () => {
     try {
       setLoading(true);
@@ -248,344 +220,25 @@ function MyApp({ Component, pageProps }: AppProps) {
       setLoading(false);
     }
   };
-  const getCreators = () => {
-    let new_records: Creator[] = [...creators];
-    base("creators")
-      .select({
-        // Selecting the first 3 records in All:
-        maxRecords: 100,
-        view: "All",
-      })
-      .eachPage(
-        //@ts-ignore
-        function page(records: any[], fetchNextPage: () => void) {
-          records.forEach(function (record) {
-            const fields = record.fields;
-            new_records = [
-              ...new_records,
-              {
-                username: fields.username,
-                description: fields.description,
-                avatar: fields.avatar,
-                background: fields.background,
-                address: fields.address,
-                website_url: fields.website_url,
-                twitter_id: fields.twitter_id,
-                instagram_id: fields.instagram_id,
-                discord_url: fields.discord_url,
-                type: fields.type,
-                verified: fields.verified,
-                updatedAt: fields.updatedAt,
-                collections: fields.collections,
-                category: fields.category,
-                tags: fields.tags,
-                //掲載された日
-                listed_at: fields.listedAt,
-              } as Creator,
-            ];
-            //console.log("creators", new_records);
-            //console.log("Retrieved", record.fields);
-          });
-          setCreators(new_records);
-          try {
-            fetchNextPage();
-          } catch (error) {
-            console.log(error);
-            return;
-          }
-          return new_records as Creator[];
-        },
-        function done(err: any) {
-          if (err) {
-            console.error(err);
-            return;
-          }
-        }
-      );
-  };
-  const getCollections = () => {
-    let new_records: Collection[] = [...collections];
-    base("collections")
-      .select({
-        maxRecords: 100,
-        view: "All",
-      })
-      .eachPage(
-        //@ts-ignore
-        function page(records: any[], fetchNextPage: () => void) {
-          records.forEach(function (record) {
-            try {
-              const fields = record.fields;
-              new_records = [
-                ...new_records,
-                {
-                  record_id: fields.record_id,
-                  name: fields.name,
-                  slug: fields.slug,
-                  creator_id: fields.creator_id[0],
-                  type: fields.type,
-                  listed_at: fields.listedAt,
-                  updatedAt: fields.updatedAt,
-                  category: fields.category,
-                  verified: fields.verified,
-                  tags: fields.tags,
-                } as Collection,
-              ];
-            } catch (error) {
-              console.log(error);
-              return;
-            }
-            //console.log("collections", new_records);
-            //console.log("Retrieved", record.fields);
-          });
-          setCollections(new_records);
-          try {
-            fetchNextPage();
-          } catch (error) {
-            console.log(error);
-            return;
-          }
-        },
-        function done(err: any) {
-          if (err) {
-            console.error(err);
-            return;
-          }
-        }
-      );
-  };
-  const getTags = (
-    baseName: string,
-    setState: React.Dispatch<React.SetStateAction<Tag[]>>
-  ) => {
-    let new_records = [...creatorTags];
-    base(baseName)
-      .select({
-        // Selecting the first 3 records in All:
-        maxRecords: 100,
-        view: "All",
-      })
-      .eachPage(
-        //@ts-ignore
-        function page(records: any[], fetchNextPage: () => void) {
-          records.forEach(function (record) {
-            const fields = record.fields;
-            new_records = [
-              ...new_records,
-              {
-                name: fields.name,
-                createdAt: fields.createdAt,
-                collections_slug: fields.collections_slug,
-                count: fields.count,
-              } as Tag,
-            ];
-            //console.log("creators", new_records);
-            //console.log("Retrieved", record.fields);
-          });
-          //sort
-          new_records = new_records.sort(function (a, b) {
-            if (a.count < b.count) return 1;
-            if (a.count > b.count) return -1;
-            return 0;
-          });
-          new_records = Array.from(new Set(new_records));
-
-          setState(new_records);
-          try {
-            fetchNextPage();
-          } catch (error) {
-            console.log(error);
-            return;
-          }
-        },
-        function done(err: any) {
-          if (err) {
-            console.error(err);
-            return;
-          }
-        }
-      );
-  };
-  const getSocials = () => {
-    let new_records = [...socials];
-    base("social")
-      .select({
-        // Selecting the first 3 records in All:
-        maxRecords: 1000,
-        view: "All",
-      })
-      .eachPage(
-        //@ts-ignore
-        function page(records: any[], fetchNextPage: () => void) {
-          records.forEach(function (record) {
-            const fields = record.fields;
-            new_records = [
-              ...new_records,
-              {
-                creator_username: fields.creator_username,
-                collection_slug: fields.collection_slug,
-                twitter_followers: fields.twitter_followers,
-                discord_members: fields.discord_members,
-                record_id: fields.record_id,
-              } as Social,
-            ];
-            //console.log("creators", new_records);
-            //console.log("Retrieved", record.fields);
-          });
-          new_records = Array.from(new Set(new_records));
-          setSocials(new_records);
-          try {
-            fetchNextPage();
-          } catch (error) {
-            console.log(error);
-            return;
-          }
-        },
-        function done(err: any) {
-          if (err) {
-            console.error(err);
-            return;
-          }
-        }
-      );
-  };
-  const getOSCollections = async (collections: Collection[]) => {
-    const options = { method: "GET" };
-    const getNewData = async () => {
-      if (OSCollections.length == 0 && socials.length > 0) {
-        let new_list: any = [];
-        await Promise.all(
-          collections.map(async (collection, index) => {
-            //1.insert social
-            const socials_filter = socials.filter(
-              (social) => social.collection_slug === collection.slug
-            );
-            const twitter_followers = socials_filter[0]
-              ? socials_filter[0].twitter_followers
-              : null;
-            const discord_members = socials_filter[0]
-              ? socials_filter[0].discord_members
-              : null;
-            //2.insert upvotes
-            let upvotes_count = 0;
-            const { data, error, status } = await supabase
-              .from("upvotes")
-              .select("id", {
-                count: "exact",
-                head: false,
-              })
-              .eq("collection_slug", collection.slug);
-            upvotes_count = data ? data.length : 0;
-            await fetch(
-              `https://api.opensea.io/api/v1/collection/${collection.slug}`,
-              options
-            )
-              .then((response) => response.json())
-              .then((response) => {
-                let data = response.collection;
-                data.record_id = collection.record_id;
-                data.tags = collection.tags;
-                data.type = collection.type;
-                data.creator_id = collection.creator_id;
-                data.category = collection.category;
-                data.listed_at = collection.listed_at;
-                data.upvotes_count = upvotes_count;
-                data.twitter_followers = twitter_followers;
-                data.discord_members = discord_members;
-                const new_data = data;
-                new_list = [...newOSCollections.current, new_data];
-                newOSCollections.current = Array.from(new Set(new_list));
-              })
-              .catch((err) => console.error(err));
-          })
-        );
-      }
-      //await getSocialCount();
-    };
-    await getNewData();
-    // console.log("OSnewList.current data");
-    // console.log(newList.current);
-    // console.log("OSnewList.current");
-    // console.log(collections);
-    const new_collections = Array.from(new Set(newOSCollections.current));
-    const result = newOSCollections.current.filter(
-      (element, index, self) =>
-        self.findIndex((e) => e.slug === element.slug) === index
-    );
-    setOSCollections(result);
-  };
-
-  // useEffect(() => {
-  //   console.log("OSCollectionsuuuuuu");
-  //   console.log(OSCollections);
-  // }, [OSCollections]);
-
-  const updateCreatorSocial = async () => {
-    console.log("gdjahgohdaiodghda");
-    let new_creators = [] as any[];
-    await Promise.all(
-      creators.map(async (creator, index) => {
-        let new_creator;
-        //1.add twitter followers
-        const socials_filter = socials.filter(
-          (social) => social.creator_username === creator.username
-        );
-        const twitter_followers = socials_filter[0]
-          ? socials_filter[0].twitter_followers
-          : null;
-        new_creator = creator;
-        new_creator.twitter_followers = twitter_followers
-          ? twitter_followers
-          : null;
-        //2.add upvotes
-        const { data, error, status } = await supabase
-          .from("upvotes")
-          .select("id", {
-            count: "exact",
-            head: false,
-          })
-          .eq("creator_id", creator.username);
-        new_creator.upvotes_count = data ? data.length : 0;
-        new_creators = [...new_creators, new_creator];
-      })
-    );
-    setCreators(new_creators);
-    console.log(new_creators);
-  };
 
   useEffect(() => {
     //getCreators();
     const data = supabase.auth.user();
     setUser(data);
     data && !profile && getProfile();
-    creators.length == 0 && getCreators();
-    collections.length == 0 && getCollections();
-    creatorTags.length == 0 && getTags("creator_tags", setCreatorTags);
-    collectionTags.length == 0 && getTags("collection_tags", setCollectionTags);
-    socials.length == 0 && getSocials();
+    // creators.length == 0 && getCreators();
+    // collections.length == 0 && getCollections();
+    // creatorTags.length == 0 && getTags("creator_tags", setCreatorTags);
+    // collectionTags.length == 0 && getTags("collection_tags", setCollectionTags);
   }, []);
 
-  useEffect(() => {
-    if (!creatorSocial) {
-      console.log("yyyy");
-
-      if (socials.length != 0 && creators.length != 0) {
-        updateCreatorSocial();
-        setCreatorSocial(true);
-        console.log("gggg");
-      }
-      console.log("uuu");
-    }
-    console.log("aaaaa");
-  }, [socials, creators]);
-
-  useEffect(() => {
-    if (OSCollections.length == 0 && collections && socials) {
-      (async () => {
-        await getOSCollections(collections);
-      })();
-    }
-  }, [collections, socials]);
+  // useEffect(() => {
+  //   if (OSCollections.length == 0 && collections && socials) {
+  //     (async () => {
+  //       await getOSCollections(collections);
+  //     })();
+  //   }
+  // }, [collections, socials]);
 
   const site_name = "NFT OTAKU";
   const title = "NFT OTAKU | Japanese NFT Creators / Collections Database";
@@ -641,7 +294,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       >
         <UtilitiesContext.Provider
           value={{
-            creatorSocial: creatorSocial,
             keyword: keyword,
             setKeyword: setKeyword,
             headerIcon: headerIcon,
@@ -654,14 +306,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         >
           <BaseContext.Provider
             value={{
-              allList,
               creators,
               collections,
-              OSCollections,
-              creatorTags,
-              collectionTags,
-              socials,
-              setSocials,
+              tags,
+              // socials,
+              // setSocials,
             }}
           >
             <div className="flex flex-col min-h-screen font-digital -font-outfit bg-stripe overflow-hidden">

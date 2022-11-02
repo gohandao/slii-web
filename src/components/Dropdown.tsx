@@ -160,7 +160,7 @@ export const Dropdown = ({ position, property }: Props) => {
         "owners",
         "items",
         "twitter",
-        "duscord",
+        "discord",
       ];
       icon = <BiFilterAlt className="text-gray-400" />;
       if (!sort) {

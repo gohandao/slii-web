@@ -10,8 +10,10 @@ export const setParams = ({
   page,
   type,
   search,
+  tab,
 }: Params) => {
   const query = {
+    tab: tab,
     type: type,
     sort: sort,
     term: term,

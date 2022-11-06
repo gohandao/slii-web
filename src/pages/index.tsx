@@ -45,6 +45,7 @@ import { OrderButton } from "@/components/OrderButton";
 import { Creator } from "@/types/creator";
 import { sortList } from "@/libs/sortList";
 import { TabIndex } from "@/components/TabIndex";
+import { getNFTs } from "@/utilities/getNFTs";
 
 const Home: NextPage = () => {
   const router = useRouter();

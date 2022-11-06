@@ -45,9 +45,40 @@ export const Header = () => {
   const [username, setUsername] = useState<string>("");
   const [dropdown, setDropdown] = useState<boolean>(false);
 
-  const currentPath = router.pathname;
+  function delQuery(url: string) {
+    return url.split("?")[0];
+  }
+  let currentPath = router.asPath;
+  currentPath = delQuery(currentPath);
+  let loginPath = "/login?prev=" + currentPath;
+  if (currentPath == "/") {
+    let loginPath = "/login";
+  }
+
+  const [homeClass, setHomeClass] = useState<string>("hidden");
+
+  const [statsClass, setStatsClass] = useState<string>("hidden");
+
+  const [tagsClass, setTagsClass] = useState<string>("hidden");
+
+  useEffect(() => {
+    if (
+      currentPath != "/" &&
+      currentPath != "/collections" &&
+      currentPath != "/login"
+    ) {
+      setHomeClass("");
+    }
+    if (currentPath != "/stats") {
+      setStatsClass("");
+    }
+    if (currentPath != "/tags") {
+      setTagsClass("");
+    }
+  }, [currentPath]);
+
   return (
-    <header className="relative py-3 z-10" x-data="{expanded: false}">
+    <header className="relative py-3 z-50" x-data="{expanded: false}">
       <div className="mx-auto px-5 md:px-8 flex justify-between">
         <div className="flex items-center gap-20 justify-between flex-1">
           <div className="flex flex-shrink-0 gap-8 items-center">
@@ -60,45 +91,43 @@ export const Header = () => {
             <Image src="/logo.svg" width={100} height={14} alt="" />
           </a>
           <div className="gap-10 hidden lg:flex pr-16 ">
-            {currentPath != "/" &&
-              currentPath != "/collections" &&
-              currentPath != "/login" && (
-                <Link href="/">
-                  <a className="text-sm font-bold text-gray-100 tracking-wider flex items-center">
-                    <span className="mr-2 text-xl -mt-[1px]">
-                      <BiHomeAlt />
-                    </span>
-                    Home
-                  </a>
-                </Link>
-              )}
-            {currentPath != "/stats" && (
-              <Link href="/stats">
-                <a className="text-sm font-bold text-gray-100 tracking-wider flex items-center">
-                  <span className="mr-2 text-xl -mt-[1px]">
-                    <TbDiamond />
-                  </span>
-                  Stats
-                </a>
-              </Link>
-            )}
-            {currentPath != "/tags" && (
-              <Link href="/tags">
-                <a className="text-sm font-bold text-gray-100 tracking-wider flex items-center">
-                  <span className="mr-2 text-xl -mt-[1px]">
-                    <BiPurchaseTagAlt />
-                  </span>
-                  Tags
-                </a>
-              </Link>
-            )}
+            <Link href="/">
+              <a
+                className={`text-sm font-bold text-gray-100 tracking-wider flex items-center ${homeClass}`}
+              >
+                <span className="mr-2 text-xl -mt-[1px]">
+                  <BiHomeAlt />
+                </span>
+                Home
+              </a>
+            </Link>
+            <Link href="/stats">
+              <a
+                className={`text-sm font-bold text-gray-100 tracking-wider flex items-center ${statsClass}`}
+              >
+                <span className="mr-2 text-xl -mt-[1px]">
+                  <TbDiamond />
+                </span>
+                Stats
+              </a>
+            </Link>
+            <Link href="/tags">
+              <a
+                className={`text-sm font-bold text-gray-100 tracking-wider flex items-center ${tagsClass}`}
+              >
+                <span className="mr-2 text-xl -mt-[1px]">
+                  <BiPurchaseTagAlt />
+                </span>
+                Tags
+              </a>
+            </Link>
           </div>
         </div>
         <div className="relative flex items-center gap-5">
           {/* <RiHeartsFill className="text-pink-500 text-xl" /> */}
           {/*<RiHeartsLine className="text-gray-500 text-xl" />*/}
           {!user ? (
-            <Link href="/login">
+            <Link href={loginPath}>
               <a className="bg-gray-800 text-gray-400 border border-gray-700 font-bold w-10 h-10 rounded-full flex justify-center items-center gap-3">
                 <RiLoginBoxLine />
               </a>
@@ -138,7 +167,7 @@ export const Header = () => {
             >
               {!user && (
                 <>
-                  <Link href="/login">
+                  <Link href={loginPath}>
                     <a className="block px-5 py-3 text-sm text-gray-400 border-b border-gray-700">
                       Login
                     </a>

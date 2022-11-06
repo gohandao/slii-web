@@ -10,6 +10,7 @@ const nextConfig = {
       "gachi-collection.vercel.app",
       "hxyufkirxytryojpqkne.supabase.co",
       "i.seadn.io",
+      "weev.media",
     ],
   },
   experimental: {

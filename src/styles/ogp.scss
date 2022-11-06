@@ -1,0 +1,49 @@
+@import url("https://use.typekit.net/xbj6ysr.css");
+
+/*.text-gradient {
+    background: linear-gradient(90deg, #4ac7fa 0%, #e649f5 100%);
+            background-clip: text;
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    //text-fill-color: transparent;
+}*/
+.font-digital {
+    // font-weight: 400;
+    font-style: normal;
+    font-weight: 700;
+    font-family: lores-12, sans-serif;
+}
+.ogp-text-gradient {
+    //background: linear-gradient(to right, #ee9ca7, #ffdde1, #2193b0, #6dd5ed);
+    // background: linear-gradient(90deg, #4ac7fa 0%, #e649f5 100%);
+    background: linear-gradient(90deg, #4ac7fa 0%, #e649f5 100%);
+            background-clip: text;
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+            text-fill-color: transparent;
+    // background-size: 300%;
+    -webkit-text-fill-color: transparent;
+}
+.image-fill {
+    display: block;
+    position: absolute;
+    width: 0;
+    min-width: 100%;
+    max-width: 100%;
+    height: 0;
+    min-height: 100%;
+    max-height: 100%;
+    margin: auto;
+    padding: 0;
+    border: none;
+    box-sizing: border-box;
+
+    inset: 0;
+    object-fit: cover;
+}
+.title {
+    color: red !important;
+    font-size: 30px;
+}

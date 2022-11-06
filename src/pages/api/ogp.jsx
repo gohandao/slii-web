@@ -1,6 +1,8 @@
 /* pages/api/ogp.js */
 import "@/styles/style.scss";
+import "@/styles/ogp.scss";
 import "@/styles/globals.css";
+import { OgpDefault } from "@/components/OgpDefault";
 import Head from "next/head";
 import Image from "next/image";
 
@@ -8,80 +10,54 @@ import ReactDOM from "react-dom/server";
 import * as playwright from "playwright-aws-lambda";
 
 const styles = `
-  @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap");
+  @import url("https://use.typekit.net/xbj6ysr.css");
   html, body {
     height: 100%;
     display: grid;
   }
-.text-gradient {
+  .font-digital {
+    // font-weight: 400;
+    font-style: normal;
+    font-weight: 700;
+    font-family: lores-12, sans-serif;
+}
+.ogp-text-gradient {
+    //background: linear-gradient(to right, #ee9ca7, #ffdde1, #2193b0, #6dd5ed);
+    // background: linear-gradient(90deg, #4ac7fa 0%, #e649f5 100%);
     background: linear-gradient(90deg, #4ac7fa 0%, #e649f5 100%);
             background-clip: text;
 
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
             text-fill-color: transparent;
+    // background-size: 300%;
+    -webkit-text-fill-color: transparent;
 }
   * {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
   }
-  .container {
-    font-family: 'Outfit', sans-serif;
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-  .background {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-  }
-  .background img {
-    width: 100%;
-    height: auto;
-  }
-  .text {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  .title {
-    font-size: 70px;
-    font-weight: bold;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-top: 40px;
-    line-height: 1.;
-  }
-  .subTitle {
-    font-size: 24px;
-    font-weight: light;
-    font-weight: 300;
-    color: #545454;
-    letter-spacing: 0.4em;
-    margin-top: 0;
-  }
+  // .container {
+  //   font-family: 'Outfit', sans-serif;
+  //   position: relative;
+  //   width: 100%;
+  //   height: 100%;
+  // }
 `;
 
 const Content = (props) => (
   <html>
     <head>
       <style>{styles}</style>
+      <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body>
       {/*<h1>{props.title}</h1>
       {props.subTitle && <p>{props.subTitle}</p>}
 */}
-      <div className="container relative w-[1200px] h-[600px] font-outfit">
-        <div className="background absolute left-0 top-0 w-full h-full">
+      <div className="container relative w-[1200px] h-[600px] font-digital">
+        {/* <div className="background absolute left-0 top-0 w-full h-full">
           <img src="https://gachi-collection.vercel.app/ogp-base.jpg" alt="" />
         </div>
         <div className="text absolute w-full h-full flex flex-col items-center justify-center">
@@ -93,7 +69,15 @@ const Content = (props) => (
               {props.subTitle}
             </p>
           )}
-        </div>
+        </div> */}
+        <OgpDefault
+          type={props.type}
+          title={props.title}
+          label={props.label}
+          avatar={props.avatar}
+          background={props.background}
+          verified={props.verified}
+        />
       </div>
     </body>
   </html>

@@ -2,26 +2,60 @@ import { supabase } from "@/libs/supabase";
 import React, { useEffect } from "react";
 // const ethers = require("ethers");
 import { ethers } from "ethers";
+const scrapeIt = require("scrape-it");
 
 const Test = () => {
-  const hhh = async () => {
-    const test = "6Wi6RC1Vz1sD9Ngsk72jQsxNKROmKKIlQVa28-I3ZwkfdqUB";
-    await fetch(
-      `https://svc.blockdaemon.com/nft/v1/ethereum/mainnet/collections?sort_by=name&order=desc`,
-      {
-        headers: { Authorization: `Bearer: ${test}` },
-      }
-    )
-      .then((response) => response.json())
-      .then((response) => {
-        console.log("JSON.parse(response)");
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log("error");
-        console.log(error);
-      });
-    console.log("owattanoka");
+  const hhh = async (collection_name: string) => {
+    const API_KEY = process.env.NEXT_PUBLIC_BLOCKDAEMON_API_KEY;
+    // const contracts = [];
+    const getCollection = async (collection_name: string) => {
+      const data = await fetch(
+        `https://svc.blockdaemon.com/nft/v1/ethereum/mainnet/collections/search?name=${collection_name}`,
+        {
+          headers: { Authorization: `Bearer ${API_KEY}` },
+        }
+      )
+        .then((response) => response.json())
+        .then((response) => {
+          return response;
+        })
+        .catch((error) => {
+          console.log("error");
+          console.log(error);
+        });
+      return data;
+    };
+    const getAssets = async (collection_id: string) => {
+      const data = await fetch(
+        `https://svc.blockdaemon.com/nft/v1/ethereum/mainnet/assets?collection_id=26ad2320-e483-5546-86e2-e750499b5b2d&sort_by=token_id`,
+        {
+          headers: { Authorization: `Bearer ${API_KEY}` },
+        }
+      )
+        .then((response) => response.json())
+        .then((response) => {
+          // console.log("JSON.parse(response)");
+          // console.log(response);
+          return response;
+        })
+        .catch((error) => {
+          console.log("error");
+          console.log(error);
+        });
+      return data;
+    };
+    // const collection_data = await getCollection(collection_name);
+    // const collection_assets = await getAssets(collection_data.data.id);
+    const collection_assets = await getAssets("test");
+    console.log("onigiri collection_assets");
+    console.log(collection_assets);
+
+    //sample contract address
+    //https://svc.blockdaemon.com/nft/v1/ethereum/mainnet/assets?contract_address=0x495f947276749ce646f68ac8c248420045cb7b5e&token_id=6809306188428173666073685742513789835067604049849918034403299221837115817985
+    //https://svc.blockdaemon.com/nft/v1/ethereum/mainnet/assets?contract_address=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
+    //https://svc.blockdaemon.com/nft/v1/ethereum/mainnet/collections/search?name=bored ape
+    //https://{ubiquity_nft_url}/{protocol}/{network}/collection/{id}
+    //https://svc.blockdaemon.com/nft/v1/ethereum/mainnet/assets?contract_address=0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D&wallet_address=0x46Fd6B647Dc8C82aD8f6cf0CC6b22ACad3f6e39d
 
     // (async () => {
     //   const provider = new ethers.providers.JsonRpcProvider(

@@ -163,7 +163,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
                     </div>
                     <div className="flex flex-col w-full flex-1  max-w-full min-w-[0px] gap-1">
                       <div className="flex items-center pt-1 relative justify-between max-w-full">
-                        <h3 className="text-sm items-center  font-bold ellipsis text-gray-100 ellipsis max-w-full min-w-[0] pr-3">
+                        <h3 className="text-sm items-center  font-bold ellipsis text-gray-100 max-w-full min-w-[0] pr-3">
                           {creator.username}
                           {creator.verified == true && (
                             <MdVerified className="-mt-[2px] text-gray-500 ml-2 inline-block" />

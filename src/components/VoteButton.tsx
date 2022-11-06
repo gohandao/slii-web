@@ -8,7 +8,7 @@ type Props = {
   id: string;
   property?: string;
   type: string;
-  count: number;
+  count?: number;
 };
 export const VoteButton = ({
   id,
@@ -19,7 +19,7 @@ export const VoteButton = ({
   const { user, upvotes, setUpvotes, bookmarks, setBookmarks } =
     useContext(AuthContext);
   const [postUpvotes, setPostUpvotes] = useState<Upvote[]>([]);
-  const [currentCount, setCurrentCount] = useState<number>(count);
+  const [currentCount, setCurrentCount] = useState<number | undefined>(count);
   useEffect(() => {
     setCurrentCount(count);
   }, [count]);
@@ -58,7 +58,8 @@ export const VoteButton = ({
         //@ts-ignore
         setUpvotes([...upvotes, ...data]);
         setUpvoted(true);
-        setCurrentCount(currentCount + 1);
+        let base_count = currentCount ? currentCount : 0;
+        setCurrentCount(base_count + 1);
         // currentCount = currentCount + 1;
       }
     } else {
@@ -92,7 +93,8 @@ export const VoteButton = ({
         setUpvotes(removedUpvotes);
         setUpvoted(false);
       }
-      setCurrentCount(currentCount - 1);
+      let base_count = currentCount ? currentCount : 0;
+      setCurrentCount(base_count - 1);
       // currentCount = currentCount - 1;
     }
   };

@@ -4,10 +4,14 @@ import { BaseLayout } from "@/components/BaseLayout";
 import Head from "next/head";
 import ReactCodeInput from "react-code-input";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import router from "next/router";
+import router, { useRouter } from "next/router";
 import { AuthContext } from "@/contexts/AuthContext";
+import { redirections } from "@/utilities/redirections";
 
 export default function Login() {
+  const router = useRouter();
+  const { prev } = router.query;
+
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(false);
@@ -51,15 +55,22 @@ export default function Login() {
       if (error) throw error;
       alert("Login success!");
     } catch (error) {
-      //alert(error.error_description || error.message)
+      // alert("Login failed!");
+      //@ts-ignore
+      alert(error.error_description || error.message);
     } finally {
       setChecking(false);
+      location.reload();
     }
   };
 
-  if (user) {
-    router.push("/account");
-  }
+  // if (user) {
+  //   if (prev && typeof prev == "string") {
+  //     router.push(prev);
+  //   } else {
+  //     router.push("/");
+  //   }
+  // }
 
   return (
     <>

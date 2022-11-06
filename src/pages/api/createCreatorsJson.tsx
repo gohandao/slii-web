@@ -7,7 +7,7 @@ import { getSocials } from "@/utilities/getSocials";
 import { sortList } from "@/libs/sortList";
 
 import { getImageUrl, supabase } from "@/libs/supabase";
-import { getOSUserAvatar } from "@/utilities/getOSUserAvatar";
+import { getOSUser } from "@/utilities/getOSUser";
 import { getOSUserBackground } from "@/utilities/getOSUserBackground";
 import { createJson } from "@/utilities/createJson";
 
@@ -38,7 +38,7 @@ const getCreators = async () => {
           new_records = [
             ...new_records,
             {
-              username: fields.username,
+              // username: fields.username,
               description: fields.description,
               // avatar: OSUserAvatar,
               // background: OSUserBackground,
@@ -75,9 +75,12 @@ const getCreators = async () => {
 const getCreatorOptions = async (creators: Creator[]) => {
   await Promise.all(
     creators.map(async (creator) => {
-      const OSUserAvatar = await getOSUserAvatar(creator.username);
+      const OSUser = await getOSUser(creator.address);
+      const avatar = OSUser.account.profile_img_url;
+      const username = OSUser.username;
       const OSUserBackground = await getOSUserBackground(creator.username);
-      creator.avatar = OSUserAvatar as string | undefined;
+      creator.username = username as string;
+      creator.avatar = avatar as string | undefined;
       creator.background = OSUserBackground as string | undefined;
     })
   );

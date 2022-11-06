@@ -26,10 +26,10 @@ export const HeaderIcon = () => {
     ref_domain = ref && ref.hostname;
     //@ts-ignore
 
-    console.log("uri_domain");
-    console.log(uri_domain);
-    console.log(ref_domain);
-    console.log(document.referrer);
+    // console.log("uri_domain");
+    // console.log(uri_domain);
+    // console.log(ref_domain);
+    // console.log(document.referrer);
   }
 
   type Props = {

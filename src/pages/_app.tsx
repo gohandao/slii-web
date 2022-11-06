@@ -1,4 +1,5 @@
 import "@/styles/style.scss";
+import "@/styles/ogp.scss";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -43,6 +44,8 @@ import { Upvote } from "@/types/upvote";
 import { Bookmark } from "@/types/bookmark";
 import { isBuffer } from "util";
 import { IconType } from "react-icons";
+import { Profile } from "@/types/profile";
+import { redirections } from "@/utilities/redirections";
 
 const shortid = require("shortid");
 
@@ -51,6 +54,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<any>();
   // const [creatorSocial, setCreatorSocial] = useState<boolean>(false);
   const [profile, setProfile] = useState<any>();
+  const [userProfile, setUserProfile] = useState<Profile>();
+
   const [likes, setLikes] = useState<Like[]>([]);
   // const [allList, setAllList] = useState<any[]>([]);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
@@ -59,6 +64,14 @@ function MyApp({ Component, pageProps }: AppProps) {
   // console.log(user);
   // console.log("profile");
   // console.log(profile);
+
+  let baseUrl = "" as string;
+  if (process.env.NODE_ENV != "test") {
+    baseUrl = {
+      production: "https://gachi-collection.vercel.app",
+      development: "http://localhost:3000",
+    }[process.env.NODE_ENV];
+  }
 
   const [headerIcon, setHeaderIcon] = useState<{
     title: string;
@@ -79,6 +92,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [indexTab, setIndexTab] = useState<"all" | "op" | "ed" | undefined>(
     "all"
   );
+
   const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
   /*const [utilities, setUtilities] = useState<Utilities>({
     search: search,
@@ -253,7 +267,6 @@ function MyApp({ Component, pageProps }: AppProps) {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
-        <link rel="stylesheet" href="https://use.typekit.net/xbj6ysr.css" />
       </Head>
       <DefaultSeo
         defaultTitle={title}
@@ -294,12 +307,15 @@ function MyApp({ Component, pageProps }: AppProps) {
       >
         <UtilitiesContext.Provider
           value={{
+            baseUrl: baseUrl,
             keyword: keyword,
             setKeyword: setKeyword,
             headerIcon: headerIcon,
             setHeaderIcon: setHeaderIcon,
             breadcrumbList: breadcrumbList,
             setBreadcrumbList: setBreadcrumbList,
+            userProfile: userProfile,
+            setUserProfile: setUserProfile,
             //collectionsMenu: collectionsMenu,
             //setCollectionsMenu: setCollectionsMenu,
           }}

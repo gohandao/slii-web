@@ -23,21 +23,31 @@ import { CollectionList } from "@/components/CollectionList";
 import { sortList } from "@/libs/sortList";
 import { TabIndex } from "@/components/TabIndex";
 import { Upvote } from "@/types/upvote";
+import { Bookmark } from "@/types/bookmark";
 import { getUserId } from "@/utilities/getUserId";
 import { getNFTs } from "@/utilities/getNFTs";
+import { SmallTab } from "./SmallTab";
 
 type Props = {
+  creatorList: Upvote[] | Bookmark[] | undefined;
+  collectionList: Upvote[] | Bookmark[] | undefined;
   property: "upvoted" | "bookmarks";
 };
-export const UserPageTemplate = (props: any) => {
+export const UserPageTemplate = ({
+  creatorList,
+  collectionList,
+  property,
+}: Props) => {
   const router = useRouter();
   const { username, order, sort, term, page, type, search, tab } = router.query;
   const currentPage = page ? Number(page) : 1;
   const limit = 10;
   const { creators, collections } = useContext(BaseContext);
-
+  const { userProfile, setUserProfile } = useContext(UtilitiesContext);
+  if (userProfile && username != userProfile.username) {
+    setUserProfile(undefined);
+  }
   const [userAvatar, setUserAvatar] = useState<Blob>();
-  const [userProfile, setUserProfile] = useState<Profile>();
 
   let avatar_url;
   let avatar_blob;
@@ -100,81 +110,13 @@ export const UserPageTemplate = (props: any) => {
   };
   username && !userProfile && getUserProfile(username as string);
 
-  const getUserUpvotes = async (username: string) => {
-    const userId =
-      username && ((await getUserId(username as string)) as string);
-    let new_upvotes;
-    try {
-      const { data, error, status } = await supabase
-        .from("upvotes")
-        .select("*, profiles(*)", {
-          count: "exact",
-          head: false,
-        })
-        .eq("user_id", `${userId}`);
-      if (error && status !== 406) {
-        throw error;
-      }
-      new_upvotes = data as Upvote[];
-      setUserUpvotes(new_upvotes);
-    } catch (error: any) {
-      alert(error.message);
-    } finally {
-      //setLoading(false)
-    }
-    return new_upvotes;
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const new_userUpvotes = await getUserUpvotes(username as string);
-      if (new_userUpvotes) {
-        setUserUpvotes(new_userUpvotes);
-      }
-      console.log("new_userUpvotes");
-      console.log(new_userUpvotes);
-    };
-    if (username) {
-      fetchData();
-    }
-  }, [username]);
-  username && !userUpvotes && getUserUpvotes(username as string);
-
-  const creator_upvotes =
-    userUpvotes &&
-    userUpvotes.filter(
-      (upvote) => upvote.creator_id && upvote.creator_id.length > 0
-    );
-
-  const collection_upvotes =
-    userUpvotes &&
-    userUpvotes.filter(
-      (upvote) => upvote.collection_slug && upvote.collection_slug.length > 0
-    );
-
-  // useEffect(() => {
-  //   console.log("start");
-
-  //   const fetchData = async () => {
-  //     const data = await getUserProfile(username as string);
-  //     setUserProfile(data);
-  //   };
-  //   if (username && !userProfile) {
-  //     fetchData();
-  //   }
-  // }, [username]);
-
   // 1.filtered creators
   const uppperKeyword = typeof search == "string" && search.toUpperCase();
 
-  // const filteredCreators = creators.filter(
-  //   //@ts-ignore
-  //   (creator) => creator.username && creator_upvotes.creator_id
-  // );
   const filteredCreators = creators.filter(
     (creator) =>
-      creator_upvotes &&
-      creator_upvotes.some((upvote) => upvote.creator_id == creator.username) &&
+      creatorList &&
+      creatorList.some((item) => item.creator_id == creator.username) &&
       creator
   );
 
@@ -210,25 +152,13 @@ export const UserPageTemplate = (props: any) => {
   };
 
   // 2.filtered collections
-  // const notSameAges = objB.filter(
-  //   (obj) => objA.some((objAinner) => objAinner.age == obj.age) && obj
-  // );
-  // console.log(notSameAges);
-
   const filteredCollections01 = collections.filter(
     (collection) =>
-      collection_upvotes &&
-      collection_upvotes.some(
-        (upvote) => upvote.collection_slug == collection.slug
-      ) &&
+      collectionList &&
+      collectionList.some((item) => item.collection_slug == collection.slug) &&
       collection
   );
 
-  // const filteredCollections01 = OSCollections.filter(
-  //   //@ts-ignore
-  //   (collection) =>
-  //     collection.slug.includes(uppperKeyword) == true
-  // );
   const filteredCollections02 =
     type && type != "all"
       ? filteredCollections01.filter((collection) => collection.type === type)
@@ -315,25 +245,6 @@ export const UserPageTemplate = (props: any) => {
 
   return (
     <>
-      <NextSeo
-        title={props.title}
-        description={props.description}
-        openGraph={{
-          type: "article",
-          title: props.title,
-          description: props.description,
-          url: process.env.NEXT_PUBLIC_SITE_URL + `/${username}`,
-          images: [
-            {
-              url: props.ogImageUrl,
-              width: 1200,
-              height: 630,
-              alt: props.title,
-              type: "image/jpeg",
-            },
-          ],
-        }}
-      />
       <BaseLayout>
         <div className="flex flex-col gap-10 pb-20">
           {/* {userProfile && <UserProfile profile={userProfile} />} */}
@@ -356,12 +267,14 @@ export const UserPageTemplate = (props: any) => {
           )}
           <section className="mx-auto w-full px-5 lg:px-8">
             <div className="flex gap-2">
-              <button className="text-gray-100 rounded-full px-5 py-1 bg-gray-800 text-xs">
+              <SmallTab title="Upvoted" path="upvotes" />
+              <SmallTab title="Bookmarks" path="bookmarks" />
+              {/* <button className="text-gray-100 rounded-full px-5 py-1 bg-gray-800 text-xs">
                 Upvotes
               </button>
               <button className="text-gray-400 rounded-full px-5 py-1 text-xs">
                 Bookmark
-              </button>
+              </button> */}
             </div>
             <div className="mb-2">
               <TabIndex property="user" />

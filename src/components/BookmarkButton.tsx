@@ -1,4 +1,5 @@
 import { AuthContext } from "@/contexts/AuthContext";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { supabase } from "@/libs/supabase";
 import React, { useContext, useEffect, useState } from "react";
 
@@ -14,15 +15,9 @@ type Props = {
 };
 export const BookmarkButton = ({ id, property = "default", type }: Props) => {
   const { user, bookmarks, setBookmarks, upvotes } = useContext(AuthContext);
+  const { baseUrl } = useContext(UtilitiesContext);
 
   const [followers, setFollowers] = useState<number>();
-  let baseUrl = "" as string;
-  if (process.env.NODE_ENV != "test") {
-    baseUrl = {
-      production: "https://gachi-collection.vercel.app",
-      development: "http://localhost:3000",
-    }[process.env.NODE_ENV];
-  }
 
   const [bookmarked, setBookmarked] = useState<boolean>(false);
 

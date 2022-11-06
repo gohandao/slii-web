@@ -32,6 +32,7 @@ import { JP } from "country-flag-icons/react/3x2";
 import { ProfileHeader } from "@/components/ProfileHeader";
 import { CopyText } from "@/components/CopyText";
 import { MdVerified } from "react-icons/md";
+import { getNFTs } from "@/utilities/getNFTs";
 
 const CreatorIndex: NextPage = (props: any) => {
   const router = useRouter();
@@ -62,6 +63,22 @@ const CreatorIndex: NextPage = (props: any) => {
         });
     }
   }, [creator]);
+
+  // useEffect(() => {
+  //   console.log("creator nfts");
+  //   // creator && getNFTs([creator.address]);
+  //   const fetchData = async () => {
+  //     let collectionAssets = [] as any[];
+  //     creatorCollections &&
+  //       creatorCollections.map(async (collection) => {
+  //         const new_assets = await getNFTs(collection.name);
+  //         collectionAssets = [...collectionAssets, new_assets];
+  //       });
+  //     console.log("collectionAssets");
+  //     console.log(collectionAssets);
+  //   };
+  //   fetchData();
+  // }, [creatorCollections]);
 
   if (!creator && username && creators && creators.length > 0) {
     //set creator
@@ -210,6 +227,7 @@ const CreatorIndex: NextPage = (props: any) => {
               ))}
             </div>
           )}
+          <div className="flex"></div>
         </div>
       </BaseLayout>
     </>

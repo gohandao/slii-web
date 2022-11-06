@@ -150,24 +150,22 @@ export const CollectionList = ({ collections, limit }: Props) => {
                             />
                           )}
                         </div>
-                        {collection && (
+                        {(collection.twitter_followers ||
+                          collection.discord_members) && (
                           <div className="absolute bottom-[22px] left-full flex items-start gap-0 ml-2 z-10 flex-col w-full">
-                            {/* <ProfileLinks
-                              twitter_id={collection.twitter_username}
-                              instagram_id={collection.instagram_username}
-                              discord_url={collection.discord_url}
-                              website_url={collection.external_url}
-                              opensea_slug={collection.slug}
-                            /> */}
                             <div className="flex bg-gray-900 gap-2 rounded-full px-3 py-[2px] opacity-80">
-                              <Stats
-                                icon={<BsTwitter />}
-                                text={collection.twitter_followers}
-                              />
-                              <Stats
-                                icon={<FaDiscord />}
-                                text={collection.discord_members}
-                              />
+                              {collection.twitter_followers && (
+                                <Stats
+                                  icon={<BsTwitter />}
+                                  text={collection.twitter_followers}
+                                />
+                              )}
+                              {collection.discord_members && (
+                                <Stats
+                                  icon={<FaDiscord />}
+                                  text={collection.discord_members}
+                                />
+                              )}
                             </div>
                           </div>
                         )}
@@ -202,7 +200,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
                         <div className="flex gap-5">
                           <div className="">
                             <p className="text-gray-500 text-xs sp:text-sm font-bold">
-                              Floor Proce
+                              Floor Price
                             </p>
                             <div className="flex items-center gap-1 text-gray-400 font-bold -ml-1">
                               {collection.payment_tokens &&
@@ -218,7 +216,14 @@ export const CollectionList = ({ collections, limit }: Props) => {
                           </div>
                           <div className="">
                             <p className="text-gray-500 text-xs sp:text-sm font-bold">
-                              Total Proce
+                              {term == "all" || !term
+                                ? "Total"
+                                : term == "24h"
+                                ? "24h"
+                                : term == "7d"
+                                ? "7d"
+                                : term == "30d" && "30d"}{" "}
+                              Volume
                             </p>
                             <div className="flex items-center gap-1 text-gray-400 font-bold -ml-1">
                               {term == "all" ||

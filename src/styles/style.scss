@@ -23,6 +23,18 @@
 
     -webkit-text-fill-color: transparent;
 }
+.ogp-text-gradient {
+    //background: linear-gradient(to right, #ee9ca7, #ffdde1, #2193b0, #6dd5ed);
+    // background: linear-gradient(90deg, #4ac7fa 0%, #e649f5 100%);
+    background: linear-gradient(90deg, #4ac7fa 0%, #e649f5 100%);
+            background-clip: text;
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+            text-fill-color: transparent;
+    // background-size: 300%;
+    -webkit-text-fill-color: transparent;
+}
 .bg-gradient {
     background-image: linear-gradient(to right, #fc5c7d, #6a82fb);
 }

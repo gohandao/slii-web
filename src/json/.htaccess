@@ -1,0 +1,11 @@
+<If "%{HTTP_HOST} =~ /.*localhost.*/">
+# ホスト（ドメイン）名にlocalhostが含まれている場合
+# =~とすると正規表現で比較できます。
+</If>
+<Else>
+# それ以外のホスト（ドメイン）の場合
+SetEnvIf Referer "^https://www\.hogehoge\.jp" ref_ng
+Order Allow,Deny
+Allow from all
+Deny from env=ref_ng
+</Else>

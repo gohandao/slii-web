@@ -11,6 +11,7 @@ export const UtilitiesContext = createContext<Utilities>({
     path: "",
   },
   setHeaderIcon: () => {},
+  setUserProfile: () => {},
   breadcrumbList: undefined,
   setBreadcrumbList: () => {},
 });

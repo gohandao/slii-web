@@ -1,8 +1,10 @@
 import { BreadcrumbList } from "@/types/breadcrumbList";
 import { IconType } from "react-icons";
+import { Profile } from "./profile";
 
 export type Utilities = {
   // creatorSocial: boolean;
+  baseUrl?: string;
   keyword?: string;
   setKeyword: React.Dispatch<React.SetStateAction<string | undefined>>;
   headerIcon: {
@@ -23,6 +25,8 @@ export type Utilities = {
       path: string;
     }>
   >;
+  userProfile?: Profile;
+  setUserProfile: React.Dispatch<React.SetStateAction<Profile | undefined>>;
   breadcrumbList: BreadcrumbList;
   setBreadcrumbList: React.Dispatch<React.SetStateAction<BreadcrumbList>>;
 };

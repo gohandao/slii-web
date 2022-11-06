@@ -165,7 +165,7 @@ export const ProfileHeader = ({
     <section>
       <div className="flex relative w-full h-40 md:h-60 overflow-hidden -mt-[68px] border-t-[10px] border-x-[10px] border-transparent ">
         <div className="w-full h-full bg-gray-800 rounded-lg overflow-hidden opacity-50">
-          <div className="opacity-40">
+          <div className="relative opacity-40 w-full h-full">
             {background_url && (
               <Image
                 //@ts-ignore
@@ -183,7 +183,7 @@ export const ProfileHeader = ({
       <div className="mx-auto px-5 lg:px-8">
         <div className="-mt-[58px] relative flex justify-between items-end mb-2">
           <div className="relative flex">
-            <div className="rounded-full border-[5px] border-gray-800 overflow-hidden flex items-center justify-center z-10 bg-gray-800 w-[110px] h-[110px]">
+            <div className="relative rounded-full border-[5px] border-gray-800 overflow-hidden flex items-center justify-center z-10 bg-gray-800 w-[110px] h-[110px]">
               {avatar_url && (
                 <Image
                   //@ts-ignore
@@ -278,8 +278,8 @@ export const ProfileHeader = ({
           <div className="flex flex-col mt-1">
             {stats &&
               stats.length > 0 &&
-              stats.map(() => (
-                <>
+              stats.map((data, index) => (
+                <div key={index}>
                   <StatsBox>
                     {twitter_followers && (
                       <Stats
@@ -309,7 +309,7 @@ export const ProfileHeader = ({
                       />
                     )}
                   </StatsBox>
-                </>
+                </div>
               ))}
           </div>
         </div>

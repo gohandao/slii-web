@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, ReactNode } from "react";
 import { useQueryState } from "next-usequerystate";
 
 import Link from "next/link";
-import { BsCheck, BsFilter } from "react-icons/bs";
+import { BsCheck, BsFilter, BsFolder2Open } from "react-icons/bs";
 import { BiSortAlt2, BiCategory, BiFilterAlt } from "react-icons/bi";
 import { TbUsers } from "react-icons/tb";
 
@@ -18,14 +18,20 @@ type Props = {
   property:
     | "creatorType"
     | "collectionType"
+    | "nftType"
     | "creatorSort"
     | "collectionSort"
+    | "nftSort"
     | "assetsDropdown"
     | "term";
+  custom_menu?: {
+    key: string;
+    value: string;
+  }[];
 };
-export const Dropdown = ({ position, property }: Props) => {
+export const Dropdown = ({ position, property, custom_menu }: Props) => {
   const router = useRouter();
-  const { order, sort, term, page, type, search } = router.query;
+  const { order, sort, term, page, type, search, slug } = router.query;
 
   const [status, setStatus] = useState<boolean>(false);
   const assetsDropdown = ["All", "Buy now", "On auction", "Price low to high"];
@@ -146,6 +152,52 @@ export const Dropdown = ({ position, property }: Props) => {
         );
       }
       break;
+    case "nftType":
+      let new_menus = custom_menu
+        ? custom_menu.map((item, index) => {
+            if (index == 0) {
+              return item.value;
+            }
+            return item.value;
+          })
+        : [];
+      menus = ["all", ...new_menus];
+      icon = <BsFolder2Open className="text-gray-400" />;
+      if (!type) {
+        title = (
+          <>
+            {icon}
+            <Title>all</Title>
+          </>
+        );
+      } else {
+        title = (
+          <>
+            {icon}
+            <Title>{type}</Title>
+          </>
+        );
+      }
+      break;
+    case "nftSort":
+      menus = ["token id", "last price", "last sale", "random"];
+      icon = <BiCategory className="text-gray-400" />;
+      if (!type) {
+        title = (
+          <>
+            {icon}
+            <Title>token id</Title>
+          </>
+        );
+      } else {
+        title = (
+          <>
+            {icon}
+            <Title>{type}</Title>
+          </>
+        );
+      }
+      break;
     case "collectionSort":
       menus = [
         "popular",
@@ -233,6 +285,47 @@ export const Dropdown = ({ position, property }: Props) => {
         search: search && (search as string),
       });
     }
+    if (property == "nftType") {
+      let new_type;
+      if (title != "all") {
+        new_type = title;
+      }
+      setParams({
+        slug: new_type,
+        sort: sort && (sort as string),
+        order: order && (order as string),
+        search: search && (search as string),
+      });
+    }
+    if (property == "nftSort") {
+      let new_sort;
+      if (title != "all") {
+        new_sort = new_sort;
+      }
+      switch (title) {
+        case "all":
+          new_sort = undefined;
+          break;
+        case "token id":
+          new_sort = "token_id";
+          break;
+        case "last price":
+          new_sort = "last_price";
+          break;
+        case "last sale":
+          new_sort = "last_sale";
+          break;
+        default:
+          new_sort = title;
+          break;
+      }
+      setParams({
+        slug: slug && (slug as string),
+        sort: new_sort,
+        order: order && (order as string),
+        search: search && (search as string),
+      });
+    }
     if (property == "creatorType") {
       let new_type;
       if (title != "all") {
@@ -299,6 +392,7 @@ export const Dropdown = ({ position, property }: Props) => {
         new_term = "24h";
       }
       setParams({
+        slug: slug && (slug as string),
         type: type && (type as string),
         sort: new_sort,
         order: order && (order as string),
@@ -313,7 +407,11 @@ export const Dropdown = ({ position, property }: Props) => {
 
   return (
     <>
-      <div className="relative inline-block text-left z-50">
+      <div
+        className={`relative inline-block text-left z-50 ${
+          menus.length < 2 && "_hidden"
+        }`}
+      >
         <div>
           <button
             type="button"
@@ -350,12 +448,6 @@ export const Dropdown = ({ position, property }: Props) => {
             {menus &&
               menus.map((menu, index) => {
                 const checkCurrentParam = () => {
-                  // property:
-                  // | "creatorType"
-                  // | "collectionType"
-                  // | "creatorSort"
-                  // | "collectionSort"
-                  // | "assetsDropdown";
                   switch (menu) {
                     case sort:
                     case type:
@@ -383,6 +475,11 @@ export const Dropdown = ({ position, property }: Props) => {
                     case property == "creatorType" &&
                       type == undefined &&
                       "all":
+                    case property == "nftType" && slug == undefined && "all":
+                      return true;
+                    case property == "nftSort" &&
+                      slug == undefined &&
+                      "token_id":
                       return true;
                       break;
                     case sort == "created_at" && "newest":
@@ -404,7 +501,7 @@ export const Dropdown = ({ position, property }: Props) => {
                 const iconCheck = checkCurrentParam();
                 return (
                   <button
-                    className="relative text-gray-300 block pl-8 pr-4 py-[11px] text-sm capitalize w-full text-left border-b border-gray-600 last:border-b-0 gap-2"
+                    className="relative text-gray-300 block pl-8 pr-4 py-[11px] text-sm capitalize w-full text-left border-b border-gray-600 last:border-b-0 gap-2 ellipsis"
                     role="menuitem"
                     tabIndex={-1}
                     id="menu-item-0"

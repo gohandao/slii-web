@@ -10,15 +10,16 @@ import { getImageUrl, supabase } from "@/libs/supabase";
 import { getOSUser } from "@/utilities/getOSUser";
 import { getOSUserBackground } from "@/utilities/getOSUserBackground";
 import { createJson } from "@/utilities/createJson";
+import { getOSData } from "@/utilities/getOSData";
 
-const createCreatorJson = async () => {
+const createCreatorJson = async (req: any, res: any) => {
   let pathName = "creators.json";
   let creators = await getCreators();
   let data = await getCreatorOptions(creators);
   let update_data = await updateSocial(data);
   let source = await sortCreators(update_data);
   await createJson(pathName, source);
-  return;
+  res.end();
 };
 
 const getCreators = async () => {
@@ -78,10 +79,20 @@ const getCreatorOptions = async (creators: Creator[]) => {
       const OSUser = await getOSUser(creator.address);
       const avatar = OSUser.account.profile_img_url;
       const username = OSUser.username;
-      const OSUserBackground = await getOSUserBackground(creator.username);
+      // const OSUserBackground = await getOSUserBackground(creator.username);
+      const data = await getOSData(creator.username);
       creator.username = username as string;
       creator.avatar = avatar as string | undefined;
-      creator.background = OSUserBackground as string | undefined;
+      creator.token_symbol = data.token_symbol as string;
+      creator.total_volume = data.total_volume as number;
+      creator.average_volume = data.average_volume as number;
+      creator.average_floor_price = data.average_floor_price as
+        | number
+        | undefined;
+      creator.total_collections = data.total_collections as number;
+      creator.total_supply = data.total_supply as number;
+      creator.total_sales = data.total_sales as number;
+      creator.background = data.background_image as string | undefined;
     })
   );
   return creators;

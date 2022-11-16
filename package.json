@@ -13,6 +13,7 @@
     "@supabase/supabase-js": "^1.35.6",
     "@tailwindcss/line-clamp": "^0.4.0",
     "airtable": "^0.11.4",
+    "await-timeout": "^1.1.1",
     "axios": "^0.27.2",
     "babel-plugin-styled-components": "^2.0.7",
     "browser-image-compression": "^2.0.0",
@@ -42,6 +43,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@types/await-timeout": "^0.3.1",
     "@types/node": "18.0.3",
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",

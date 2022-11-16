@@ -1,6 +1,7 @@
 import { Tag } from "./tag";
 
 export type Profile = {
+  address: string | undefined;
   username: string;
   sub_title: string;
   verified?: boolean;

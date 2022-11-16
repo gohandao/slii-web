@@ -11,5 +11,10 @@ module.exports = {
       },
     },
   },
+  variants: {
+    extend: {
+      backgroundOpacity: ['active'],
+    },
+  },
   plugins: [require("@tailwindcss/line-clamp")],
 };

@@ -33,19 +33,41 @@ import { ProfileHeader } from "@/components/ProfileHeader";
 import { CopyText } from "@/components/CopyText";
 import { MdVerified } from "react-icons/md";
 import { getNFTs } from "@/utilities/getNFTs";
+import { Dropdown } from "@/components/Dropdown";
+import { Searchbox } from "@/components/Searchbox";
+import { OrderButton } from "@/components/OrderButton";
+import { sortList } from "@/libs/sortList";
+import { sortNFTs } from "@/libs/sortNFTs";
+import { randomize } from "@/utilities/randomize";
+import { RandomButton } from "@/components/RandomButton";
+import { NFTList } from "@/components/NFTList";
 
 const CreatorIndex: NextPage = (props: any) => {
   const router = useRouter();
-  const { username } = router.query;
+  const { username, order, sort, term, page, type, search, slug } =
+    router.query;
+  const currentPage = page ? Number(page) : 1;
+  const limit = 50;
+  const [checkAssets, setCheckAssets] = useState(false);
+  const [sortedAssets, setSortedAssets] = useState<any[]>([]);
+  const [random, setRandom] = useState<boolean>(false);
+
   const [creator, setCreator] = useState<Creator>();
 
   const [creatorCollections, setCreatorCollections] = useState<any[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [assets, setAssets] = useState<any[]>([]);
+  const [currentAssets, setCurrentAssets] = useState<any[]>([]);
 
   const { creators, collections } = useContext(BaseContext);
   // const collections = useContext(CollectionsContext);
-  const { setHeaderIcon } = useContext(UtilitiesContext);
+  const { setHeaderIcon, setKeyword } = useContext(UtilitiesContext);
+
+  useEffect(() => {
+    setKeyword(undefined);
+  }, []);
+
   useEffect(() => {
     {
       creator &&
@@ -54,7 +76,7 @@ const CreatorIndex: NextPage = (props: any) => {
           subTitle: (
             <div className="flex gap-1 text-[10px] items-center text-gray-400 leading-none">
               <JP title="Japan" className="h-[10px] rounded-sm" />
-              {creator.username}
+              Creator
             </div>
           ),
           emoji: "",
@@ -63,22 +85,6 @@ const CreatorIndex: NextPage = (props: any) => {
         });
     }
   }, [creator]);
-
-  // useEffect(() => {
-  //   console.log("creator nfts");
-  //   // creator && getNFTs([creator.address]);
-  //   const fetchData = async () => {
-  //     let collectionAssets = [] as any[];
-  //     creatorCollections &&
-  //       creatorCollections.map(async (collection) => {
-  //         const new_assets = await getNFTs(collection.name);
-  //         collectionAssets = [...collectionAssets, new_assets];
-  //       });
-  //     console.log("collectionAssets");
-  //     console.log(collectionAssets);
-  //   };
-  //   fetchData();
-  // }, [creatorCollections]);
 
   if (!creator && username && creators && creators.length > 0) {
     //set creator
@@ -118,7 +124,55 @@ const CreatorIndex: NextPage = (props: any) => {
       );
       setCreatorCollections(collection_filter);
     }
-  }, [username, collections]);
+  }, [creators, username, collections]);
+
+  if (!checkAssets && assets.length < 1 && creatorCollections.length > 0) {
+    const fetchData = async () => {
+      let new_assets: any[] = [];
+      await Promise.all(
+        creatorCollections.map(async (collection) => {
+          const data = await getNFTs(collection.slug);
+          if (data) {
+            new_assets = [...new_assets, ...data];
+          }
+        })
+      );
+      // console.log(creatorCollections);
+      // console.log(assets);
+      // console.log(new_assets);
+      setAssets(new_assets);
+    };
+
+    fetchData();
+  }
+
+  useEffect(() => {
+    if (
+      !checkAssets &&
+      assets.length < 1 &&
+      creatorCollections.length > 0 &&
+      !checkAssets
+    ) {
+      const fetchData = async () => {
+        let new_assets: any[] = [];
+        await Promise.all(
+          creatorCollections.map(async (collection) => {
+            const data = await getNFTs(collection.slug);
+            if (data) {
+              new_assets = [...new_assets, ...data];
+            }
+          })
+        );
+        // console.log("assets nfts");
+        // console.log(creatorCollections);
+        // console.log(assets);
+        // console.log(new_assets);
+        setAssets(new_assets);
+        setCheckAssets(true);
+      };
+      fetchData();
+    }
+  }, [creatorCollections]);
 
   //props
   const title = creator && (
@@ -136,28 +190,57 @@ const CreatorIndex: NextPage = (props: any) => {
     </>
   );
 
-  // let avatar_url = "" as string;
-  // if (creator && creator.avatar) {
-  //   avatar_url =
-  //     creator.avatar.length > 0
-  //       ? //@ts-ignore
-  //         creator.avatar[0].thumbnails.large.url
-  //       : //@ts-ignore
-  //         creator.avatar[0].url;
-  // }
+  const filteredAssets =
+    slug && slug != "all"
+      ? assets.filter((asset) => asset.collection_slug === slug)
+      : assets;
 
-  // const getBackground = () => {
-  //   let data;
-  //   if (creator) {
-  //     creator.avatar && creator.avatar.length > 0
-  //       ? //@ts-ignore
-  //         (data = creator.avatar[0].thumbnails.large.url)
-  //       : //@ts-ignore
-  //         (data = creator.avatar[0].url);
-  //   }
-  //   return data;
-  // };
-  // const background_url = getBackground() as string;
+  const uppperKeyword = typeof search == "string" && search.toUpperCase();
+  //1.match username
+  const searchedAssets01 = filteredAssets.filter(
+    (asset) =>
+      typeof search == "string" &&
+      //すべて大文字にして大文字小文字の区別をなくす
+      //@ts-ignore
+      asset.name.toUpperCase().includes(uppperKeyword) == true
+  );
+  // //2.match description
+  const origin_searchedAssets = [
+    ...searchedAssets01,
+    // ...searchedCreators02,
+  ];
+  //重複削除
+  let searchedAssets = [] as any[];
+  if (search && search.length > 0) {
+    searchedAssets = Array.from(new Set(origin_searchedAssets));
+  } else {
+    searchedAssets = filteredAssets;
+  }
+
+  const args = {
+    property: "nfts" as "nfts" | "creators" | "collections",
+    list: searchedAssets,
+    page: currentPage,
+    order: order as "desc" | "asc" | undefined,
+    sort: sort as string | undefined,
+    //category: collectionsSort,
+    limit: limit,
+  };
+
+  useEffect(() => {
+    if (sort != "random" && assets.length > 1) {
+      const data = sortNFTs(args);
+      setSortedAssets((sortedAssets) => data);
+    }
+  }, [assets, creators, order, sort, term, page, type, search]);
+
+  useEffect(() => {
+    if (sort == "random") {
+      setCurrentAssets(randomize(searchedAssets));
+    } else {
+      setCurrentAssets(searchedAssets);
+    }
+  }, [sortedAssets, sort, random, search]);
 
   const links = {
     address: creator?.address,
@@ -174,6 +257,13 @@ const CreatorIndex: NextPage = (props: any) => {
       value: "twitter",
     },
   ];
+
+  const custom_menu = creatorCollections.map((collection) => {
+    return {
+      key: collection.slug as string,
+      value: collection.name as string,
+    };
+  });
 
   return (
     <>
@@ -197,7 +287,7 @@ const CreatorIndex: NextPage = (props: any) => {
         }}
       />
       <BaseLayout>
-        <div className="flex flex-col gap-10 pb-20">
+        <div className="flex flex-col gap-10">
           {creator && (
             <ProfileHeader
               page="creator"
@@ -227,7 +317,38 @@ const CreatorIndex: NextPage = (props: any) => {
               ))}
             </div>
           )}
-          <div className="flex"></div>
+          {assets && assets.length > 0 && (
+            <div className="px-5 lg:px-8">
+              <div className="relative flex gap-3 z-20 justify-between mb-5 sm:gap-5">
+                {custom_menu.length > 0 && (
+                  <Dropdown
+                    position="left"
+                    property="nftType"
+                    custom_menu={custom_menu}
+                  />
+                )}
+                <Searchbox />
+                <div className="flex items-center gap-3">
+                  <Dropdown position="right" property="nftSort" />
+                  {sort != "random" ? (
+                    <OrderButton />
+                  ) : (
+                    <RandomButton random={random} setRandom={setRandom} />
+                  )}
+                </div>
+              </div>
+              <NFTList assets={currentAssets} />
+              {sort != "random" && currentAssets.length > limit && (
+                <div className="flex justify-center">
+                  <Pagination
+                    currentPage={currentPage}
+                    length={currentAssets.length}
+                    limit={limit}
+                  />
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </BaseLayout>
     </>

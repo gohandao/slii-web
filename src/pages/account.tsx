@@ -1,5 +1,5 @@
 import { useState, useEffect, SetStateAction, useContext } from "react";
-import { supabase } from "@/libs/supabase";
+import { getImageUrl, supabase } from "@/libs/supabase";
 import { BaseLayout } from "@/components/BaseLayout";
 import Head from "next/head";
 import Link from "next/link";
@@ -44,6 +44,7 @@ export default function Account() {
   const [label, setLabel] = useState<string>();
   const [description, setDescription] = useState<string>();
   const [background, setBackground] = useState<File>();
+  const [newBackground, setNewBackground] = useState<File>();
   const [loading, setLoading] = useState(false);
   // const [avatar, setAvatar] = useState<File>();
   const [email, setEmail] = useState<string>("");
@@ -64,14 +65,24 @@ export default function Account() {
     if (profile) {
       setUsername(profile.username);
       setAvatarUrl(profile.avatar_url);
+
+      let background_blob;
+      const getBackgroundBlob = async () => {
+        background_blob =
+          profile &&
+          profile.background_url &&
+          (await getImageUrl(profile.background_url));
+        setBackground(background_blob);
+      };
+      getBackgroundBlob();
     }
   }, [user, profile]);
 
-  const uploadImage = async (image: File) => {
+  const uploadImage = async (image: File, path: string) => {
     const uuid = uuidv4();
 
     const { data, error } = await supabase.storage
-      .from("avatars")
+      .from(path)
       .upload(`public/${uuid}.jpg`, image, {
         cacheControl: "3600",
         upsert: false,
@@ -86,11 +97,11 @@ export default function Account() {
       let new_background_url;
       if (user) {
         if (avatar) {
-          new_avatar_url = await uploadImage(avatar);
+          new_avatar_url = await uploadImage(avatar, "avatars");
           new_avatar_url = new_avatar_url?.Key;
         }
         if (background) {
-          new_background_url = await uploadImage(background);
+          new_background_url = await uploadImage(background, "public");
           new_background_url = new_background_url?.Key;
         }
         const updates = {
@@ -131,7 +142,11 @@ export default function Account() {
         <div className="mt-8 px-5">
           <div className="relative bg-gray-800 max-w-3xl mx-auto pt-16 pb-10 px-5 md:px-20 lg:px-28 rounded overflow-hidden">
             <div className="absolute w-full left-0 top-0 h-[120px] flex justify-center items-center">
-              <UploadBackground image={background} setImage={setBackground} />
+              <UploadBackground
+                image={background}
+                newImage={background}
+                setNewImage={setBackground}
+              />
             </div>
             <div className="mb-3 flex">
               <UploadImage
@@ -238,7 +253,7 @@ export default function Account() {
                 onClick={() => updateProfile()}
                 disabled={loading}
               >
-                {loading ? "Loading ..." : "Update"}
+                {loading ? "Loading ..." : "Save"}
               </button>
             </div>
           </div>

@@ -32,27 +32,42 @@ import { SocialCount } from "@/components/SocialCount";
 import { JP } from "country-flag-icons/react/3x2";
 import { ProfileHeader } from "@/components/ProfileHeader";
 import { MdVerified } from "react-icons/md";
+import { RandomButton } from "@/components/RandomButton";
+import { Searchbox } from "@/components/Searchbox";
+import { OrderButton } from "@/components/OrderButton";
+import { sortNFTs } from "@/libs/sortNFTs";
+import { randomize } from "@/utilities/randomize";
+import { NFTList } from "@/components/NFTList";
+import { getNFTs } from "@/utilities/getNFTs";
 
 const CollectionIndex: NextPage = (props: any) => {
   const OPENSEA_API_KEY = process.env.NEXT_PUBLIC_OPENSEA_API_KEY as string;
 
   const router = useRouter();
-  const { username, slug } = router.query;
+  const { username, order, sort, term, page, type, search, slug } =
+    router.query;
+  const currentPage = page ? Number(page) : 1;
+  const limit = 50;
+
+  const [sortedAssets, setSortedAssets] = useState<any[]>([]);
+  const [random, setRandom] = useState<boolean>(false);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [collection, setCollection] = useState<any>();
   const [airtableCollection, setAirtableCollection] = useState<Collection>();
   const { creators, collections } = useContext(BaseContext);
+  const [assets, setAssets] = useState<any[]>([]);
+  const [currentAssets, setCurrentAssets] = useState<any[]>([]);
 
   const [existence, setExistence] = useState<boolean>(false);
   const [creator, setCreator] = useState<Creator>();
   const [collectionAssets, setCollectionAssets] = useState<[]>([]);
 
-  const { setBreadcrumbList } = useContext(UtilitiesContext);
+  const { setHeaderIcon, setKeyword } = useContext(UtilitiesContext);
 
   console.log("collection");
   console.log(collection);
 
-  const { setHeaderIcon } = useContext(UtilitiesContext);
   useEffect(() => {
     {
       creator &&
@@ -70,27 +85,9 @@ const CollectionIndex: NextPage = (props: any) => {
         });
     }
   }, [collection]);
-
-  // const breadcrumbList = collection &&
-  //   username && [
-  //     {
-  //       name: "Home",
-  //       path: "/",
-  //     },
-  //     {
-  //       name: "Collections",
-  //       path: "/collections",
-  //     },
-  //     {
-  //       //@ts-ignore
-  //       name: collection.name as string,
-  //       //@ts-ignore
-  //       path: `/collection/${collection.slug as string}`,
-  //     },
-  //   ];
-  // useEffect(() => {
-  //   breadcrumbList && setBreadcrumbList(breadcrumbList);
-  // }, [collection]);
+  useEffect(() => {
+    setKeyword(undefined);
+  }, []);
 
   if (!creator && creators && collection && creators.length > 0) {
     //set creator
@@ -127,56 +124,83 @@ const CollectionIndex: NextPage = (props: any) => {
     }
   }, [username, collections, collection]);
 
-  const updateCollectionAssets = (assets: any) => {
-    setCollectionAssets(assets);
-  };
-
-  const getCollectionAssets = () => {
-    const options = {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        //"X-API-KEY": OPENSEA_API_KEY,
-      },
+  if (assets.length < 1 && collection) {
+    const fetchData = async () => {
+      let new_assets: any[] = [];
+      const data = await getNFTs(collection.slug);
+      if (data) {
+        new_assets = [...new_assets, ...data];
+      }
+      setAssets(new_assets);
     };
-    /*fetch(
-      `https://api.opensea.io/api/v1/events?collection_slug=${slug}`,
-      options
-    );*/
-    fetch(
-      "https://testnets-api.opensea.io/api/v1/events?asset_contract_address=0xdb394e8dd1b17ffb3cde41a099fc96dd6e37b42a&only_opensea=false&limit=20",
-      options
-    )
-      .then((response) => response.json())
-      .then((response) => {
-        setCollectionAssets(response.asset_events);
-        //updateCollectionAssets(response.assets);
-      })
-      .catch((err) => console.error(err));
+    fetchData();
+  }
+
+  useEffect(() => {
+    if (assets.length < 1 && collection) {
+      const fetchData = async () => {
+        let new_assets: any[] = [];
+        const data = await getNFTs(collection.slug);
+        if (data) {
+          new_assets = [...new_assets, ...data];
+        }
+        setAssets(new_assets);
+      };
+      fetchData();
+    }
+  }, [slug]);
+
+  const filteredAssets =
+    slug && slug != "all"
+      ? assets.filter((asset) => asset.collection_slug === slug)
+      : assets;
+
+  const uppperKeyword = typeof search == "string" && search.toUpperCase();
+  //1.match username
+  const searchedAssets01 = filteredAssets.filter(
+    (asset) =>
+      typeof search == "string" &&
+      //すべて大文字にして大文字小文字の区別をなくす
+      //@ts-ignore
+      asset.name.toUpperCase().includes(uppperKeyword) == true
+  );
+  // //2.match description
+  const origin_searchedAssets = [
+    ...searchedAssets01,
+    // ...searchedCreators02,
+  ];
+  //重複削除
+  let searchedAssets = [] as any[];
+  if (search && search.length > 0) {
+    searchedAssets = Array.from(new Set(origin_searchedAssets));
+  } else {
+    searchedAssets = filteredAssets;
+  }
+
+  const args = {
+    property: "nfts" as "nfts" | "creators" | "collections",
+    list: searchedAssets,
+    page: currentPage,
+    order: order as "desc" | "asc" | undefined,
+    sort: sort as string | undefined,
+    //category: collectionsSort,
+    limit: limit,
   };
 
   useEffect(() => {
-    // if (slug) {
-    //   collection && getCollection();
-    // }
-    if (collection) {
-      collectionAssets.length == 0 && getCollectionAssets();
+    if (sort != "random") {
+      const data = sortNFTs(args);
+      setSortedAssets((sortedAssets) => data);
     }
-  }, [slug, collection]);
+  }, [assets, creators, order, sort, term, page, type, search]);
 
-  /*useEffect(() => {
-    const test = async () => {
-      const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
-
-      const response = await fetch(
-        `https://api.airtable.com/v0/appFYknMhbtkUTFgt/collections?api_key=${AIRTABLE_API_KEY}`
-      );
-      const { records } = await response.json();
-      console.log("testrecords");
-      console.log(records);
-    };
-    test();
-  }, []);*/
+  useEffect(() => {
+    if (sort == "random") {
+      setCurrentAssets(randomize(searchedAssets));
+    } else {
+      setCurrentAssets(sortedAssets);
+    }
+  }, [sortedAssets, sort, random, search]);
 
   //props
   const title = collection && (
@@ -230,6 +254,7 @@ const CollectionIndex: NextPage = (props: any) => {
       value: "twitter",
     },
   ];
+
   return (
     <>
       {collection ? (
@@ -254,7 +279,7 @@ const CollectionIndex: NextPage = (props: any) => {
             }}
           />
           <BaseLayout>
-            <div className="flex flex-col gap-10 pb-20">
+            <div className="flex flex-col gap-10">
               {/* {collection && <CollectionProfile collection={collection} />} */}
               {collection && (
                 <ProfileHeader
@@ -273,40 +298,30 @@ const CollectionIndex: NextPage = (props: any) => {
                   upvotes_count={collection.upvotes_count}
                 />
               )}
-              {collectionAssets && (
-                <section className="mx-auto w-full px-5 md:px-8">
-                  <div className="flex gap-3 mb-4">
-                    <div className="flex items-center">
-                      <div className="animated-dot"></div>
-                    </div>
-                    <div className="flex gap-3 items-baseline">
-                      <Title property="h2" addClass="">
-                        Items
-                      </Title>
-                      <p className="text-gray-400 text-sm">
-                        {collectionAssets.length} Items
-                      </p>
+              {assets && assets.length > 0 && (
+                <div className="px-5 lg:px-8">
+                  <div className="relative flex gap-3 z-20 justify-between mb-5 sm:gap-5">
+                    <Searchbox />
+                    <div className="flex items-center gap-3">
+                      <Dropdown position="right" property="nftSort" />
+                      {sort != "random" ? (
+                        <OrderButton />
+                      ) : (
+                        <RandomButton random={random} setRandom={setRandom} />
+                      )}
                     </div>
                   </div>
-                  <div className="flex gap-5 justify-between mb-4">
-                    {/* <Dropdown position="left" type="assetsDropdown" /> */}
-                  </div>
-                  {/*<div className="flex gap-5 mb-4">
-                    <p className="rounded-full border border-gray-100 px-5 py-2 text-gray-100 text-sm font-bold">
-                      All
-                    </p>
-                    <p className="rounded-full border border-gray-100 px-5 py-2 text-gray-100 text-sm font-bold">
-                      Buy now
-                    </p>
-                    <p className="rounded-full border border-gray-100 px-5 py-2 text-gray-100 text-sm font-bold">
-                      On auction
-                    </p>
-                    <p className="rounded-full border border-gray-100 px-5 py-2 text-gray-100 text-sm font-bold">
-                      Price low to high
-                    </p>
-              </div>*/}
-                  <CollectionAssets collectionAssets={collectionAssets} />
-                </section>
+                  <NFTList assets={currentAssets} />
+                  {sort != "random" && searchedAssets.length > limit && (
+                    <div className="flex justify-center">
+                      <Pagination
+                        currentPage={currentPage}
+                        length={searchedAssets.length}
+                        limit={limit}
+                      />
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           </BaseLayout>

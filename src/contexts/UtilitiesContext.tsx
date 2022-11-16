@@ -2,6 +2,8 @@ import React, { createContext, useState } from "react";
 import { Utilities } from "@/types/utilities";
 
 export const UtilitiesContext = createContext<Utilities>({
+  loginModal: false,
+  setLoginModal: () => {},
   keyword: "",
   setKeyword: () => {},
   headerIcon: {

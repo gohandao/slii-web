@@ -4,6 +4,7 @@ import router from "next/router";
 import { Params } from "@/types/params";
 
 export const setParams = ({
+  slug,
   sort,
   order,
   term,
@@ -13,6 +14,7 @@ export const setParams = ({
   tab,
 }: Params) => {
   const query = {
+    slug: slug,
     tab: tab,
     type: type,
     sort: sort,

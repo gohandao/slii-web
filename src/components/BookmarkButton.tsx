@@ -15,7 +15,7 @@ type Props = {
 };
 export const BookmarkButton = ({ id, property = "default", type }: Props) => {
   const { user, bookmarks, setBookmarks, upvotes } = useContext(AuthContext);
-  const { baseUrl } = useContext(UtilitiesContext);
+  const { baseUrl, setLoginModal } = useContext(UtilitiesContext);
 
   const [followers, setFollowers] = useState<number>();
 
@@ -46,7 +46,8 @@ export const BookmarkButton = ({ id, property = "default", type }: Props) => {
         setBookmarked(true);
       }
     } else {
-      alert("Please login.");
+      setLoginModal(true);
+      // alert("Please login.");
     }
   };
   const removeBookmarkHandler = async (

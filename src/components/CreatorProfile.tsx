@@ -51,7 +51,7 @@ export const CreatorProfile = ({ creator }: Props) => {
       development: "http://localhost:3000",
     }[process.env.NODE_ENV];
   }
-  const { socials, setSocials } = useContext(BaseContext);
+  // const { socials, setSocials } = useContext(BaseContext);
 
   const [social, setSocial] = useState<Social>();
 
@@ -119,24 +119,24 @@ export const CreatorProfile = ({ creator }: Props) => {
   };
   !checkSocial && social && getSocialCounts();
 
-  useEffect(() => {
-    if (socials && creator.username) {
-      //set collection
-      const socials_filter = socials.filter(
-        (social) => creator.username === social.creator_username
-      );
-      socials_filter.length > 0 && setSocial(socials_filter[0]);
-      if (socials_filter.length == 0) {
-        setSocial({
-          collection_slug: "",
-          creator_username: "",
-          twitter_followers: null,
-          discord_members: null,
-          record_id: null,
-        });
-      }
-    }
-  }, [socials]);
+  // useEffect(() => {
+  //   if (socials && creator.username) {
+  //     //set collection
+  //     const socials_filter = socials.filter(
+  //       (social) => creator.username === social.creator_username
+  //     );
+  //     socials_filter.length > 0 && setSocial(socials_filter[0]);
+  //     if (socials_filter.length == 0) {
+  //       setSocial({
+  //         collection_slug: "",
+  //         creator_username: "",
+  //         twitter_followers: null,
+  //         discord_members: null,
+  //         record_id: null,
+  //       });
+  //     }
+  //   }
+  // }, [socials]);
 
   // シェアボタンのリンク先
   const currentUrl = baseUrl + router.asPath;

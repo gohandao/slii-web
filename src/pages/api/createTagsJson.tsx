@@ -7,11 +7,11 @@ import { sortList } from "@/libs/sortList";
 import { getTags } from "@/utilities/getTags";
 import { createJson } from "@/utilities/createJson";
 
-const createTagsJson = async () => {
+const createTagsJson = async (req: any, res: any) => {
   let pathName = "tags.json";
   const source = await getTags("tags");
   await createJson(pathName, source);
-  return;
+  res.end();
 };
 
 export default createTagsJson;

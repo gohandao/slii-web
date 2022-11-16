@@ -1,6 +1,9 @@
 import { AuthContext } from "@/contexts/AuthContext";
+import { BaseContext } from "@/contexts/BaseContext";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { supabase } from "@/libs/supabase";
 import { Upvote } from "@/types/upvote";
+import { updateUpvotes } from "@/utilities/updateUpvotes";
 import React, { useContext, useEffect, useState } from "react";
 import { BsTriangleFill } from "react-icons/bs";
 
@@ -18,14 +21,25 @@ export const VoteButton = ({
 }: Props) => {
   const { user, upvotes, setUpvotes, bookmarks, setBookmarks } =
     useContext(AuthContext);
+  const { loginModal, setLoginModal } = useContext(UtilitiesContext);
+  const { setCreators, setCollections } = useContext(BaseContext);
   const [postUpvotes, setPostUpvotes] = useState<Upvote[]>([]);
+  const [upvoted, setUpvoted] = useState<boolean>(false);
+
   const [currentCount, setCurrentCount] = useState<number | undefined>(count);
+
   useEffect(() => {
-    setCurrentCount(count);
-  }, [count]);
+    let initial_count = count;
+    if (upvoted == true && count == 0) {
+      initial_count = 1;
+    }
+    if (upvoted == false && count && count > 0) {
+      initial_count = count - 1;
+    }
+    setCurrentCount(initial_count);
+  }, [count, upvoted]);
 
   // let currentCount = count;
-
   let baseUrl = "" as string;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
@@ -33,8 +47,6 @@ export const VoteButton = ({
       development: "http://localhost:3000",
     }[process.env.NODE_ENV];
   }
-
-  const [upvoted, setUpvoted] = useState<boolean>(false);
 
   const creator_id = type == "creator" ? id : "";
   const collection_slug = type == "collection" ? id : "";
@@ -59,11 +71,18 @@ export const VoteButton = ({
         setUpvotes([...upvotes, ...data]);
         setUpvoted(true);
         let base_count = currentCount ? currentCount : 0;
-        setCurrentCount(base_count + 1);
-        // currentCount = currentCount + 1;
+        let new_count = base_count + 1;
+        const new_data = updateUpvotes({
+          upvotes_count: new_count,
+          creator_username: creator_id,
+          collection_slug: collection_slug,
+        });
+        new_data && creator_id && setCreators(new_data);
+        new_data && collection_slug && setCollections(new_data);
       }
     } else {
-      alert("Please login.");
+      setLoginModal(true);
+      // alert("Please login.");
     }
   };
   const removeLikeHandler = async (
@@ -94,7 +113,14 @@ export const VoteButton = ({
         setUpvoted(false);
       }
       let base_count = currentCount ? currentCount : 0;
-      setCurrentCount(base_count - 1);
+      let new_count = base_count > 0 ? base_count - 1 : 0;
+      const new_data = updateUpvotes({
+        upvotes_count: new_count,
+        creator_username: creator_id,
+        collection_slug: collection_slug,
+      });
+      new_data && creator_id && setCreators(new_data);
+      new_data && collection_slug && setCollections(new_data);
       // currentCount = currentCount - 1;
     }
   };
@@ -151,8 +177,7 @@ export const VoteButton = ({
     propertyClass =
       "rounded px-2 py-[3px] flex items-center justify-center gap-1";
   } else {
-    propertyClass =
-      "rounded px-3 py-[10px] flex items-center justify-center gap-1 border-2";
+    propertyClass = "px-3 py-[10px] flex items-center justify-center gap-1";
   }
   return (
     <div className="flex justify-center gap-3">
@@ -166,7 +191,7 @@ export const VoteButton = ({
               addLikeHandler(e);
             }
           }}
-          className={``}
+          className={`h-[44px]`}
         >
           {property == "simple" ? (
             <>
@@ -183,25 +208,28 @@ export const VoteButton = ({
               )}
             </>
           ) : (
-            <>
+            <div className="bg-upvote h-full rounded">
               {upvoted ? (
-                <div className={`bg-white ${propertyClass} border-orange-600 `}>
+                <div
+                  className={`bg-white ${propertyClass} border-2 border-orange-600 rounded`}
+                >
                   <BsTriangleFill className="text-sm text-orange-600 opacity-80" />
                   <p className="text-orange-600 px-1 text-sm">
                     Upvoted {currentCount}
                   </p>
                 </div>
               ) : (
-                <div
-                  className={`bg-orange-500 ${propertyClass} border-orange-500 `}
-                >
-                  <BsTriangleFill className="text-sm text-white opacity-50" />
-                  <p className="text-gray-100 px-1 text-sm">
-                    Upvote {currentCount}
+                <div className={` ${propertyClass} `}>
+                  <BsTriangleFill className="text-sm text-white" />
+                  <p className="text-white px-1 text-sm">
+                    <span className="text-orange-100 text-xs hidden sm:inline">
+                      Upvote
+                    </span>{" "}
+                    {currentCount}
                   </p>
                 </div>
               )}
-            </>
+            </div>
           )}
         </button>
       </div>

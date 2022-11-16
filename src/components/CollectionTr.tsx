@@ -24,7 +24,7 @@ export const CollectionTr = ({ item, index, limit }: any) => {
   const { order, sort, term, page } = router.query;
   const currentPage = page ? Number(page) : 1;
 
-  const { socials } = useContext(BaseContext);
+  // const { socials } = useContext(BaseContext);
 
   let changeClass;
   switch (term) {

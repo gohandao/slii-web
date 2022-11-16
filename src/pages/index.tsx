@@ -108,7 +108,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     const data = sortList(args);
     setSortedCreators((sortedCreators) => data);
-  }, [creators, order, sort, term, page, type, search]);
+  }, [order, sort, term, page, type, search]);
 
   const breadcrumbList = [
     {

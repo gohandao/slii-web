@@ -5,6 +5,8 @@ import { Profile } from "./profile";
 export type Utilities = {
   // creatorSocial: boolean;
   baseUrl?: string;
+  loginModal: boolean;
+  setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
   keyword?: string;
   setKeyword: React.Dispatch<React.SetStateAction<string | undefined>>;
   headerIcon: {

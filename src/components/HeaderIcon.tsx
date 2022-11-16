@@ -3,7 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
-import { BsArrowLeftCircle, BsArrowRightCircle } from "react-icons/bs";
+import {
+  BsArrowLeftCircle,
+  BsArrowRightCircle,
+  BsFillArrowLeftCircleFill,
+  BsFillArrowRightCircleFill,
+} from "react-icons/bs";
 import { DrawerMenu } from "@/components/DrawerMenu";
 import { BiHomeAlt } from "react-icons/bi";
 
@@ -80,10 +85,10 @@ export const HeaderIcon = () => {
         className={`${showClassName}`}
       >
         {property == "back" && (
-          <BsArrowLeftCircle className={`text-gray-500 text-xl `} />
+          <BsFillArrowLeftCircleFill className={`text-gray-500 text-xl `} />
         )}
         {property == "next" && (
-          <BsArrowRightCircle className={`text-gray-500 text-xl `} />
+          <BsFillArrowRightCircleFill className={`text-gray-500 text-xl `} />
         )}
       </button>
     );

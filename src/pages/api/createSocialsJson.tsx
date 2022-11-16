@@ -3,10 +3,11 @@ import collections from "@/json/collections.json";
 import { getDiscordMembers } from "@/libs/discord";
 import { getTwitterFollowers } from "@/libs/twitter";
 import { createJson } from "@/utilities/createJson";
-export const createSocialsJson = async () => {
+export const createSocialsJson = async (req: any, res: any) => {
   const pathName = "socials.json";
   const source = await getSocials();
   await createJson(pathName, source);
+  res.end();
 };
 export const getSocials = async () => {
   type Social = {

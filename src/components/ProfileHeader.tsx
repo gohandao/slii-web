@@ -26,7 +26,7 @@ type Props = {
   sub_title?: any;
   avatar_url?: string | Blob | MediaSource;
   background_url?: string;
-  description: string;
+  description?: string;
   links: {
     address?: string;
     twitter_id?: string;
@@ -99,7 +99,7 @@ export const ProfileHeader = ({
   const requestMenus = [
     {
       icon: <FaRegFlag />,
-      title: "Kaizen idea",
+      title: "Report",
       url: "https://google.com",
     },
   ];
@@ -180,8 +180,8 @@ export const ProfileHeader = ({
           </div>
         </div>
       </div>
-      <div className="mx-auto px-5 lg:px-8">
-        <div className="-mt-[58px] relative flex justify-between items-end mb-2">
+      <div className="mx-auto px-5 lg:px-8 flex flex-col gap-3">
+        <div className="-mt-[58px] relative flex justify-between items-end">
           <div className="relative flex">
             <div className="relative rounded-full border-[5px] border-gray-800 overflow-hidden flex items-center justify-center z-10 bg-gray-800 w-[110px] h-[110px]">
               {avatar_url && (
@@ -209,10 +209,11 @@ export const ProfileHeader = ({
               )}
             </div>
           </div>
-          <div className="flex justify-between flex-1 w-full ml-3">
+          <div className="flex justify-between flex-1 w-full ml-3 h-[44px]">
             <div className=" gap-5 capitalize flex justify-center items-center">
               <ProfileDropdown
                 icon={<BsThreeDots className="text-gray-500" />}
+                position="left"
                 dropdown={requestDropdown}
                 setDropdown={setRequestDropdown}
                 menus={requestMenus}
@@ -222,7 +223,7 @@ export const ProfileHeader = ({
               {page != "user" && (
                 <>
                   <BookmarkButton id={id} type={page} />
-                  {upvotes_count && (
+                  {upvotes_count != null && (
                     <VoteButton
                       id={id}
                       property="default"
@@ -273,46 +274,38 @@ export const ProfileHeader = ({
                   </button>
                 </>
               )}
+              <div className="flex gap-2 w-full -mt-1">
+                {tags &&
+                  tags.map((tag, index) => (
+                    <Label key={index} name={tag} type="creator" />
+                  ))}
+              </div>
             </div>
           </div>
-          <div className="flex flex-col mt-1">
-            {stats &&
-              stats.length > 0 &&
-              stats.map((data, index) => (
-                <div key={index}>
-                  <StatsBox>
-                    {twitter_followers && (
-                      <Stats
-                        field="Followers"
-                        value={
-                          <div className="flex gap-2 items-center w-full justify-end">
-                            <FaTwitter className="text-sm opacity-60" />
-                            {twitter_followers}
-                          </div>
-                        }
-                      />
-                    )}
-                    <Stats field="Collections" value={twitter_followers} />
-                    <Stats field="Created" value={twitter_followers} />
-                    <Stats field="Collected" value={twitter_followers} />
-                    <Stats field="Views" value="100" />
-                    {tags && (
-                      <Stats
-                        field="Tags"
-                        value={
-                          <div className="flex gap-2 justify-end w-full">
-                            {tags.map((tag, index) => (
-                              <Label key={index} name={tag} type="creator" />
-                            ))}
-                          </div>
-                        }
-                      />
-                    )}
-                  </StatsBox>
-                </div>
-              ))}
-          </div>
         </div>
+        {stats &&
+          stats.length > 0 &&
+          stats.map((data, index) => (
+            <div key={index} className="flex flex-col items-start mt-1">
+              <StatsBox>
+                {twitter_followers && (
+                  <Stats
+                    field="Followers"
+                    value={
+                      <div className="flex gap-2 items-center w-full justify-end">
+                        <FaTwitter className="text-sm opacity-60" />
+                        {twitter_followers}
+                      </div>
+                    }
+                  />
+                )}
+                <Stats field="Collections" value={twitter_followers} />
+                <Stats field="Created" value={twitter_followers} />
+                <Stats field="Collected" value={twitter_followers} />
+                <Stats field="Views" value="100" />
+              </StatsBox>
+            </div>
+          ))}
       </div>
     </section>
   );

@@ -48,6 +48,7 @@ export const UserPageTemplate = ({
     setUserProfile(undefined);
   }
   const [userAvatar, setUserAvatar] = useState<Blob>();
+  const [userBackground, setUserBackground] = useState<Blob>();
 
   let avatar_url;
   let avatar_blob;
@@ -60,6 +61,18 @@ export const UserPageTemplate = ({
   };
   userProfile && !userAvatar && getAvatarBlob;
   !userAvatar && getAvatarBlob();
+
+  let background_url;
+  let background_blob;
+  const getBackgroundBlob = async () => {
+    background_blob =
+      userProfile &&
+      userProfile.background_url &&
+      (await getImageUrl(userProfile.background_url));
+    background_blob && setUserBackground(background_blob);
+  };
+  userProfile && !userBackground && getBackgroundBlob;
+  !userBackground && getBackgroundBlob();
 
   const [userUpvotes, setUserUpvotes] = useState<Upvote[] | undefined>([]);
   const [userBookmarks, setUserBookmarks] = useState<Upvote[] | undefined>([]);
@@ -255,7 +268,9 @@ export const UserPageTemplate = ({
               title={title}
               sub_title={sub_title}
               avatar_url={userAvatar && URL.createObjectURL(userAvatar)}
-              background_url={userProfile.background_url}
+              background_url={
+                userBackground && URL.createObjectURL(userBackground)
+              }
               description={userProfile.description}
               links={links}
               // tags={userProfile.tags}

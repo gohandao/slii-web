@@ -41,7 +41,8 @@ export const Header = () => {
   //   !avatar && getAvatarBlob();
   // }, [profile]);
 
-  const { headerIcon } = useContext(UtilitiesContext);
+  const { loginModal, setLoginModal, headerIcon } =
+    useContext(UtilitiesContext);
   const [username, setUsername] = useState<string>("");
   const [dropdown, setDropdown] = useState<boolean>(false);
 
@@ -87,9 +88,9 @@ export const Header = () => {
               <Searchbox />
             </div> */}
           </div>
-          <a className="absolute left-0 right-0 top-0 mx-auto inline-flex justify-center h-6 bg-gray-800 w-[100px] rounded-b-lg py-2 opacity-90">
+          {/* <a className="absolute left-0 right-0 top-0 mx-auto inline-flex justify-center h-6 bg-gray-800 w-[100px] rounded-b-lg py-2 opacity-90">
             <Image src="/logo.svg" width={100} height={14} alt="" />
-          </a>
+          </a> */}
           <div className="gap-10 hidden lg:flex pr-16 ">
             <Link href="/">
               <a
@@ -127,11 +128,14 @@ export const Header = () => {
           {/* <RiHeartsFill className="text-pink-500 text-xl" /> */}
           {/*<RiHeartsLine className="text-gray-500 text-xl" />*/}
           {!user ? (
-            <Link href={loginPath}>
-              <a className="bg-gray-800 text-gray-400 border border-gray-700 font-bold w-10 h-10 rounded-full flex justify-center items-center gap-3">
-                <RiLoginBoxLine />
-              </a>
-            </Link>
+            <button
+              onClick={() => {
+                setLoginModal(true);
+              }}
+              className="bg-gray-800 text-gray-400 border border-gray-700 font-bold w-10 h-10 rounded-full flex justify-center items-center gap-3"
+            >
+              <RiLoginBoxLine />
+            </button>
           ) : (
             <button
               onClick={() => {
@@ -165,20 +169,6 @@ export const Header = () => {
             <div
               className={`absolute top-full right-0 rounded border border-gray-700 bg-gray-800 w-40 mt-2 z-20`}
             >
-              {!user && (
-                <>
-                  <Link href={loginPath}>
-                    <a className="block px-5 py-3 text-sm text-gray-400 border-b border-gray-700">
-                      Login
-                    </a>
-                  </Link>
-                  <Link href="/signup">
-                    <a className="block px-5 py-3 text-sm text-gray-400">
-                      Signup
-                    </a>
-                  </Link>
-                </>
-              )}
               {user && (
                 <>
                   <Link href={`/${profile.username}`}>

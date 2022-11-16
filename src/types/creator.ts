@@ -1,6 +1,6 @@
 export type Creator = {
   username: string;
-  description: string;
+  description?: string;
   avatar: any;
   background: any;
   address: string;
@@ -12,9 +12,17 @@ export type Creator = {
   verified?: boolean;
   listed_at: Date | null | string;
   updatedAt?: Date | null | string;
-  collections?: [];
+  collections?: string[];
   category?: string;
   twitter_followers?: number | null;
   upvotes_count?: number;
-  tags?: [];
+  tags?: string[];
+  token_symbol?: string;
+  total_volume?: number;
+  average_volume?: number;
+  average_floor_price?: number;
+  total_collections?: number;
+  total_supply?: number;
+  total_sales?: number;
+  background_image?: string;
 };

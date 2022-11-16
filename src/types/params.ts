@@ -1,4 +1,5 @@
 export type Params = {
+  slug?: string;
   sort?: string;
   order?: string;
   term?: string;

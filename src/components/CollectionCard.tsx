@@ -44,7 +44,7 @@ export const CollectionCard = ({ username, collection, index }: any) => {
   return (
     <Link href={`/collection/${collection.slug}`} key={index}>
       <a className="block relative w-full overflow-hidden bg-gray-800 border border-gray-700 rounded-lg hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 max-w-[480px] px-1 pt-1 pb-4">
-        <div className="relative overflow-hidden h-20 md:h-24 w-full bg-gray-900 rounded">
+        <div className="relative overflow-hidden h-20 md:h-24 w-full bg-gray-900 rounded opacity-40">
           {collection.banner_image_url && (
             <Image
               //@ts-ignore
@@ -56,7 +56,7 @@ export const CollectionCard = ({ username, collection, index }: any) => {
           )}
         </div>
         <div className="px-3 md:px-5 -mt-[50px]">
-          <div className="relative object-cover w-20 h-20 rounded-lg overflow-hidden mb-1 border-[5px] border-gray-700 bg-gray-700">
+          <div className="relative object-cover w-16 h-16 md:w-[72px] md:h-[72px] rounded-lg overflow-hidden mb-1 border-[5px] border-gray-700 bg-gray-700">
             {collection.image_url && (
               <Image
                 //@ts-ignore
@@ -105,7 +105,7 @@ export const CollectionCard = ({ username, collection, index }: any) => {
               </div>
             </div>
             <div className="">
-              <p className="text-gray-500 text-sm font-bold">Total Proce</p>
+              <p className="text-gray-500 text-sm font-bold">Total Volume</p>
               <div className="flex items-center gap-1 text-gray-400 font-bold -ml-1">
                 {collection.payment_tokens &&
                   collection.payment_tokens[0].symbol == "ETH" && <EthIcon />}

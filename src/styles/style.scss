@@ -114,6 +114,26 @@
     border-style: solid;
     border-color: #000000 transparent transparent transparent;
 }
+.rt-triangle {
+    opacity: .8;
+    width: 0;
+    height: 0;
+    border-width: 0 40px 40px 0;
+    border-style: solid;
+    border-color: transparent #000000 transparent transparent;
+}
+.os-triangle {
+    opacity: .8;
+    width: 0;
+    height: 0;
+    border-width: 0 30px 30px 0;
+    border-style: solid;
+    border-color: transparent #2081e2 transparent transparent;
+}
+
+.bg-upvote {
+    background: linear-gradient(308.49deg, #cb2c2c 0%, #ff9432 100%);
+}
 
 .ellipsis {
     overflow: hidden;

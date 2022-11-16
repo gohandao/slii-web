@@ -9,13 +9,13 @@ import { sortList } from "@/libs/sortList";
 import { getSocials } from "@/utilities/getSocials";
 import { createJson } from "@/utilities/createJson";
 
-const createCollectionJson = async () => {
+const createCollectionJson = async (req: any, res: any) => {
   let pathName = "collections.json";
   let base = await getCollections();
   let data = await getOSCollections(base);
   let source = await sortCollections(data);
   await createJson(pathName, source);
-  return;
+  res.end();
 };
 
 const getCollections = async () => {

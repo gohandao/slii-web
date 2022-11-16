@@ -32,9 +32,9 @@ import { Tag } from "@/types/tag";
 import { Utilities } from "@/types/utilities";
 import { Footer } from "@/components/Footer";
 import { BreadcrumbList } from "@/types/breadcrumbList";
-import creators from "@/json/creators.json";
+import creatorsJson from "@/json/creators.json";
 
-import collections from "@/json/collections.json";
+import collectionsJson from "@/json/collections.json";
 import tags from "@/json/tags.json";
 import { Social } from "@/types/social";
 import { stringify } from "querystring";
@@ -50,7 +50,9 @@ import { redirections } from "@/utilities/redirections";
 const shortid = require("shortid");
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const test = creators as Creator[];
+  const [creators, setCreators] = useState<Creator[]>(creatorsJson);
+  const [collections, setCollections] = useState<any[]>(collectionsJson);
+  const [loginModal, setLoginModal] = useState(false);
   const [user, setUser] = useState<any>();
   // const [creatorSocial, setCreatorSocial] = useState<boolean>(false);
   const [profile, setProfile] = useState<any>();
@@ -307,6 +309,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       >
         <UtilitiesContext.Provider
           value={{
+            loginModal: loginModal,
+            setLoginModal: setLoginModal,
             baseUrl: baseUrl,
             keyword: keyword,
             setKeyword: setKeyword,
@@ -324,15 +328,15 @@ function MyApp({ Component, pageProps }: AppProps) {
             value={{
               creators,
               collections,
+              setCreators,
+              setCollections,
               tags,
               // socials,
               // setSocials,
             }}
           >
             <div className="flex flex-col min-h-screen font-digital -font-outfit bg-stripe overflow-hidden">
-              <div className="min-h-[860px]">
-                <Component {...pageProps} />
-              </div>
+              <Component {...pageProps} />
               <div className="mt-auto">
                 <Footer />
               </div>

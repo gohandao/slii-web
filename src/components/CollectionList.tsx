@@ -139,7 +139,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
                   <div className="px-4 w-full">
                     <div className="flex w-full gap-2 items-center">
                       <div className="relative -mt-[60px]">
-                        <div className="rounded border-[5px] overflow-hidden flex items-center justify-center z-10 bg-gray-100 border-gray-700 relative w-[70px] h-[70px] min-w-[70px]">
+                        <div className="rounded border-[5px] overflow-hidden flex items-center justify-center z-10 bg-gray-600 border-gray-700 relative w-[70px] h-[70px] min-w-[70px]">
                           {collection.image_url && (
                             <Image
                               //@ts-ignore

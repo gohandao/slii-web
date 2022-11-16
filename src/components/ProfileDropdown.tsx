@@ -5,6 +5,7 @@ import { BsThreeDots } from "react-icons/bs";
 import { FaRegFlag } from "react-icons/fa";
 
 type Props = {
+  position: "left" | "right";
   icon: any;
   dropdown: boolean;
   setDropdown: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,11 +16,21 @@ type Props = {
   }[];
 };
 export const ProfileDropdown = ({
+  position,
   icon,
   dropdown,
   setDropdown,
   menus,
 }: Props) => {
+  let possitionClass = "";
+  switch (position) {
+    case "left":
+      possitionClass = "origin-top-left left-0 ";
+      break;
+    case "right":
+      possitionClass = "origin-top-right right-0 ";
+      break;
+  }
   const onClickHandler = (url: string) => {
     //router.push(url);
     window.open(`${url}`, "_blank");
@@ -37,7 +48,7 @@ export const ProfileDropdown = ({
       </button>
       {dropdown && (
         <div
-          className={`absolute origin-top-right left-0 sm:origin-top-left sm:right-0 sm:left-auto rounded border border-gray-700 bg-gray-800 z-20 w-48`}
+          className={`absolute rounded border border-gray-700 bg-gray-800 z-20 w-48 ${possitionClass}`}
         >
           {menus.map((menu, index) => (
             <button

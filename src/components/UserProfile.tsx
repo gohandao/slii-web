@@ -45,7 +45,7 @@ export const UserProfile = ({ profile }: Props) => {
       development: "http://localhost:3000",
     }[process.env.NODE_ENV];
   }
-  const { socials } = useContext(BaseContext);
+  // const { socials } = useContext(BaseContext);
 
   const [avatar, setAvatar] = useState<File | Blob>();
   let avatar_url;
@@ -102,24 +102,24 @@ export const UserProfile = ({ profile }: Props) => {
     setIsOpen(false);
   };
 
-  useEffect(() => {
-    if (socials && profile.username) {
-      //set collection
-      const socials_filter = socials.filter(
-        (social) => profile.username === social.creator_username
-      );
-      socials_filter.length > 0 && setSocial(socials_filter[0]);
-      if (socials_filter.length == 0) {
-        setSocial({
-          collection_slug: "",
-          creator_username: "",
-          twitter_followers: null,
-          discord_members: null,
-          record_id: null,
-        });
-      }
-    }
-  }, [socials]);
+  // useEffect(() => {
+  //   if (socials && profile.username) {
+  //     //set collection
+  //     const socials_filter = socials.filter(
+  //       (social) => profile.username === social.creator_username
+  //     );
+  //     socials_filter.length > 0 && setSocial(socials_filter[0]);
+  //     if (socials_filter.length == 0) {
+  //       setSocial({
+  //         collection_slug: "",
+  //         creator_username: "",
+  //         twitter_followers: null,
+  //         discord_members: null,
+  //         record_id: null,
+  //       });
+  //     }
+  //   }
+  // }, [socials]);
 
   /*useEffect(() => {
     if (twitterData) {
@@ -209,9 +209,7 @@ export const UserProfile = ({ profile }: Props) => {
         <div className="-mt-[60px] relative flex justify-center">
           <div className="relative flex">
             <div className="rounded-full border-[5px] border-gray-800 overflow-hidden flex items-center justify-center z-10 mb-2 bg-gray-800 w-[110px] h-[110px]">
-              {profile &&
-              profile.avatar_url &&
-              profile.avatar_url.length > 0 ? (
+              {profile && profile.avatar_url ? (
                 <Image
                   //@ts-ignore
                   src={URL.createObjectURL(avatar)}
@@ -231,21 +229,23 @@ export const UserProfile = ({ profile }: Props) => {
                 />
               )}
             </div>
-            <div className="flex gap-3 absolute bottom-6 right-full rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
+            <div className=" gap-3 absolute bottom-6 right-full rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
               <ProfileDropdown
+                position="left"
                 icon={<BsFillShareFill className="text-gray-500" />}
                 dropdown={shareDropdown}
                 setDropdown={setShareDropdown}
                 menus={shareMenus}
               />
               <ProfileDropdown
+                position="left"
                 icon={<BsThreeDots className="text-gray-500 " />}
                 dropdown={requestDropdown}
                 setDropdown={setRequestDropdown}
                 menus={requestMenus}
               />
             </div>
-            <div className="flex gap-3 absolute bottom-6 left-full rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
+            <div className=" gap-3 absolute bottom-6 left-full rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
               <BookmarkButton id={profile.username} type="creator" />
             </div>
           </div>

@@ -26,6 +26,7 @@
     "src/libs/supabase.jsx",
     "src/pages/api/twitter.jsx",
     "src/utilities/removeUndefinedObject.jsx",
+    "src/pages/api/updateNFTs.jsx",
     "src/libs/discord.jsx",
     "src/libs/twitter.jsx"
   ],

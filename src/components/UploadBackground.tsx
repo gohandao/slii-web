@@ -12,10 +12,11 @@ export type Props = {
   // uploadImages: File[];
   // setUploadImages: (value: React.SetStateAction<File[]>) => void;
   image: File | undefined;
-  setImage: (value: React.SetStateAction<File | undefined>) => void;
+  newImage: File | undefined;
+  setNewImage: (value: React.SetStateAction<File | undefined>) => void;
 };
 
-export const UploadBackground = ({ image, setImage }: Props) => {
+export const UploadBackground = ({ image, newImage, setNewImage }: Props) => {
   // const [images, setImages] = useState<File[]>([]);
   // const [image, setImage] = useState<File>();
 
@@ -36,7 +37,7 @@ export const UploadBackground = ({ image, setImage }: Props) => {
           options
         );
         // const compressed_file = e.target.files[0];
-        setImage(compressed_file);
+        setNewImage(compressed_file);
         // console.log("e.target.files[0]");
         // console.log(e.target.files[0]);
         // console.log(Object.getPrototypeOf(e.target.files[0]));
@@ -48,7 +49,7 @@ export const UploadBackground = ({ image, setImage }: Props) => {
   };
 
   const handleOnRemoveImage = () => {
-    setImage(undefined);
+    setNewImage(undefined);
   };
   // const handleOnRemoveImage = (index: number) => {
   //   // 選択した画像は削除可能
@@ -72,9 +73,9 @@ export const UploadBackground = ({ image, setImage }: Props) => {
           className="hidden"
         />
         <div className="w-full h-full flex relative bg-gray-700 overflow-hidden items-center justify-center">
-          {image ? (
+          {newImage ? (
             <Image
-              src={URL.createObjectURL(image)}
+              src={URL.createObjectURL(newImage)}
               layout="fill"
               objectFit="cover"
               alt=""

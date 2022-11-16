@@ -6,7 +6,7 @@ export type Collection = {
   type: string;
   category: string;
   verified: boolean;
-  tags: [];
+  tags: string[];
   listed_at: Date | null;
   updatedAt: Date | null;
   twitter_followers: number | null;

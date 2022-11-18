@@ -7,25 +7,53 @@ import { BiSearchAlt, BiSearchAlt2 } from "react-icons/bi";
 import { setParams } from "@/utilities/setParams";
 import { IoSearchCircleSharp } from "react-icons/io5";
 
-export const Searchbox = () => {
+type Props = {
+  id: string;
+  property?: "default" | "nft";
+};
+export const Searchbox = ({ id, property }: Props) => {
   const router = useRouter();
   const { order, sort, term, page, type, search, tab } = router.query;
+  const { hiddenUrl } = useContext(UtilitiesContext);
 
-  const { keyword, setKeyword } = useContext(UtilitiesContext);
+  const { keyword, setKeyword, NFTKeyword, setNFTKeyword } =
+    useContext(UtilitiesContext);
+
+  const currentKeyword = property == "nft" ? NFTKeyword : keyword;
 
   useEffect(() => {
-    search && search.length > 0 && !keyword && setKeyword(search as string);
+    if (property == "nft") {
+      search &&
+        search.length > 0 &&
+        !NFTKeyword &&
+        setNFTKeyword(search as string);
+    } else {
+      search && search.length > 0 && !keyword && setKeyword(search as string);
+    }
   }, []);
   useEffect(() => {
-    setParams({
-      type: type && (type as string),
-      sort: sort && (sort as string),
-      order: order && (order as string),
-      term: term && (term as string),
-      search: keyword && (keyword as string),
-      tab: tab && (tab as string),
-    });
-  }, [keyword]);
+    if (property == "nft") {
+      setParams({
+        type: type && (type as string),
+        sort: sort && (sort as string),
+        order: order && (order as string),
+        term: term && (term as string),
+        search: NFTKeyword && (NFTKeyword as string),
+        tab: tab && (tab as string),
+        hiddenUrl,
+      });
+    } else {
+      setParams({
+        type: type && (type as string),
+        sort: sort && (sort as string),
+        order: order && (order as string),
+        term: term && (term as string),
+        search: keyword && (keyword as string),
+        tab: tab && (tab as string),
+        hiddenUrl,
+      });
+    }
+  }, [keyword, NFTKeyword]);
 
   const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
@@ -58,9 +86,9 @@ export const Searchbox = () => {
         <input
           type="text"
           name=""
-          id=""
+          id={id}
           placeholder="Keyword search"
-          value={keyword}
+          value={currentKeyword}
           onChange={(e) => {
             onChangeText(e);
           }}

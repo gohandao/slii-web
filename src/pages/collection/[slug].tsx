@@ -301,7 +301,7 @@ const CollectionIndex: NextPage = (props: any) => {
               {assets && assets.length > 0 && (
                 <div className="px-5 lg:px-8">
                   <div className="relative flex gap-3 z-20 justify-between mb-5 sm:gap-5">
-                    <Searchbox />
+                    <Searchbox id="nft" property="nft" />
                     <div className="flex items-center gap-3">
                       <Dropdown position="right" property="nftSort" />
                       {sort != "random" ? (

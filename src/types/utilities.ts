@@ -7,8 +7,12 @@ export type Utilities = {
   baseUrl?: string;
   loginModal: boolean;
   setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
+  hiddenUrl?: string;
+  setHiddenUrl: React.Dispatch<React.SetStateAction<string | undefined>>;
   keyword?: string;
   setKeyword: React.Dispatch<React.SetStateAction<string | undefined>>;
+  NFTKeyword?: string;
+  setNFTKeyword: React.Dispatch<React.SetStateAction<string | undefined>>;
   headerIcon: {
     title: string;
     subTitle?: any;

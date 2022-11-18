@@ -91,6 +91,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     path: "",
   });
   const [keyword, setKeyword] = useState<string | undefined>();
+  const [hiddenUrl, setHiddenUrl] = useState<string | undefined>();
+  const [NFTKeyword, setNFTKeyword] = useState<string | undefined>();
   const [indexTab, setIndexTab] = useState<"all" | "op" | "ed" | undefined>(
     "all"
   );
@@ -312,8 +314,12 @@ function MyApp({ Component, pageProps }: AppProps) {
             loginModal: loginModal,
             setLoginModal: setLoginModal,
             baseUrl: baseUrl,
+            hiddenUrl: hiddenUrl,
+            setHiddenUrl: setHiddenUrl,
             keyword: keyword,
             setKeyword: setKeyword,
+            NFTKeyword: keyword,
+            setNFTKeyword: setKeyword,
             headerIcon: headerIcon,
             setHeaderIcon: setHeaderIcon,
             breadcrumbList: breadcrumbList,

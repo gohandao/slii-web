@@ -1,7 +1,8 @@
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { setParams } from "@/utilities/setParams";
 import { useQueryState } from "next-usequerystate";
 import { useRouter } from "next/router";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useContext } from "react";
 
 type Props = {
   term?: string;
@@ -10,6 +11,8 @@ export const TermSort = ({ term }: Props) => {
   //const [termParam, setTermParam] = useQueryState("term");
   const router = useRouter();
   const { order, sort, page, type, search } = router.query;
+  const { hiddenUrl } = useContext(UtilitiesContext);
+
   type Props = {
     title: string;
   };
@@ -32,6 +35,7 @@ export const TermSort = ({ term }: Props) => {
             term: title,
             type: type as string,
             search: search as string,
+            hiddenUrl,
           });
           //setTermParam(title);
         }}

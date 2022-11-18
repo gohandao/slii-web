@@ -8,6 +8,7 @@
     -webkit-text-fill-color: transparent;
     //text-fill-color: transparent;
 }*/
+
 .font-digital {
     // font-weight: 400;
     font-style: normal;
@@ -156,7 +157,7 @@ $stripe02: #1a1a1a;
     );
     background-size: 5px 5px;
 }
-.hide-scrollbar {
+.hide-scrollbar, .ReactModal__Overlay {
     /* IE, Edge 対応 */
     -ms-overflow-style: none;
     /* Firefox 対応 */

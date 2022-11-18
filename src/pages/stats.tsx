@@ -113,7 +113,7 @@ const StatsPage: NextPage = () => {
           )}
           <div className="flex gap-3 sm:gap-5 justify-between items-center mb-4">
             <Dropdown position="left" property="collectionType" />
-            <Searchbox />
+            <Searchbox id="collection" />
             <div className="hidden md:flex">
               <TermSort term={term as string} />
             </div>

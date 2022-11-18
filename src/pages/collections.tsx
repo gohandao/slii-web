@@ -138,7 +138,7 @@ const CollectionsPage: NextPage = () => {
           </div>
           <div className="relative flex gap-3 sm:gap-5 z-20 justify-between mb-3">
             <Dropdown position="left" property="collectionType" />
-            <Searchbox />
+            <Searchbox id="collection" />
             <div className="flex items-center gap-3">
               <Dropdown position="right" property="collectionSort" />
               <OrderButton />

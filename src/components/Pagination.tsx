@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import router, { useRouter } from "next/router";
 
 import Router from "next/router";
 import Link from "next/link";
 import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
 import { setParams } from "@/utilities/setParams";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 type Props = {
   currentPage: number;
@@ -21,6 +22,7 @@ export const Pagination = ({ currentPage, length, limit }: Props) => {
   const lastPage = Math.floor(length / limit) + 1;
   const router = useRouter();
   const { order, sort, term, page, type, search } = router.query;
+  const { hiddenUrl } = useContext(UtilitiesContext);
 
   const PaginationItem = ({ count }: ItemProps) => {
     let activeClass;
@@ -40,6 +42,7 @@ export const Pagination = ({ currentPage, length, limit }: Props) => {
             term: term && (term as string),
             page: count,
             search: search && (search as string),
+            hiddenUrl,
           });
         }}
       >

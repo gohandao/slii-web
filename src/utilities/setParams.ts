@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
-import router from "next/router";
+import router, { useRouter } from "next/router";
 import { Params } from "@/types/params";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 export const setParams = ({
   slug,
@@ -12,6 +13,8 @@ export const setParams = ({
   type,
   search,
   tab,
+  hiddenUrl,
+  keyword,
 }: Params) => {
   const query = {
     slug: slug,
@@ -24,10 +27,16 @@ export const setParams = ({
     search: search,
   };
   const new_query: Params = removeUndefinedObject(query);
+  // const { hiddenUrl } = useContext(UtilitiesContext);
   const currentUrl = location.pathname;
-  console.log("new_query");
-  console.log(query);
-  console.log(new_query);
+  const new_url = hiddenUrl ? hiddenUrl : currentUrl;
+  const new_asUrl = hiddenUrl ? currentUrl : undefined;
+
+  console.log("currentUrlssss");
+  console.log(currentUrl);
+  console.log(new_url);
+  console.log(new_asUrl);
+
   router.push(
     {
       pathname: currentUrl,

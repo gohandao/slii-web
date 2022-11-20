@@ -99,7 +99,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
               className="relative flex hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1"
               key={index}
             >
-              <Link href={`/collection/${collection.slug}`}>
+              <Link href={`/collection/${collection.slug}`} legacyBehavior>
                 <a className="relative flex flex-col border border-gray-800 rounded-lg w-full items-center shadow-lg bg-gray-800 overflow-hidden pb-2">
                   <div className="absolute top-0 right-0 z-20  text-gray-400 opacity-60 flex gap-1 items-center">
                     <p className="text-gray-400 text-xs text-center mt-[2px]">

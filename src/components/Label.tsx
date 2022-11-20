@@ -18,7 +18,7 @@ export const Label = ({ name, type }: Props) => {
 
   return (
     <object>
-      <Link href={`/tags/${name}?type=${type}`}>
+      <Link href={`/tags/${name}?type=${type}`} legacyBehavior>
         <a className={`rounded py-1 text-xs md:text-sm ${typeClass}`}>
           #{name}
         </a>

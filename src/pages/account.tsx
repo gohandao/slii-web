@@ -57,6 +57,12 @@ const AccountPage: NextPage = () => {
   // const file = await imageCompression(images[0].files[0], options);
 
   useEffect(() => {
+    if (!user) {
+      router.push("/");
+    }
+  }, [user]);
+
+  useEffect(() => {
     if (user) {
       setEmail(user.email);
     }
@@ -174,7 +180,7 @@ const AccountPage: NextPage = () => {
                     placeholder="Minimum 4 characters"
                     onChange={setUsername}
                   />
-                  <Link href={`/${username}`}>
+                  <Link href={`/${username}`} legacyBehavior>
                     <a className="inline-block text-blue-500 underline hover:no-underline mt-1 text-sm">
                       https://nftotaku.xyz/{username}
                     </a>

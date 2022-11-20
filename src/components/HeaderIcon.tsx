@@ -102,7 +102,7 @@ export const HeaderIcon = () => {
         </div>
         {/* <NextButton /> */}
         {headerIcon.emoji.length > 0 ? (
-          <Link href={headerIcon.path}>
+          <Link href={headerIcon.path} legacyBehavior>
             <a className="relative h-7 font-bold text-base text-white tracking-wider flex items-center mt-[2px]">
               {headerIcon.emoji && (
                 <span className="text-3xl mr-2 -mt-[2px]">
@@ -113,7 +113,7 @@ export const HeaderIcon = () => {
             </a>
           </Link>
         ) : headerIcon.element ? (
-          <Link href={headerIcon.path}>
+          <Link href={headerIcon.path} legacyBehavior>
             <a className="relative h-7 font-bold text-base text-white tracking-wider flex items-center mt-[2px]">
               {headerIcon.element && (
                 <span className="text-3xl mr-2 -mt-[2px]">
@@ -124,7 +124,7 @@ export const HeaderIcon = () => {
             </a>
           </Link>
         ) : headerIcon.avatar.length > 0 ? (
-          <Link href={headerIcon.path}>
+          <Link href={headerIcon.path} legacyBehavior>
             <a className="relative h-7 font-bold text-2xl text-white tracking-wider flex items-center gap-2">
               {headerIcon.avatar && (
                 <div className="w-[44px] h-[44px] rounded-full overflow-hidden relative border-[3px] border-gray-700">
@@ -145,7 +145,7 @@ export const HeaderIcon = () => {
         ) : currentPath != "/" &&
           currentPath != "/collections" &&
           currentPath != "/creator/[username]" ? (
-          <Link href={headerIcon.path}>
+          <Link href={headerIcon.path} legacyBehavior>
             <a className="relative tracking-wider flex items-center gap-2 py-[2px]">
               <div className="flex flex-col gap-[2px]">
                 <p className="text-lg ellipsis max-w-[180px] font-bold text-gray-100 leading-none">
@@ -158,7 +158,7 @@ export const HeaderIcon = () => {
             </a>
           </Link>
         ) : (
-          <Link href="/">
+          <Link href="/" legacyBehavior>
             <a className="relative flex h-7 font-bold text-base text-gray-100 tracking-wider items-center mt-[2px]">
               <span className="text-3xl mr-2 -mt-[2px]">
                 <BiHomeAlt />

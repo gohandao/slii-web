@@ -217,7 +217,7 @@ const CollectionIndex: NextPage = (props: any) => {
     <>
       <p className="text-xs text-gray-500">
         By{" "}
-        <Link href={`/creator/${creator.username}`}>
+        <Link href={`/creator/${creator.username}`} legacyBehavior>
           <a className="inline-flex gap-1 items-center">
             {creator.username}{" "}
             {creator.verified == true && (

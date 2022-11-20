@@ -42,7 +42,7 @@ export const Tab = ({ title, path, param }: Tab) => {
   return (
     <>
       {path && (
-        <Link href={path}>
+        <Link href={path} legacyBehavior>
           <a
             className={`relative text-2xl font-bold py-2 rounded-lg flex justify-center items-center transition-all duration-300 ${passiveClass}`}
           >

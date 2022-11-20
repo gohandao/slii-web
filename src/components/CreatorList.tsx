@@ -71,6 +71,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
             >
               <Link
                 href={`/creator/${creator.username}?ref=index`}
+                legacyBehavior
                 // href={{
                 //   pathname: `/?username=${creator.username}`,
                 //   query: {

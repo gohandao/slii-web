@@ -42,7 +42,7 @@ export const CollectionCard = ({ username, collection, index }: any) => {
     );
   };
   return (
-    <Link href={`/collection/${collection.slug}`} key={index}>
+    <Link href={`/collection/${collection.slug}`} key={index} legacyBehavior>
       <a className="block relative w-full overflow-hidden bg-gray-800 border border-gray-700 rounded-lg hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 max-w-[480px] px-1 pt-1 pb-4">
         <div className="relative overflow-hidden h-20 md:h-24 w-full bg-gray-900 rounded opacity-40">
           {collection.banner_image_url && (

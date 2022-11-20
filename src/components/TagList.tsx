@@ -27,7 +27,7 @@ export const TagList = ({ tags, type }: Props) => {
           return (
             <div key={index}>
               {tag && tag.name && (
-                <Link href={path}>
+                <Link href={path} legacyBehavior>
                   <a
                     className={`inline-block rounded px-3 py-2 text-sm ${typeClass}`}
                   >

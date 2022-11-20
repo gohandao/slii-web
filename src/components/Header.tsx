@@ -92,7 +92,7 @@ export const Header = () => {
             <Image src="/logo.svg" width={100} height={14} alt="" />
           </a> */}
           <div className="gap-10 hidden lg:flex pr-16 ">
-            <Link href="/">
+            <Link href="/" legacyBehavior>
               <a
                 className={`text-sm font-bold text-gray-100 tracking-wider flex items-center ${homeClass}`}
               >
@@ -102,7 +102,7 @@ export const Header = () => {
                 Home
               </a>
             </Link>
-            <Link href="/stats">
+            <Link href="/stats" legacyBehavior>
               <a
                 className={`text-sm font-bold text-gray-100 tracking-wider flex items-center ${statsClass}`}
               >
@@ -112,7 +112,7 @@ export const Header = () => {
                 Stats
               </a>
             </Link>
-            <Link href="/tags">
+            <Link href="/tags" legacyBehavior>
               <a
                 className={`text-sm font-bold text-gray-100 tracking-wider flex items-center ${tagsClass}`}
               >
@@ -171,12 +171,12 @@ export const Header = () => {
             >
               {user && (
                 <>
-                  <Link href={`/${profile.username}`}>
+                  <Link href={`/${profile.username}`} legacyBehavior>
                     <a className="block px-5 py-3 border-b border-gray-700 text-sm text-gray-400">
                       Profile
                     </a>
                   </Link>
-                  <Link href="/account">
+                  <Link href="/account" legacyBehavior>
                     <a className="block px-5 py-3 border-b border-gray-700 text-sm text-gray-400">
                       Account
                     </a>

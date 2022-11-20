@@ -45,6 +45,7 @@ export const SmallTab = ({ title, path }: Props) => {
         pathname: pathName,
         query: new_query,
       }}
+      legacyBehavior
     >
       <a
         className={`text-gray-100 rounded-full px-5 py-1  text-xs ${passiveClass}`}

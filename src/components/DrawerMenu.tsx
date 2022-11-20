@@ -43,7 +43,7 @@ export const DrawerMenu = ({ status, setStatus }: Props) => {
       className={`max-w-[360px] fixed h-screen left-0 top-0 bg-gray-800 z-50 ${statusClass} transition-all duration-500`}
     >
       <div className={`relative flex justify-center pt-4 mb-2 `}>
-        <Link href="/">
+        <Link href="/" legacyBehavior>
           <a className="relative flex h-7">
             <Image src="/logo.svg" width={142} height={20} alt="" />
           </a>
@@ -66,7 +66,7 @@ export const DrawerMenu = ({ status, setStatus }: Props) => {
       </p>
       <div className={`flex flex-col`}>
         {menus.map((menu, index) => (
-          <Link href={menu.path} key={index}>
+          <Link href={menu.path} key={index} legacyBehavior>
             <a
               className={`relative  font-bold text-base text-white tracking-wider flex items-center py-3 px-5 odd:bg-gray-700`}
             >

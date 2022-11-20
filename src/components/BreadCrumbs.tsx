@@ -26,7 +26,7 @@ export const BreadCrumbs = ({ list }: Props) => {
             >
               {list.length - 1 !== index ? (
                 <div className="flex items-center gap-3 text-blue-500">
-                  <Link href={path}>
+                  <Link href={path} legacyBehavior>
                     <a className="text-sm" itemProp="item">
                       <span itemProp="name">{name}</span>
                     </a>

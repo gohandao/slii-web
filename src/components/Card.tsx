@@ -21,6 +21,7 @@ export const Card = ({ creator }: Props) => {
       href={`/creator/${creator.username}`}
       scroll={false}
       className="flex w-full"
+      legacyBehavior
     >
       <a className="relative border-2 border-gray-900 rounded-lg flex pointer text-sm bg-white">
         <div className="relative flex justify-center items-center w-40 h-40 overflow-hidden">

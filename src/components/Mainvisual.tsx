@@ -8,7 +8,7 @@ type Props = {
 export const Mainvisual = () => {
   const Button = ({ href, children }: Props) => {
     return (
-      <Link href={href}>
+      <Link href={href} legacyBehavior>
         <a className="border-2 border-gray-900 inline-flex w-32 text-center py-2 rounded-lg justify-center text-sm xl:text-base">
           {children}
         </a>

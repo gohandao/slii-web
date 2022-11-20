@@ -10,11 +10,11 @@ export const useRedirections = () => {
   const { user } = useContext(AuthContext);
 
   switch (currentPath) {
-    case "/account":
-      if (!user) {
-        router.push("/");
-      }
-      break;
+    // case "/profile":
+    //   if (!user) {
+    //     router.push("/");
+    //   }
+    //   break;
     case "/login":
       if (user) {
         if (prev && typeof prev == "string") {

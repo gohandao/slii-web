@@ -29,7 +29,7 @@ export const Footer = () => {
   const { user, avatar } = useContext(AuthContext);
   const Button = ({ url, title }: ButtonProps) => {
     return (
-      <Link href={url}>
+      <Link href={url} legacyBehavior>
         <a className="flex justify-center items-center px-5 py-5 rounded bg-gray-900 text-white">
           {title}
         </a>
@@ -38,7 +38,7 @@ export const Footer = () => {
   };
   const FixedMenu = ({ href, children }: FixedMenuProps) => {
     return (
-      <Link href={href}>
+      <Link href={href} legacyBehavior>
         <a className="flex items-center justify-center px-3 py-[14px] text-2xl w-full text-gray-400 border-r border-gray-700 last:border-none">
           {children}
         </a>

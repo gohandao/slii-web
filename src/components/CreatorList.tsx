@@ -129,6 +129,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
                           alt=""
                           loading="lazy"
                           className="rounded"
+                          quality={20}
                         />
                       )}
                     </div>
@@ -145,6 +146,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
                               height={80}
                               objectFit="cover"
                               alt=""
+                              quality={20}
                             />
                           )}
                         </div>

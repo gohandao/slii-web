@@ -99,6 +99,7 @@ export const BookmarkButton = ({ id, property = "default", type }: Props) => {
   };
   useEffect(() => {
     checkBookmarked();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookmarks, id]);
   return (
     <div className="flex justify-center gap-3">

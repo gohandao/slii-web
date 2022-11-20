@@ -24,7 +24,6 @@ import {
   AiOutlineHeart,
 } from "react-icons/ai";
 import { VoteButton } from "./VoteButton";
-import { LikeButton } from "./LikeButton";
 import { BookmarkButton } from "./BookmarkButton";
 import { Collection } from "@/types/collection";
 import { abbreviateNumber } from "@/utilities/abbreviateNumber";

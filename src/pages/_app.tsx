@@ -16,10 +16,6 @@ import { base } from "@/libs/airtable";
 import { AuthContext } from "@/contexts/AuthContext";
 
 import { CreatorsContext } from "@/contexts/CreatorsContext";
-import {
-  CreatorTagsContext,
-  CollectionTagsContext,
-} from "@/contexts/TagsContext";
 import { CollectionsContext } from "@/contexts/CollectionsContext";
 import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
@@ -45,7 +41,8 @@ import { Bookmark } from "@/types/bookmark";
 import { isBuffer } from "util";
 import { IconType } from "react-icons";
 import { Profile } from "@/types/profile";
-import { redirections } from "@/utilities/redirections";
+import { useRedirections } from "@/utilities/useRedirections";
+import { Params } from "@/types/params";
 
 const shortid = require("shortid");
 
@@ -57,6 +54,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   // const [creatorSocial, setCreatorSocial] = useState<boolean>(false);
   const [profile, setProfile] = useState<any>();
   const [userProfile, setUserProfile] = useState<Profile>();
+  const [scrollY, setScrollY] = useState<number>();
+  const [prevHeight, setPrevHeight] = useState<number>();
 
   const [likes, setLikes] = useState<Like[]>([]);
   // const [allList, setAllList] = useState<any[]>([]);
@@ -91,7 +90,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     path: "",
   });
   const [keyword, setKeyword] = useState<string | undefined>();
-  const [hiddenUrl, setHiddenUrl] = useState<string | undefined>();
+  const [hiddenParams, setHiddenParams] = useState<Params | undefined>();
   const [NFTKeyword, setNFTKeyword] = useState<string | undefined>();
   const [indexTab, setIndexTab] = useState<"all" | "op" | "ed" | undefined>(
     "all"
@@ -138,6 +137,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     !avatar && getAvatarBlob();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   // user && !likes getLikes();
@@ -145,6 +145,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     getBookmarks();
     getUpvotes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const getBookmarks = async () => {
@@ -248,6 +249,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     // collections.length == 0 && getCollections();
     // creatorTags.length == 0 && getTags("creator_tags", setCreatorTags);
     // collectionTags.length == 0 && getTags("collection_tags", setCollectionTags);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // useEffect(() => {
@@ -314,8 +316,8 @@ function MyApp({ Component, pageProps }: AppProps) {
             loginModal: loginModal,
             setLoginModal: setLoginModal,
             baseUrl: baseUrl,
-            hiddenUrl: hiddenUrl,
-            setHiddenUrl: setHiddenUrl,
+            hiddenParams: hiddenParams,
+            setHiddenParams: setHiddenParams,
             keyword: keyword,
             setKeyword: setKeyword,
             NFTKeyword: keyword,
@@ -326,6 +328,10 @@ function MyApp({ Component, pageProps }: AppProps) {
             setBreadcrumbList: setBreadcrumbList,
             userProfile: userProfile,
             setUserProfile: setUserProfile,
+            scrollY: scrollY,
+            setScrollY: setScrollY,
+            prevHeight: prevHeight,
+            setPrevHeight: setPrevHeight,
             //collectionsMenu: collectionsMenu,
             //setCollectionsMenu: setCollectionsMenu,
           }}

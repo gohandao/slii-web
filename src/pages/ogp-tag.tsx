@@ -6,12 +6,12 @@ const OGP = () => {
     <div className="flex w-full h-full">
       <div className="relative w-[1200px] h-[600px] font-digital">
         <div className="absolute left-0 top-0 w-full h-full">
-          <Image src="/ogp-base.jpg" layout="fill" />
+          <Image src="/ogp-base.jpg" layout="fill" alt="" />
         </div>
         <div className="absolute left-[84px] top-[42px] flex flex-col w-[860px] h-[540px]">
           <div className="relative flex w-full h-full rounded-tr-[20px] overflow-hidden">
             <div className="relative w-full h-[270px]">
-              <Image src="/ogp-bg.jpg" layout="fill" />
+              <Image src="/ogp-bg.jpg" layout="fill" alt="" />
             </div>
           </div>
           <div className="w-full h-full flex flex-col ml-[66px]">

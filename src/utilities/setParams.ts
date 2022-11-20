@@ -13,8 +13,7 @@ export const setParams = ({
   type,
   search,
   tab,
-  hiddenUrl,
-  keyword,
+  ref,
 }: Params) => {
   const query = {
     slug: slug,
@@ -25,17 +24,18 @@ export const setParams = ({
     order: order,
     page: page,
     search: search,
+    ref: ref,
   };
   const new_query: Params = removeUndefinedObject(query);
   // const { hiddenUrl } = useContext(UtilitiesContext);
   const currentUrl = location.pathname;
-  const new_url = hiddenUrl ? hiddenUrl : currentUrl;
-  const new_asUrl = hiddenUrl ? currentUrl : undefined;
+  // const new_url = hiddenUrl ? hiddenUrl : currentUrl;
+  // const new_asUrl = hiddenUrl ? currentUrl : undefined;
 
-  console.log("currentUrlssss");
-  console.log(currentUrl);
-  console.log(new_url);
-  console.log(new_asUrl);
+  // console.log("currentUrlssss");
+  // console.log(currentUrl);
+  // console.log(new_url);
+  // console.log(new_asUrl);
 
   router.push(
     {

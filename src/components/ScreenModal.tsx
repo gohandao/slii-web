@@ -1,4 +1,5 @@
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
 import router from "next/router";
 import React, { ReactNode, useContext, useState } from "react";
 import { IoIosClose } from "react-icons/io";
@@ -6,15 +7,17 @@ import Modal from "react-modal";
 
 type Props = {
   children: ReactNode;
+  path?: string;
   modalIsOpen: boolean;
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export const ScreenModal = ({
+  path,
   children,
   modalIsOpen,
   setModalIsOpen,
 }: Props) => {
-  const { hiddenUrl } = useContext(UtilitiesContext);
+  const { hiddenParams } = useContext(UtilitiesContext);
 
   const customStyles = {
     overlay: {
@@ -24,6 +27,7 @@ export const ScreenModal = ({
       backgroundColor: "rgba(0,0,0,0.5)",
       zIndex: 9999,
       overflow: "auto",
+      backdropFilter: "blur(3px)",
     },
 
     content: {
@@ -53,12 +57,17 @@ export const ScreenModal = ({
     // モーダルが開いた後の処理
   };
   // モーダルを閉じる処理
+  const new_query = hiddenParams && removeUndefinedObject(hiddenParams);
   const closeModal = () => {
     setModalIsOpen(false);
-    if (hiddenUrl) {
-      router.push(hiddenUrl);
+    if (path) {
+      router.push({
+        pathname: path,
+        query: new_query,
+      });
     }
   };
+
   return (
     <Modal
       // isOpenがtrueならモダールが起動する

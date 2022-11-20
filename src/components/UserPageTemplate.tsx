@@ -93,6 +93,7 @@ export const UserPageTemplate = ({
           path: `/${userProfile.username}`,
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userProfile]);
 
   const getUserProfile = async (username: string) => {
@@ -230,6 +231,7 @@ export const UserPageTemplate = ({
     setSortedCreators((sortedCreators) => data_creators);
     const data_collections = sortList(collections_args);
     setSortedCollections((sortedCollections) => data_collections);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order, sort, term, page, type, search]);
 
   //props

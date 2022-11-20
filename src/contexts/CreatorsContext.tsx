@@ -16,7 +16,7 @@ export const CreatorsContext = createContext<Creator[]>([
     discord_url: "",
     verified: false,
     type: "",
-    createdAt: null,
+    listed_at: null,
     updatedAt: null,
     collections: [],
     category: "",

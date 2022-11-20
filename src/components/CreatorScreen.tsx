@@ -17,10 +17,8 @@ import { CollectionsContext } from "@/contexts/CollectionsContext";
 
 import { CollectionCard } from "@/components/CollectionCard";
 import { List } from "@/components/List";
-import { ShowMore } from "@/components/ShowMore";
 import { Pagination } from "@/components/Pagination";
 import { BaseLayout } from "@/components/BaseLayout";
-import { IndexTab } from "@/components/IndexTab";
 import { CreatorProfile } from "@/components/CreatorProfile";
 import { Title } from "@/components/Title";
 import { Custom404 } from "@/pages/404";
@@ -153,6 +151,7 @@ export const CreatorScreen = ({ property }: Props) => {
       };
       fetchData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creatorCollections]);
 
   //props
@@ -208,23 +207,13 @@ export const CreatorScreen = ({ property }: Props) => {
     //category: collectionsSort,
     limit: limit,
   };
-  console.log("creatorCollections");
-  console.log(sortedAssets);
-  console.log(assets);
-  console.log(creatorCollections);
-  console.log("NFTKeyword");
-  console.log(NFTKeyword);
-  console.log(keyword);
-  console.log(search);
-  console.log(searchedAssets);
-  useEffect(() => {
-    console.log("hogehogehoge");
-    console.log(assets.length);
 
+  useEffect(() => {
     if (sort != "random" && assets.length > 1) {
       const data = sortNFTs(args);
       setSortedAssets((sortedAssets) => data);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assets, creators, order, sort, term, page, type, search]);
 
   useEffect(() => {
@@ -233,6 +222,7 @@ export const CreatorScreen = ({ property }: Props) => {
     } else {
       setCurrentAssets(searchedAssets);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortedAssets, sort, random, search]);
 
   const links = {
@@ -257,9 +247,6 @@ export const CreatorScreen = ({ property }: Props) => {
       value: collection.name as string,
     };
   });
-
-  console.log("currentAssets");
-  console.log(currentAssets);
 
   return (
     <>
@@ -295,26 +282,24 @@ export const CreatorScreen = ({ property }: Props) => {
         )}
         {assets && assets.length > 0 && (
           <div className="px-5 lg:px-8">
-            {property != "modal" && (
-              <div className="relative flex gap-3 z-20 justify-between mb-5 sm:gap-5">
-                {custom_menu.length > 0 && (
-                  <Dropdown
-                    position="left"
-                    property="nftType"
-                    custom_menu={custom_menu}
-                  />
+            <div className="relative flex gap-3 z-20 justify-between mb-5 sm:gap-5">
+              {custom_menu.length > 0 && (
+                <Dropdown
+                  position="left"
+                  property="nftType"
+                  custom_menu={custom_menu}
+                />
+              )}
+              <Searchbox property="nft" id="nft" />
+              <div className="flex items-center gap-3">
+                <Dropdown position="right" property="nftSort" />
+                {sort != "random" ? (
+                  <OrderButton />
+                ) : (
+                  <RandomButton random={random} setRandom={setRandom} />
                 )}
-                <Searchbox property="nft" id="nft" />
-                <div className="flex items-center gap-3">
-                  <Dropdown position="right" property="nftSort" />
-                  {sort != "random" ? (
-                    <OrderButton />
-                  ) : (
-                    <RandomButton random={random} setRandom={setRandom} />
-                  )}
-                </div>
               </div>
-            )}
+            </div>
             <NFTList assets={currentAssets} />
             {sort != "random" && currentAssets.length > limit && (
               <div className="flex justify-center">

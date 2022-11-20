@@ -49,19 +49,20 @@ export const CollectionTable = ({ collections, limit }: Props) => {
 
   const [test, setTest] = useState(0);
   //②set initial collections data
-  const args = {
-    property: "collections" as "creators" | "collections",
-    list: collections,
-    page: currentPage,
-    order: order as "desc" | "asc" | undefined,
-    sort: sort as string | undefined,
-    term: term as "24h" | "7d" | "30d" | "all" | undefined,
-    //category: collectionsSort,
-    limit: limit,
-  };
   useEffect(() => {
+    const args = {
+      property: "collections" as "creators" | "collections",
+      list: collections,
+      page: currentPage,
+      order: order as "desc" | "asc" | undefined,
+      sort: sort as string | undefined,
+      term: term as "24h" | "7d" | "30d" | "all" | undefined,
+      //category: collectionsSort,
+      limit: limit,
+    };
     const data = sortList(args);
     setSortedCollections((sortedCollections) => data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collections, order, sort, term, page, type, search]);
 
   return (

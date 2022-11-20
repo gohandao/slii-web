@@ -1,10 +1,12 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import * as Scroll from "react-scroll";
+
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 
 import { CreatorList } from "@/components/CreatorList";
 import { CollectionTable } from "@/components/CollectionTable";
@@ -13,29 +15,21 @@ import { SearchArea } from "@/components/SearchArea";
 import { BreadCrumbs } from "@/components/BreadCrumbs";
 
 import { Mainvisual } from "@/components/Mainvisual";
-import { ShowMore } from "@/components/ShowMore";
 import { Pagination } from "@/components/Pagination";
 import { BaseLayout } from "@/components/BaseLayout";
-import { IndexTab } from "@/components/IndexTab";
 import { Hr } from "@/components/Hr";
 import { Title } from "@/components/Title";
 import { LinkButton } from "@/components/LinkButton";
 
 import { TagList } from "@/components/TagList";
 
-import {
-  CreatorTagsContext,
-  CollectionTagsContext,
-} from "@/contexts/TagsContext";
 import { CreatorsContext } from "@/contexts/CreatorsContext";
 import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 import { Tag } from "@/types/tag";
 import { Searchbox } from "@/components/Searchbox";
-import { AllList } from "@/components/AllList";
 import { Tab } from "@/components/Tab";
-import { SplitLayout } from "@/components/SplitLayout";
 import { Dropdown } from "@/components/Dropdown";
 import { FaLongArrowAltDown } from "react-icons/fa";
 import { BsArrowDown, BsArrowUp } from "react-icons/bs";
@@ -48,82 +42,78 @@ import { TabIndex } from "@/components/TabIndex";
 import { getNFTs } from "@/utilities/getNFTs";
 import { ScreenModal } from "@/components/ScreenModal";
 import { CreatorScreen } from "@/components/CreatorScreen";
+import { CreatorsIndexScreen } from "@/components/CreatorsIndexScreen";
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const { order, sort, term, page, type, search, username } = router.query;
+  const { order, sort, term, page, type, search, username, ref } = router.query;
   const currentPage = page ? Number(page) : 1;
-  const [creatorModal, setCreatorModal] = useState<boolean>(false);
+
+  const params = {
+    type: type as string,
+    page: typeof page == "number" && page != 0 ? (page as number) : undefined,
+    search: search as string,
+    order: order as string,
+    sort: sort as string,
+    term: term as string,
+  };
 
   const limit = 10;
   const [sortedCreators, setSortedCreators] = useState<Creator[]>([]);
 
   const { creators, collections, tags } = useContext(BaseContext);
-  const { setHeaderIcon, setBreadcrumbList } = useContext(UtilitiesContext);
+  const {
+    setHeaderIcon,
+    setHiddenParams,
+    setScrollY,
+    scrollY,
+    prevHeight,
+    setPrevHeight,
+  } = useContext(UtilitiesContext);
 
-  // const filteredCreators = creators;
+  // let new_scrollY = scrollY;
+  const new_scrollY = useRef(scrollY);
+  const new_height = useRef(0);
 
-  const filteredCreators =
-    type && type != "all"
-      ? creators.filter((creator) => creator.type === type)
-      : creators;
+  // scrollY && window.scrollTo(0, scrollY);
 
-  const uppperKeyword = typeof search == "string" && search.toUpperCase();
-  //1.match username
-  const searchedCreators01 = filteredCreators.filter(
-    (creator) =>
-      typeof search == "string" &&
-      //すべて大文字にして大文字小文字の区別をなくす
-      //@ts-ignore
-      creator.username.toUpperCase().includes(uppperKeyword) == true
-  );
-  // //2.match description
-  // const searchedCreators02 = filteredCreators.filter(
-  //   (creator) =>
-  //     typeof search == "string" &&
-  //     //@ts-ignore
-  //     creator.description &&
-  //     //@ts-ignore
-  //     creator.description.toUpperCase().includes(uppperKeyword) == true
-  // );
-  const origin_searchedCreators = [
-    ...searchedCreators01,
-    // ...searchedCreators02,
-  ];
-  //重複削除
-  let searchedCreators = [] as Creator[];
-  if (search && search.length > 0) {
-    searchedCreators = Array.from(new Set(origin_searchedCreators));
-  } else {
-    searchedCreators = filteredCreators;
+  console.log("initial scrollY");
+  console.log(scrollY);
+
+  var scroll = Scroll.animateScroll;
+  if (scrollY && scrollY != 0) {
+    scroll.scrollTo(scrollY, { duration: 0 });
   }
 
-  const args = {
-    property: "creators" as "creators" | "collections",
-    list: searchedCreators,
-    page: currentPage,
-    order: order as "desc" | "asc" | undefined,
-    sort: sort as string | undefined,
-    term: term as "24h" | "7d" | "30d" | "all" | undefined,
-    //category: collectionsSort,
-    limit: limit,
-  };
+  useEffect(() => {
+    new_height.current = window.innerHeight;
+    if (new_height.current && new_height.current != 0) {
+      setPrevHeight(new_height.current);
+    }
+    // if (scrollY && scrollY != 0) {
+    //   window.scrollTo(0, scrollY);
+    // }
+    // // window.scrollTo(0, scrollY);
+    var scroll = Scroll.animateScroll;
+    if (scrollY && scrollY != 0) {
+      scroll.scrollTo(scrollY, { duration: 0 });
+    }
+    window.addEventListener("scroll", async () => {
+      new_scrollY.current = window.scrollY;
+      console.log(new_scrollY.current);
+      if (new_scrollY.current && new_scrollY.current != 0) {
+        setScrollY(new_scrollY.current);
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [new_scrollY]);
 
   useEffect(() => {
-    const data = sortList(args);
-    setSortedCreators((sortedCreators) => data);
-  }, [username, order, sort, term, page, type, search]);
+    setHiddenParams(params);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order, sort, term, page, type, search, username]);
 
-  useEffect(() => {
-    setCreatorModal(username ? true : false);
-  }, [username]);
-
-  const breadcrumbList = [
-    {
-      name: "Home",
-      path: "/",
-    },
-  ];
+  // const filteredCreators = creators;
   useEffect(() => {
     setHeaderIcon({
       title: "",
@@ -131,7 +121,7 @@ const Home: NextPage = () => {
       avatar: "",
       path: "/",
     });
-    setBreadcrumbList(breadcrumbList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -143,42 +133,14 @@ const Home: NextPage = () => {
         <meta name="description" content="Generated by create next app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <ScreenModal modalIsOpen={creatorModal} setModalIsOpen={setCreatorModal}>
-        <CreatorScreen property="modal" />
-      </ScreenModal>
       <BaseLayout>
-        <section className="mx-auto px-5 lg:px-8">
-          <div className="">
-            <TabIndex />
-          </div>
-          <div className="flex gap-3 mb-2">
-            <div className="flex gap-3 items-baseline">
-              <p className="text-gray-500 text-sm">
-                {searchedCreators.length} Creators
-              </p>
-            </div>
-          </div>
-          <div className="relative flex gap-3 z-20 justify-between mb-3 sm:gap-5">
-            <Dropdown position="left" property="creatorType" />
-            <Searchbox id="creator" />
-            <div className="flex items-center gap-3">
-              <Dropdown position="right" property="creatorSort" />
-              <OrderButton />
-            </div>
-          </div>
-          <div className="mb-10">
-            {searchedCreators.length > 0 && (
-              <CreatorList creators={sortedCreators} limit={limit} />
-            )}
-          </div>
-          <div className="flex justify-center">
-            <Pagination
-              currentPage={currentPage}
-              length={searchedCreators.length}
-              limit={limit}
-            />
-          </div>
-        </section>
+        <div
+          style={{
+            minHeight: `${prevHeight}px`,
+          }}
+        >
+          <CreatorsIndexScreen params={params} />
+        </div>
       </BaseLayout>
     </div>
   );

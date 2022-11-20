@@ -6,11 +6,6 @@ import { base } from "@/libs/airtable";
 
 import React, { useState, useEffect, useContext } from "react";
 
-import {
-  CreatorTagsContext,
-  CollectionTagsContext,
-} from "@/contexts/TagsContext";
-
 import { TagList } from "@/components/TagList";
 import { CreatorList } from "@/components/CreatorList";
 import { CollectionTable } from "@/components/CollectionTable";
@@ -43,21 +38,22 @@ const TagsPage: NextPage = () => {
       element: <BiPurchaseTagAlt />,
       path: `/tags`,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const { setBreadcrumbList } = useContext(UtilitiesContext);
-  const breadcrumbList = [
-    {
-      name: "Home",
-      path: "/",
-    },
-    {
-      name: "Tags",
-      path: "/tags",
-    },
-  ];
-  useEffect(() => {
-    setBreadcrumbList(breadcrumbList);
-  }, []);
+  // const { setBreadcrumbList } = useContext(UtilitiesContext);
+  // const breadcrumbList = [
+  //   {
+  //     name: "Home",
+  //     path: "/",
+  //   },
+  //   {
+  //     name: "Tags",
+  //     path: "/tags",
+  //   },
+  // ];
+  // useEffect(() => {
+  //   setBreadcrumbList(breadcrumbList);
+  // }, []);
 
   const { tags } = useContext(BaseContext);
   // const  = useContext(CollectionTagsContext);

@@ -84,13 +84,21 @@ export const UploadImage = ({ image, newImage, setNewImage }: Props) => {
             newImage && (
               <>
                 {/* <img src={URL.createObjectURL(images[0])} alt="" className="" /> */}
-                <img
+                {/* <img
                   //@ts-ignore
                   // src={URL.createObjectURL(images[0])}
                   src={URL.createObjectURL(newImage)}
                   alt=""
                   loading="lazy"
                   className="image-fill"
+                /> */}
+                <Image
+                  //@ts-ignore
+                  // src={URL.createObjectURL(images[0])}
+                  src={URL.createObjectURL(newImage)}
+                  layout="fill"
+                  alt=""
+                  loading="lazy"
                 />
                 {/*<button
                   onClick={() => handleOnRemoveImage(0)}

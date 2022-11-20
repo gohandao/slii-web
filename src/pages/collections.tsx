@@ -13,29 +13,21 @@ import { SearchArea } from "@/components/SearchArea";
 import { BreadCrumbs } from "@/components/BreadCrumbs";
 
 import { Mainvisual } from "@/components/Mainvisual";
-import { ShowMore } from "@/components/ShowMore";
 import { Pagination } from "@/components/Pagination";
 import { BaseLayout } from "@/components/BaseLayout";
-import { IndexTab } from "@/components/IndexTab";
 import { Hr } from "@/components/Hr";
 import { Title } from "@/components/Title";
 import { LinkButton } from "@/components/LinkButton";
 
 import { TagList } from "@/components/TagList";
 
-import {
-  CreatorTagsContext,
-  CollectionTagsContext,
-} from "@/contexts/TagsContext";
 import { CreatorsContext } from "@/contexts/CreatorsContext";
 import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 import { Tag } from "@/types/tag";
 import { Searchbox } from "@/components/Searchbox";
-import { AllList } from "@/components/AllList";
 import { Tab } from "@/components/Tab";
-import { SplitLayout } from "@/components/SplitLayout";
 import { Dropdown } from "@/components/Dropdown";
 import { OrderButton } from "@/components/OrderButton";
 import { CollectionList } from "@/components/CollectionList";
@@ -79,20 +71,20 @@ const CollectionsPage: NextPage = () => {
     searchedCollections = filteredCollections;
   }
 
-  const args = {
-    property: "collections" as "creators" | "collections",
-    list: searchedCollections,
-    page: currentPage,
-    order: order as "desc" | "asc" | undefined,
-    sort: sort as string | undefined,
-    term: term as "24h" | "7d" | "30d" | "all" | undefined,
-    //category: collectionsSort,
-    limit: limit,
-  };
-
   useEffect(() => {
+    const args = {
+      property: "collections" as "creators" | "collections",
+      list: searchedCollections,
+      page: currentPage,
+      order: order as "desc" | "asc" | undefined,
+      sort: sort as string | undefined,
+      term: term as "24h" | "7d" | "30d" | "all" | undefined,
+      //category: collectionsSort,
+      limit: limit,
+    };
     const data = sortList(args);
     setSortedCollections((sortedCollections) => data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collections, order, sort, term, page, type, search]);
 
   const breadcrumbList = [
@@ -113,6 +105,7 @@ const CollectionsPage: NextPage = () => {
       path: "/",
     });
     setBreadcrumbList(breadcrumbList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

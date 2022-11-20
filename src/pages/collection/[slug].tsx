@@ -16,19 +16,15 @@ import { CollectionsContext } from "@/contexts/CollectionsContext";
 
 import { List } from "@/components/List";
 import { Title } from "@/components/Title";
-import { ShowMore } from "@/components/ShowMore";
 import { Pagination } from "@/components/Pagination";
 import { BaseLayout } from "@/components/BaseLayout";
-import { IndexTab } from "@/components/IndexTab";
 import { CreatorProfile } from "@/components/CreatorProfile";
-import { CollectionProfile } from "@/components/CollectionProfile";
 import { CollectionAssets } from "@/components/CollectionAssets";
 
 import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
 import { Dropdown } from "@/components/Dropdown";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import { SocialCount } from "@/components/SocialCount";
 import { JP } from "country-flag-icons/react/3x2";
 import { ProfileHeader } from "@/components/ProfileHeader";
 import { MdVerified } from "react-icons/md";
@@ -84,9 +80,11 @@ const CollectionIndex: NextPage = (props: any) => {
           path: `/creator/${collection.creator_id}`,
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collection]);
   useEffect(() => {
     setKeyword(undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!creator && creators && collection && creators.length > 0) {
@@ -122,7 +120,8 @@ const CollectionIndex: NextPage = (props: any) => {
       );
       collection_filter.length > 0 && setCollection(collection_filter[0]);
     }
-  }, [username, collections, collection]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [creators, username, collections, collection]);
 
   if (assets.length < 1 && collection) {
     const fetchData = async () => {
@@ -148,6 +147,7 @@ const CollectionIndex: NextPage = (props: any) => {
       };
       fetchData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
 
   const filteredAssets =
@@ -192,6 +192,7 @@ const CollectionIndex: NextPage = (props: any) => {
       const data = sortNFTs(args);
       setSortedAssets((sortedAssets) => data);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assets, creators, order, sort, term, page, type, search]);
 
   useEffect(() => {
@@ -200,6 +201,7 @@ const CollectionIndex: NextPage = (props: any) => {
     } else {
       setCurrentAssets(sortedAssets);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortedAssets, sort, random, search]);
 
   //props

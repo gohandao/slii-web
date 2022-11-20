@@ -32,7 +32,6 @@ type Props = {
 export const Dropdown = ({ position, property, custom_menu }: Props) => {
   const router = useRouter();
   const { order, sort, term, page, type, search, slug } = router.query;
-  const { hiddenUrl } = useContext(UtilitiesContext);
 
   const [status, setStatus] = useState<boolean>(false);
   const assetsDropdown = ["All", "Buy now", "On auction", "Price low to high"];
@@ -284,7 +283,6 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
         term: new_term,
         order: order && (order as string),
         search: search && (search as string),
-        hiddenUrl,
       });
     }
     if (property == "nftType") {
@@ -297,7 +295,6 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
         sort: sort && (sort as string),
         order: order && (order as string),
         search: search && (search as string),
-        hiddenUrl,
       });
     }
     if (property == "nftSort") {
@@ -327,7 +324,6 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
         sort: new_sort,
         order: order && (order as string),
         search: search && (search as string),
-        hiddenUrl,
       });
     }
     if (property == "creatorType") {
@@ -340,7 +336,6 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
         sort: sort && (sort as string),
         order: order && (order as string),
         search: search && (search as string),
-        hiddenUrl,
       });
     }
     if (property == "creatorSort") {
@@ -355,7 +350,6 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
         sort: new_sort,
         order: order && (order as string),
         search: search && (search as string),
-        hiddenUrl,
       });
     }
     if (property == "collectionType") {
@@ -368,7 +362,6 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
         sort: sort && (sort as string),
         order: order && (order as string),
         search: search && (search as string),
-        hiddenUrl,
       });
     }
     if (property == "collectionSort") {
@@ -405,7 +398,6 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
         order: order && (order as string),
         term: new_term && (new_term as string),
         search: search && (search as string),
-        hiddenUrl,
       });
     }
     setStatus(false);

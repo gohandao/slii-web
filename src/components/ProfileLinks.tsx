@@ -49,12 +49,12 @@ export const ProfileLinks = ({
         )}
         {opensea_slug && (
           <Button url={`https://opensea.io/collection/${opensea_slug}`}>
-            <Image src="/icon-opensea.svg" width={14} height={14} />
+            <Image src="/icon-opensea.svg" width={14} height={14} alt="" />
           </Button>
         )}
         {opensea_username && (
           <Button url={`https://opensea.io/${opensea_username}`}>
-            <Image src="/icon-opensea.svg" width={14} height={14} />
+            <Image src="/icon-opensea.svg" width={14} height={14} alt="" />
           </Button>
         )}
         {twitter_id && (

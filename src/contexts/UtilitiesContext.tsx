@@ -6,6 +6,10 @@ export const UtilitiesContext = createContext<Utilities>({
   setLoginModal: () => {},
   keyword: "",
   setKeyword: () => {},
+  NFTKeyword: "",
+  setNFTKeyword: () => {},
+  hiddenParams: {},
+  setHiddenParams: () => {},
   headerIcon: {
     title: "",
     emoji: "",
@@ -16,4 +20,8 @@ export const UtilitiesContext = createContext<Utilities>({
   setUserProfile: () => {},
   breadcrumbList: undefined,
   setBreadcrumbList: () => {},
+  scrollY: undefined,
+  setScrollY: () => {},
+  prevHeight: undefined,
+  setPrevHeight: () => {},
 });

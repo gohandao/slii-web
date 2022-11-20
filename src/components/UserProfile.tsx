@@ -19,13 +19,11 @@ import { LikeViews } from "@/components/LikeViews";
 import { JP } from "country-flag-icons/react/3x2";
 import { BsFillShareFill, BsThreeDots, BsTwitter } from "react-icons/bs";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
-import { SocialCount } from "./SocialCount";
 import { CopyText } from "@/components/CopyText";
 import { useRouter } from "next/router";
 import { FiCopy } from "react-icons/fi";
 import { Social } from "@/types/social";
 import { BaseContext } from "@/contexts/BaseContext";
-import { LikeButton } from "@/components/LikeButton";
 import { ViewsCount } from "@/components/ViewsCount";
 import { VoteButton } from "./VoteButton";
 import { BookmarkButton } from "./BookmarkButton";
@@ -60,6 +58,7 @@ export const UserProfile = ({ profile }: Props) => {
 
   useEffect(() => {
     !avatar && getAvatarBlob();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   const [social, setSocial] = useState<Social>();
@@ -277,15 +276,6 @@ export const UserProfile = ({ profile }: Props) => {
             <p className="text-gray-100 mt-1 break-all px-3 text-sm sm:text-base">
               {profile.description}
             </p>
-            {social && (
-              <SocialCount
-                record_id={social.record_id}
-                creator_username={profile.username}
-                twitter_id={twitterId}
-                twitter_followers={social.twitter_followers}
-                discord_members={social.discord_members}
-              />
-            )}
           </div>
           <ProfileLinks
             address={profile.address}

@@ -5,6 +5,7 @@ import "@/styles/globals.css";
 import { OgpDefault } from "@/components/OgpDefault";
 import Head from "next/head";
 import Image from "next/image";
+import Script from "next/script";
 
 import ReactDOM from "react-dom/server";
 import * as playwright from "playwright-aws-lambda";
@@ -47,12 +48,12 @@ const styles = `
 `;
 
 const Content = (props) => (
-  <html>
-    <head>
+  <>
+    <Head>
       <style>{styles}</style>
-      <script src="https://cdn.tailwindcss.com"></script>
-    </head>
+    </Head>
     <body>
+      <Script src="https://cdn.tailwindcss.com"></Script>
       {/*<h1>{props.title}</h1>
       {props.subTitle && <p>{props.subTitle}</p>}
 */}
@@ -80,10 +81,10 @@ const Content = (props) => (
         />
       </div>
     </body>
-  </html>
+  </>
 );
 
-export default async (req, res) => {
+export const OGPImage = async (req, res) => {
   // サイズの設定
   const { title, subTitle } = req.query;
   const viewport = { width: 1200, height: 630 };
@@ -114,3 +115,4 @@ export default async (req, res) => {
   // レスポンスを返す
   res.end(image);
 };
+export default OGPImage;

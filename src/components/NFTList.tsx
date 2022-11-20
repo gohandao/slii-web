@@ -28,14 +28,24 @@ export const NFTList = ({ assets }: Props) => {
           <a
             href={asset.permalink}
             target="_blank"
+            rel="noreferrer"
             className="relative flex overflow-hidden rounded-lg bg-gray-700"
           >
             <div className="os-triangle absolute right-0 top-0 z-10"></div>
-            <img
+            {/* <img
               src="/icon-opensea.svg"
               className="absolute top-1 right-1 w-[10px] h-[10px] z-20"
+            /> */}
+            <Image
+              src="/icon-opensea.svg"
+              // layout="fill"
+              objectFit="cover"
+              alt=""
+              loading="lazy"
+              width={10}
+              height={10}
+              className="absolute top-1 right-1 w-[10px] h-[10px] z-20"
             />
-
             <Image
               src={asset.image_thumbnail_url}
               // layout="fill"

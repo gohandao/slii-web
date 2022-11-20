@@ -12,19 +12,13 @@ import { CollectionTable } from "@/components/CollectionTable";
 import { SearchArea } from "@/components/SearchArea";
 
 import { Mainvisual } from "@/components/Mainvisual";
-import { ShowMore } from "@/components/ShowMore";
 import { Pagination } from "@/components/Pagination";
 import { BaseLayout } from "@/components/BaseLayout";
-import { IndexTab } from "@/components/IndexTab";
 import { Hr } from "@/components/Hr";
 import { Title } from "@/components/Title";
 import { LinkButton } from "@/components/LinkButton";
 import { TagList } from "@/components/TagList";
 
-import {
-  CreatorTagsContext,
-  CollectionTagsContext,
-} from "@/contexts/TagsContext";
 import { BaseContext } from "@/contexts/BaseContext";
 
 import { Creator } from "@/types/creator";
@@ -44,25 +38,26 @@ const KeywordPage: NextPage = () => {
       avatar: "",
       path: `/`,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const { setBreadcrumbList } = useContext(UtilitiesContext);
-  const breadcrumbList = keyword && [
-    {
-      name: "Home",
-      path: "/",
-    },
-    {
-      name: "Search",
-      path: "/",
-    },
-    {
-      name: keyword as string,
-      path: `/search/${keyword as string}`,
-    },
-  ];
-  useEffect(() => {
-    breadcrumbList && setBreadcrumbList(breadcrumbList);
-  }, []);
+  // const { setBreadcrumbList } = useContext(UtilitiesContext);
+  // const breadcrumbList = keyword && [
+  //   {
+  //     name: "Home",
+  //     path: "/",
+  //   },
+  //   {
+  //     name: "Search",
+  //     path: "/",
+  //   },
+  //   {
+  //     name: keyword as string,
+  //     path: `/search/${keyword as string}`,
+  //   },
+  // ];
+  // useEffect(() => {
+  //   breadcrumbList && setBreadcrumbList(breadcrumbList);
+  // }, []);
 
   const { creators, collections, tags } = useContext(BaseContext);
   // const collections = useContext(CollectionsContext);

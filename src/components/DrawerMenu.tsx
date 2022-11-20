@@ -68,7 +68,7 @@ export const DrawerMenu = ({ status, setStatus }: Props) => {
         {menus.map((menu, index) => (
           <Link href={menu.path} key={index}>
             <a
-              className={`relative flex font-bold text-base text-white tracking-wider flex items-center py-3 px-5 odd:bg-gray-700`}
+              className={`relative  font-bold text-base text-white tracking-wider flex items-center py-3 px-5 odd:bg-gray-700`}
             >
               <span className={`text-3xl mr-3 -mt-[2px]`}>{menu.emoji}</span>
               {menu.title}

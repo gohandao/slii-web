@@ -28,7 +28,8 @@
     "src/utilities/removeUndefinedObject.jsx",
     "src/pages/api/updateNFTs.jsx",
     "src/libs/discord.jsx",
-    "src/libs/twitter.jsx"
+    "src/libs/twitter.jsx",
+    "src/components/_Categories"
   ],
   "exclude": ["node_modules"]
 }

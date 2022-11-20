@@ -6,7 +6,7 @@ import ReactCodeInput from "react-code-input";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import router, { useRouter } from "next/router";
 import { AuthContext } from "@/contexts/AuthContext";
-import { redirections } from "@/utilities/redirections";
+import { useRedirections } from "@/utilities/useRedirections";
 import { BaseModal } from "./BaseModal";
 
 export const LoginModal = () => {

@@ -142,7 +142,9 @@ export const HeaderIcon = () => {
               </p>
             </a>
           </Link>
-        ) : currentPath != "/" && currentPath != "/collections" ? (
+        ) : currentPath != "/" &&
+          currentPath != "/collections" &&
+          currentPath != "/creator/[username]" ? (
           <Link href={headerIcon.path}>
             <a className="relative tracking-wider flex items-center gap-2 py-[2px]">
               <div className="flex flex-col gap-[2px]">

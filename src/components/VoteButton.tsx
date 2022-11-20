@@ -170,6 +170,7 @@ export const VoteButton = ({
   useEffect(() => {
     checkUpvoted();
     // getUpvotesCount();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [upvotes, id]);
 
   let propertyClass;

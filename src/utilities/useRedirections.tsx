@@ -2,7 +2,7 @@ import { AuthContext } from "@/contexts/AuthContext";
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
 
-export const redirections = () => {
+export const useRedirections = () => {
   const router = useRouter();
   const { prev } = router.query;
   const currentPath = router.pathname;

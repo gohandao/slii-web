@@ -9,10 +9,8 @@ import { CollectionTable } from "@/components/CollectionTable";
 import { SearchArea } from "@/components/SearchArea";
 
 import { Mainvisual } from "@/components/Mainvisual";
-import { ShowMore } from "@/components/ShowMore";
 import { Pagination } from "@/components/Pagination";
 import { BaseLayout } from "@/components/BaseLayout";
-import { IndexTab } from "@/components/IndexTab";
 import { Hr } from "@/components/Hr";
 import { Title } from "@/components/Title";
 import { LinkButton } from "@/components/LinkButton";
@@ -39,16 +37,16 @@ const StatsPage: NextPage = () => {
   const limit = 10;
 
   const { setBreadcrumbList, setHeaderIcon } = useContext(UtilitiesContext);
-  const breadcrumbList = [
-    {
-      name: "Home",
-      path: "/",
-    },
-    {
-      name: "Collection stats",
-      path: "/stats",
-    },
-  ];
+  // const breadcrumbList = [
+  //   {
+  //     name: "Home",
+  //     path: "/",
+  //   },
+  //   {
+  //     name: "Collection stats",
+  //     path: "/stats",
+  //   },
+  // ];
   useEffect(() => {
     setHeaderIcon({
       title: "Collection stats",
@@ -57,7 +55,8 @@ const StatsPage: NextPage = () => {
       avatar: "",
       path: "/stats",
     });
-    setBreadcrumbList(breadcrumbList);
+    // setBreadcrumbList(breadcrumbList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const { creators, collections } = useContext(BaseContext);
 

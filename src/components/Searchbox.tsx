@@ -13,82 +13,66 @@ type Props = {
 };
 export const Searchbox = ({ id, property }: Props) => {
   const router = useRouter();
-  const { order, sort, term, page, type, search, tab } = router.query;
-  const { hiddenUrl } = useContext(UtilitiesContext);
+  const { order, sort, term, page, type, search, tab, ref } = router.query;
+  const { hiddenParams } = useContext(UtilitiesContext);
+  const [value, setValue] = useState<string>("");
 
   const { keyword, setKeyword, NFTKeyword, setNFTKeyword } =
     useContext(UtilitiesContext);
-
   const currentKeyword = property == "nft" ? NFTKeyword : keyword;
 
   useEffect(() => {
     if (property == "nft") {
-      search &&
-        search.length > 0 &&
-        !NFTKeyword &&
+      if (search && search.length > 0 && !NFTKeyword) {
         setNFTKeyword(search as string);
+        setValue(search as string);
+      }
     } else {
-      search && search.length > 0 && !keyword && setKeyword(search as string);
+      if (hiddenParams?.search && hiddenParams.search.length > 0) {
+        setKeyword(hiddenParams.search as string);
+        setValue(hiddenParams.search as string);
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   useEffect(() => {
     if (property == "nft") {
-      setParams({
-        type: type && (type as string),
-        sort: sort && (sort as string),
-        order: order && (order as string),
-        term: term && (term as string),
-        search: NFTKeyword && (NFTKeyword as string),
-        tab: tab && (tab as string),
-        hiddenUrl,
-      });
+      setNFTKeyword(value);
     } else {
-      setParams({
-        type: type && (type as string),
-        sort: sort && (sort as string),
-        order: order && (order as string),
-        term: term && (term as string),
-        search: keyword && (keyword as string),
-        tab: tab && (tab as string),
-        hiddenUrl,
-      });
+      setKeyword(value);
     }
-  }, [keyword, NFTKeyword]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
 
   const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value);
-    // setTimeout(() => {
-    //   setParams({
-    //     type: type && (type as string),
-    //     sort: sort && (sort as string),
-    //     order: order && (order as string),
-    //     term: term && (term as string),
-    //     search: keyword && (keyword as string),
-    //   });
-    // }, 3000);
+    setValue(e.target.value);
+    setParams({
+      type: type && (type as string),
+      sort: sort && (sort as string),
+      order: order && (order as string),
+      term: term && (term as string),
+      search: e.target.value && (e.target.value as string),
+      tab: tab && (tab as string),
+      ref: ref && (ref as string),
+    });
   };
 
-  // const searchHandler = () => {
-  //   if (search && search.length > 0) {
-  //     // router.push(`/search/${search}`);
-  //     setParams({
-  //       type: type && (type as string),
-  //       sort: sort && (sort as string),
-  //       order: order && (order as string),
-  //       term: term && (term as string),
-  //       search: search && (search as string),
-  //     });
+  // const inputElement = useRef<HTMLInputElement | null>(null);
+  // useEffect(() => {
+  //   if (inputElement.current && autofocus == true) {
+  //     inputElement.current.focus();
   //   }
-  // };
+  // }, []);
   return (
     <>
       <div className="relative w-full rounded-lg overflow-hidden flex-1">
         <input
           type="text"
-          name=""
+          name={id}
           id={id}
           placeholder="Keyword search"
-          value={currentKeyword}
+          value={value}
           onChange={(e) => {
             onChangeText(e);
           }}

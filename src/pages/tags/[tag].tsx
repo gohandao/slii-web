@@ -15,10 +15,8 @@ import { CollectionTable } from "@/components/CollectionTable";
 import { SearchArea } from "@/components/SearchArea";
 
 import { Mainvisual } from "@/components/Mainvisual";
-import { ShowMore } from "@/components/ShowMore";
 import { Pagination } from "@/components/Pagination";
 import { BaseLayout } from "@/components/BaseLayout";
-import { IndexTab } from "@/components/IndexTab";
 import { Hr } from "@/components/Hr";
 import { Title } from "@/components/Title";
 import { LinkButton } from "@/components/LinkButton";
@@ -52,6 +50,7 @@ const TagPage: NextPage = () => {
       avatar: "",
       path: `/tags`,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 1.filtered creators
@@ -157,6 +156,7 @@ const TagPage: NextPage = () => {
       const data = sortList(collections_args);
       setSortedCollections((sortedCollections) => data);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collections, creators, order, sort, term, page, type, search, tab]);
 
   return (

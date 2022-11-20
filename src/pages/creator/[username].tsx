@@ -17,10 +17,8 @@ import { CollectionsContext } from "@/contexts/CollectionsContext";
 
 import { CollectionCard } from "@/components/CollectionCard";
 import { List } from "@/components/List";
-import { ShowMore } from "@/components/ShowMore";
 import { Pagination } from "@/components/Pagination";
 import { BaseLayout } from "@/components/BaseLayout";
-import { IndexTab } from "@/components/IndexTab";
 import { CreatorProfile } from "@/components/CreatorProfile";
 import { Title } from "@/components/Title";
 import { Custom404 } from "@/pages/404";
@@ -29,10 +27,12 @@ import { Creator } from "@/types/creator";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { JP } from "country-flag-icons/react/3x2";
 import { CreatorScreen } from "@/components/CreatorScreen";
+import { ScreenModal } from "@/components/ScreenModal";
+import { CreatorsIndexScreen } from "@/components/CreatorsIndexScreen";
 
 const CreatorIndex: NextPage = (props: any) => {
   const router = useRouter();
-  const { username, order, sort, term, page, type, search, slug } =
+  const { username, order, sort, term, page, type, search, slug, ref } =
     router.query;
   const currentPage = page ? Number(page) : 1;
   const limit = 50;
@@ -50,7 +50,19 @@ const CreatorIndex: NextPage = (props: any) => {
 
   const { creators, collections } = useContext(BaseContext);
   // const collections = useContext(CollectionsContext);
-  const { setHeaderIcon, setKeyword } = useContext(UtilitiesContext);
+  const { setHeaderIcon, hiddenParams, scrollY } = useContext(UtilitiesContext);
+  const [creatorModal, setCreatorModal] = useState<boolean>(ref ? true : false);
+
+  // const [first, setfirst] = useState(false);
+  // useEffect(() => {
+  //   if (!first && scrollY) {
+  //     window.scrollTo(0, scrollY);
+  //     setfirst(true);
+  //   }
+  // }, []);
+  useEffect(() => {
+    setCreatorModal(ref ? true : false);
+  }, [ref]);
 
   useEffect(() => {
     {
@@ -68,7 +80,11 @@ const CreatorIndex: NextPage = (props: any) => {
           path: `/creator/${creator.username}`,
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creator]);
+
+  // console.log("crs scrollY");
+  // console.log(scrollY);
 
   return (
     <>
@@ -91,9 +107,36 @@ const CreatorIndex: NextPage = (props: any) => {
           ],
         }}
       />
-      <BaseLayout>
-        <CreatorScreen />
-      </BaseLayout>
+      {ref == "index" ? (
+        <>
+          <ScreenModal
+            modalIsOpen={creatorModal}
+            setModalIsOpen={setCreatorModal}
+            path="/"
+          >
+            <CreatorScreen property="modal" />
+          </ScreenModal>
+          {/* <iframe
+            src="http://localhost:3000/?search=oh"
+            id="iframe"
+            className="fixed top-0 left-0 w-screen h-screen"
+          ></iframe> */}
+          <div
+            className={`fixed left-0 w-full`}
+            style={{
+              top: `-${scrollY}px`,
+            }}
+          >
+            <BaseLayout>
+              <CreatorsIndexScreen params={hiddenParams} />
+            </BaseLayout>
+          </div>
+        </>
+      ) : (
+        <BaseLayout>
+          <CreatorScreen />
+        </BaseLayout>
+      )}
     </>
   );
 };

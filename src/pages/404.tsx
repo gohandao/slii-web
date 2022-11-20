@@ -8,10 +8,8 @@ import { CollectionTable } from "@/components/CollectionTable";
 import { SearchArea } from "@/components/SearchArea";
 
 import { Mainvisual } from "@/components/Mainvisual";
-import { ShowMore } from "@/components/ShowMore";
 import { Pagination } from "@/components/Pagination";
 import { BaseLayout } from "@/components/BaseLayout";
-import { IndexTab } from "@/components/IndexTab";
 import { Hr } from "@/components/Hr";
 import { Title } from "@/components/Title";
 import { LinkButton } from "@/components/LinkButton";
@@ -22,20 +20,20 @@ export const Custom404: NextPage = () => {
   const router = useRouter();
   const { page } = router.query;
 
-  const { setBreadcrumbList } = useContext(UtilitiesContext);
-  const breadcrumbList = [
-    {
-      name: "Home",
-      path: "/",
-    },
-    {
-      name: "404",
-      path: "/",
-    },
-  ];
-  useEffect(() => {
-    setBreadcrumbList(breadcrumbList);
-  }, []);
+  // const { setBreadcrumbList } = useContext(UtilitiesContext);
+  // const breadcrumbList = [
+  //   {
+  //     name: "Home",
+  //     path: "/",
+  //   },
+  //   {
+  //     name: "404",
+  //     path: "/",
+  //   },
+  // ];
+  // useEffect(() => {
+  //   setBreadcrumbList(breadcrumbList);
+  // }, []);
   return (
     <div>
       <Head>

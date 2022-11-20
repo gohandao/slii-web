@@ -39,20 +39,31 @@ export const OgpDefault = ({
   return (
     <div className="relative w-[1200px] h-[600px] font-digital">
       <div className="absolute left-0 top-0 w-full h-full">
-        <img
+        {/* <img
           src={`https://weev.media/wp-content/uploads/2022/11/ogp-base.jpg`}
           className="image-fill"
+        /> */}
+        <Image
+          src="https://weev.media/wp-content/uploads/2022/11/ogp-base.jpg"
+          layout="fill"
+          alt=""
         />
       </div>
       <div className="relative left-[84px] top-[44px] flex flex-col w-[860px] h-[540px]">
         <div className="relative flex w-full h-full rounded-tr-[20px] overflow-hidden opacity-40">
           <div className="relative w-full h-[270px] ">
             {background ? (
-              <img src={background} className="image-fill" />
+              // <img src={background} className="image-fill" />
+              <Image src={background} layout="fill" alt="" />
             ) : (
-              <img
-                src={`https://weev.media/wp-content/uploads/2022/11/ogp-bg.jpg`}
-                className="image-fill"
+              // <img
+              //   src={`https://weev.media/wp-content/uploads/2022/11/ogp-bg.jpg`}
+              //   className="image-fill"
+              //   />
+              <Image
+                src="https://weev.media/wp-content/uploads/2022/11/ogp-bg.jpg"
+                layout="fill"
+                alt=""
               />
             )}
           </div>
@@ -61,11 +72,17 @@ export const OgpDefault = ({
           <>
             <div className="absolute flex items-center justify-center left-[66px] top-[90px] w-[232px] h-[232px] rounded-full border-[6px] border-gray-700 overflow-hidden -ml-[6px]">
               {avatar ? (
-                <img src={avatar} className="image-fill" />
+                // <img src={avatar} className="image-fill" />
+                <Image src={avatar} layout="fill" alt="" />
               ) : (
-                <img
+                // <img
+                //   src={`https://weev.media/wp-content/uploads/2022/11/default-avatar.jpg`}
+                //   className="image-fill"
+                //   />
+                <Image
                   src={`https://weev.media/wp-content/uploads/2022/11/default-avatar.jpg`}
-                  className="image-fill"
+                  layout="fill"
+                  alt=""
                 />
               )}
             </div>

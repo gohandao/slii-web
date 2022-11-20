@@ -10,7 +10,7 @@ export const CollectionsContext = createContext<Collection[]>([
     slug: "",
     creator_id: "",
     type: "",
-    createdAt: null,
+    listed_at: null,
     updatedAt: null,
     category: "",
     verified: false,

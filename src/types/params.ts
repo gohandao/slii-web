@@ -7,6 +7,6 @@ export type Params = {
   type?: string;
   search?: string;
   tab?: string;
-  hiddenUrl?: string;
   keyword?: string;
+  ref?: string;
 };

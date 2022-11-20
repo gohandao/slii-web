@@ -23,13 +23,11 @@ import { LikeViews } from "@/components/LikeViews";
 import { JP } from "country-flag-icons/react/3x2";
 import { BsFillShareFill, BsThreeDots, BsTwitter } from "react-icons/bs";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
-import { SocialCount } from "./SocialCount";
 import { CopyText } from "@/components/CopyText";
 import { useRouter } from "next/router";
 import { FiCopy } from "react-icons/fi";
 import { Social } from "@/types/social";
 import { BaseContext } from "@/contexts/BaseContext";
-import { LikeButton } from "@/components/LikeButton";
 import { ViewsCount } from "@/components/ViewsCount";
 import { VoteButton } from "./VoteButton";
 import { BookmarkButton } from "./BookmarkButton";
@@ -99,25 +97,25 @@ export const CreatorProfile = ({ creator }: Props) => {
   const [twitterFollowers, setTwitterFollowers] = useState<number>();
   const [discordMembers, setDiscordMembers] = useState<number>();
   const [checkSocial, setCheckSocial] = useState<boolean>(false);
-  const getSocialCounts = async () => {
-    const data =
-      social &&
-      (await updateSocial({
-        record_id: social.record_id,
-        creator_username: creator.username,
-        twitter_id: twitterId,
-        twitter_followers: social.twitter_followers,
-        discord_id: discordId,
-        discord_members: social.discord_members,
-        socials: socials,
-        setSocials: setSocials,
-      }));
-    setTwitterFollowers(data && data.twitter_followers);
-    setDiscordMembers(data && data.discord_members);
+  // const getSocialCounts = async () => {
+  //   const data =
+  //     social &&
+  //     (await updateSocial({
+  //       record_id: social.record_id,
+  //       creator_username: creator.username,
+  //       twitter_id: twitterId,
+  //       twitter_followers: social.twitter_followers,
+  //       discord_id: discordId,
+  //       discord_members: social.discord_members,
+  //       socials: socials,
+  //       setSocials: setSocials,
+  //     }));
+  //   setTwitterFollowers(data && data.twitter_followers);
+  //   setDiscordMembers(data && data.discord_members);
 
-    setCheckSocial(true);
-  };
-  !checkSocial && social && getSocialCounts();
+  //   setCheckSocial(true);
+  // };
+  // !checkSocial && social && getSocialCounts();
 
   // useEffect(() => {
   //   if (socials && creator.username) {
@@ -272,6 +270,7 @@ export const CreatorProfile = ({ creator }: Props) => {
                 menus={shareMenus}
               /> */}
               <ProfileDropdown
+                position="left"
                 icon={<BsThreeDots className="text-gray-500" />}
                 dropdown={requestDropdown}
                 setDropdown={setRequestDropdown}
@@ -308,7 +307,7 @@ export const CreatorProfile = ({ creator }: Props) => {
               <p className="text-gray-100 mt-1 text-justify break-all text-sm sm:text-base transition-all duration-200 ">
                 {showDescription ? description : slicedDescription}
               </p>
-              {description.length > 80 && (
+              {description && description.length > 80 && (
                 <>
                   <button
                     className="inline-flex text-gray-500 items-center gap-1"

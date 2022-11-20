@@ -6,11 +6,11 @@ import { FaDiscord } from "react-icons/fa";
 import { BsTwitter, BsInstagram, BsGlobe2 } from "react-icons/bs";
 
 type Props = {
-  twitter_id: string;
-  instagram_id: string;
-  discord_url: string;
-  website_url: string;
-  opensea_url: string;
+  twitter_id?: string;
+  instagram_id?: string;
+  discord_url?: string;
+  website_url?: string;
+  opensea_url?: string;
 };
 export const CardLinks = ({
   twitter_id,
@@ -38,7 +38,13 @@ export const CardLinks = ({
           }}
           className="flex items-center"
         >
-          <Image src="/icon-opensea.svg" width={14} height={14} className="" />
+          <Image
+            src="/icon-opensea.svg"
+            width={14}
+            height={14}
+            className=""
+            alt=""
+          />
         </button>
       )}
       {twitter_id && (

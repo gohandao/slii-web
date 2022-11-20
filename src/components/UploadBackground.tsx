@@ -86,14 +86,15 @@ export const UploadBackground = ({ image, newImage, setNewImage }: Props) => {
             image && (
               <>
                 {/* <img src={URL.createObjectURL(images[0])} alt="" className="" /> */}
-                <img
+                {/* <img
                   //@ts-ignore
                   // src={URL.createObjectURL(images[0])}
                   src={URL.createObjectURL(image)}
                   alt=""
                   loading="lazy"
                   className="image-fill opacity-50"
-                />
+                  /> */}
+                <Image src={URL.createObjectURL(image)} layout="fill" alt="" />
               </>
             )
           )}

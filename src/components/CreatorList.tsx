@@ -141,8 +141,8 @@ export const CreatorList = ({ creators, limit }: Props) => {
                             <Image
                               //@ts-ignore
                               src={creator.avatar}
-                              // width={80}
-                              // height={80}
+                              width={80}
+                              height={80}
                               objectFit="cover"
                               layout="fill"
                               alt=""

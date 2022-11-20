@@ -144,7 +144,6 @@ export const CreatorList = ({ creators, limit }: Props) => {
                               width={80}
                               height={80}
                               objectFit="cover"
-                              layout="fill"
                               alt=""
                             />
                           )}

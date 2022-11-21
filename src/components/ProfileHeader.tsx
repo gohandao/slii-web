@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
-import Image from "next/image";
+import Image from "next/legacy/image";
 
 import { BsThreeDots, BsTwitter } from "react-icons/bs";
 import { FaRegFlag, FaTwitter } from "react-icons/fa";

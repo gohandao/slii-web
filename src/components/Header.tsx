@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import Image from "next/legacy/image";
 
 import { Searchbox } from "@/components/Searchbox";
 import { AuthContext } from "@/contexts/AuthContext";

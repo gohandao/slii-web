@@ -2,7 +2,7 @@ import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import { ParsedUrlQuery } from "node:querystring";
 
 import Head from "next/head";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { useRouter } from "next/router";
 
 import React, { useContext, useEffect, useState } from "react";

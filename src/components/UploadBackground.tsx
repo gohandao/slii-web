@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import axios from "axios";
 import { AuthContext } from "@/contexts/AuthContext";
 import { TiDelete } from "react-icons/ti";

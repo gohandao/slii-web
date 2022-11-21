@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import Image from "next/image";
+import Image from "next/legacy/image";
 
 import { FaDiscord, FaRegChartBar } from "react-icons/fa";
 import { BsTwitter, BsInstagram, BsGlobe2 } from "react-icons/bs";

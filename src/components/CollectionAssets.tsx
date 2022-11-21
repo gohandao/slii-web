@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import Link from "next/link";
 import Moment from "react-moment";
 
@@ -19,18 +19,27 @@ export const CollectionAssets = ({ collectionAssets }: any) => {
             rel="noreferrer"
           >
             <div className="absolute right-0 top-0 rounded-bl-full bg-blue-500 z-10 w-6 h-6 flex items-center justify-center pl-[6px] pb-1">
-              <Image src="/icon-opensea.svg" width={12} height={12} alt="" />
+              <Image
+                src="/icon-opensea.svg"
+                width={12}
+                height={12}
+                alt=""
+                style={{
+                  maxWidth: "100%",
+                  width: "auto",
+                  height: "10px",
+                }}
+              />
             </div>
             <div className="relative object-cover w-full h-auto overflow-hidden mb-2">
               {collectionAsset.asset.image_thumbnail_url && (
                 <Image
                   src={collectionAsset.asset.image_thumbnail_url}
-                  layout="fill"
                   alt=""
                   quality={10}
+                  fill
+                  sizes="100vw"
                 />
-
-                // <img src={collectionAsset.asset.image_thumbnail_url} alt="" />
               )}
             </div>
             <div className="px-4 pt-1 pb-3">
@@ -48,6 +57,10 @@ export const CollectionAssets = ({ collectionAssets }: any) => {
                           width={16}
                           height={16}
                           alt=""
+                          style={{
+                            maxWidth: "100%",
+                            height: "auto",
+                          }}
                         />
                       )}
                     {collectionAsset.payment_token

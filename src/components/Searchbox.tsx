@@ -24,13 +24,16 @@ export const Searchbox = ({ id, property }: Props) => {
   useEffect(() => {
     if (property == "nft") {
       if (search && search.length > 0 && !NFTKeyword) {
-        setNFTKeyword(search as string);
-        setValue(search as string);
+        setNFTKeyword(search && typeof search == "string" ? search : "");
+        setValue(search && typeof search == "string" ? search : "");
       }
     } else {
       if (hiddenParams?.search && hiddenParams.search.length > 0) {
         setKeyword(hiddenParams.search as string);
         setValue(hiddenParams.search as string);
+      } else {
+        setKeyword(search && typeof search == "string" ? search : "");
+        setValue(search && typeof search == "string" ? search : "");
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 
 import { totalmem } from "os";
 import { MdVerified } from "react-icons/md";
@@ -37,6 +37,21 @@ export const OgpDefault = ({
     </>
   );
   return (
+    // <div className="flex w-full h-full">
+    //   <div className="relative w-[1200px] h-[600px] font-outfit">
+    //     <div className="absolute left-0 top-0 w-full h-full">
+    //       <Image src="/ogp-base.jpg" layout="fill" />
+    //     </div>
+    //     <div className="absolute w-full h-full flex flex-col items-center justify-center">
+    //       <h1 className="text-[70px] font-bold ogp-text-gradient mt-10">
+    //         # Illustrator
+    //       </h1>
+    //       <p className="text-xl font-light text-[#545454] tracking-[0.4em]">
+    //         Tags
+    //       </p>
+    //     </div>
+    //   </div>
+    // </div>
     <div className="relative w-[1200px] h-[600px] font-digital">
       <div className="absolute left-0 top-0 w-full h-full">
         {/* <img
@@ -45,25 +60,22 @@ export const OgpDefault = ({
         /> */}
         <Image
           src="https://weev.media/wp-content/uploads/2022/11/ogp-base.jpg"
-          layout="fill"
           alt=""
+          fill
+          sizes="100vw"
         />
       </div>
       <div className="relative left-[84px] top-[44px] flex flex-col w-[860px] h-[540px]">
         <div className="relative flex w-full h-full rounded-tr-[20px] overflow-hidden opacity-40">
           <div className="relative w-full h-[270px] ">
             {background ? (
-              // <img src={background} className="image-fill" />
-              <Image src={background} layout="fill" alt="" />
+              <Image src={background} alt="" fill sizes="100vw" />
             ) : (
-              // <img
-              //   src={`https://weev.media/wp-content/uploads/2022/11/ogp-bg.jpg`}
-              //   className="image-fill"
-              //   />
               <Image
                 src="https://weev.media/wp-content/uploads/2022/11/ogp-bg.jpg"
-                layout="fill"
                 alt=""
+                fill
+                sizes="100vw"
               />
             )}
           </div>
@@ -72,17 +84,13 @@ export const OgpDefault = ({
           <>
             <div className="absolute flex items-center justify-center left-[66px] top-[90px] w-[232px] h-[232px] rounded-full border-[6px] border-gray-700 overflow-hidden -ml-[6px]">
               {avatar ? (
-                // <img src={avatar} className="image-fill" />
-                <Image src={avatar} layout="fill" alt="" />
+                <Image src={avatar} alt="" fill sizes="300px" />
               ) : (
-                // <img
-                //   src={`https://weev.media/wp-content/uploads/2022/11/default-avatar.jpg`}
-                //   className="image-fill"
-                //   />
                 <Image
                   src={`https://weev.media/wp-content/uploads/2022/11/default-avatar.jpg`}
-                  layout="fill"
                   alt=""
+                  fill
+                  sizes="300px"
                 />
               )}
             </div>
@@ -107,20 +115,5 @@ export const OgpDefault = ({
         )}
       </div>
     </div>
-    // <div className="flex w-full h-full">
-    //   <div className="relative w-[1200px] h-[600px] font-outfit">
-    //     <div className="absolute left-0 top-0 w-full h-full">
-    //       <Image src="/ogp-base.jpg" layout="fill" />
-    //     </div>
-    //     <div className="absolute w-full h-full flex flex-col items-center justify-center">
-    //       <h1 className="text-[70px] font-bold ogp-text-gradient mt-10">
-    //         # Illustrator
-    //       </h1>
-    //       <p className="text-xl font-light text-[#545454] tracking-[0.4em]">
-    //         Tags
-    //       </p>
-    //     </div>
-    //   </div>
-    // </div>
   );
 };

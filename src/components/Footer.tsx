@@ -1,6 +1,6 @@
 import React, { ReactNode, useContext } from "react";
 import Link from "next/link";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { AiOutlineHome } from "react-icons/ai";
 import { TbDiamond, TbUsers } from "react-icons/tb";
 import { BsCollection, BsMailbox, BsTags } from "react-icons/bs";

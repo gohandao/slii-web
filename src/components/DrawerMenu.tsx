@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { BsArrowLeftCircle } from "react-icons/bs";
 
 type Props = {
@@ -45,7 +45,15 @@ export const DrawerMenu = ({ status, setStatus }: Props) => {
       <div className={`relative flex justify-center pt-4 mb-2 `}>
         <Link href="/" legacyBehavior>
           <a className="relative flex h-7">
-            <Image src="/logo.svg" width={142} height={20} alt="" />
+            <Image
+              src="/logo.svg"
+              width={142}
+              height={20}
+              alt=""
+              style={{
+                maxWidth: "100%",
+                height: "auto"
+              }} />
           </a>
         </Link>
         <button

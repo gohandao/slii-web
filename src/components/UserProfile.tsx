@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import Link from "next/link";
 import Modal from "react-modal";
 
@@ -184,21 +184,27 @@ export const UserProfile = ({ profile }: Props) => {
                   <Image
                     //@ts-ignore
                     src={creator.background[0].thumbnails.large.url}
-                    layout="fill"
-                    objectFit="cover"
                     alt=""
                     loading="lazy"
                     quality={10}
+                    fill
+                    sizes="100vw"
+                    style={{
+                      objectFit: "cover",
+                    }}
                   />
                 ) : (
                   <Image
                     //@ts-ignore
                     src={creator.background[0].url}
-                    layout="fill"
-                    objectFit="cover"
                     alt=""
                     loading="lazy"
                     quality={10}
+                    fill
+                    sizes="100vw"
+                    style={{
+                      objectFit: "cover",
+                    }}
                   />
                 )
               }
@@ -216,9 +222,13 @@ export const UserProfile = ({ profile }: Props) => {
                   src={URL.createObjectURL(avatar)}
                   width={100}
                   height={100}
-                  objectFit="cover"
                   alt=""
                   quality={40}
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                    objectFit: "cover",
+                  }}
                 />
               ) : (
                 <Image
@@ -226,9 +236,12 @@ export const UserProfile = ({ profile }: Props) => {
                   src="/default-avatar.jpg"
                   width={100}
                   height={100}
-                  layout="fill"
-                  objectFit="cover"
                   alt=""
+                  fill
+                  sizes="300px"
+                  style={{
+                    objectFit: "cover",
+                  }}
                 />
               )}
             </div>

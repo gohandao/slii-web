@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import axios from "axios";
 import { AuthContext } from "@/contexts/AuthContext";
 import { TiDelete } from "react-icons/ti";
@@ -76,13 +76,15 @@ export const UploadBackground = ({ image, newImage, setNewImage }: Props) => {
           {newImage ? (
             <Image
               src={URL.createObjectURL(newImage)}
-              layout="fill"
-              objectFit="cover"
               alt=""
               loading="lazy"
               className="opacity-50"
               quality={40}
-            />
+              fill
+              sizes="100vw"
+              style={{
+                objectFit: "cover"
+              }} />
           ) : (
             image && (
               <>
@@ -95,12 +97,7 @@ export const UploadBackground = ({ image, newImage, setNewImage }: Props) => {
                   loading="lazy"
                   className="image-fill opacity-50"
                   /> */}
-                <Image
-                  src={URL.createObjectURL(image)}
-                  layout="fill"
-                  alt=""
-                  quality={40}
-                />
+                <Image src={URL.createObjectURL(image)} alt="" quality={40} fill sizes="100vw" />
               </>
             )
           )}

@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import Image from "next/legacy/image";
+import Image from "next/image";
 import Link from "next/link";
 
 import { JP } from "country-flag-icons/react/3x2";
@@ -71,7 +71,16 @@ export const CollectionList = ({ collections, limit }: Props) => {
   const EthIcon = () => {
     return (
       <div className="w-4 flex items-center">
-        <Image src="/icon-eth.svg" width={16} height={16} alt="" className="" />
+        <Image
+          src="/icon-eth.svg"
+          width={16}
+          height={16}
+          alt=""
+          className=""
+          style={{
+            maxWidth: "100%",
+            height: "auto"
+          }} />
       </div>
     );
   };
@@ -128,11 +137,13 @@ export const CollectionList = ({ collections, limit }: Props) => {
                         <Image
                           //@ts-ignore
                           src={collection.banner_image_url}
-                          layout="fill"
-                          objectFit="cover"
                           alt=""
                           quality={10}
-                        />
+                          fill
+                          sizes="100vw"
+                          style={{
+                            objectFit: "cover"
+                          }} />
                       )}
                     </div>
                   </div>
@@ -144,11 +155,13 @@ export const CollectionList = ({ collections, limit }: Props) => {
                             <Image
                               //@ts-ignore
                               src={collection.image_url}
-                              layout="fill"
-                              objectFit="cover"
                               alt=""
                               quality={10}
-                            />
+                              fill
+                              sizes="100vw"
+                              style={{
+                                objectFit: "cover"
+                              }} />
                           )}
                         </div>
                         {(collection.twitter_followers ||

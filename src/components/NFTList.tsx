@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 
 type Props = {
   assets: any[];
@@ -17,7 +17,17 @@ export const NFTList = ({ assets }: Props) => {
   const EthIcon = () => {
     return (
       <div className="w-4 flex items-center">
-        <Image src="/icon-eth.svg" width={16} height={16} alt="" className="" />
+        <Image
+          src="/icon-eth.svg"
+          width={16}
+          height={16}
+          alt=""
+          className=""
+          style={{
+            maxWidth: "100%",
+            height: "auto",
+          }}
+        />
       </div>
     );
   };
@@ -38,24 +48,30 @@ export const NFTList = ({ assets }: Props) => {
             /> */}
             <Image
               src="/icon-opensea.svg"
-              // layout="fill"
-              objectFit="cover"
               alt=""
               loading="lazy"
               width={10}
               height={10}
               className="absolute top-1 right-1 w-[10px] h-[10px] z-20"
+              style={{
+                maxWidth: "100%",
+                width: "auto",
+                height: "10px",
+              }}
             />
             <Image
               src={asset.image_thumbnail_url}
-              // layout="fill"
-              objectFit="cover"
               alt=""
               loading="lazy"
               width={300}
               height={300}
               className="w-full"
               quality={10}
+              style={{
+                maxWidth: "100%",
+                height: "auto",
+                objectFit: "cover",
+              }}
             />
 
             <div className="absolute left-0 bottom-0 px-3 py-[2px] bg-gray-800 rounded-tr-lg bg-opacity-90	">

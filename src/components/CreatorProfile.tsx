@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import Link from "next/link";
 import Modal from "react-modal";
 
@@ -194,24 +194,28 @@ export const CreatorProfile = ({ creator }: Props) => {
                 <Image
                   //@ts-ignore
                   src={creator.background[0].thumbnails.large.url}
-                  layout="fill"
-                  objectFit="cover"
                   alt=""
                   loading="lazy"
                   className="bg-gray-800 rounded-lg"
                   quality={10}
-                />
+                  fill
+                  sizes="100vw"
+                  style={{
+                    objectFit: "cover"
+                  }} />
               ) : (
                 <Image
                   //@ts-ignore
                   src={creator.background[0].url}
-                  layout="fill"
-                  objectFit="cover"
                   alt=""
                   loading="lazy"
                   className="bg-gray-800 rounded-lg"
                   quality={10}
-                />
+                  fill
+                  sizes="100vw"
+                  style={{
+                    objectFit: "cover"
+                  }} />
               )
             }
           </>
@@ -227,20 +231,26 @@ export const CreatorProfile = ({ creator }: Props) => {
                   src={creator.avatar[0].thumbnails.large.url}
                   width={100}
                   height={100}
-                  objectFit="cover"
                   alt=""
                   quality={10}
-                />
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                    objectFit: "cover"
+                  }} />
               ) : (
                 <Image
                   //@ts-ignore
                   src={creator.avatar[0].url}
                   width={100}
                   height={100}
-                  objectFit="cover"
                   alt=""
                   quality={10}
-                />
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                    objectFit: "cover"
+                  }} />
               )}
             </div>
 
@@ -301,7 +311,16 @@ export const CreatorProfile = ({ creator }: Props) => {
               )}
             </h1>
             <div className="flex items-center gap-1 text-xs text-gray-400">
-              <Image src="/icon-eth.svg" width={16} height={16} alt="" />
+              <Image
+                src="/icon-eth.svg"
+                width={16}
+                height={16}
+                alt=""
+                style={{
+                  maxWidth: "100%",
+                  height: "auto",
+                  objectFit: "cover"
+                }} />
               <CopyText
                 text={creator.address}
                 alertText="ETH address has copied!"

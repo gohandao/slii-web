@@ -5,7 +5,7 @@ import { ParsedUrlQuery } from "node:querystring";
 
 import React, { useState, useEffect, useContext } from "react";
 import Head from "next/head";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import Link from "next/link";
 
 import { base } from "@/libs/airtable";
@@ -165,7 +165,15 @@ export const CreatorScreen = ({ property }: Props) => {
   );
   const sub_title = creator && (
     <>
-      <Image src="/icon-eth.svg" width={16} height={16} alt="" />
+      <Image
+        src="/icon-eth.svg"
+        width={16}
+        height={16}
+        alt=""
+        style={{
+          maxWidth: "100%",
+          height: "auto"
+        }} />
       <CopyText text={creator.address} alertText="ETH address has copied!" />
     </>
   );

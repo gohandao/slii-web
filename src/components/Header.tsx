@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/legacy/image";
+import Image from "next/image";
 
 import { Searchbox } from "@/components/Searchbox";
 import { AuthContext } from "@/contexts/AuthContext";
@@ -146,21 +146,27 @@ export const Header = () => {
               {avatar ? (
                 <Image
                   src={URL.createObjectURL(avatar)}
-                  layout="fill"
-                  objectFit="cover"
                   alt=""
                   loading="lazy"
                   className=""
                   quality={20}
+                  fill
+                  sizes="100vw"
+                  style={{
+                    objectFit: "cover",
+                  }}
                 />
               ) : (
                 <Image
                   src="/default-avatar.jpg"
-                  layout="fill"
-                  objectFit="cover"
                   alt=""
                   loading="lazy"
                   className=""
+                  fill
+                  sizes="300px"
+                  style={{
+                    objectFit: "cover",
+                  }}
                 />
               )}
               {/*<FaRegUser />*/}

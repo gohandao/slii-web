@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import Link from "next/link";
 import Moment from "react-moment";
 
@@ -119,17 +119,20 @@ export const CreatorList = ({ creators, limit }: Props) => {
                     </p>
                   </div>
                   <div className="flex w-full h-20 overflow-hidden opacity-[30%] relative border-4 border-transparent">
-                    <div className="w-full h-full bg-gray-500 rounded">
+                    <div className="relative w-full h-full bg-gray-500 rounded">
                       {creator.background && (
                         <Image
                           //@ts-ignore
                           src={creator.background}
-                          layout="fill"
-                          objectFit="cover"
                           alt=""
                           loading="lazy"
                           className="rounded"
                           quality={10}
+                          fill
+                          sizes="300px"
+                          style={{
+                            objectFit: "cover",
+                          }}
                         />
                       )}
                     </div>
@@ -144,9 +147,14 @@ export const CreatorList = ({ creators, limit }: Props) => {
                               src={creator.avatar}
                               width={80}
                               height={80}
-                              objectFit="cover"
                               alt=""
                               quality={10}
+                              sizes="300px"
+                              style={{
+                                maxWidth: "100%",
+                                height: "auto",
+                                objectFit: "cover",
+                              }}
                             />
                           )}
                         </div>

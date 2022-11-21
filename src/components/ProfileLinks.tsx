@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 
 import { FaDiscord, FaRegChartBar } from "react-icons/fa";
 import { BsTwitter, BsInstagram, BsGlobe2 } from "react-icons/bs";
@@ -49,12 +49,32 @@ export const ProfileLinks = ({
         )}
         {opensea_slug && (
           <Button url={`https://opensea.io/collection/${opensea_slug}`}>
-            <Image src="/icon-opensea.svg" width={14} height={14} alt="" />
+            <Image
+              src="/icon-opensea.svg"
+              width={14}
+              height={14}
+              alt=""
+              style={{
+                maxWidth: "100%",
+                width: "auto",
+                height: "12px",
+              }}
+            />
           </Button>
         )}
         {opensea_username && (
           <Button url={`https://opensea.io/${opensea_username}`}>
-            <Image src="/icon-opensea.svg" width={14} height={14} alt="" />
+            <Image
+              src="/icon-opensea.svg"
+              width={14}
+              height={14}
+              alt=""
+              style={{
+                maxWidth: "100%",
+                width: "auto",
+                height: "12px",
+              }}
+            />
           </Button>
         )}
         {twitter_id && (

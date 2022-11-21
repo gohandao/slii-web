@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 
 import { BsThreeDots, BsTwitter } from "react-icons/bs";
 import { FaRegFlag, FaTwitter } from "react-icons/fa";
@@ -170,13 +170,15 @@ export const ProfileHeader = ({
               <Image
                 //@ts-ignore
                 src={background_url}
-                layout="fill"
-                objectFit="cover"
                 alt=""
                 loading="lazy"
                 className="rounded-lg"
                 quality={10}
-              />
+                fill
+                sizes="100vw"
+                style={{
+                  objectFit: "cover"
+                }} />
             )}
           </div>
         </div>
@@ -191,10 +193,13 @@ export const ProfileHeader = ({
                   src={avatar_url}
                   width={100}
                   height={100}
-                  objectFit="cover"
                   alt=""
                   quality={10}
-                />
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                    objectFit: "cover"
+                  }} />
               )}
             </div>
 

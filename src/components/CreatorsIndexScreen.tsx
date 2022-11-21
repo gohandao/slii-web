@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import * as Scroll from "react-scroll";
 
-import Image from "next/legacy/image";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -45,22 +45,29 @@ import { CreatorScreen } from "@/components/CreatorScreen";
 import { Params } from "@/types/params";
 
 type Props = {
-  params?: Params;
+  params: Params;
+  // type?: string;
+  // page?: number;
+  // search?: string;
+  // order?: string;
+  // sort?: string;
+  // term?: string;
 };
 export const CreatorsIndexScreen = ({ params }: Props) => {
   const router = useRouter();
+  const { type, page, search, order, sort, term } = params;
   // const [type, setType] = useState(params && params.type);
   // const [page, setPage] = useState(params && params.page);
   // const [search, setSearch] = useState(params && params.search);
   // const [order, setOrder] = useState(params && params.order);
   // const [sort, setSort] = useState(params && params.sort);
   // const [term, setTerm] = useState(params && params.term);
-  const type = params && params.type;
-  const page = params && params.page;
-  const search = params && params.search;
-  const order = params && params.order;
-  const sort = params && params.sort;
-  const term = params && params.term;
+  // const type = params && params.type;
+  // const page = params && params.page;
+  // const search = params && params.search;
+  // const order = params && params.order;
+  // const sort = params && params.sort;
+  // const term = params && params.term;
 
   const currentPage = page ? Number(page) : 1;
   const [creatorModal, setCreatorModal] = useState<boolean>(false);
@@ -73,7 +80,7 @@ export const CreatorsIndexScreen = ({ params }: Props) => {
   const { setHeaderIcon, tempCreators, setTempCreators } =
     useContext(UtilitiesContext);
   const currentCreators =
-    tempCreators.length > 0 && !checkInitial ? tempCreators : sortedCreators;
+    tempCreators.length > 0 && checkInitial ? tempCreators : sortedCreators;
 
   // const filteredCreators = creators;
 
@@ -126,18 +133,19 @@ export const CreatorsIndexScreen = ({ params }: Props) => {
   useEffect(() => {
     console.log("checkInitial");
     console.log(checkInitial);
+    console.log(tempCreators);
 
     if (tempCreators.length == 0 || checkInitial) {
       const data = sortList(args);
       setSortedCreators((sortedCreators) => data);
-      // setTempCreators(data);
+      setTempCreators(data);
       console.log("000000000000000000000000000000");
     }
     console.log("11111111111111111111111111111111");
 
     setCheckInitial(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params]);
+  }, [type, page, search, order, sort, term]);
 
   useEffect(() => {
     setHeaderIcon({

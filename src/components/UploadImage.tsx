@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import axios from "axios";
 import { AuthContext } from "@/contexts/AuthContext";
 import { TiDelete } from "react-icons/ti";
@@ -74,12 +74,15 @@ export const UploadImage = ({ image, newImage, setNewImage }: Props) => {
           {image && !newImage ? (
             <Image
               src={URL.createObjectURL(image)}
-              layout="fill"
-              objectFit="cover"
               alt=""
               loading="lazy"
               className=""
               quality={40}
+              fill
+              sizes="100vw"
+              style={{
+                objectFit: "cover",
+              }}
             />
           ) : (
             newImage && (
@@ -97,10 +100,11 @@ export const UploadImage = ({ image, newImage, setNewImage }: Props) => {
                   //@ts-ignore
                   // src={URL.createObjectURL(images[0])}
                   src={URL.createObjectURL(newImage)}
-                  layout="fill"
                   alt=""
                   loading="lazy"
                   quality={40}
+                  fill
+                  sizes="100vw"
                 />
                 {/*<button
                   onClick={() => handleOnRemoveImage(0)}
@@ -114,12 +118,15 @@ export const UploadImage = ({ image, newImage, setNewImage }: Props) => {
           {!avatar && !image && (
             <Image
               src="/default-avatar.jpg"
-              layout="fill"
-              objectFit="cover"
               alt=""
               loading="lazy"
               className=""
               quality={40}
+              fill
+              sizes="300px"
+              style={{
+                objectFit: "cover",
+              }}
             />
           )}
           <div className="absolute left-0 top-0 right-0 bottom-0 m-auto flex items-center justify-center">

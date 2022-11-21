@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import Moment from "react-moment";
 import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 import { MdVerified } from "react-icons/md";
@@ -37,7 +37,16 @@ export const CollectionCard = ({ username, collection, index }: any) => {
   const EthIcon = () => {
     return (
       <div className="w-4 flex items-center">
-        <Image src="/icon-eth.svg" width={16} height={16} alt="" className="" />
+        <Image
+          src="/icon-eth.svg"
+          width={16}
+          height={16}
+          alt=""
+          className=""
+          style={{
+            maxWidth: "100%",
+            height: "auto"
+          }} />
       </div>
     );
   };
@@ -49,11 +58,13 @@ export const CollectionCard = ({ username, collection, index }: any) => {
             <Image
               //@ts-ignore
               src={collection.banner_image_url}
-              layout="fill"
-              objectFit="cover"
               alt=""
               quality={10}
-            />
+              fill
+              sizes="100vw"
+              style={{
+                objectFit: "cover"
+              }} />
           )}
         </div>
         <div className="px-3 md:px-5 -mt-[50px]">
@@ -62,11 +73,13 @@ export const CollectionCard = ({ username, collection, index }: any) => {
               <Image
                 //@ts-ignore
                 src={collection.image_url}
-                layout="fill"
-                objectFit="cover"
                 alt=""
                 quality={10}
-              />
+                fill
+                sizes="100vw"
+                style={{
+                  objectFit: "cover"
+                }} />
             )}
           </div>
           <div className="flex items-center relative justify-between -mr-1 max-w-full mb-1">

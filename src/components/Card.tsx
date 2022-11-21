@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import Link from "next/link";
 
 import { FaReact } from "react-icons/fa";
@@ -31,11 +31,13 @@ export const Card = ({ creator }: Props) => {
                 <Image
                   //@ts-ignore
                   src={creator.avatar[0].thumbnails.large.url}
-                  layout="fill"
-                  objectFit="cover"
                   alt=""
                   quality={10}
-                />
+                  fill
+                  sizes="100vw"
+                  style={{
+                    objectFit: "cover"
+                  }} />
               </>
             )}
           </div>

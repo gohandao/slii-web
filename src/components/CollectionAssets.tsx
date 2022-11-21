@@ -27,6 +27,7 @@ export const CollectionAssets = ({ collectionAssets }: any) => {
                   src={collectionAsset.asset.image_thumbnail_url}
                   layout="fill"
                   alt=""
+                  quality={10}
                 />
 
                 // <img src={collectionAsset.asset.image_thumbnail_url} alt="" />

@@ -61,9 +61,13 @@ export const CreatorsIndexScreen = ({ params }: Props) => {
 
   const limit = 10;
   const [sortedCreators, setSortedCreators] = useState<Creator[]>([]);
+  const [checkInitial, setCheckInitial] = useState<boolean>(false);
 
   const { creators, collections, tags } = useContext(BaseContext);
-  const { setHeaderIcon, setBreadcrumbList } = useContext(UtilitiesContext);
+  const { setHeaderIcon, tempCreators, setTempCreators } =
+    useContext(UtilitiesContext);
+  const currentCreators =
+    tempCreators.length > 0 && !checkInitial ? tempCreators : sortedCreators;
 
   // const filteredCreators = creators;
 
@@ -114,8 +118,18 @@ export const CreatorsIndexScreen = ({ params }: Props) => {
   };
 
   useEffect(() => {
-    const data = sortList(args);
-    setSortedCreators((sortedCreators) => data);
+    console.log("checkInitial");
+    console.log(checkInitial);
+
+    if (tempCreators.length == 0 && checkInitial) {
+      const data = sortList(args);
+      setSortedCreators((sortedCreators) => data);
+      setTempCreators(data);
+      console.log("000000000000000000000000000000");
+    }
+    console.log("11111111111111111111111111111111");
+
+    setCheckInitial(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
 
@@ -163,7 +177,7 @@ export const CreatorsIndexScreen = ({ params }: Props) => {
         </div>
         <div className="mb-10">
           {searchedCreators.length > 0 && (
-            <CreatorList creators={sortedCreators} limit={limit} />
+            <CreatorList creators={currentCreators} limit={limit} />
           )}
         </div>
         <div className="flex justify-center">

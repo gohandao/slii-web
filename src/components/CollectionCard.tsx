@@ -52,6 +52,7 @@ export const CollectionCard = ({ username, collection, index }: any) => {
               layout="fill"
               objectFit="cover"
               alt=""
+              quality={10}
             />
           )}
         </div>
@@ -64,6 +65,7 @@ export const CollectionCard = ({ username, collection, index }: any) => {
                 layout="fill"
                 objectFit="cover"
                 alt=""
+                quality={10}
               />
             )}
           </div>

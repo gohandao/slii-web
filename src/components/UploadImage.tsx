@@ -79,6 +79,7 @@ export const UploadImage = ({ image, newImage, setNewImage }: Props) => {
               alt=""
               loading="lazy"
               className=""
+              quality={40}
             />
           ) : (
             newImage && (
@@ -99,6 +100,7 @@ export const UploadImage = ({ image, newImage, setNewImage }: Props) => {
                   layout="fill"
                   alt=""
                   loading="lazy"
+                  quality={40}
                 />
                 {/*<button
                   onClick={() => handleOnRemoveImage(0)}
@@ -112,11 +114,10 @@ export const UploadImage = ({ image, newImage, setNewImage }: Props) => {
           {!avatar && !image && (
             <Image
               src="/default-avatar.jpg"
-              layout="fill"
-              objectFit="cover"
               alt=""
               loading="lazy"
               className=""
+              quality={40}
             />
           )}
           <div className="absolute left-0 top-0 right-0 bottom-0 m-auto flex items-center justify-center">

@@ -151,12 +151,11 @@ export const Header = () => {
                   alt=""
                   loading="lazy"
                   className=""
+                  quality={20}
                 />
               ) : (
                 <Image
                   src="/default-avatar.jpg"
-                  layout="fill"
-                  objectFit="cover"
                   alt=""
                   loading="lazy"
                   className=""

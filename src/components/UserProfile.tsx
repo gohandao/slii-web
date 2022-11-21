@@ -188,6 +188,7 @@ export const UserProfile = ({ profile }: Props) => {
                     objectFit="cover"
                     alt=""
                     loading="lazy"
+                    quality={10}
                   />
                 ) : (
                   <Image
@@ -197,6 +198,7 @@ export const UserProfile = ({ profile }: Props) => {
                     objectFit="cover"
                     alt=""
                     loading="lazy"
+                    quality={10}
                   />
                 )
               }
@@ -216,6 +218,7 @@ export const UserProfile = ({ profile }: Props) => {
                   height={100}
                   objectFit="cover"
                   alt=""
+                  quality={40}
                 />
               ) : (
                 <Image
@@ -223,7 +226,6 @@ export const UserProfile = ({ profile }: Props) => {
                   src="/default-avatar.jpg"
                   width={100}
                   height={100}
-                  objectFit="cover"
                   alt=""
                 />
               )}

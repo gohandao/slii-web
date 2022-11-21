@@ -41,7 +41,6 @@ import { Bookmark } from "@/types/bookmark";
 import { isBuffer } from "util";
 import { IconType } from "react-icons";
 import { Profile } from "@/types/profile";
-import { useRedirections } from "@/utilities/useRedirections";
 import { Params } from "@/types/params";
 
 const shortid = require("shortid");
@@ -49,6 +48,10 @@ const shortid = require("shortid");
 function MyApp({ Component, pageProps }: AppProps) {
   const [creators, setCreators] = useState<Creator[]>(creatorsJson);
   const [collections, setCollections] = useState<any[]>(collectionsJson);
+
+  const [tempCreators, setTempCreators] = useState<Creator[]>([]);
+  const [tempCollections, setTempCollections] = useState<any[]>([]);
+
   const [loginModal, setLoginModal] = useState(false);
   const [user, setUser] = useState<any>();
   // const [creatorSocial, setCreatorSocial] = useState<boolean>(false);
@@ -332,6 +335,10 @@ function MyApp({ Component, pageProps }: AppProps) {
             setScrollY: setScrollY,
             prevHeight: prevHeight,
             setPrevHeight: setPrevHeight,
+            tempCreators,
+            tempCollections,
+            setTempCreators,
+            setTempCollections,
             //collectionsMenu: collectionsMenu,
             //setCollectionsMenu: setCollectionsMenu,
           }}
@@ -349,9 +356,6 @@ function MyApp({ Component, pageProps }: AppProps) {
           >
             <div className="flex flex-col min-h-screen font-digital -font-outfit bg-stripe overflow-hidden">
               <Component {...pageProps} />
-              <div className="mt-auto">
-                <Footer />
-              </div>
             </div>
           </BaseContext.Provider>
         </UtilitiesContext.Provider>

@@ -34,6 +34,7 @@ export const Card = ({ creator }: Props) => {
                   layout="fill"
                   objectFit="cover"
                   alt=""
+                  quality={10}
                 />
               </>
             )}

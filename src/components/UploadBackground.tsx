@@ -81,6 +81,7 @@ export const UploadBackground = ({ image, newImage, setNewImage }: Props) => {
               alt=""
               loading="lazy"
               className="opacity-50"
+              quality={40}
             />
           ) : (
             image && (
@@ -94,7 +95,12 @@ export const UploadBackground = ({ image, newImage, setNewImage }: Props) => {
                   loading="lazy"
                   className="image-fill opacity-50"
                   /> */}
-                <Image src={URL.createObjectURL(image)} layout="fill" alt="" />
+                <Image
+                  src={URL.createObjectURL(image)}
+                  layout="fill"
+                  alt=""
+                  quality={40}
+                />
               </>
             )
           )}

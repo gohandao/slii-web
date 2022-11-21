@@ -1,5 +1,6 @@
 import { BreadcrumbList } from "@/types/breadcrumbList";
 import { IconType } from "react-icons";
+import { Creator } from "./creator";
 import { Params } from "./params";
 import { Profile } from "./profile";
 
@@ -40,4 +41,8 @@ export type Utilities = {
   setScrollY: React.Dispatch<React.SetStateAction<number | undefined>>;
   prevHeight?: number;
   setPrevHeight: React.Dispatch<React.SetStateAction<number | undefined>>;
+  tempCreators: Creator[];
+  setTempCreators: React.Dispatch<React.SetStateAction<Creator[]>>;
+  tempCollections: any[];
+  setTempCollections: React.Dispatch<React.SetStateAction<any[]>>;
 };

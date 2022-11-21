@@ -131,6 +131,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
                           layout="fill"
                           objectFit="cover"
                           alt=""
+                          quality={10}
                         />
                       )}
                     </div>
@@ -146,6 +147,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
                               layout="fill"
                               objectFit="cover"
                               alt=""
+                              quality={10}
                             />
                           )}
                         </div>

@@ -199,6 +199,7 @@ export const CreatorProfile = ({ creator }: Props) => {
                   alt=""
                   loading="lazy"
                   className="bg-gray-800 rounded-lg"
+                  quality={10}
                 />
               ) : (
                 <Image
@@ -209,6 +210,7 @@ export const CreatorProfile = ({ creator }: Props) => {
                   alt=""
                   loading="lazy"
                   className="bg-gray-800 rounded-lg"
+                  quality={10}
                 />
               )
             }
@@ -227,6 +229,7 @@ export const CreatorProfile = ({ creator }: Props) => {
                   height={100}
                   objectFit="cover"
                   alt=""
+                  quality={10}
                 />
               ) : (
                 <Image
@@ -236,6 +239,7 @@ export const CreatorProfile = ({ creator }: Props) => {
                   height={100}
                   objectFit="cover"
                   alt=""
+                  quality={10}
                 />
               )}
             </div>

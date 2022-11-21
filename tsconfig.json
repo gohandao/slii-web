@@ -29,6 +29,7 @@
     "src/pages/api/updateNFTs.jsx",
     "src/libs/discord.jsx",
     "src/libs/twitter.jsx",
+    "src/utilities/useRedirections.jsx",
     "src/components/_Categories"
   ],
   "exclude": ["node_modules"]

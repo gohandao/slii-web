@@ -133,6 +133,7 @@ export const HeaderIcon = () => {
                     layout="fill"
                     objectFit="cover"
                     alt=""
+                    quality={40}
                   />
                 </div>
               )}

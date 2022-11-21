@@ -175,6 +175,7 @@ export const ProfileHeader = ({
                 alt=""
                 loading="lazy"
                 className="rounded-lg"
+                quality={10}
               />
             )}
           </div>
@@ -192,6 +193,7 @@ export const ProfileHeader = ({
                   height={100}
                   objectFit="cover"
                   alt=""
+                  quality={10}
                 />
               )}
             </div>

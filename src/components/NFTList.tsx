@@ -55,6 +55,7 @@ export const NFTList = ({ assets }: Props) => {
               width={300}
               height={300}
               className="w-full"
+              quality={10}
             />
 
             <div className="absolute left-0 bottom-0 px-3 py-[2px] bg-gray-800 rounded-tr-lg bg-opacity-90	">

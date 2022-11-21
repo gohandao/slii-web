@@ -92,6 +92,7 @@ export const CollectionTr = ({ item, index, limit }: any) => {
                       layout="fill"
                       objectFit="cover"
                       alt=""
+                      quality={10}
                     />
                   )}
                 </div>
@@ -104,6 +105,7 @@ export const CollectionTr = ({ item, index, limit }: any) => {
                         layout="fill"
                         objectFit="cover"
                         alt=""
+                        quality={10}
                       />
                     )}
                   </div>

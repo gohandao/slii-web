@@ -19,6 +19,9 @@ export const BaseLayout = ({ children }: Props) => {
       <Header />
       <div className=""></div>
       <main>{children}</main>
+      <div className="mt-auto">
+        <Footer />
+      </div>
     </>
   );
 };

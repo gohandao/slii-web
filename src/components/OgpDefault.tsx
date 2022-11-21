@@ -81,6 +81,7 @@ export const OgpDefault = ({
                 //   />
                 <Image
                   src={`https://weev.media/wp-content/uploads/2022/11/default-avatar.jpg`}
+                  layout="fill"
                   alt=""
                 />
               )}

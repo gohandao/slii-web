@@ -226,6 +226,8 @@ export const UserProfile = ({ profile }: Props) => {
                   src="/default-avatar.jpg"
                   width={100}
                   height={100}
+                  layout="fill"
+                  objectFit="cover"
                   alt=""
                 />
               )}

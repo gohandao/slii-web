@@ -49,6 +49,12 @@ type Props = {
 };
 export const CreatorsIndexScreen = ({ params }: Props) => {
   const router = useRouter();
+  // const [type, setType] = useState(params && params.type);
+  // const [page, setPage] = useState(params && params.page);
+  // const [search, setSearch] = useState(params && params.search);
+  // const [order, setOrder] = useState(params && params.order);
+  // const [sort, setSort] = useState(params && params.sort);
+  // const [term, setTerm] = useState(params && params.term);
   const type = params && params.type;
   const page = params && params.page;
   const search = params && params.search;
@@ -121,10 +127,10 @@ export const CreatorsIndexScreen = ({ params }: Props) => {
     console.log("checkInitial");
     console.log(checkInitial);
 
-    if (tempCreators.length == 0 && checkInitial) {
+    if (tempCreators.length == 0 || checkInitial) {
       const data = sortList(args);
       setSortedCreators((sortedCreators) => data);
-      setTempCreators(data);
+      // setTempCreators(data);
       console.log("000000000000000000000000000000");
     }
     console.log("11111111111111111111111111111111");

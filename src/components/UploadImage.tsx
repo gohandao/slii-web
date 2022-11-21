@@ -114,6 +114,8 @@ export const UploadImage = ({ image, newImage, setNewImage }: Props) => {
           {!avatar && !image && (
             <Image
               src="/default-avatar.jpg"
+              layout="fill"
+              objectFit="cover"
               alt=""
               loading="lazy"
               className=""

@@ -156,6 +156,8 @@ export const Header = () => {
               ) : (
                 <Image
                   src="/default-avatar.jpg"
+                  layout="fill"
+                  objectFit="cover"
                   alt=""
                   loading="lazy"
                   className=""

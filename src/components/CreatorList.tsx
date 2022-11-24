@@ -37,6 +37,7 @@ type Props = {
 export const CreatorList = ({ creators, limit }: Props) => {
   const router = useRouter();
   const { page, order, sort, term, type, search } = router.query;
+  const currentPath = router.pathname;
 
   const params = process.browser && location.search;
   const { setHiddenParams } = useContext(UtilitiesContext);
@@ -60,6 +61,11 @@ export const CreatorList = ({ creators, limit }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creators]);
 
+  let modal_param = "";
+  if (currentPath == "/") {
+    modal_param = "?screen=modal";
+  }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3 w-full justify-center">
       {currentCreators.length > 0 &&
@@ -70,7 +76,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
               key={index}
             >
               <Link
-                href={`/creator/${creator.username}?ref=index`}
+                href={`/creator/${creator.username}${modal_param}`}
                 legacyBehavior
                 // href={{
                 //   pathname: `/?username=${creator.username}`,

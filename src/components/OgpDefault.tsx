@@ -1,4 +1,3 @@
-import React from "react";
 import Image from "next/image";
 
 import { totalmem } from "os";
@@ -18,7 +17,7 @@ export const OgpDefault = ({
   avatar,
   title,
   label,
-  verified = true,
+  verified = false,
 }: Props) => {
   let baseUrl = "" as string;
   if (process.env.NODE_ENV != "test") {

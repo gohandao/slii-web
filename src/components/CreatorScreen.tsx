@@ -3,7 +3,7 @@ import { NextSeo } from "next-seo";
 
 import { ParsedUrlQuery } from "node:querystring";
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
@@ -45,7 +45,7 @@ type Props = {
 };
 export const CreatorScreen = ({ property }: Props) => {
   const router = useRouter();
-  const { username, order, sort, term, page, type, search, slug } =
+  const { username, order, sort, term, page, type, search, slug, screen } =
     router.query;
   const currentPage = page ? Number(page) : 1;
   const limit = 50;
@@ -60,6 +60,7 @@ export const CreatorScreen = ({ property }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [assets, setAssets] = useState<any[]>([]);
   const [currentAssets, setCurrentAssets] = useState<any[]>([]);
+  // const currentAssets = useRef<any[]>([]);
 
   const { creators, collections } = useContext(BaseContext);
   // const collections = useContext(CollectionsContext);
@@ -106,32 +107,30 @@ export const CreatorScreen = ({ property }: Props) => {
     }
   }, [creators, username, collections]);
 
-  if (!checkAssets && assets.length < 1 && creatorCollections.length > 0) {
-    const fetchData = async () => {
-      let new_assets: any[] = [];
-      await Promise.all(
-        creatorCollections.map(async (collection) => {
-          const data = await getNFTs(collection.slug);
-          if (data) {
-            new_assets = [...new_assets, ...data];
-          }
-        })
-      );
-      // console.log(creatorCollections);
-      // console.log(assets);
-      // console.log(new_assets);
-      setAssets(new_assets);
-    };
-    fetchData();
-  }
+  // if (!checkAssets && assets.length < 1 && creatorCollections.length > 0) {
+  //   const fetchData = async () => {
+  //     let new_assets: any[] = [];
+  //     await Promise.all(
+  //       creatorCollections.map(async (collection) => {
+  //         const data = await getNFTs(collection.slug);
+  //         if (data) {
+  //           new_assets = [...new_assets, ...data];
+  //         }
+  //       })
+  //     );
+  //     // console.log(creatorCollections);
+  //     // console.log(assets);
+  //     // console.log(new_assets);
+  //     setAssets(new_assets);
+  //     setCheckAssets(true);
+  //   };
+  //   fetchData();
+  // }
+  console.log("checkAssets");
+  console.log(checkAssets);
 
   useEffect(() => {
-    if (
-      !checkAssets &&
-      assets.length < 1 &&
-      creatorCollections.length > 0 &&
-      !checkAssets
-    ) {
+    if (!checkAssets && assets.length < 1 && creatorCollections.length > 0) {
       const fetchData = async () => {
         let new_assets: any[] = [];
         await Promise.all(
@@ -154,6 +153,35 @@ export const CreatorScreen = ({ property }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creatorCollections]);
 
+  const test = creator && !screen && screen != "modal" && "test";
+  console.log("test m");
+  console.log(test);
+
+  useEffect(() => {
+    {
+      creator && !screen
+        ? setHeaderIcon({
+            title: creator.username,
+            subTitle: (
+              <div className="flex gap-1 text-[10px] items-center text-gray-400 leading-none">
+                <JP title="Japan" className="h-[10px] rounded-sm" />
+                Creator
+              </div>
+            ),
+            emoji: "",
+            avatar: "",
+            path: `/creator/${creator.username}`,
+          })
+        : setHeaderIcon({
+            title: "",
+            emoji: "",
+            avatar: "",
+            path: "/",
+            type: "home",
+          });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [creator, screen]);
   //props
   const title = creator && (
     <>
@@ -172,8 +200,9 @@ export const CreatorScreen = ({ property }: Props) => {
         alt=""
         style={{
           maxWidth: "100%",
-          height: "auto"
-        }} />
+          height: "auto",
+        }}
+      />
       <CopyText text={creator.address} alertText="ETH address has copied!" />
     </>
   );
@@ -209,7 +238,7 @@ export const CreatorScreen = ({ property }: Props) => {
   const args = {
     property: "nfts" as "nfts" | "creators" | "collections",
     list: searchedAssets,
-    page: currentPage,
+    page: Number(page),
     order: order as "desc" | "asc" | undefined,
     sort: sort as string | undefined,
     //category: collectionsSort,
@@ -217,21 +246,22 @@ export const CreatorScreen = ({ property }: Props) => {
   };
 
   useEffect(() => {
-    if (sort != "random" && assets.length > 1) {
+    if (sort != "random") {
       const data = sortNFTs(args);
       setSortedAssets((sortedAssets) => data);
+      setCurrentAssets((currentAssets) => data);
+    } else if (sort == "random") {
+      setCurrentAssets((currentAssets) => randomize(searchedAssets));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assets, creators, order, sort, term, page, type, search]);
+  }, [assets, creators, order, sort, term, page, type, search, random]);
 
-  useEffect(() => {
-    if (sort == "random") {
-      setCurrentAssets(randomize(searchedAssets));
-    } else {
-      setCurrentAssets(searchedAssets);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortedAssets, sort, random, search]);
+  // useEffect(() => {
+  //   if (sort == "random") {
+  //     setCurrentAssets((currentAssets) => randomize(searchedAssets));
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [sortedAssets, sort, random]);
 
   const links = {
     address: creator?.address,

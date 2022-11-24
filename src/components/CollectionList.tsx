@@ -40,6 +40,7 @@ type Props = {
 export const CollectionList = ({ collections, limit }: Props) => {
   const router = useRouter();
   const { page } = router.query;
+  const currentPath = router.pathname;
   const currentPage = page ? Number(page) : 1;
   const { order, sort, term } = router.query;
 
@@ -70,17 +71,19 @@ export const CollectionList = ({ collections, limit }: Props) => {
   };
   const EthIcon = () => {
     return (
-      <div className="w-4 flex items-center">
+      <div className="relative w-4 flex items-center">
         <Image
           src="/icon-eth.svg"
           width={16}
           height={16}
           alt=""
+          sizes="16px"
           className=""
           style={{
             maxWidth: "100%",
-            height: "auto"
-          }} />
+            height: "auto",
+          }}
+        />
       </div>
     );
   };
@@ -99,6 +102,9 @@ export const CollectionList = ({ collections, limit }: Props) => {
       </div>
     );
   };
+
+  const modal_param = currentPath == "/collections" ? "?screen=modal" : "";
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3 w-full justify-center">
       {collections.length > 0 &&
@@ -108,7 +114,10 @@ export const CollectionList = ({ collections, limit }: Props) => {
               className="relative flex hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1"
               key={index}
             >
-              <Link href={`/collection/${collection.slug}`} legacyBehavior>
+              <Link
+                href={`/collection/${collection.slug}${modal_param}`}
+                legacyBehavior
+              >
                 <a className="relative flex flex-col border border-gray-800 rounded-lg w-full items-center shadow-lg bg-gray-800 overflow-hidden pb-2">
                   <div className="absolute top-0 right-0 z-20  text-gray-400 opacity-60 flex gap-1 items-center">
                     <p className="text-gray-400 text-xs text-center mt-[2px]">
@@ -132,7 +141,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
                     </p>
                   </div>
                   <div className="flex w-full h-20 overflow-hidden opacity-[30%] relative border-4 border-transparent">
-                    <div className="w-full h-full bg-gray-500 rounded">
+                    <div className="relative w-full h-full bg-gray-500 rounded">
                       {collection.banner_image_url && (
                         <Image
                           //@ts-ignore
@@ -140,17 +149,18 @@ export const CollectionList = ({ collections, limit }: Props) => {
                           alt=""
                           quality={10}
                           fill
-                          sizes="100vw"
+                          sizes="300px"
                           style={{
-                            objectFit: "cover"
-                          }} />
+                            objectFit: "cover",
+                          }}
+                        />
                       )}
                     </div>
                   </div>
                   <div className="px-4 w-full">
                     <div className="flex w-full gap-2 items-center">
                       <div className="relative -mt-[60px]">
-                        <div className="rounded border-[5px] overflow-hidden flex items-center justify-center z-10 bg-gray-600 border-gray-700 relative w-[70px] h-[70px] min-w-[70px]">
+                        <div className="relative rounded border-[5px] overflow-hidden flex items-center justify-center z-10 bg-gray-600 border-gray-700  w-[70px] h-[70px] min-w-[70px]">
                           {collection.image_url && (
                             <Image
                               //@ts-ignore
@@ -158,10 +168,11 @@ export const CollectionList = ({ collections, limit }: Props) => {
                               alt=""
                               quality={10}
                               fill
-                              sizes="100vw"
+                              sizes="200px"
                               style={{
-                                objectFit: "cover"
-                              }} />
+                                objectFit: "cover",
+                              }}
+                            />
                           )}
                         </div>
                         {(collection.twitter_followers ||

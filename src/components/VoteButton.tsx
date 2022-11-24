@@ -192,7 +192,7 @@ export const VoteButton = ({
               addLikeHandler(e);
             }
           }}
-          className={`h-[44px]`}
+          className={``}
         >
           {property == "simple" ? (
             <>
@@ -209,7 +209,7 @@ export const VoteButton = ({
               )}
             </>
           ) : (
-            <div className="bg-upvote h-full rounded">
+            <div className="bg-upvote rounded h-[44px]">
               {upvoted ? (
                 <div
                   className={`bg-white ${propertyClass} border-2 border-orange-600 rounded`}

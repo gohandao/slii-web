@@ -79,6 +79,7 @@ const getCreatorOptions = async (creators: Creator[]) => {
       const OSUser = await getOSUser(creator.address);
       const avatar = OSUser.account.profile_img_url;
       const username = OSUser.username;
+      const verified = OSUser.account.config == "verified" ? true : false;
       // const OSUserBackground = await getOSUserBackground(creator.username);
       const data = await getOSData(creator.username);
       creator.username = username as string;
@@ -93,6 +94,7 @@ const getCreatorOptions = async (creators: Creator[]) => {
       creator.total_supply = data.total_supply as number;
       creator.total_sales = data.total_sales as number;
       creator.background = data.background_image as string | undefined;
+      creator.verified = verified;
     })
   );
   return creators;

@@ -58,7 +58,10 @@ export const UserPageTemplate = ({
       userProfile.avatar_url &&
       (await getImageUrl(userProfile.avatar_url));
     avatar_blob && setUserAvatar(avatar_blob);
+    console.log("avatar_blob");
+    console.log(avatar_blob);
   };
+
   userProfile && !userAvatar && getAvatarBlob;
   !userAvatar && getAvatarBlob();
 

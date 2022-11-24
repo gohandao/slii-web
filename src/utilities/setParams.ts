@@ -13,7 +13,7 @@ export const setParams = ({
   type,
   search,
   tab,
-  ref,
+  screen,
 }: Params) => {
   const query = {
     slug: slug,
@@ -24,7 +24,7 @@ export const setParams = ({
     order: order,
     page: page,
     search: search,
-    ref: ref,
+    screen: screen,
   };
   const new_query: Params = removeUndefinedObject(query);
   // const { hiddenUrl } = useContext(UtilitiesContext);

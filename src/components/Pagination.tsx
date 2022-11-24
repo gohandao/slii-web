@@ -21,7 +21,7 @@ export const Pagination = ({ currentPage, length, limit }: Props) => {
   const nextPage = currentPage + 1;
   const lastPage = Math.floor(length / limit) + 1;
   const router = useRouter();
-  const { order, sort, term, page, type, search } = router.query;
+  const { order, sort, term, page, type, search, screen } = router.query;
 
   const PaginationItem = ({ count }: ItemProps) => {
     let activeClass;
@@ -41,6 +41,7 @@ export const Pagination = ({ currentPage, length, limit }: Props) => {
             term: term && (term as string),
             page: count,
             search: search && (search as string),
+            screen: screen && (screen as string),
           });
         }}
       >

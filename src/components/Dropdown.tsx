@@ -31,7 +31,7 @@ type Props = {
 };
 export const Dropdown = ({ position, property, custom_menu }: Props) => {
   const router = useRouter();
-  const { order, sort, term, page, type, search, slug } = router.query;
+  const { order, sort, term, page, type, search, slug, screen } = router.query;
 
   const [status, setStatus] = useState<boolean>(false);
   const assetsDropdown = ["All", "Buy now", "On auction", "Price low to high"];
@@ -182,18 +182,32 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
     case "nftSort":
       menus = ["token id", "last price", "last sale", "random"];
       icon = <BiCategory className="text-gray-400" />;
-      if (!type) {
+      if (!sort) {
         title = (
           <>
             {icon}
             <Title>token id</Title>
           </>
         );
+      } else if (sort == "last_price") {
+        title = (
+          <>
+            {icon}
+            <Title>last price</Title>
+          </>
+        );
+      } else if (sort == "last_sale") {
+        title = (
+          <>
+            {icon}
+            <Title>last sale</Title>
+          </>
+        );
       } else {
         title = (
           <>
             {icon}
-            <Title>{type}</Title>
+            <Title>{sort}</Title>
           </>
         );
       }
@@ -283,6 +297,7 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
         term: new_term,
         order: order && (order as string),
         search: search && (search as string),
+        screen: screen && (screen as string),
       });
     }
     if (property == "nftType") {
@@ -295,6 +310,7 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
         sort: sort && (sort as string),
         order: order && (order as string),
         search: search && (search as string),
+        screen: screen && (screen as string),
       });
     }
     if (property == "nftSort") {
@@ -324,6 +340,7 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
         sort: new_sort,
         order: order && (order as string),
         search: search && (search as string),
+        screen: screen && (screen as string),
       });
     }
     if (property == "creatorType") {
@@ -336,6 +353,7 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
         sort: sort && (sort as string),
         order: order && (order as string),
         search: search && (search as string),
+        screen: screen && (screen as string),
       });
     }
     if (property == "creatorSort") {
@@ -350,6 +368,7 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
         sort: new_sort,
         order: order && (order as string),
         search: search && (search as string),
+        screen: screen && (screen as string),
       });
     }
     if (property == "collectionType") {
@@ -362,6 +381,7 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
         sort: sort && (sort as string),
         order: order && (order as string),
         search: search && (search as string),
+        screen: screen && (screen as string),
       });
     }
     if (property == "collectionSort") {

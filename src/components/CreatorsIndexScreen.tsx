@@ -55,19 +55,7 @@ type Props = {
 };
 export const CreatorsIndexScreen = ({ params }: Props) => {
   const router = useRouter();
-  const { type, page, search, order, sort, term } = params;
-  // const [type, setType] = useState(params && params.type);
-  // const [page, setPage] = useState(params && params.page);
-  // const [search, setSearch] = useState(params && params.search);
-  // const [order, setOrder] = useState(params && params.order);
-  // const [sort, setSort] = useState(params && params.sort);
-  // const [term, setTerm] = useState(params && params.term);
-  // const type = params && params.type;
-  // const page = params && params.page;
-  // const search = params && params.search;
-  // const order = params && params.order;
-  // const sort = params && params.sort;
-  // const term = params && params.term;
+  const { type, page, search, order, sort, term, screen } = params;
 
   const currentPage = page ? Number(page) : 1;
   const [creatorModal, setCreatorModal] = useState<boolean>(false);
@@ -119,43 +107,28 @@ export const CreatorsIndexScreen = ({ params }: Props) => {
     searchedCreators = filteredCreators;
   }
 
-  const args = {
-    property: "creators" as "creators" | "collections",
-    list: searchedCreators,
-    page: currentPage,
-    order: order as "desc" | "asc" | undefined,
-    sort: sort as string | undefined,
-    term: term as "24h" | "7d" | "30d" | "all" | undefined,
-    //category: collectionsSort,
-    limit: limit,
-  };
-
   useEffect(() => {
     console.log("checkInitial");
     console.log(checkInitial);
-    console.log(tempCreators);
 
+    const args = {
+      property: "creators" as "creators" | "collections",
+      list: searchedCreators,
+      page: currentPage,
+      order: order as "desc" | "asc" | undefined,
+      sort: sort as string | undefined,
+      term: term as "24h" | "7d" | "30d" | "all" | undefined,
+      //category: collectionsSort,
+      limit: limit,
+    };
     if (tempCreators.length == 0 || checkInitial) {
       const data = sortList(args);
       setSortedCreators((sortedCreators) => data);
       setTempCreators(data);
-      console.log("000000000000000000000000000000");
     }
-    console.log("11111111111111111111111111111111");
-
     setCheckInitial(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type, page, search, order, sort, term]);
-
-  useEffect(() => {
-    setHeaderIcon({
-      title: "",
-      emoji: "",
-      avatar: "",
-      path: "/",
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // useEffect(() => {
   //   setCreatorModal(params.username ? true : false);

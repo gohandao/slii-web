@@ -60,11 +60,23 @@ export const ScreenModal = ({
   const new_query = hiddenParams && removeUndefinedObject(hiddenParams);
   const closeModal = () => {
     setModalIsOpen(false);
+    // router.back();
+
+    // if (window.history.state && window.history.state.idx > 0) {
+    //   router.back();
+    // } else
+    // if (path) {
+    //   router.push(path);
+    // } else {
+    //   router.push("/");
+    // }
     if (path) {
       router.push({
         pathname: path,
         query: new_query,
       });
+    } else {
+      router.push("/");
     }
   };
 

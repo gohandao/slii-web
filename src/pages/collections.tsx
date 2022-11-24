@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
+import * as Scroll from "react-scroll";
 
 import { CreatorList } from "@/components/CreatorList";
 import { CollectionTable } from "@/components/CollectionTable";
@@ -34,123 +35,128 @@ import { CollectionList } from "@/components/CollectionList";
 import { Collection } from "@/types/collection";
 import { sortList } from "@/libs/sortList";
 import { TabIndex } from "@/components/TabIndex";
+import { CollectionsIndexScreen } from "@/components/CollectionsIndexScreen";
+import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
+import { NextSeo } from "next-seo";
 
 const CollectionsPage: NextPage = () => {
   const router = useRouter();
-  const { order, sort, term, page, type, search } = router.query;
-  const currentPage = page ? Number(page) : 1;
-  const limit = 10;
-  const [sortedCollections, setSortedCollections] = useState<Collection[]>([]);
+  const { order, sort, term, page, type, search, username, screen } =
+    router.query;
+  const currentPage = page ? Number(page) : undefined;
 
-  const { creators, collections, tags } = useContext(BaseContext);
-  const { setHeaderIcon, setBreadcrumbList } = useContext(UtilitiesContext);
+  const params = {
+    type: type as string,
+    page: currentPage,
+    search: search as string,
+    order: order as string,
+    sort: sort as string,
+    term: term as string,
+  };
+  // const new_params = removeUndefinedObject(params);
 
-  const filteredCollections =
-    type && type != "all"
-      ? collections.filter((collection) => collection.type === type)
-      : collections;
+  const {
+    setHeaderIcon,
+    setHiddenParams,
+    setScrollY,
+    scrollY,
+    prevHeight,
+    setPrevHeight,
+  } = useContext(UtilitiesContext);
 
-  const uppperKeyword = typeof search == "string" && search.toUpperCase();
-  //1.match username
-  const searchedCollections01 = filteredCollections.filter(
-    (collection) =>
-      typeof search == "string" &&
-      //すべて大文字にして大文字小文字の区別をなくす
-      //@ts-ignore
-      collection.name.toUpperCase().includes(uppperKeyword) == true
-  );
-  const origin_searchedCollections = [
-    ...searchedCollections01,
-    // ...searchedCreators02,
-  ];
-  //重複削除
-  let searchedCollections = [] as Collection[];
-  if (search && search.length > 0) {
-    searchedCollections = Array.from(new Set(origin_searchedCollections));
-  } else {
-    searchedCollections = filteredCollections;
-  }
+  // let new_scrollY = scrollY;
+  const new_scrollY = useRef(scrollY);
+  const new_height = useRef(0);
+
+  // scrollY && window.scrollTo(0, scrollY);
+
+  // console.log("initial scrollY");
+  // console.log(scrollY);
+
+  // var scroll = Scroll.animateScroll;
+  // if (scrollY && scrollY != 0) {
+  //   scroll.scrollTo(scrollY, { duration: 0 });
+  // }
+
+  // var scroll = Scroll.animateScroll;
+  // if (scrollY && scrollY != 0) {
+  //   scroll.scrollTo(scrollY, { duration: 0 });
+  // }
+  useEffect(() => {
+    var scroll = Scroll.animateScroll;
+    if (scrollY && scrollY != 0) {
+      scroll.scrollTo(scrollY, { duration: 0 });
+    }
+  }, []);
 
   useEffect(() => {
-    const args = {
-      property: "collections" as "creators" | "collections",
-      list: searchedCollections,
-      page: currentPage,
-      order: order as "desc" | "asc" | undefined,
-      sort: sort as string | undefined,
-      term: term as "24h" | "7d" | "30d" | "all" | undefined,
-      //category: collectionsSort,
-      limit: limit,
-    };
-    const data = sortList(args);
-    setSortedCollections((sortedCollections) => data);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collections, order, sort, term, page, type, search]);
+    new_height.current = document.body.scrollHeight;
+    // new_height.current = window.innerHeight;
+    if (new_height.current && new_height.current != 0) {
+      setPrevHeight(new_height.current);
+    }
 
-  const breadcrumbList = [
-    {
-      name: "Home",
-      path: "/",
-    },
-    {
-      name: "Collections",
-      path: "/collections",
-    },
-  ];
+    // if (scrollY && scrollY != 0) {
+    //   window.scrollTo(0, scrollY);
+    // }
+    // // window.scrollTo(0, scrollY);
+    // var scroll = Scroll.animateScroll;
+    // if (scrollY && scrollY != 0) {
+    //   scroll.scrollTo(scrollY, { duration: 0 });
+    // }
+    window.addEventListener("scroll", async () => {
+      new_scrollY.current = window.scrollY;
+      // console.log(new_scrollY.current);
+      if (new_scrollY.current && new_scrollY.current != 0) {
+        setScrollY(new_scrollY.current);
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [new_scrollY]);
+  useEffect(() => {
+    setHiddenParams(params);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order, sort, term, page, type, search, username]);
   useEffect(() => {
     setHeaderIcon({
       title: "",
       emoji: "",
       avatar: "",
       path: "/",
+      type: "home",
     });
-    setBreadcrumbList(breadcrumbList);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div>
-      <Head>
+      {/* <Head>
         <title>
           NFT OTAKU | Search Japanese NFT creators, projects, collections.
         </title>
         <meta name="description" content="Generated by create next app" />
         <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <BaseLayout>
-        <section className="mx-auto px-5 lg:px-8">
-          <div className="">
-            <TabIndex />
-          </div>
-          <div className="flex gap-3 mb-2">
-            <div className="flex gap-3 items-baseline">
-              <p className="text-gray-500 text-sm">
-                {searchedCollections.length} Collections
-              </p>
-            </div>
-          </div>
-          <div className="relative flex gap-3 sm:gap-5 z-20 justify-between mb-3">
-            <Dropdown position="left" property="collectionType" />
-            <Searchbox id="collection" />
-            <div className="flex items-center gap-3">
-              <Dropdown position="right" property="collectionSort" />
-              <OrderButton />
-            </div>
-          </div>
-          <div className="mb-10">
-            {searchedCollections.length > 0 && (
-              <CollectionList collections={sortedCollections} limit={limit} />
-            )}
-          </div>
-          <div className="flex justify-center">
-            <Pagination
-              currentPage={currentPage}
-              length={searchedCollections.length}
-              limit={limit}
-            />
-          </div>
-        </section>
-      </BaseLayout>
+      </Head> */}
+      <NextSeo
+        title="All NFT Collections in Japan | NFT OTAKU"
+        description="Find NFT colllections created by Japanese NFT artists and projects."
+        openGraph={{
+          type: "article",
+          url: process.env.NEXT_PUBLIC_SITE_URL + "/collections",
+          title: "All NFT Collections in Japan | NFT OTAKU",
+          description:
+            "Find NFT colllections created by Japanese NFT artists and projects.",
+        }}
+      />
+      <div
+        style={{
+          minHeight: `${prevHeight}px`,
+        }}
+      >
+        <BaseLayout>
+          <CollectionsIndexScreen params={params} />
+        </BaseLayout>
+      </div>
     </div>
   );
 };

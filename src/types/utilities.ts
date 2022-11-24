@@ -9,13 +9,14 @@ export type Utilities = {
   baseUrl?: string;
   loginModal: boolean;
   setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
-  hiddenParams?: Params;
-  setHiddenParams: React.Dispatch<React.SetStateAction<Params | undefined>>;
+  hiddenParams: Params;
+  setHiddenParams: React.Dispatch<React.SetStateAction<Params>>;
   keyword?: string;
   setKeyword: React.Dispatch<React.SetStateAction<string | undefined>>;
   NFTKeyword?: string;
   setNFTKeyword: React.Dispatch<React.SetStateAction<string | undefined>>;
   headerIcon: {
+    type?: string;
     title: string;
     subTitle?: any;
     emoji: string;
@@ -31,6 +32,7 @@ export type Utilities = {
       emoji: string;
       element?: any;
       path: string;
+      type?: string;
     }>
   >;
   userProfile?: Profile;

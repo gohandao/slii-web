@@ -1,5 +1,6 @@
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import { NextSeo } from "next-seo";
+import creatorsJson from "@/json/creators.json";
 
 import { ParsedUrlQuery } from "node:querystring";
 
@@ -32,7 +33,7 @@ import { CreatorsIndexScreen } from "@/components/CreatorsIndexScreen";
 
 const CreatorIndex: NextPage = (props: any) => {
   const router = useRouter();
-  const { username, order, sort, term, page, type, search, slug, ref } =
+  const { username, order, sort, term, page, type, search, slug, screen } =
     router.query;
   const currentPage = page ? Number(page) : 1;
   const limit = 50;
@@ -51,7 +52,11 @@ const CreatorIndex: NextPage = (props: any) => {
   const { creators, collections } = useContext(BaseContext);
   // const collections = useContext(CollectionsContext);
   const { setHeaderIcon, hiddenParams, scrollY } = useContext(UtilitiesContext);
-  const [creatorModal, setCreatorModal] = useState<boolean>(ref ? true : false);
+  const [creatorModal, setCreatorModal] = useState<boolean>(
+    screen ? true : false
+  );
+
+  // console.log(hiddenParams);
 
   // const [first, setfirst] = useState(false);
   // useEffect(() => {
@@ -61,27 +66,12 @@ const CreatorIndex: NextPage = (props: any) => {
   //   }
   // }, []);
   useEffect(() => {
-    setCreatorModal(ref ? true : false);
-  }, [ref]);
-
-  useEffect(() => {
-    {
-      creator &&
-        setHeaderIcon({
-          title: creator.username,
-          subTitle: (
-            <div className="flex gap-1 text-[10px] items-center text-gray-400 leading-none">
-              <JP title="Japan" className="h-[10px] rounded-sm" />
-              Creator
-            </div>
-          ),
-          emoji: "",
-          avatar: "",
-          path: `/creator/${creator.username}`,
-        });
+    if (hiddenParams) {
+      setCreatorModal(screen ? true : false);
+    } else {
+      setCreatorModal(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [creator]);
+  }, [screen]);
 
   // console.log("crs scrollY");
   // console.log(scrollY);
@@ -95,7 +85,7 @@ const CreatorIndex: NextPage = (props: any) => {
           type: "article",
           title: props.title,
           description: props.description,
-          url: process.env.NEXT_PUBLIC_SITE_URL + `/${username}`,
+          url: process.env.NEXT_PUBLIC_SITE_URL + `/creator/${username}`,
           images: [
             {
               url: props.ogImageUrl,
@@ -107,7 +97,7 @@ const CreatorIndex: NextPage = (props: any) => {
           ],
         }}
       />
-      {ref == "index" ? (
+      {screen == "modal" ? (
         <>
           <ScreenModal
             modalIsOpen={creatorModal}
@@ -116,11 +106,6 @@ const CreatorIndex: NextPage = (props: any) => {
           >
             <CreatorScreen property="modal" />
           </ScreenModal>
-          {/* <iframe
-            src="http://localhost:3000/?search=oh"
-            id="iframe"
-            className="fixed top-0 left-0 w-screen h-screen"
-          ></iframe> */}
           <div
             className={`fixed left-0 w-full`}
             style={{
@@ -152,15 +137,17 @@ type Params = ParsedUrlQuery & {
 };
 
 export const getStaticPaths = async () => {
-  const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
-  const response = await fetch(
-    `https://api.airtable.com/v0/appFYknMhbtkUTFgt/creators?api_key=${AIRTABLE_API_KEY}`
-  );
-  const { records } = await response.json();
-  const creators = records;
+  // const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
+  // const response = await fetch(
+  //   `https://api.airtable.com/v0/appFYknMhbtkUTFgt/creators?api_key=${AIRTABLE_API_KEY}`
+  // );
+  // const { records } = await response.json();
+  // const creators = records;
+  const creators = creatorsJson;
   return {
     paths: creators.map(
-      (creator: any) => `/creator/${creator.fields.username}`
+      // (creator: any) => `/creator/${creator.fields.username}`
+      (creator: any) => `/creator/${creator.username}`
     ),
     //fallback: false,
     fallback: "blocking",
@@ -170,26 +157,25 @@ export const getStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   params,
 }) => {
-  const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
+  // const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
   /*const response = await fetch(
     `https://api.airtable.com/v0/appFYknMhbtkUTFgt/creators?api_key=${AIRTABLE_API_KEY}`
   );*/
+  const creators = creatorsJson;
   const username = params && params.username;
-  const response = await fetch(
-    `https://api.airtable.com/v0/appFYknMhbtkUTFgt/creators?api_key=${AIRTABLE_API_KEY}&filterByFormula=%7Busername%7D+%3D+%22${username}%22`
-  );
-  const { records } = await response.json();
+  // const response = await fetch(
+  //   `https://api.airtable.com/v0/appFYknMhbtkUTFgt/creators?api_key=${AIRTABLE_API_KEY}&filterByFormula=%7Busername%7D+%3D+%22${username}%22`
+  // );
+  // const { records } = await response.json();
   //const creators = records;
   //const creator = creators[0];
   //console.log("static creator");
   //console.log(creator);
-  /*const creator = creators.filter(
-    (creator: any) => creator.fields.username === username
-  );*/
-  const description =
-    records.length > 0 && records[0].fields.description
-      ? records[0].fields.description
-      : "";
+  const filtered_creators = creators.filter(
+    (creator: any) => creator.username === username
+  );
+  const creator = filtered_creators[0];
+  const description = creator && creator.description ? creator.description : "";
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
@@ -197,15 +183,23 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
       development: "http://localhost:3000",
     }[process.env.NODE_ENV];
   }
+
+  const avatar = creator.avatar ? creator.avatar : "";
+  const background = creator.background ? creator.background : "";
+  //@ts-ignore
+  const varified = creator.varified ? creator.varified : "";
+
   return {
     props: {
       // OGP画像は絶対URLで記述する必要があります
       //ogImageUrl: `${baseUrl}/api/ogp?title=${creator.username}&page=creators`,
-      title: `${username}'s NFT collections`,
-      description: description,
+      title: `${username}'s NFT stats and collections | NFT OTAKU`,
+      // description: description.slice(0, 200),
+      description: `${username} is a Japanese NFT creator / project.`,
+
       //description: `${records[0].fields.description}`,
-      ogImageUrl: `${baseUrl}/api/ogp?title=${username}&subTitle=Creator`,
-      revalidate: 10,
+      ogImageUrl: `${baseUrl}/api/ogp?title=${username}&label=Creator&type=user&avatar=${avatar}&background=${background}&verified=${varified}`,
+      revalidate: 600,
     },
   };
 };

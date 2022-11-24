@@ -13,7 +13,7 @@ type Props = {
 };
 export const Searchbox = ({ id, property }: Props) => {
   const router = useRouter();
-  const { order, sort, term, page, type, search, tab, ref } = router.query;
+  const { order, sort, term, page, type, search, tab, screen } = router.query;
   const { hiddenParams } = useContext(UtilitiesContext);
   const [value, setValue] = useState<string>("");
 
@@ -57,7 +57,7 @@ export const Searchbox = ({ id, property }: Props) => {
       term: term && (term as string),
       search: e.target.value && (e.target.value as string),
       tab: tab && (tab as string),
-      ref: ref && (ref as string),
+      screen: screen && (screen as string),
     });
   };
 

@@ -8,7 +8,9 @@ export const NFTList = ({ assets }: Props) => {
   const [currentAssets, setCurrentAssets] = useState<any[]>([]);
 
   useEffect(() => {
-    setCurrentAssets(assets);
+    console.log("worked");
+
+    setCurrentAssets((currentAssets) => assets);
   }, [assets]);
 
   const Hyphen = () => {
@@ -34,7 +36,7 @@ export const NFTList = ({ assets }: Props) => {
   return (
     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 gap-3 w-full justify-center mb-10">
       {currentAssets.map((asset, index) => (
-        <div className="" key={index}>
+        <div className="" key={asset.id}>
           <a
             href={asset.permalink}
             target="_blank"

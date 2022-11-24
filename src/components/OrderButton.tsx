@@ -6,7 +6,7 @@ import { TbArrowBigDownLine, TbArrowBigUpLine } from "react-icons/tb";
 
 export const OrderButton = () => {
   const router = useRouter();
-  const { order, sort, term, page, type, search } = router.query;
+  const { order, sort, term, page, type, search, screen } = router.query;
   const currentPage = page ? Number(page) : 1;
   return (
     <button
@@ -30,6 +30,7 @@ export const OrderButton = () => {
           order: new_order,
           page: new_page,
           search: search && (search as string),
+          screen: screen && (screen as string),
         });
       }}
     >

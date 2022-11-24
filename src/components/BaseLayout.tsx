@@ -13,15 +13,16 @@ export const BaseLayout = ({ children }: Props) => {
   useRedirections();
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <LoginModal />
       {/* <NoticeBar /> */}
       <Header />
-      <div className=""></div>
-      <main>{children}</main>
+      <div className="">
+        <main>{children}</main>
+      </div>
       <div className="mt-auto">
         <Footer />
       </div>
-    </>
+    </div>
   );
 };

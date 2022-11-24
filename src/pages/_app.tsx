@@ -1,6 +1,7 @@
 import "@/styles/style.scss";
 import "@/styles/ogp.scss";
 import "@/styles/globals.css";
+import * as gtag from "@/libs/gtag";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { DefaultSeo } from "next-seo";
@@ -46,6 +47,9 @@ import { Params } from "@/types/params";
 const shortid = require("shortid");
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+  const currentPath = router.pathname;
+
   const [creators, setCreators] = useState<Creator[]>(creatorsJson);
   const [collections, setCollections] = useState<any[]>(collectionsJson);
 
@@ -76,6 +80,15 @@ function MyApp({ Component, pageProps }: AppProps) {
       development: "http://localhost:3000",
     }[process.env.NODE_ENV];
   }
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      gtag.pageview(url);
+    };
+    router.events.on("routeChangeComplete", handleRouteChange);
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, [router.events]);
 
   const [headerIcon, setHeaderIcon] = useState<{
     title: string;
@@ -84,6 +97,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     avatar: any;
     element?: any;
     path: string;
+    type?: string;
   }>({
     title: "",
     subTitle: "",
@@ -93,7 +107,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     path: "",
   });
   const [keyword, setKeyword] = useState<string | undefined>();
-  const [hiddenParams, setHiddenParams] = useState<Params | undefined>();
+  const [hiddenParams, setHiddenParams] = useState<Params>({});
   const [NFTKeyword, setNFTKeyword] = useState<string | undefined>();
   const [indexTab, setIndexTab] = useState<"all" | "op" | "ed" | undefined>(
     "all"
@@ -116,7 +130,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   // const [collectionTags, setCollectionTags] = useState<Tag[]>([]);
   // const [socials, setSocials] = useState<Social[]>([]);
 
-  const router = useRouter();
   //const { page } = router.query
   const MORALIS_APP_ID = process.env.NEXT_PUBLIC_MORALIS_APP_ID as string;
   const MORALIS_SERVER_URL = process.env
@@ -244,6 +257,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   };
 
   useEffect(() => {
+    if (currentPath != "collections" && currentPath != "/collection/[slug]") {
+      setTempCollections([]);
+    }
+    if (currentPath != "/" && currentPath != "/creator/[username]") {
+      setTempCreators([]);
+    }
+  }, [currentPath]);
+
+  useEffect(() => {
     //getCreators();
     const data = supabase.auth.user();
     setUser(data);
@@ -266,8 +288,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   const site_name = "NFT OTAKU";
   const title = "NFT OTAKU | Japanese NFT Creators / Collections Database";
   const description =
-    "Search creators, collections and NFTs with NFT OTAKU. We are creating special database and collaboration platform.";
-  const twitter_id = "gachi";
+    "Discover favorite Japanese NFT creators, projects and collections. NFT OTAKU is one of the biggest NFT creator search application in Japan.";
+  const twitter_id = "nftotaku_dao";
 
   return (
     <>
@@ -297,7 +319,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           ],
         }}
         twitter={{
-          handle: "@ik_takagishi",
+          handle: "@nftotaku_dao",
           //site: "@ik_takagishi",
           cardType: "summary_large_image",
         }}
@@ -354,7 +376,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               // setSocials,
             }}
           >
-            <div className="flex flex-col min-h-screen font-digital -font-outfit bg-stripe overflow-hidden">
+            <div className="flex flex-col min-h-screen bg-stripe overflow-hidden">
               <Component {...pageProps} />
             </div>
           </BaseContext.Provider>

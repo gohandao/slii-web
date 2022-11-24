@@ -18,6 +18,7 @@ import { BreadCrumbs } from "@/components/BreadCrumbs";
 import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { BiPurchaseTagAlt } from "react-icons/bi";
+import { NextSeo } from "next-seo";
 
 type GetAllTags = {
   baseName: string;
@@ -60,7 +61,7 @@ const TagsPage: NextPage = () => {
 
   return (
     <div>
-      <Head>
+      {/* <Head>
         <title>
           Search Japanese NFT creators and collections with tags | NFT OTAKU
         </title>
@@ -69,7 +70,19 @@ const TagsPage: NextPage = () => {
           content="You can search Japanese NFT creators and collections with tags."
         />
         <link rel="icon" href="/favicon.ico" />
-      </Head>
+      </Head> */}
+      <NextSeo
+        title="Search Japanese NFT creators and collections with tags | NFT OTAKU"
+        description="You can search Japanese NFT creators and collections with tags."
+        openGraph={{
+          type: "article",
+          url: process.env.NEXT_PUBLIC_SITE_URL + "/404",
+          title:
+            "Search Japanese NFT creators and collections with tags | NFT OTAKU",
+          description:
+            "You can search Japanese NFT creators and collections with tags.",
+        }}
+      />
       <BaseLayout>
         {/*<div className="mx-auto px-5 md:px-8 mt-5 lg:mt-10 mb-5">
           <Headline

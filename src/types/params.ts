@@ -8,5 +8,5 @@ export type Params = {
   search?: string;
   tab?: string;
   keyword?: string;
-  ref?: string;
+  screen?: string;
 };

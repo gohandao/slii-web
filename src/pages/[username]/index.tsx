@@ -131,17 +131,13 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
     })
     .eq("username", username)
     .single();
-  //const creators = records;
-  //const creator = creators[0];
-  //console.log("static creator");
-  //console.log(creator);
-  /*const creator = creators.filter(
-    (creator: any) => creator.fields.username === username
-  );*/
+
   const description =
     data && data.description
-      ? data.description
+      ? data.description.slice(0, 200)
       : `This is ${username}'s profile page.`;
+  const label = data && data.label ? data.label.slice(0, 20) : `NFT Holder`;
+
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
@@ -149,14 +145,20 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
       development: "http://localhost:3000",
     }[process.env.NODE_ENV];
   }
+
+  const storage_url = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_URL;
+  const avatar = data.avatar ? storage_url + "/" + data.avatar : "";
+  const background = data.background ? storage_url + "/" + data.background : "";
+  const varified = "";
+
   return {
     props: {
       // OGP画像は絶対URLで記述する必要があります
       //ogImageUrl: `${baseUrl}/api/ogp?title=${creator.username}&page=creators`,
-      title: `${username}'s profile`,
+      title: `${username}'s profile | NFT OTAKU`,
       description: description,
       //description: `${records[0].fields.description}`,
-      ogImageUrl: `${baseUrl}/api/ogp?title=${username}&subTitle=Creator`,
+      ogImageUrl: `${baseUrl}/api/ogp?title=${username}&label=${label}&type=user&avatar=${avatar}&background=${background}`,
       revalidate: 10,
     },
   };

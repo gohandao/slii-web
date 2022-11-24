@@ -24,4 +24,8 @@ export const UtilitiesContext = createContext<Utilities>({
   setScrollY: () => {},
   prevHeight: undefined,
   setPrevHeight: () => {},
+  tempCreators: [],
+  setTempCreators: () => {},
+  tempCollections: [],
+  setTempCollections: () => {},
 });

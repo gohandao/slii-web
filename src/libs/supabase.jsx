@@ -13,12 +13,12 @@ export const getImageUrl = async (path) => {
     const res = await supabase.storage.from(storage_name).download(file_path);
     // const res = supabase.storage.from(storage_name).getPublicUrl(file_path);
     url = res.data && res.data;
-    console.log("getImageUrl");
-    console.log(path);
-    console.log(storage_name);
-    console.log(file_path);
-    console.log(res);
-    console.log(res.data);
+    // console.log("getImageUrl");
+    // console.log(path);
+    // console.log(storage_name);
+    // console.log(file_path);
+    // console.log(res);
+    // console.log(res.data);
   } else {
     return;
   }

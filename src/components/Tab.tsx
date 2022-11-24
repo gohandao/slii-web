@@ -17,8 +17,8 @@ export const Tab = ({ title, path, param }: Tab) => {
     return asPath.split("?")[0];
   };
   const currentPath = removeParams(router.asPath);
-  console.log("currentPathiii");
-  console.log(currentPath);
+  // console.log("currentPathiii");
+  // console.log(currentPath);
 
   let passiveClass = "text-gray-500";
   if (currentPath == path) {

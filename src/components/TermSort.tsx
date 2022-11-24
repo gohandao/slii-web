@@ -10,7 +10,7 @@ type Props = {
 export const TermSort = ({ term }: Props) => {
   //const [termParam, setTermParam] = useQueryState("term");
   const router = useRouter();
-  const { order, sort, page, type, search, ref } = router.query;
+  const { order, sort, page, type, search, screen } = router.query;
   // const { hiddenUrl } = useContext(UtilitiesContext);
 
   type Props = {
@@ -35,7 +35,7 @@ export const TermSort = ({ term }: Props) => {
             term: title,
             type: type as string,
             search: search as string,
-            ref: ref as string,
+            screen: screen as string,
           });
           //setTermParam(title);
         }}

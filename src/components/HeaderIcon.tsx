@@ -17,6 +17,7 @@ export const HeaderIcon = () => {
   const [status, setStatus] = useState<boolean>(false);
 
   const { headerIcon } = useContext(UtilitiesContext);
+
   const currentPath = router.pathname;
 
   let uri;
@@ -93,85 +94,85 @@ export const HeaderIcon = () => {
       </button>
     );
   };
-  return <>
-    {/* <DrawerMenu status={status} setStatus={setStatus} /> */}
-    <div className="lg:min-w-[160px] flex items-center gap-3">
-      <div className="flex gap-3 md:hidden">
-        <BackButton property="back" />
-      </div>
-      {/* <NextButton /> */}
-      {headerIcon.emoji.length > 0 ? (
-        <Link href={headerIcon.path} legacyBehavior>
-          <a className="relative h-7 font-bold text-base text-white tracking-wider flex items-center mt-[2px]">
-            {headerIcon.emoji && (
-              <span className="text-3xl mr-2 -mt-[2px]">
-                {headerIcon.emoji}
-              </span>
-            )}
-            {headerIcon.title}
-          </a>
-        </Link>
-      ) : headerIcon.element ? (
-        <Link href={headerIcon.path} legacyBehavior>
-          <a className="relative h-7 font-bold text-base text-white tracking-wider flex items-center mt-[2px]">
-            {headerIcon.element && (
-              <span className="text-3xl mr-2 -mt-[2px]">
-                {headerIcon.element}
-              </span>
-            )}
-            {headerIcon.title}
-          </a>
-        </Link>
-      ) : headerIcon.avatar.length > 0 ? (
-        <Link href={headerIcon.path} legacyBehavior>
-          <a className="relative h-7 font-bold text-2xl text-white tracking-wider flex items-center gap-2">
-            {headerIcon.avatar && (
-              <div className="w-[44px] h-[44px] rounded-full overflow-hidden relative border-[3px] border-gray-700">
-                <Image
-                  src={headerIcon.avatar}
-                  alt=""
-                  quality={40}
-                  fill
-                  sizes="100vw"
-                  style={{
-                    objectFit: "cover"
-                  }} />
-              </div>
-            )}
-
-            <p className="text-sm ellipsis max-w-[180px]">
+  return (
+    <>
+      {/* <DrawerMenu status={status} setStatus={setStatus} /> */}
+      <div className="lg:min-w-[160px] flex items-center gap-3">
+        <div className="flex gap-3 md:hidden">
+          <BackButton property="back" />
+        </div>
+        {/* <NextButton /> */}
+        {headerIcon.emoji.length > 0 ? (
+          <Link href={headerIcon.path} legacyBehavior>
+            <a className="relative h-7 font-bold text-base text-white tracking-wider flex items-center mt-[2px]">
+              {headerIcon.emoji && (
+                <span className="text-3xl mr-2 -mt-[2px]">
+                  {headerIcon.emoji}
+                </span>
+              )}
               {headerIcon.title}
-            </p>
-          </a>
-        </Link>
-      ) : currentPath != "/" &&
-        currentPath != "/collections" &&
-        currentPath != "/creator/[username]" ? (
-        <Link href={headerIcon.path} legacyBehavior>
-          <a className="relative tracking-wider flex items-center gap-2 py-[2px]">
-            <div className="flex flex-col gap-[2px]">
-              <p className="text-lg ellipsis max-w-[180px] font-bold text-gray-100 leading-none">
+            </a>
+          </Link>
+        ) : headerIcon.element ? (
+          <Link href={headerIcon.path} legacyBehavior>
+            <a className="relative h-7 font-bold text-base text-white tracking-wider flex items-center mt-[2px]">
+              {headerIcon.element && (
+                <span className="text-3xl mr-2 -mt-[2px]">
+                  {headerIcon.element}
+                </span>
+              )}
+              {headerIcon.title}
+            </a>
+          </Link>
+        ) : headerIcon.avatar.length > 0 ? (
+          <Link href={headerIcon.path} legacyBehavior>
+            <a className="relative h-7 font-bold text-2xl text-white tracking-wider flex items-center gap-2">
+              {headerIcon.avatar && (
+                <div className="w-[44px] h-[44px] rounded-full overflow-hidden relative border-[3px] border-gray-700">
+                  <Image
+                    src={headerIcon.avatar}
+                    alt=""
+                    quality={40}
+                    fill
+                    sizes="100vw"
+                    style={{
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+              )}
+              <p className="text-sm ellipsis max-w-[180px]">
                 {headerIcon.title}
               </p>
-              <div className="opacity-70  text-gray-300 text-sm">
-                {headerIcon.subTitle && headerIcon.subTitle}
+            </a>
+          </Link>
+        ) : headerIcon.type != "home" ? (
+          <Link href={headerIcon.path} legacyBehavior>
+            <a className="relative tracking-wider flex items-center gap-2 py-[2px]">
+              <div className="flex flex-col gap-[2px]">
+                <p className="text-lg ellipsis max-w-[180px] font-bold text-gray-100 leading-none">
+                  {headerIcon.title}
+                </p>
+                <div className="opacity-70  text-gray-300 text-sm">
+                  {headerIcon.subTitle && headerIcon.subTitle}
+                </div>
               </div>
-            </div>
-          </a>
-        </Link>
-      ) : (
-        <Link href="/" legacyBehavior>
-          <a className="relative flex h-7 font-bold text-base text-gray-100 tracking-wider items-center mt-[2px]">
-            <span className="text-3xl mr-2 -mt-[2px]">
-              <BiHomeAlt />
-            </span>
-            Home
-          </a>
-          {/* <a className="relative flex h-7">
+            </a>
+          </Link>
+        ) : (
+          <Link href="/" legacyBehavior>
+            <a className="relative flex h-7 font-bold text-base text-gray-100 tracking-wider items-center mt-[2px]">
+              <span className="text-3xl mr-2 -mt-[2px]">
+                <BiHomeAlt />
+              </span>
+              Home
+            </a>
+            {/* <a className="relative flex h-7">
             <Image src="/logo.svg" width={142} height={20} alt="" />
           </a> */}
-        </Link>
-      )}
-    </div>
-  </>;
+          </Link>
+        )}
+      </div>
+    </>
+  );
 };

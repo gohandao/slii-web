@@ -55,9 +55,9 @@ export const CreatorList = ({ creators, limit }: Props) => {
 
   useEffect(() => {
     setCurrentCreators(creators);
-    console.log("uuu currnet creators");
-    console.log(currentCreators);
-    console.log(creators);
+    // console.log("uuu currnet creators");
+    // console.log(currentCreators);
+    // console.log(creators);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creators]);
 

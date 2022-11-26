@@ -62,6 +62,7 @@ export const ProfileHeader = ({
   upvotes_count,
 }: Props) => {
   const router = useRouter();
+  const { screen } = router.query;
   // const { socials, setSocials } = useContext(BaseContext);
 
   // const [social, setSocial] = useState<Social>();
@@ -105,62 +106,11 @@ export const ProfileHeader = ({
   ];
   // description
   const slicedDescription =
-    description && description.length > 80
-      ? description.slice(0, 80) + "…"
+    description && description.length > 160
+      ? description.slice(0, 160) + "…"
       : description;
   const [showDescription, setShowDescription] = useState<boolean>(false);
 
-  //discord_id
-  // const discord_id =
-  //   discord_url && discord_url.substring(discord_url.lastIndexOf("/") + 1);
-
-  // useEffect(() => {
-  //   if (socials && page) {
-  //     //set collection
-  //     let socials_filter = [] as any[];
-  //     if (page == "creator") {
-  //       socials_filter = socials.filter(
-  //         (social) => id === social.creator_username
-  //       );
-  //     }
-  //     if (page == "collection") {
-  //       socials_filter = socials.filter(
-  //         (social) => id === social.collection_slug
-  //       );
-  //     }
-  //     socials_filter.length > 0 && setSocial(socials_filter[0]);
-  //     if (socials_filter.length == 0) {
-  //       setSocial({
-  //         collection_slug: "",
-  //         creator_username: "",
-  //         twitter_followers: null,
-  //         discord_members: null,
-  //         record_id: null,
-  //       });
-  //     }
-  //   }
-  // }, [socials]);
-
-  // update social
-  // const getSocialCounts = async () => {
-  //   const data =
-  //     social &&
-  //     (await updateSocial({
-  //       record_id: social.record_id,
-  //       creator_username: page == "creator" ? "id" : undefined,
-  //       collection_slug: page == "collection" ? "id" : undefined,
-  //       twitter_id: twitter_id,
-  //       twitter_followers: social.twitter_followers,
-  //       discord_id: discord_id,
-  //       discord_members: social.discord_members,
-  //       socials: socials,
-  //       setSocials: setSocials,
-  //     }));
-  //   setTwitterFollowers(data && data.twitter_followers);
-  //   setDiscordMembers(data && data.discord_members);
-  //   setCheckSocial(true);
-  // };
-  // !checkSocial && social && getSocialCounts();
   return (
     <section>
       <div className="flex relative w-full h-40 md:h-60 overflow-hidden -mt-[68px] border-t-[10px] border-x-[10px] border-transparent ">
@@ -177,16 +127,25 @@ export const ProfileHeader = ({
                 fill
                 sizes="100vw"
                 style={{
-                  objectFit: "cover"
-                }} />
+                  objectFit: "cover",
+                }}
+              />
             )}
           </div>
         </div>
       </div>
       <div className="mx-auto px-5 lg:px-8 flex flex-col gap-3">
-        <div className="-mt-[58px] relative flex justify-between items-end">
+        <div
+          className={`-mt-[38px] relative flex justify-between items-end ${
+            screen != "modal" && "lg:-mt-[48px]"
+          }`}
+        >
           <div className="relative flex">
-            <div className="relative rounded-full border-[5px] border-gray-800 overflow-hidden flex items-center justify-center z-10 bg-gray-800 w-[110px] h-[110px]">
+            <div
+              className={`relative rounded-full border-[5px] border-gray-800 overflow-hidden flex items-center justify-center z-10 bg-gray-800 w-[90px] h-[90px] ${
+                screen != "modal" && "lg:w-[100px] lg:h-[100px]"
+              }`}
+            >
               {avatar_url && (
                 <Image
                   //@ts-ignore
@@ -198,12 +157,17 @@ export const ProfileHeader = ({
                   style={{
                     maxWidth: "100%",
                     height: "auto",
-                    objectFit: "cover"
-                  }} />
+                    objectFit: "cover",
+                  }}
+                />
               )}
             </div>
 
-            <div className="absolute top-5 left-full flex items-center gap-4 ml-2">
+            <div
+              className={`absolute top-1 left-full flex items-center gap-4 ml-2 ${
+                screen != "modal" && "lg:top-3"
+              }`}
+            >
               {links && (
                 <ProfileLinks
                   address={links.address}
@@ -245,7 +209,11 @@ export const ProfileHeader = ({
         </div>
         <div className="flex flex-1 gap-16 justify-between">
           <div className="flex flex-col gap-2">
-            <h1 className="text-2xl sm:text-3xl text-gray-100 font-bold inline justify-center items-center">
+            <h1
+              className={`text-2xl text-gray-100 font-bold inline justify-center items-center ${
+                !screen && "sm:text-3xl "
+              }`}
+            >
               {title}
             </h1>
             <div className="flex items-center gap-1 text-xs text-gray-400">

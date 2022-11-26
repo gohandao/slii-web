@@ -71,6 +71,7 @@ const CreatorIndex: NextPage = (props: any) => {
     } else {
       setCreatorModal(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [screen]);
 
   // console.log("crs scrollY");

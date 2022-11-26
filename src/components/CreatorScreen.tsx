@@ -1,30 +1,13 @@
-import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
-import { NextSeo } from "next-seo";
-
-import { ParsedUrlQuery } from "node:querystring";
-
 import React, { useState, useEffect, useContext, useRef } from "react";
-import Head from "next/head";
 import Image from "next/image";
-import Link from "next/link";
-
-import { base } from "@/libs/airtable";
-
 import { useRouter } from "next/router";
 
 import { BaseContext } from "@/contexts/BaseContext";
-import { CollectionsContext } from "@/contexts/CollectionsContext";
 
 import { CollectionCard } from "@/components/CollectionCard";
-import { List } from "@/components/List";
 import { Pagination } from "@/components/Pagination";
-import { BaseLayout } from "@/components/BaseLayout";
-import { CreatorProfile } from "@/components/CreatorProfile";
-import { Title } from "@/components/Title";
-import { Custom404 } from "@/pages/404";
 
 import { Creator } from "@/types/creator";
-import { Collection } from "@/types/collection";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { JP } from "country-flag-icons/react/3x2";
 import { ProfileHeader } from "@/components/ProfileHeader";
@@ -34,7 +17,6 @@ import { getNFTs } from "@/utilities/getNFTs";
 import { Dropdown } from "@/components/Dropdown";
 import { Searchbox } from "@/components/Searchbox";
 import { OrderButton } from "@/components/OrderButton";
-import { sortList } from "@/libs/sortList";
 import { sortNFTs } from "@/libs/sortNFTs";
 import { randomize } from "@/utilities/randomize";
 import { RandomButton } from "@/components/RandomButton";
@@ -48,7 +30,7 @@ export const CreatorScreen = ({ property }: Props) => {
   const { username, order, sort, term, page, type, search, slug, screen } =
     router.query;
   const currentPage = page ? Number(page) : 1;
-  const limit = 50;
+  const limit = 20;
   const [checkAssets, setCheckAssets] = useState(false);
   const [sortedAssets, setSortedAssets] = useState<any[]>([]);
   const [random, setRandom] = useState<boolean>(false);
@@ -107,27 +89,22 @@ export const CreatorScreen = ({ property }: Props) => {
     }
   }, [creators, username, collections]);
 
-  // if (!checkAssets && assets.length < 1 && creatorCollections.length > 0) {
-  //   const fetchData = async () => {
-  //     let new_assets: any[] = [];
-  //     await Promise.all(
-  //       creatorCollections.map(async (collection) => {
-  //         const data = await getNFTs(collection.slug);
-  //         if (data) {
-  //           new_assets = [...new_assets, ...data];
-  //         }
-  //       })
-  //     );
-  //     // console.log(creatorCollections);
-  //     // console.log(assets);
-  //     // console.log(new_assets);
-  //     setAssets(new_assets);
-  //     setCheckAssets(true);
-  //   };
-  //   fetchData();
-  // }
-  console.log("checkAssets");
-  console.log(checkAssets);
+  if (!checkAssets && assets.length < 1 && creatorCollections.length > 0) {
+    const fetchData = async () => {
+      let new_assets: any[] = [];
+      await Promise.all(
+        creatorCollections.map(async (collection) => {
+          const data = await getNFTs(collection.slug);
+          if (data) {
+            new_assets = [...new_assets, ...data];
+          }
+        })
+      );
+      setAssets(new_assets);
+      setCheckAssets(true);
+    };
+    fetchData();
+  }
 
   useEffect(() => {
     if (!checkAssets && assets.length < 1 && creatorCollections.length > 0) {
@@ -141,10 +118,6 @@ export const CreatorScreen = ({ property }: Props) => {
             }
           })
         );
-        // console.log("assets nfts");
-        // console.log(creatorCollections);
-        // console.log(assets);
-        // console.log(new_assets);
         setAssets(new_assets);
         setCheckAssets(true);
       };
@@ -152,10 +125,6 @@ export const CreatorScreen = ({ property }: Props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creatorCollections]);
-
-  const test = creator && !screen && screen != "modal" && "test";
-  console.log("test m");
-  console.log(test);
 
   useEffect(() => {
     {
@@ -241,7 +210,6 @@ export const CreatorScreen = ({ property }: Props) => {
     page: Number(page),
     order: order as "desc" | "asc" | undefined,
     sort: sort as string | undefined,
-    //category: collectionsSort,
     limit: limit,
   };
 
@@ -339,11 +307,11 @@ export const CreatorScreen = ({ property }: Props) => {
               </div>
             </div>
             <NFTList assets={currentAssets} />
-            {sort != "random" && currentAssets.length > limit && (
+            {sort != "random" && searchedAssets.length > limit && (
               <div className="flex justify-center">
                 <Pagination
                   currentPage={currentPage}
-                  length={currentAssets.length}
+                  length={searchedAssets.length}
                   limit={limit}
                 />
               </div>

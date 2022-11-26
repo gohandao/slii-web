@@ -23,9 +23,9 @@ export const Card = ({ creator }: Props) => {
       className="flex w-full"
       legacyBehavior
     >
-      <a className="relative border-2 border-gray-900 rounded-lg flex pointer text-sm bg-white">
-        <div className="relative flex justify-center items-center w-40 h-40 overflow-hidden">
-          <div className="relative w-80 h-56">
+      <a className="pointer relative flex rounded-lg border-2 border-gray-900 bg-white text-sm">
+        <div className="relative flex h-40 w-40 items-center justify-center overflow-hidden">
+          <div className="relative h-56 w-80">
             {creator.avatar && (
               <>
                 <Image
@@ -36,8 +36,9 @@ export const Card = ({ creator }: Props) => {
                   fill
                   sizes="100vw"
                   style={{
-                    objectFit: "cover"
-                  }} />
+                    objectFit: "cover",
+                  }}
+                />
               </>
             )}
           </div>
@@ -57,7 +58,7 @@ export const Card = ({ creator }: Props) => {
               creator.tags.map((tag, index) => (
                 <p
                   key={index}
-                  className="border border-gray-900 rounded-full py-1 px-3 inline-flex text-xs"
+                  className="inline-flex rounded-full border border-gray-900 py-1 px-3 text-xs"
                 >
                   {tag}
                 </p>

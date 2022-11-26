@@ -6,8 +6,6 @@ import "@/styles/ogp.scss";
 // import Head from "next/head";
 import { ImageResponse } from "@vercel/og";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Html } from "next/document";
-import Head from "next/head";
 import { NextRequest } from "next/server";
 import { MdVerified } from "react-icons/md";
 

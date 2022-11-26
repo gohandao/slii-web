@@ -51,11 +51,11 @@ export const CollectionsIndexScreen = ({ params }: Props) => {
   const [checkInitial, setCheckInitial] = useState<boolean>(false);
 
   const { creators, collections, tags } = useContext(BaseContext);
-  const { setHeaderIcon, tempCollections, setTempCollections } =
+  const { setHeaderIcon, tempCollections, setTempCollections, hiddenParams } =
     useContext(UtilitiesContext);
 
   const currentCollections =
-    tempCollections.length > 0 && checkInitial
+    tempCollections.length > 0 && !checkInitial
       ? tempCollections
       : sortedCollections;
 
@@ -85,23 +85,36 @@ export const CollectionsIndexScreen = ({ params }: Props) => {
     searchedCollections = filteredCollections;
   }
 
+  const args = {
+    property: "collections" as "creators" | "collections",
+    list: searchedCollections,
+    page: currentPage,
+    order: order as "desc" | "asc" | undefined,
+    sort: sort as string | undefined,
+    term: term as "24h" | "7d" | "30d" | "all" | undefined,
+    //category: collectionsSort,
+    limit: limit,
+  };
+  //モーダルを閉じた際の処理
+  if (
+    hiddenParams.page != page &&
+    hiddenParams.order != order &&
+    hiddenParams.sort != sort &&
+    hiddenParams.term != term &&
+    !checkInitial
+  ) {
+    const data = sortList(args);
+    setSortedCollections((sortedCollections) => data);
+  }
+  if (!checkInitial) {
+    setCheckInitial(true);
+  }
   useEffect(() => {
-    const args = {
-      property: "collections" as "creators" | "collections",
-      list: searchedCollections,
-      page: currentPage,
-      order: order as "desc" | "asc" | undefined,
-      sort: sort as string | undefined,
-      term: term as "24h" | "7d" | "30d" | "all" | undefined,
-      //category: collectionsSort,
-      limit: limit,
-    };
     if (tempCollections.length == 0 || checkInitial) {
       const data = sortList(args);
       setSortedCollections((sortedCollections) => data);
       setTempCollections(data);
     }
-    setCheckInitial(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collections, order, sort, term, page, type]);
 

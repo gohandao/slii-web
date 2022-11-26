@@ -1246,8 +1246,6 @@ export const sortList = (args: sortProps) => {
           break;
       }
   }
-  console.log("new_list");
-  console.log(new_list);
   if (args.limit) {
     let limited_list = [] as any[];
     let start;

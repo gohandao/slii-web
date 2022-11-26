@@ -6,12 +6,15 @@ import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 import { MdVerified } from "react-icons/md";
 import { VoteButton } from "./VoteButton";
 import { BookmarkButton } from "./BookmarkButton";
+import { useRouter } from "next/router";
 
 type StatsProps = {
   title: string;
   element: any;
 };
 export const CollectionCard = ({ username, collection, index }: any) => {
+  const router = useRouter();
+  const { screen } = router.query;
   const Stats = ({ title, element }: StatsProps) => {
     return (
       <div className="inline-flex min-w-[120px] rounded border-2 border-gray-100 bg-gray-50 flex-col p-2">
@@ -45,15 +48,20 @@ export const CollectionCard = ({ username, collection, index }: any) => {
           className=""
           style={{
             maxWidth: "100%",
-            height: "auto"
-          }} />
+            height: "auto",
+          }}
+        />
       </div>
     );
   };
   return (
     <Link href={`/collection/${collection.slug}`} key={index} legacyBehavior>
       <a className="block relative w-full overflow-hidden bg-gray-800 border border-gray-700 rounded-lg hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 max-w-[480px] px-1 pt-1 pb-4">
-        <div className="relative overflow-hidden h-20 md:h-24 w-full bg-gray-900 rounded opacity-40">
+        <div
+          className={`relative overflow-hidden h-20 mw-full bg-gray-900 rounded opacity-40 ${
+            screen != "modal" && "lg:h-24 "
+          }`}
+        >
           {collection.banner_image_url && (
             <Image
               //@ts-ignore
@@ -63,12 +71,17 @@ export const CollectionCard = ({ username, collection, index }: any) => {
               fill
               sizes="100vw"
               style={{
-                objectFit: "cover"
-              }} />
+                objectFit: "cover",
+              }}
+            />
           )}
         </div>
         <div className="px-3 md:px-5 -mt-[50px]">
-          <div className="relative object-cover w-16 h-16 md:w-[72px] md:h-[72px] rounded-lg overflow-hidden mb-1 border-[5px] border-gray-700 bg-gray-700">
+          <div
+            className={`relative object-cover w-16 h-16 rounded-lg overflow-hidden mb-1 border-[5px] border-gray-700 bg-gray-700 ${
+              screen != "modal" && "md:w-[72px] md:h-[72px] "
+            }`}
+          >
             {collection.image_url && (
               <Image
                 //@ts-ignore
@@ -78,8 +91,9 @@ export const CollectionCard = ({ username, collection, index }: any) => {
                 fill
                 sizes="100vw"
                 style={{
-                  objectFit: "cover"
-                }} />
+                  objectFit: "cover",
+                }}
+              />
             )}
           </div>
           <div className="flex items-center relative justify-between -mr-1 max-w-full mb-1">

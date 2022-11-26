@@ -45,6 +45,7 @@ import { CreatorScreen } from "@/components/CreatorScreen";
 import { CreatorsIndexScreen } from "@/components/CreatorsIndexScreen";
 import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
 import { NextSeo } from "next-seo";
+import { getContentsHeight } from "@/utilities/getContentsHeight";
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -87,35 +88,39 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     var scroll = Scroll.animateScroll;
-    if (scrollY && scrollY != 0) {
+    // if (scrollY && scrollY != 0) {
+    if (scrollY) {
       scroll.scrollTo(scrollY, { duration: 0 });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  let body_height = 0;
+  if (typeof window === "object") {
+    const body_element = document.getElementById("container");
+    body_height = body_element ? body_element.scrollHeight : 0;
+  }
+  const contents_height = getContentsHeight();
 
   useEffect(() => {
     // new_height.current = window.innerHeight;
-    new_height.current = document.body.scrollHeight;
-    if (new_height.current && new_height.current != 0) {
+
+    new_height.current = contents_height;
+    // if (new_height.current && new_height.current != 0) {
+    if (new_height.current) {
       setPrevHeight(new_height.current);
     }
 
-    // if (scrollY && scrollY != 0) {
-    //   window.scrollTo(0, scrollY);
-    // }
-    // // window.scrollTo(0, scrollY);
-    // var scroll = Scroll.animateScroll;
-    // if (scrollY && scrollY != 0) {
-    //   scroll.scrollTo(scrollY, { duration: 0 });
-    // }
     window.addEventListener("scroll", async () => {
       new_scrollY.current = window.scrollY;
       // console.log(new_scrollY.current);
-      if (new_scrollY.current && new_scrollY.current != 0) {
+      // if (new_scrollY.current && new_scrollY.current != 0) {
+      if (new_scrollY.current) {
         setScrollY(new_scrollY.current);
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [new_scrollY]);
+  }, [new_scrollY, body_height]);
 
   useEffect(() => {
     setHiddenParams(params);
@@ -150,6 +155,7 @@ const Home: NextPage = () => {
         style={{
           minHeight: `${prevHeight}px`,
         }}
+        className="flex flex-col"
       >
         <BaseLayout>
           <CreatorsIndexScreen params={params} />

@@ -212,15 +212,18 @@ export const VoteButton = ({
             <div className="bg-upvote rounded h-[44px]">
               {upvoted ? (
                 <div
-                  className={`bg-white ${propertyClass} border-2 border-orange-600 rounded`}
+                  className={`h-full bg-white ${propertyClass} border-2 border-orange-600 rounded`}
                 >
                   <BsTriangleFill className="text-sm text-orange-600 opacity-80" />
                   <p className="text-orange-600 px-1 text-sm">
-                    Upvoted {currentCount}
+                    <span className="text-orange-600 text-sm hidden sm:inline">
+                      Upvoted
+                    </span>{" "}
+                    {currentCount}
                   </p>
                 </div>
               ) : (
-                <div className={` ${propertyClass} `}>
+                <div className={`h-full  ${propertyClass} `}>
                   <BsTriangleFill className="text-sm text-white" />
                   <p className="text-white px-1 text-sm">
                     <span className="text-orange-100 text-xs hidden sm:inline">

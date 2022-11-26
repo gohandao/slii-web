@@ -65,10 +65,10 @@ export const CreatorsIndexScreen = ({ params }: Props) => {
   const [checkInitial, setCheckInitial] = useState<boolean>(false);
 
   const { creators, collections, tags } = useContext(BaseContext);
-  const { setHeaderIcon, tempCreators, setTempCreators } =
+  const { setHeaderIcon, hiddenParams, tempCreators, setTempCreators } =
     useContext(UtilitiesContext);
   const currentCreators =
-    tempCreators.length > 0 && checkInitial ? tempCreators : sortedCreators;
+    tempCreators.length > 0 && !checkInitial ? tempCreators : sortedCreators;
 
   // const filteredCreators = creators;
 
@@ -107,26 +107,40 @@ export const CreatorsIndexScreen = ({ params }: Props) => {
     searchedCreators = filteredCreators;
   }
 
+  const args = {
+    property: "creators" as "creators" | "collections",
+    list: searchedCreators,
+    page: currentPage,
+    order: order as "desc" | "asc" | undefined,
+    sort: sort as string | undefined,
+    term: term as "24h" | "7d" | "30d" | "all" | undefined,
+    //category: collectionsSort,
+    limit: limit,
+  };
+  //モーダルを閉じた際の処理
+  if (
+    hiddenParams.page != page &&
+    hiddenParams.order != order &&
+    hiddenParams.sort != sort &&
+    hiddenParams.term != term &&
+    creators.length > 0 &&
+    !checkInitial
+  ) {
+    const data = sortList(args);
+    setSortedCreators((sortedCreators) => data);
+  }
+  if (!checkInitial) {
+    setCheckInitial(true);
+  }
   useEffect(() => {
-    console.log("checkInitial");
-    console.log(checkInitial);
-
-    const args = {
-      property: "creators" as "creators" | "collections",
-      list: searchedCreators,
-      page: currentPage,
-      order: order as "desc" | "asc" | undefined,
-      sort: sort as string | undefined,
-      term: term as "24h" | "7d" | "30d" | "all" | undefined,
-      //category: collectionsSort,
-      limit: limit,
-    };
-    if (tempCreators.length == 0 || checkInitial) {
+    if (checkInitial && creators.length > 0) {
       const data = sortList(args);
+      console.log("data");
+      console.log(data);
+
       setSortedCreators((sortedCreators) => data);
       setTempCreators(data);
     }
-    setCheckInitial(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type, page, search, order, sort, term]);
 

@@ -48,6 +48,7 @@ const shortid = require("shortid");
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
+  const { screen } = router.query;
   const currentPath = router.pathname;
 
   const [creators, setCreators] = useState<Creator[]>(creatorsJson);
@@ -257,33 +258,41 @@ function MyApp({ Component, pageProps }: AppProps) {
   };
 
   useEffect(() => {
-    if (currentPath != "collections" && currentPath != "/collection/[slug]") {
+    //ページ用に一時保存しているデータリセット
+    if (
+      currentPath &&
+      currentPath != "collections" &&
+      currentPath != "/collection/[slug]"
+    ) {
       setTempCollections([]);
     }
-    if (currentPath != "/" && currentPath != "/creator/[username]") {
+    if (
+      currentPath &&
+      currentPath != "/" &&
+      currentPath != "/creator/[username]"
+    ) {
       setTempCreators([]);
+    }
+    if (
+      currentPath &&
+      currentPath != "/" &&
+      currentPath != "/creator/[username]" &&
+      screen == "modal" &&
+      currentPath != "/collections" &&
+      currentPath != "/collection/[slug]" &&
+      currentPath != "/collections" &&
+      currentPath != "/collection/[slug]"
+    ) {
+      setPrevHeight(0);
     }
   }, [currentPath]);
 
   useEffect(() => {
-    //getCreators();
     const data = supabase.auth.user();
     setUser(data);
     data && !profile && getProfile();
-    // creators.length == 0 && getCreators();
-    // collections.length == 0 && getCollections();
-    // creatorTags.length == 0 && getTags("creator_tags", setCreatorTags);
-    // collectionTags.length == 0 && getTags("collection_tags", setCollectionTags);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // useEffect(() => {
-  //   if (OSCollections.length == 0 && collections && socials) {
-  //     (async () => {
-  //       await getOSCollections(collections);
-  //     })();
-  //   }
-  // }, [collections, socials]);
 
   const site_name = "NFT OTAKU";
   const title = "NFT OTAKU | Japanese NFT Creators / Collections Database";

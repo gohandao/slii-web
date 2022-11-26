@@ -57,7 +57,7 @@ const Content = (props) => (
       {/*<h1>{props.title}</h1>
       {props.subTitle && <p>{props.subTitle}</p>}
 */}
-      <div className="container relative w-[1200px] h-[600px] font-digital">
+      <div className="font-digital container relative h-[600px] w-[1200px]">
         {/* <div className="background absolute left-0 top-0 w-full h-full">
           <img src="https://gachi-collection.vercel.app/ogp-base.jpg" alt="" />
         </div>

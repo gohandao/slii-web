@@ -21,7 +21,7 @@ export const NFTList = ({ assets }: Props) => {
   };
   const EthIcon = () => {
     return (
-      <div className="w-4 flex items-center">
+      <div className="flex w-4 items-center">
         <Image
           src="/icon-eth.svg"
           width={16}
@@ -38,8 +38,8 @@ export const NFTList = ({ assets }: Props) => {
   };
   return (
     <div
-      className={`grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6  w-full justify-center mb-10 overflow-hidden rounded-lg ${
-        screen != "modal" && "xl:grid-cols-8 2xl:grid-cols-10 lg:gap-3"
+      className={`mb-10 grid w-full grid-cols-3 justify-center  overflow-hidden rounded-lg sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 ${
+        screen != "modal" && "lg:gap-3 xl:grid-cols-8 2xl:grid-cols-10"
       }`}
     >
       {currentAssets.map((asset, index) => (
@@ -49,7 +49,7 @@ export const NFTList = ({ assets }: Props) => {
             target="_blank"
             rel="noreferrer"
             className={`relative flex bg-gray-700 ${
-              screen != "modal" && "rounded overflow-hidden "
+              screen != "modal" && "overflow-hidden rounded "
             }`}
           >
             <div className="os-triangle absolute right-0 top-0 z-10"></div>
@@ -63,7 +63,7 @@ export const NFTList = ({ assets }: Props) => {
               loading="lazy"
               width={10}
               height={10}
-              className="absolute top-1 right-1 w-[10px] h-[10px] z-20"
+              className="absolute top-1 right-1 z-20 h-[10px] w-[10px]"
               style={{
                 maxWidth: "100%",
                 width: "auto",
@@ -85,8 +85,8 @@ export const NFTList = ({ assets }: Props) => {
               }}
             />
 
-            <div className="absolute left-0 bottom-0 px-3 py-[2px] bg-gray-800 rounded-tr-lg bg-opacity-90	">
-              <div className="flex items-center gap-1 text-gray-400 font-bold -ml-1 text-xs">
+            <div className="absolute left-0 bottom-0 rounded-tr-lg bg-gray-800 bg-opacity-90 px-3 py-[2px]	">
+              <div className="-ml-1 flex items-center gap-1 text-xs font-bold text-gray-400">
                 <span className="">
                   Last
                   <span

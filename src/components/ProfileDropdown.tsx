@@ -48,14 +48,14 @@ export const ProfileDropdown = ({
       </button>
       {dropdown && (
         <div
-          className={`absolute rounded border border-gray-700 bg-gray-800 z-20 w-48 ${possitionClass}`}
+          className={`absolute z-20 w-48 rounded border border-gray-700 bg-gray-800 ${possitionClass}`}
         >
           {menus.map((menu, index) => (
             <button
               onClick={() => {
                 onClickHandler(menu.url);
               }}
-              className="flex px-5 py-3 text-sm text-gray-400 items-center gap-3 normal-case"
+              className="flex items-center gap-3 px-5 py-3 text-sm normal-case text-gray-400"
               key={index}
             >
               {menu.icon}

@@ -44,7 +44,7 @@ export const Tab = ({ title, path, param }: Tab) => {
       {path && (
         <Link href={path} legacyBehavior>
           <a
-            className={`relative text-2xl font-bold py-2 rounded-lg flex justify-center items-center transition-all duration-300 ${passiveClass}`}
+            className={`relative flex items-center justify-center rounded-lg py-2 text-2xl font-bold transition-all duration-300 ${passiveClass}`}
           >
             {title}
           </a>
@@ -52,7 +52,7 @@ export const Tab = ({ title, path, param }: Tab) => {
       )}
       {param && (
         <button
-          className={`relative text-2xl font-bold py-2 rounded-lg flex justify-center items-center transition-all duration-300 ${passiveClass}`}
+          className={`relative flex items-center justify-center rounded-lg py-2 text-2xl font-bold transition-all duration-300 ${passiveClass}`}
           onClick={() => {
             if (param != "creator") {
               router.push(

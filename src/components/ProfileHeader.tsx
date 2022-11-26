@@ -113,9 +113,9 @@ export const ProfileHeader = ({
 
   return (
     <section>
-      <div className="flex relative w-full h-40 md:h-60 overflow-hidden -mt-[68px] border-t-[10px] border-x-[10px] border-transparent ">
-        <div className="w-full h-full bg-gray-800 rounded-lg overflow-hidden opacity-50">
-          <div className="relative opacity-40 w-full h-full">
+      <div className="relative -mt-[68px] flex h-40 w-full overflow-hidden border-x-[10px] border-t-[10px] border-transparent md:h-60 ">
+        <div className="h-full w-full overflow-hidden rounded-lg bg-gray-800 opacity-50">
+          <div className="relative h-full w-full opacity-40">
             {background_url && (
               <Image
                 //@ts-ignore
@@ -134,16 +134,16 @@ export const ProfileHeader = ({
           </div>
         </div>
       </div>
-      <div className="mx-auto px-5 lg:px-8 flex flex-col gap-3">
+      <div className="mx-auto flex flex-col gap-3 px-5 lg:px-8">
         <div
-          className={`-mt-[38px] relative flex justify-between items-end ${
+          className={`relative -mt-[38px] flex items-end justify-between ${
             screen != "modal" && "lg:-mt-[48px]"
           }`}
         >
           <div className="relative flex">
             <div
-              className={`relative rounded-full border-[5px] border-gray-800 overflow-hidden flex items-center justify-center z-10 bg-gray-800 w-[90px] h-[90px] ${
-                screen != "modal" && "lg:w-[100px] lg:h-[100px]"
+              className={`relative z-10 flex h-[90px] w-[90px] items-center justify-center overflow-hidden rounded-full border-[5px] border-gray-800 bg-gray-800 ${
+                screen != "modal" && "lg:h-[100px] lg:w-[100px]"
               }`}
             >
               {avatar_url && (
@@ -164,7 +164,7 @@ export const ProfileHeader = ({
             </div>
 
             <div
-              className={`absolute top-1 left-full flex items-center gap-4 ml-2 ${
+              className={`absolute top-1 left-full ml-2 flex items-center gap-4 ${
                 screen != "modal" && "lg:top-3"
               }`}
             >
@@ -180,8 +180,8 @@ export const ProfileHeader = ({
               )}
             </div>
           </div>
-          <div className="flex justify-between flex-1 w-full ml-3 h-[44px]">
-            <div className=" gap-5 capitalize flex justify-center items-center">
+          <div className="ml-3 flex h-[44px] w-full flex-1 justify-between">
+            <div className=" flex items-center justify-center gap-5 capitalize">
               <ProfileDropdown
                 icon={<BsThreeDots className="text-gray-500" />}
                 position="left"
@@ -207,10 +207,10 @@ export const ProfileHeader = ({
             </div>
           </div>
         </div>
-        <div className="flex flex-1 gap-16 justify-between">
+        <div className="flex flex-1 justify-between gap-16">
           <div className="flex flex-col gap-2">
             <h1
-              className={`text-2xl text-gray-100 font-bold inline justify-center items-center ${
+              className={`inline items-center justify-center text-2xl font-bold text-gray-100 ${
                 !screen && "sm:text-3xl "
               }`}
             >
@@ -222,13 +222,13 @@ export const ProfileHeader = ({
               <CopyText text={address} alertText="ETH address has copied!" /> */}
             </div>
             <div className="flex flex-col gap-1">
-              <p className="text-gray-100 mt-1 text-justify break-all text-sm sm:text-base transition-all duration-200 ">
+              <p className="mt-1 break-all text-justify text-sm text-gray-100 transition-all duration-200 sm:text-base ">
                 {showDescription ? description : slicedDescription}
               </p>
               {description && description.length > 80 && (
                 <>
                   <button
-                    className="inline-flex text-gray-500 items-center gap-1"
+                    className="inline-flex items-center gap-1 text-gray-500"
                     onClick={() => {
                       showDescription
                         ? setShowDescription(false)
@@ -249,7 +249,7 @@ export const ProfileHeader = ({
                   </button>
                 </>
               )}
-              <div className="flex gap-2 w-full -mt-1">
+              <div className="-mt-1 flex w-full gap-2">
                 {tags &&
                   tags.map((tag, index) => (
                     <Label key={index} name={tag} type="creator" />
@@ -261,13 +261,13 @@ export const ProfileHeader = ({
         {stats &&
           stats.length > 0 &&
           stats.map((data, index) => (
-            <div key={index} className="flex flex-col items-start mt-1">
+            <div key={index} className="mt-1 flex flex-col items-start">
               <StatsBox>
                 {twitter_followers && (
                   <Stats
                     field="Followers"
                     value={
-                      <div className="flex gap-2 items-center w-full justify-end">
+                      <div className="flex w-full items-center justify-end gap-2">
                         <FaTwitter className="text-sm opacity-60" />
                         {twitter_followers}
                       </div>

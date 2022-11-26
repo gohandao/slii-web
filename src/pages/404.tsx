@@ -56,10 +56,10 @@ export const Custom404: NextPage = () => {
         }}
       />
       <BaseLayout>
-        <section className="flex items-center h-full p-16 bg-gray-900 text-gray-100">
-          <div className="container flex flex-col items-center justify-center px-5 mx-auto my-8">
+        <section className="flex h-full items-center bg-gray-900 p-16 text-gray-100">
+          <div className="container mx-auto my-8 flex flex-col items-center justify-center px-5">
             <div className="max-w-md text-center">
-              <h2 className="mb-8 font-extrabold text-9xl text-gray-600">
+              <h2 className="mb-8 text-9xl font-extrabold text-gray-600">
                 <span className="sr-only">Error</span>404
               </h2>
               <p className="text-2xl font-semibold md:text-3xl">
@@ -72,7 +72,7 @@ export const Custom404: NextPage = () => {
               <a
                 rel="noopener noreferrer"
                 href="#"
-                className="px-8 py-3 font-semibold rounded bg-violet-400 text-gray-900"
+                className="rounded bg-violet-400 px-8 py-3 font-semibold text-gray-900"
               >
                 Back to homepage
               </a>

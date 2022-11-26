@@ -67,7 +67,7 @@ export const CollectionTable = ({ collections, limit }: Props) => {
 
   return (
     <div className="flex flex-col">
-      <div className="-mx-8 -mt-2 overflow-x-auto sm:-mx-6 lg:-mx-8 pb-3 -mb-3 px-8 md:px-6 lg:px-8 hide-scrollbar ">
+      <div className="hide-scrollbar -mx-8 -mt-2 -mb-3 overflow-x-auto px-8 pb-3 sm:-mx-6 md:px-6 lg:-mx-8 lg:px-8 ">
         <div className="inline-block min-w-full py-2 align-middle ">
           <div className="overflow-hidden">
             <table
@@ -91,7 +91,7 @@ export const CollectionTable = ({ collections, limit }: Props) => {
                 </tr>
               </thead>
               {sortedCollections.length > 0 && (
-                <tbody className="border border-gray-200 divide-y divide-gray-200 rounded">
+                <tbody className="divide-y divide-gray-200 rounded border border-gray-200">
                   {sortedCollections &&
                     sortedCollections.map((item, index) => (
                       <CollectionTr

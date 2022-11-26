@@ -17,7 +17,7 @@ export const CollectionCard = ({ username, collection, index }: any) => {
   const { screen } = router.query;
   const Stats = ({ title, element }: StatsProps) => {
     return (
-      <div className="inline-flex min-w-[120px] rounded border-2 border-gray-100 bg-gray-50 flex-col p-2">
+      <div className="inline-flex min-w-[120px] flex-col rounded border-2 border-gray-100 bg-gray-50 p-2">
         <p className="text-xs font-medium tracking-wide text-gray-400">
           {title}
         </p>
@@ -39,7 +39,7 @@ export const CollectionCard = ({ username, collection, index }: any) => {
   };
   const EthIcon = () => {
     return (
-      <div className="w-4 flex items-center">
+      <div className="flex w-4 items-center">
         <Image
           src="/icon-eth.svg"
           width={16}
@@ -56,9 +56,9 @@ export const CollectionCard = ({ username, collection, index }: any) => {
   };
   return (
     <Link href={`/collection/${collection.slug}`} key={index} legacyBehavior>
-      <a className="block relative w-full overflow-hidden bg-gray-800 border border-gray-700 rounded-lg hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 max-w-[480px] px-1 pt-1 pb-4">
+      <a className="relative block w-full max-w-[480px] transform overflow-hidden rounded-lg border border-gray-700 bg-gray-800 px-1 pt-1 pb-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
         <div
-          className={`relative overflow-hidden h-20 mw-full bg-gray-900 rounded opacity-40 ${
+          className={`mw-full relative h-20 overflow-hidden rounded bg-gray-900 opacity-40 ${
             screen != "modal" && "lg:h-24 "
           }`}
         >
@@ -76,10 +76,10 @@ export const CollectionCard = ({ username, collection, index }: any) => {
             />
           )}
         </div>
-        <div className="px-3 md:px-5 -mt-[50px]">
+        <div className="-mt-[50px] px-3 md:px-5">
           <div
-            className={`relative object-cover w-16 h-16 rounded-lg overflow-hidden mb-1 border-[5px] border-gray-700 bg-gray-700 ${
-              screen != "modal" && "md:w-[72px] md:h-[72px] "
+            className={`relative mb-1 h-16 w-16 overflow-hidden rounded-lg border-[5px] border-gray-700 bg-gray-700 object-cover ${
+              screen != "modal" && "md:h-[72px] md:w-[72px] "
             }`}
           >
             {collection.image_url && (
@@ -96,11 +96,11 @@ export const CollectionCard = ({ username, collection, index }: any) => {
               />
             )}
           </div>
-          <div className="flex items-center relative justify-between -mr-1 max-w-full mb-1">
-            <p className="items-center  font-bold ellipsis text-gray-100 ellipsis max-w-full min-w-[0] pr-3">
+          <div className="relative -mr-1 mb-1 flex max-w-full items-center justify-between">
+            <p className="ellipsis  ellipsis min-w-[0] max-w-full items-center pr-3 font-bold text-gray-100">
               {collection.name}
               {collection.safelist_request_status == "verified" && (
-                <MdVerified className="text-gray-500 text-sm inline ml-2" />
+                <MdVerified className="ml-2 inline text-sm text-gray-500" />
               )}
             </p>
             <div className="flex gap-2">
@@ -122,8 +122,8 @@ export const CollectionCard = ({ username, collection, index }: any) => {
           </div>
           <div className="flex gap-5">
             <div className="">
-              <p className="text-gray-500 text-sm font-bold">Floor Proce</p>
-              <div className="flex items-center gap-1 text-gray-400 font-bold -ml-1">
+              <p className="text-sm font-bold text-gray-500">Floor Proce</p>
+              <div className="-ml-1 flex items-center gap-1 font-bold text-gray-400">
                 {collection.payment_tokens &&
                   collection.payment_tokens[0].symbol == "ETH" && <EthIcon />}
                 {collection.stats && collection.stats.floor_price > 0 ? (
@@ -134,8 +134,8 @@ export const CollectionCard = ({ username, collection, index }: any) => {
               </div>
             </div>
             <div className="">
-              <p className="text-gray-500 text-sm font-bold">Total Volume</p>
-              <div className="flex items-center gap-1 text-gray-400 font-bold -ml-1">
+              <p className="text-sm font-bold text-gray-500">Total Volume</p>
+              <div className="-ml-1 flex items-center gap-1 font-bold text-gray-400">
                 {collection.payment_tokens &&
                   collection.payment_tokens[0].symbol == "ETH" && <EthIcon />}
                 {collection.stats && collection.stats.total_volume > 0 ? (

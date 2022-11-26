@@ -123,14 +123,14 @@ export const CollectionsIndexScreen = ({ params }: Props) => {
       <div className="">
         <TabIndex />
       </div>
-      <div className="flex gap-3 mb-2">
-        <div className="flex gap-3 items-baseline">
-          <p className="text-gray-500 text-sm">
+      <div className="mb-2 flex gap-3">
+        <div className="flex items-baseline gap-3">
+          <p className="text-sm text-gray-500">
             {searchedCollections.length} Collections
           </p>
         </div>
       </div>
-      <div className="relative flex gap-3 sm:gap-5 z-20 justify-between mb-3">
+      <div className="relative z-20 mb-3 flex justify-between gap-3 sm:gap-5">
         <Dropdown position="left" property="collectionType" />
         <Searchbox id="collection" />
         <div className="flex items-center gap-3">

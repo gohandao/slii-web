@@ -19,7 +19,7 @@ export const Count = ({ count, maxLength, property }: Props) => {
   }
   return (
     <p
-      className={`absolute bottom-1 right-1 pl-3 pr-2 py-1 text-right text-xs rounded-tl text-gray-300 ${propertyClass}`}
+      className={`absolute bottom-1 right-1 rounded-tl py-1 pl-3 pr-2 text-right text-xs text-gray-300 ${propertyClass}`}
     >
       {count}/{maxLength}
     </p>

@@ -9,7 +9,7 @@ export const Mainvisual = () => {
   const Button = ({ href, children }: Props) => {
     return (
       <Link href={href} legacyBehavior>
-        <a className="border-2 border-gray-900 inline-flex w-32 text-center py-2 rounded-lg justify-center text-sm xl:text-base">
+        <a className="inline-flex w-32 justify-center rounded-lg border-2 border-gray-900 py-2 text-center text-sm xl:text-base">
           {children}
         </a>
       </Link>
@@ -17,7 +17,7 @@ export const Mainvisual = () => {
   };
   return (
     <div className="pt-3">
-      <div className="flex gap-3 items-center mb-2">
+      <div className="mb-2 flex items-center gap-3">
         <span className="text-2xl">👀</span>
         <h2 className="text-gradient flex-inline text-lg font-bold leading-[1.2]">
           Find your favorites!!

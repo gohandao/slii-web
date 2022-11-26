@@ -71,7 +71,7 @@ export const CollectionScreen = ({ property }: Props) => {
         ? setHeaderIcon({
             title: creator.username,
             subTitle: (
-              <div className="flex gap-1 text-[10px] items-center text-gray-400 leading-none">
+              <div className="flex items-center gap-1 text-[10px] leading-none text-gray-400">
                 <JP title="Japan" className="h-[10px] rounded-sm" />
                 {creator.type}
               </div>
@@ -222,7 +222,7 @@ export const CollectionScreen = ({ property }: Props) => {
     <>
       {collection.name}
       {collection.safelist_request_status == "verified" && (
-        <MdVerified className="text-gray-500 text-xl inline ml-2" />
+        <MdVerified className="ml-2 inline text-xl text-gray-500" />
       )}
     </>
   );
@@ -231,7 +231,7 @@ export const CollectionScreen = ({ property }: Props) => {
       <p className="text-xs text-gray-500">
         By{" "}
         <Link href={`/creator/${creator.username}`} legacyBehavior>
-          <a className="inline-flex gap-1 items-center">
+          <a className="inline-flex items-center gap-1">
             {creator.username}{" "}
             {creator.verified == true && (
               <MdVerified className="mt-[2px] text-gray-500" />
@@ -293,7 +293,7 @@ export const CollectionScreen = ({ property }: Props) => {
         )}
         {assets && assets.length > 0 && (
           <div className="px-5 lg:px-8">
-            <div className="relative flex gap-3 z-20 justify-between mb-5 sm:gap-5">
+            <div className="relative z-20 mb-5 flex justify-between gap-3 sm:gap-5">
               <Searchbox id="nft" property="nft" />
               <div className="flex items-center gap-3">
                 <Dropdown position="right" property="nftSort" />

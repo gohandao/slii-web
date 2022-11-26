@@ -70,7 +70,7 @@ export const UploadImage = ({ image, newImage, setNewImage }: Props) => {
           }
           className="hidden"
         />
-        <div className="w-[100px] h-[100px] flex relative rounded-full bg-gray-800 border-4 border-gray-700 overflow-hidden items-center justify-center">
+        <div className="relative flex h-[100px] w-[100px] items-center justify-center overflow-hidden rounded-full border-4 border-gray-700 bg-gray-800">
           {image && !newImage ? (
             <Image
               src={URL.createObjectURL(image)}
@@ -130,8 +130,8 @@ export const UploadImage = ({ image, newImage, setNewImage }: Props) => {
             />
           )}
           <div className="absolute left-0 top-0 right-0 bottom-0 m-auto flex items-center justify-center">
-            <div className="w-8 h-8 rounded-full flex justify-center items-center translucent-black">
-              <RiImageAddLine className="text-gray-300 text-sm" />
+            <div className="translucent-black flex h-8 w-8 items-center justify-center rounded-full">
+              <RiImageAddLine className="text-sm text-gray-300" />
             </div>
           </div>
         </div>

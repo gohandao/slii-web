@@ -40,7 +40,7 @@ export const Textarea = ({
         <textarea
           id={id}
           {...props}
-          className={`w-full rounded px-5 py-2 min-h-[150px]`}
+          className={`min-h-[150px] w-full rounded px-5 py-2`}
           onChange={(e) => {
             setText(e.currentTarget.value);
           }}

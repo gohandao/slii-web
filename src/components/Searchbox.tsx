@@ -69,7 +69,7 @@ export const Searchbox = ({ id, property }: Props) => {
   // }, []);
   return (
     <>
-      <div className="relative w-full rounded-lg overflow-hidden flex-1">
+      <div className="relative w-full flex-1 overflow-hidden rounded-lg">
         <input
           type="text"
           name={id}
@@ -84,9 +84,9 @@ export const Searchbox = ({ id, property }: Props) => {
           //     searchHandler();
           //   }
           // }}
-          className="block w-full py-[11px] pl-4 sm:pl-12 pr-4 text-base text-gray-400 rounded-lg bg-gray-800"
+          className="block w-full rounded-lg bg-gray-800 py-[11px] pl-4 pr-4 text-base text-gray-400 sm:pl-12"
         />
-        <BiSearchAlt2 className="absolute left-[16px] top-[14px] text-gray-400 text-xl hidden sm:inline-block" />
+        <BiSearchAlt2 className="absolute left-[16px] top-[14px] hidden text-xl text-gray-400 sm:inline-block" />
         {/* <button
           className="absolute right-0 top-0 w-10 flex h-full justify-center items-center bg-blue-500"
           onClick={() => {

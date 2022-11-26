@@ -26,7 +26,7 @@ export const Input = ({
           type={type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="px-5 py-3 rounded"
+          className="rounded px-5 py-3"
           placeholder={placeholder}
         />
       </div>

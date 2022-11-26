@@ -59,7 +59,7 @@ export const UploadBackground = ({ image, newImage, setNewImage }: Props) => {
   // };
 
   return (
-    <div className="w-full h-full">
+    <div className="h-full w-full">
       {/* 1つのボタンで画像を選択する */}
       <label htmlFor="background_image" className="">
         <input
@@ -72,7 +72,7 @@ export const UploadBackground = ({ image, newImage, setNewImage }: Props) => {
           }
           className="hidden"
         />
-        <div className="w-full h-full flex relative bg-gray-700 overflow-hidden items-center justify-center">
+        <div className="relative flex h-full w-full items-center justify-center overflow-hidden bg-gray-700">
           {newImage ? (
             <Image
               src={URL.createObjectURL(newImage)}
@@ -83,8 +83,9 @@ export const UploadBackground = ({ image, newImage, setNewImage }: Props) => {
               fill
               sizes="100vw"
               style={{
-                objectFit: "cover"
-              }} />
+                objectFit: "cover",
+              }}
+            />
           ) : (
             image && (
               <>
@@ -97,13 +98,19 @@ export const UploadBackground = ({ image, newImage, setNewImage }: Props) => {
                   loading="lazy"
                   className="image-fill opacity-50"
                   /> */}
-                <Image src={URL.createObjectURL(image)} alt="" quality={40} fill sizes="100vw" />
+                <Image
+                  src={URL.createObjectURL(image)}
+                  alt=""
+                  quality={40}
+                  fill
+                  sizes="100vw"
+                />
               </>
             )
           )}
           <div className="absolute left-0 top-0 right-0 bottom-0 m-auto flex items-center justify-center gap-4">
-            <div className="w-8 h-8 rounded-full flex justify-center items-center translucent-black">
-              <RiImageAddLine className="text-gray-300 text-sm" />
+            <div className="translucent-black flex h-8 w-8 items-center justify-center rounded-full">
+              <RiImageAddLine className="text-sm text-gray-300" />
             </div>
             {image && (
               <button
@@ -111,9 +118,9 @@ export const UploadBackground = ({ image, newImage, setNewImage }: Props) => {
                   e.preventDefault();
                   handleOnRemoveImage();
                 }}
-                className="w-8 h-8 rounded-full flex justify-center items-center translucent-black"
+                className="translucent-black flex h-8 w-8 items-center justify-center rounded-full"
               >
-                <IoClose className="text-gray-300 text-sm" />
+                <IoClose className="text-sm text-gray-300" />
               </button>
             )}
           </div>

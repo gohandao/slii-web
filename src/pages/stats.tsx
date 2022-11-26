@@ -101,16 +101,16 @@ const StatsPage: NextPage = () => {
         }}
       />
       <BaseLayout>
-        <section className="mx-auto px-5 md:px-8 mt-3">
-          <h1 className="text-gray-500 text-sm tracking-[0.2em] mb-3">
+        <section className="mx-auto mt-3 px-5 md:px-8">
+          <h1 className="mb-3 text-sm tracking-[0.2em] text-gray-500">
             Japanese awesome NFT collections stats.
           </h1>
           {collections && (
-            <p className="text-gray-500 mb-2 text-sm">
+            <p className="mb-2 text-sm text-gray-500">
               {collections.length} collections
             </p>
           )}
-          <div className="flex gap-3 sm:gap-5 justify-between items-center mb-4">
+          <div className="mb-4 flex items-center justify-between gap-3 sm:gap-5">
             <Dropdown position="left" property="collectionType" />
             <Searchbox id="collection" />
             <div className="hidden md:flex">

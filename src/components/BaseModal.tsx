@@ -56,13 +56,13 @@ export const BaseModal = ({ children, modalIsOpen, setModalIsOpen }: Props) => {
       //@ts-ignore
       style={customStyles}
     >
-      <div className="relative p-5 bg-transparent ">
+      <div className="relative bg-transparent p-5 ">
         {children}
         <button
           onClick={closeModal}
-          className="absolute right-3 top-3 w-7 h-7 bg-gray-600 rounded-full flex items-center justify-center"
+          className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-gray-600"
         >
-          <IoIosClose className="text-gray-400 text-xl" />
+          <IoIosClose className="text-xl text-gray-400" />
         </button>
       </div>
     </Modal>

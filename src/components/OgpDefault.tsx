@@ -31,7 +31,7 @@ export const OgpDefault = ({
     <>
       {title}{" "}
       {verified == true && (
-        <MdVerified className="-mt-[2px] text-4xl text-gray-500 inline-block" />
+        <MdVerified className="-mt-[2px] inline-block text-4xl text-gray-500" />
       )}
     </>
   );
@@ -51,8 +51,8 @@ export const OgpDefault = ({
     //     </div>
     //   </div>
     // </div>
-    <div className="relative w-[1200px] h-[600px] font-digital">
-      <div className="absolute left-0 top-0 w-full h-full">
+    <div className="font-digital relative h-[600px] w-[1200px]">
+      <div className="absolute left-0 top-0 h-full w-full">
         {/* <img
           src={`https://weev.media/wp-content/uploads/2022/11/ogp-base.jpg`}
           className="image-fill"
@@ -64,9 +64,9 @@ export const OgpDefault = ({
           sizes="100vw"
         />
       </div>
-      <div className="relative left-[84px] top-[44px] flex flex-col w-[860px] h-[540px]">
-        <div className="relative flex w-full h-full rounded-tr-[20px] overflow-hidden opacity-40">
-          <div className="relative w-full h-[270px] ">
+      <div className="relative left-[84px] top-[44px] flex h-[540px] w-[860px] flex-col">
+        <div className="relative flex h-full w-full overflow-hidden rounded-tr-[20px] opacity-40">
+          <div className="relative h-[270px] w-full ">
             {background ? (
               <Image src={background} alt="" fill sizes="100vw" />
             ) : (
@@ -81,7 +81,7 @@ export const OgpDefault = ({
         </div>
         {type == "user" ? (
           <>
-            <div className="absolute flex items-center justify-center left-[66px] top-[90px] w-[232px] h-[232px] rounded-full border-[6px] border-gray-700 overflow-hidden -ml-[6px]">
+            <div className="absolute left-[66px] top-[90px] -ml-[6px] flex h-[232px] w-[232px] items-center justify-center overflow-hidden rounded-full border-[6px] border-gray-700">
               {avatar ? (
                 <Image src={avatar} alt="" fill sizes="300px" />
               ) : (
@@ -93,21 +93,21 @@ export const OgpDefault = ({
                 />
               )}
             </div>
-            <div className="w-full h-full flex flex-col ml-[66px] max-w-full">
-              <h1 className="text-[70px] font-bold ogp-text-gradient mt-[54px] leading-tight -ml-[6px] w-fit ellipsis max-w-[700px] min-w-[0]">
+            <div className="ml-[66px] flex h-full w-full max-w-full flex-col">
+              <h1 className="ogp-text-gradient ellipsis mt-[54px] -ml-[6px] w-fit min-w-[0] max-w-[700px] text-[70px] font-bold leading-tight">
                 {title ? new_title : "Not Found"}
               </h1>
-              <p className="text-xl font-light text-gray-300 tracking-[0.4em]">
+              <p className="text-xl font-light tracking-[0.4em] text-gray-300">
                 {label ? label : "NFT Collecter"}
               </p>
             </div>
           </>
         ) : (
-          <div className="w-full h-full flex flex-col ml-[66px]">
-            <h1 className="text-[70px] font-bold ogp-text-gradient mt-10 leading-snug -ml-1">
+          <div className="ml-[66px] flex h-full w-full flex-col">
+            <h1 className="ogp-text-gradient mt-10 -ml-1 text-[70px] font-bold leading-snug">
               {title ? title : "Not Found"}
             </h1>
-            <p className="text-xl font-light text-gray-300 tracking-[0.4em]">
+            <p className="text-xl font-light tracking-[0.4em] text-gray-300">
               Tags
             </p>
           </div>

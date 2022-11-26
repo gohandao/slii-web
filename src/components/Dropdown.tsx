@@ -44,7 +44,7 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
   };
   const Title = ({ children }: TitleProps) => {
     return (
-      <span className="hidden sm:inline-block capitalize">{children}</span>
+      <span className="hidden capitalize sm:inline-block">{children}</span>
     );
   };
   //メニュー表示
@@ -428,14 +428,14 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
   return (
     <>
       <div
-        className={`relative inline-block text-left z-50 ${
+        className={`relative z-50 inline-block text-left ${
           menus.length < 2 && "_hidden"
         }`}
       >
         <div>
           <button
             type="button"
-            className="inline-flex h-[46px] items-center  gap-2 justify-center w-full rounded-md border border-gray-600 shadow-sm px-4 py-[11px] bg-gray-800 text-sm font-medium text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-600 focus:ring-indigo-500 capitalize"
+            className="inline-flex h-[46px] w-full  items-center justify-center gap-2 rounded-md border border-gray-600 bg-gray-800 px-4 py-[11px] text-sm font-medium capitalize text-gray-300 shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-600"
             id="menu-button"
             onClick={() => {
               toggleDropdownHandler();
@@ -444,7 +444,7 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
             <>
               {title}
               <svg
-                className="-mr-1 ml-2 h-5 w-5 hidden sm:block"
+                className="-mr-1 ml-2 hidden h-5 w-5 sm:block"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
                 fill="currentColor"
@@ -460,7 +460,7 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
           </button>
         </div>
         <div
-          className={`absolute mt-2 w-56 rounded-md shadow-lg border border-gray-700 bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none ${dropdownClass} ${possitionClass}`}
+          className={`absolute mt-2 w-56 rounded-md border border-gray-700 bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${dropdownClass} ${possitionClass}`}
           role="menu"
           tabIndex={-1}
         >
@@ -521,7 +521,7 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
                 const iconCheck = checkCurrentParam();
                 return (
                   <button
-                    className="relative text-gray-300 block pl-8 pr-4 py-[11px] text-sm capitalize w-full text-left border-b border-gray-600 last:border-b-0 gap-2 ellipsis"
+                    className="ellipsis relative block w-full gap-2 border-b border-gray-600 py-[11px] pl-8 pr-4 text-left text-sm capitalize text-gray-300 last:border-b-0"
                     role="menuitem"
                     tabIndex={-1}
                     id="menu-item-0"
@@ -531,7 +531,7 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
                     key={index}
                   >
                     {iconCheck && (
-                      <BsCheck className="absolute left-3 flex h-full top-0 items-center text-green-500" />
+                      <BsCheck className="absolute left-3 top-0 flex h-full items-center text-green-500" />
                     )}
                     {menu}
                   </button>

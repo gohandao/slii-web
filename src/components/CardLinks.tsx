@@ -20,7 +20,7 @@ export const CardLinks = ({
   opensea_url,
 }: Props) => {
   return (
-    <div className="flex gap-3 mt-auto w-full justify-end py-1 items-center opacity-30">
+    <div className="mt-auto flex w-full items-center justify-end gap-3 py-1 opacity-30">
       {/*twitter_id && (
         <object>
           <Link href={`https://twitter.com/${twitter_id}`}>
@@ -59,7 +59,7 @@ export const CardLinks = ({
             //router.push(`https://twitter.com/${twitter_id}`);
             window.open(`https://twitter.com/${twitter_id}`, "_blank");
           }}
-          className="text-white text-sm"
+          className="text-sm text-white"
         >
           <BsTwitter />
         </button>
@@ -70,7 +70,7 @@ export const CardLinks = ({
             //router.push(`https://twitter.com/${twitter_id}`);
             window.open(`https://instagram.com/${instagram_id}`, "_blank");
           }}
-          className="text-white text-sm"
+          className="text-sm text-white"
         >
           <BsInstagram />
         </button>
@@ -81,7 +81,7 @@ export const CardLinks = ({
             //router.push(`https://twitter.com/${twitter_id}`);
             window.open(`${discord_url}`, "_blank");
           }}
-          className="text-white text-sm"
+          className="text-sm text-white"
         >
           <FaDiscord />
         </button>
@@ -92,7 +92,7 @@ export const CardLinks = ({
             //router.push(`https://twitter.com/${twitter_id}`);
             window.open(`${website_url}`, "_blank");
           }}
-          className="text-white text-sm"
+          className="text-sm text-white"
         >
           <BsGlobe2 />
         </button>

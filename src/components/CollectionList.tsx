@@ -71,7 +71,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
   };
   const EthIcon = () => {
     return (
-      <div className="relative w-4 flex items-center">
+      <div className="relative flex w-4 items-center">
         <Image
           src="/icon-eth.svg"
           width={16}
@@ -95,7 +95,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
   const Stats = ({ icon, text }: StatsProps) => {
     return (
       <div
-        className={`relative flex justify-center items-center gap-2 left-0 top-0 py-[2px] px-[2px] z-10 rounded text-xs md:text-xs capitalize text-gray-500 `}
+        className={`relative left-0 top-0 z-10 flex items-center justify-center gap-2 rounded py-[2px] px-[2px] text-xs capitalize text-gray-500 md:text-xs `}
       >
         {icon}
         {text}
@@ -106,25 +106,25 @@ export const CollectionList = ({ collections, limit }: Props) => {
   const modal_param = currentPath == "/collections" ? "?screen=modal" : "";
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3 w-full justify-center">
+    <div className="grid w-full grid-cols-1 justify-center gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
       {collections.length > 0 &&
         collections.map((collection, index) => {
           return (
             <div
-              className="relative flex hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1"
+              className="relative flex transform transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
               key={index}
             >
               <Link
                 href={`/collection/${collection.slug}${modal_param}`}
                 legacyBehavior
               >
-                <a className="relative flex flex-col border border-gray-800 rounded-lg w-full items-center shadow-lg bg-gray-800 overflow-hidden pb-2">
-                  <div className="absolute top-0 right-0 z-20  text-gray-400 opacity-60 flex gap-1 items-center">
-                    <p className="text-gray-400 text-xs text-center mt-[2px]">
+                <a className="relative flex w-full flex-col items-center overflow-hidden rounded-lg border border-gray-800 bg-gray-800 pb-2 shadow-lg">
+                  <div className="absolute top-0 right-0 z-20  flex items-center gap-1 text-gray-400 opacity-60">
+                    <p className="mt-[2px] text-center text-xs text-gray-400">
                       {collection.stats && collection.stats.num_owners} /
                       {collection.stats && collection.stats.total_supply}
                     </p>
-                    <div className="flex justify-center items-center gap-2 py-[2px] px-2 rounded-bl-lg text-xs md:text-xs capitalize bg-gray-900">
+                    <div className="flex items-center justify-center gap-2 rounded-bl-lg bg-gray-900 py-[2px] px-2 text-xs capitalize md:text-xs">
                       {collection.type}
                       <JP title="Japan" className="h-3 rounded-sm" />
                     </div>
@@ -132,16 +132,16 @@ export const CollectionList = ({ collections, limit }: Props) => {
                   <div className="absolute -left-[1px] -top-[1px] z-10 opacity-60">
                     <div className="lt-triangle"></div>
                   </div>
-                  <div className="flex absolute left-[6px] top-1 z-20">
-                    <p className="text-gray-500 text-xs">
+                  <div className="absolute left-[6px] top-1 z-20 flex">
+                    <p className="text-xs text-gray-500">
                       #{" "}
                       {limit
                         ? index + 1 + (currentPage - 1) * limit
                         : index + 1}
                     </p>
                   </div>
-                  <div className="flex w-full h-20 overflow-hidden opacity-[30%] relative border-4 border-transparent">
-                    <div className="relative w-full h-full bg-gray-500 rounded">
+                  <div className="relative flex h-20 w-full overflow-hidden border-4 border-transparent opacity-[30%]">
+                    <div className="relative h-full w-full rounded bg-gray-500">
                       {collection.banner_image_url && (
                         <Image
                           //@ts-ignore
@@ -157,10 +157,10 @@ export const CollectionList = ({ collections, limit }: Props) => {
                       )}
                     </div>
                   </div>
-                  <div className="px-4 w-full">
-                    <div className="flex w-full gap-2 items-center">
+                  <div className="w-full px-4">
+                    <div className="flex w-full items-center gap-2">
                       <div className="relative -mt-[60px]">
-                        <div className="relative rounded border-[5px] overflow-hidden flex items-center justify-center z-10 bg-gray-600 border-gray-700  w-[70px] h-[70px] min-w-[70px]">
+                        <div className="relative z-10 flex h-[70px] w-[70px] min-w-[70px] items-center justify-center overflow-hidden rounded  border-[5px] border-gray-700 bg-gray-600">
                           {collection.image_url && (
                             <Image
                               //@ts-ignore
@@ -177,8 +177,8 @@ export const CollectionList = ({ collections, limit }: Props) => {
                         </div>
                         {(collection.twitter_followers ||
                           collection.discord_members) && (
-                          <div className="absolute bottom-[22px] left-full flex items-start gap-0 ml-2 z-10 flex-col w-full">
-                            <div className="flex bg-gray-900 gap-2 rounded-full px-3 py-[2px] opacity-80">
+                          <div className="absolute bottom-[22px] left-full z-10 ml-2 flex w-full flex-col items-start gap-0">
+                            <div className="flex gap-2 rounded-full bg-gray-900 px-3 py-[2px] opacity-80">
                               {collection.twitter_followers && (
                                 <Stats
                                   icon={<BsTwitter />}
@@ -196,12 +196,12 @@ export const CollectionList = ({ collections, limit }: Props) => {
                         )}
                       </div>
                     </div>
-                    <div className="flex flex-col w-full flex-1  max-w-full min-w-[0px] gap-1">
-                      <div className="flex items-center pt-[6px] relative justify-between -mr-1 max-w-full">
-                        <h3 className="text-sm items-center  font-bold ellipsis text-gray-100 ellipsis max-w-full min-w-[0] pr-3">
+                    <div className="flex w-full min-w-[0px] max-w-full  flex-1 flex-col gap-1">
+                      <div className="relative -mr-1 flex max-w-full items-center justify-between pt-[6px]">
+                        <h3 className="ellipsis ellipsis  min-w-[0] max-w-full items-center pr-3 text-sm font-bold text-gray-100">
                           {collection.name}
                           {collection.safelist_request_status == "verified" && (
-                            <MdVerified className="-mt-[2px] text-gray-500 ml-2 inline-block" />
+                            <MdVerified className="-mt-[2px] ml-2 inline-block text-gray-500" />
                           )}
                         </h3>
                         <div className="flex gap-2">
@@ -221,13 +221,13 @@ export const CollectionList = ({ collections, limit }: Props) => {
                           </div>
                         </div>
                       </div>
-                      <div className="flex gap-5 justify-between items-end">
+                      <div className="flex items-end justify-between gap-5">
                         <div className="flex gap-5">
                           <div className="">
-                            <p className="text-gray-500 text-xs sp:text-sm font-bold">
+                            <p className="sp:text-sm text-xs font-bold text-gray-500">
                               Floor Price
                             </p>
-                            <div className="flex items-center gap-1 text-gray-400 font-bold -ml-1">
+                            <div className="-ml-1 flex items-center gap-1 font-bold text-gray-400">
                               {collection.payment_tokens &&
                                 collection.payment_tokens[0].symbol ==
                                   "ETH" && <EthIcon />}
@@ -240,7 +240,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
                             </div>
                           </div>
                           <div className="">
-                            <p className="text-gray-500 text-xs sp:text-sm font-bold">
+                            <p className="sp:text-sm text-xs font-bold text-gray-500">
                               {term == "all" || !term
                                 ? "Total"
                                 : term == "24h"
@@ -250,7 +250,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
                                 : term == "30d" && "30d"}{" "}
                               Volume
                             </p>
-                            <div className="flex items-center gap-1 text-gray-400 font-bold -ml-1">
+                            <div className="-ml-1 flex items-center gap-1 font-bold text-gray-400">
                               {term == "all" ||
                               (!term &&
                                 collection.stats &&

@@ -242,7 +242,7 @@ export const UserPageTemplate = ({
     <>
       {userProfile.username}{" "}
       {userProfile.verified == true && (
-        <MdVerified className="text-gray-500 text-xl inline ml-1" />
+        <MdVerified className="ml-1 inline text-xl text-gray-500" />
       )}
     </>
   );
@@ -301,7 +301,7 @@ export const UserPageTemplate = ({
             </div>
             {tab != "collection" && (
               <div className="">
-                <div className="relative flex gap-3 sm:gap-5 z-20 justify-between mb-3">
+                <div className="relative z-20 mb-3 flex justify-between gap-3 sm:gap-5">
                   <Dropdown position="left" property="collectionType" />
                   <Searchbox id="creator" />
                   <div className="flex items-center gap-3">
@@ -327,7 +327,7 @@ export const UserPageTemplate = ({
             )}
             {tab == "collection" && (
               <div className="">
-                <div className="relative flex gap-3 sm:gap-5 z-20 justify-between mb-3">
+                <div className="relative z-20 mb-3 flex justify-between gap-3 sm:gap-5">
                   <Dropdown position="left" property="collectionType" />
                   <Searchbox id="collection" />
                   <div className="flex items-center gap-3">

@@ -151,7 +151,7 @@ export const OGPImage = async (
                   >
                     {title ? new_title : "Not Found"}{" "}
                     {verified == "true" && (
-                      <MdVerified className="text-gray-500 text-xl inline ml-1" />
+                      <MdVerified className="ml-1 inline text-xl text-gray-500" />
                     )}
                   </h1>
                   <p tw="-mt-1 flex text-xl font-light text-gray-300 tracking-[0.4em]">

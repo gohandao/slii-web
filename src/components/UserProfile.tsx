@@ -174,8 +174,8 @@ export const UserProfile = ({ profile }: Props) => {
         <h2>Hello</h2>
         <button onClick={closeModal}>close</button>
       </Modal>
-      <div className="flex relative w-full h-40 md:h-60 overflow-hidden -mt-[70px] opacity-20 border-t-[10px] border-x-[10px] border-transparent">
-        <div className="w-full h-full bg-gray-800 rounded-lg overflow-hidden">
+      <div className="relative -mt-[70px] flex h-40 w-full overflow-hidden border-x-[10px] border-t-[10px] border-transparent opacity-20 md:h-60">
+        <div className="h-full w-full overflow-hidden rounded-lg bg-gray-800">
           {profile.background_url && profile.background_url.length > 0 && (
             <>
               {
@@ -213,9 +213,9 @@ export const UserProfile = ({ profile }: Props) => {
         </div>
       </div>
       <div className="mx-auto  max-w-2xl">
-        <div className="-mt-[60px] relative flex justify-center">
+        <div className="relative -mt-[60px] flex justify-center">
           <div className="relative flex">
-            <div className="rounded-full border-[5px] border-gray-800 overflow-hidden flex items-center justify-center z-10 mb-2 bg-gray-800 w-[110px] h-[110px]">
+            <div className="z-10 mb-2 flex h-[110px] w-[110px] items-center justify-center overflow-hidden rounded-full border-[5px] border-gray-800 bg-gray-800">
               {profile && profile.avatar_url ? (
                 <Image
                   //@ts-ignore
@@ -245,7 +245,7 @@ export const UserProfile = ({ profile }: Props) => {
                 />
               )}
             </div>
-            <div className=" gap-3 absolute bottom-6 right-full rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
+            <div className=" absolute bottom-6 right-full flex items-center justify-center gap-3 rounded-tl-full rounded-bl-full text-sm capitalize">
               <ProfileDropdown
                 position="left"
                 icon={<BsFillShareFill className="text-gray-500" />}
@@ -261,17 +261,17 @@ export const UserProfile = ({ profile }: Props) => {
                 menus={requestMenus}
               />
             </div>
-            <div className=" gap-3 absolute bottom-6 left-full rounded-tl-full rounded-bl-full text-sm capitalize flex justify-center items-center">
+            <div className=" absolute bottom-6 left-full flex items-center justify-center gap-3 rounded-tl-full rounded-bl-full text-sm capitalize">
               <BookmarkButton id={profile.username} type="creator" />
             </div>
           </div>
         </div>
         <div className="flex flex-1 flex-col gap-5 px-5">
-          <div className="flex flex-col gap-2 items-center">
-            <h1 className="text-2xl sm:text-3xl text-gray-100 font-bold inline justify-center items-center">
+          <div className="flex flex-col items-center gap-2">
+            <h1 className="inline items-center justify-center text-2xl font-bold text-gray-100 sm:text-3xl">
               {profile.username}{" "}
               {profile.verified == true && (
-                <MdVerified className="text-gray-500 text-xl inline ml-1" />
+                <MdVerified className="ml-1 inline text-xl text-gray-500" />
               )}
             </h1>
             <ViewsCount id={profile.username} type="creator" />
@@ -279,9 +279,9 @@ export const UserProfile = ({ profile }: Props) => {
               <a
                 target="_blank"
                 href=""
-                className="text-white text-sm px-4 py-3 bg-gray-700 flex items-center justify-center gap-1 rounded gap-2"
+                className="flex items-center justify-center gap-1 gap-2 rounded bg-gray-700 px-4 py-3 text-sm text-white"
               >
-                <AiOutlineTwitter className="text-gray-500 text-lg" />
+                <AiOutlineTwitter className="text-lg text-gray-500" />
                 Visit
               </a>
               <VoteButton
@@ -290,7 +290,7 @@ export const UserProfile = ({ profile }: Props) => {
                 type="creator"
               />
             </div>
-            <p className="text-gray-100 mt-1 break-all px-3 text-sm sm:text-base">
+            <p className="mt-1 break-all px-3 text-sm text-gray-100 sm:text-base">
               {profile.description}
             </p>
           </div>

@@ -32,9 +32,9 @@ export const ViewsCount = ({ id, type }: Props) => {
   };
   return (
     <div className="flex gap-3">
-      <div className="flex gap-1 items-center">
+      <div className="flex items-center gap-1">
         {/*<AiOutlineEye className="text-2xl text-white opacity-30 text-lg" />*/}
-        <p className="text-gray-500 text-sm">100 Views</p>
+        <p className="text-sm text-gray-500">100 Views</p>
       </div>
     </div>
   );

@@ -35,7 +35,7 @@ export const BreadCrumbs = ({ list }: Props) => {
                   <span className="text-gray-100">/</span>
                 </div>
               ) : (
-                <div className="text-gray-100 text-sm" itemProp="item">
+                <div className="text-sm text-gray-100" itemProp="item">
                   <span aria-current="page" itemProp="name">
                     {name}
                   </span>

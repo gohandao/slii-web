@@ -7,7 +7,7 @@ import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 
 export const CollectionAssets = ({ collectionAssets }: any) => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-4 w-full justify-center">
+    <div className="grid w-full grid-cols-2 justify-center gap-4 md:grid-cols-4 xl:grid-cols-6">
       {collectionAssets &&
         collectionAssets.map((collectionAsset: any) => (
           // <Link key={collectionAsset.id} href={collectionAsset.asset.permalink}>
@@ -15,10 +15,10 @@ export const CollectionAssets = ({ collectionAssets }: any) => {
             key={collectionAsset.id}
             target="_blank"
             href={collectionAsset.asset.permalink}
-            className="relative border border-gray-700 rounded bg-gray-800 overflow-hidden transition-all duration-200 transform hover:-translate-y-1"
+            className="relative transform overflow-hidden rounded border border-gray-700 bg-gray-800 transition-all duration-200 hover:-translate-y-1"
             rel="noreferrer"
           >
-            <div className="absolute right-0 top-0 rounded-bl-full bg-blue-500 z-10 w-6 h-6 flex items-center justify-center pl-[6px] pb-1">
+            <div className="absolute right-0 top-0 z-10 flex h-6 w-6 items-center justify-center rounded-bl-full bg-blue-500 pl-[6px] pb-1">
               <Image
                 src="/icon-opensea.svg"
                 width={12}
@@ -31,7 +31,7 @@ export const CollectionAssets = ({ collectionAssets }: any) => {
                 }}
               />
             </div>
-            <div className="relative object-cover w-full h-auto overflow-hidden mb-2">
+            <div className="relative mb-2 h-auto w-full overflow-hidden object-cover">
               {collectionAsset.asset.image_thumbnail_url && (
                 <Image
                   src={collectionAsset.asset.image_thumbnail_url}
@@ -43,13 +43,13 @@ export const CollectionAssets = ({ collectionAssets }: any) => {
               )}
             </div>
             <div className="px-4 pt-1 pb-3">
-              <h4 className="text-gray-100 mb-2">
+              <h4 className="mb-2 text-gray-100">
                 {collectionAsset.asset.name}
               </h4>
               <div className="flex justify-between">
                 <div className="flex flex-col ">
                   <p className="text-xs text-gray-400">Price</p>
-                  <p className="flex item-center gap-1 text-sm text-gray-100 -ml-1">
+                  <p className="item-center -ml-1 flex gap-1 text-sm text-gray-100">
                     {collectionAsset.payment_token &&
                       collectionAsset.payment_token.symbol == "ETH" && (
                         <Image

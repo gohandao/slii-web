@@ -103,7 +103,7 @@ export const BookmarkButton = ({ id, property = "default", type }: Props) => {
   }, [bookmarks, id]);
   return (
     <div className="flex justify-center gap-3">
-      <div className="flex gap-1 items-center">
+      <div className="flex items-center gap-1">
         {bookmarked ? (
           <button
             onClick={(e) => {

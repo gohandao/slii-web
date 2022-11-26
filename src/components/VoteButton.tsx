@@ -182,7 +182,7 @@ export const VoteButton = ({
   }
   return (
     <div className="flex justify-center gap-3">
-      <div className="flex gap-1 items-center ">
+      <div className="flex items-center gap-1 ">
         <button
           onClick={(e) => {
             e.preventDefault();
@@ -199,24 +199,24 @@ export const VoteButton = ({
               {upvoted ? (
                 <div className={`bg-gray-700 ${propertyClass} `}>
                   <BsTriangleFill className="text-sm text-orange-500 opacity-90" />
-                  <p className="text-gray-100 text-sm">{currentCount}</p>
+                  <p className="text-sm text-gray-100">{currentCount}</p>
                 </div>
               ) : (
                 <div className={`bg-gray-700 ${propertyClass}  `}>
                   <BsTriangleFill className="text-sm text-white opacity-30" />
-                  <p className="text-gray-100 text-sm">{currentCount}</p>
+                  <p className="text-sm text-gray-100">{currentCount}</p>
                 </div>
               )}
             </>
           ) : (
-            <div className="bg-upvote rounded h-[44px]">
+            <div className="bg-upvote h-[44px] rounded">
               {upvoted ? (
                 <div
-                  className={`h-full bg-white ${propertyClass} border-2 border-orange-600 rounded`}
+                  className={`h-full bg-white ${propertyClass} rounded border-2 border-orange-600`}
                 >
                   <BsTriangleFill className="text-sm text-orange-600 opacity-80" />
-                  <p className="text-orange-600 px-1 text-sm">
-                    <span className="text-orange-600 text-sm hidden sm:inline">
+                  <p className="px-1 text-sm text-orange-600">
+                    <span className="hidden text-sm text-orange-600 sm:inline">
                       Upvoted
                     </span>{" "}
                     {currentCount}
@@ -225,8 +225,8 @@ export const VoteButton = ({
               ) : (
                 <div className={`h-full  ${propertyClass} `}>
                   <BsTriangleFill className="text-sm text-white" />
-                  <p className="text-white px-1 text-sm">
-                    <span className="text-orange-100 text-xs hidden sm:inline">
+                  <p className="px-1 text-sm text-white">
+                    <span className="hidden text-xs text-orange-100 sm:inline">
                       Upvote
                     </span>{" "}
                     {currentCount}

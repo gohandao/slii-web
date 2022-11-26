@@ -181,13 +181,13 @@ const TagPage: NextPage = (props: any) => {
         }}
       />
       <BaseLayout>
-        <section className="mx-auto px-5 md:px-8 mt-5">
-          <h1 className="text-gray-500 text-sm tracking-[0.2em] mb-3">
-            Resulut of <span className="text-3xl ml-1 text-bold">#{tag}</span>
+        <section className="mx-auto mt-5 px-5 md:px-8">
+          <h1 className="mb-3 text-sm tracking-[0.2em] text-gray-500">
+            Resulut of <span className="text-bold ml-1 text-3xl">#{tag}</span>
           </h1>
-          <div className="flex gap-3 mb-">
-            <div className="flex gap-3 items-baseline">
-              <p className="text-gray-400 text-sm">
+          <div className="mb- flex gap-3">
+            <div className="flex items-baseline gap-3">
+              <p className="text-sm text-gray-400">
                 {searchedCreators.length} Creators, {searchedCollections.length}{" "}
                 Collections
               </p>
@@ -198,7 +198,7 @@ const TagPage: NextPage = (props: any) => {
           </div>
           {tab != "collection" && (
             <div className="">
-              <div className="relative flex gap-3 sm:gap-5 z-20 justify-between mb-3">
+              <div className="relative z-20 mb-3 flex justify-between gap-3 sm:gap-5">
                 <Dropdown position="left" property="collectionType" />
                 <Searchbox id="creator" />
                 <div className="flex items-center gap-3">

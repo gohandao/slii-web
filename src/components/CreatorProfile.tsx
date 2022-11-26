@@ -185,7 +185,7 @@ export const CreatorProfile = ({ creator }: Props) => {
         <h2>Hello</h2>
         <button onClick={closeModal}>close</button>
       </Modal>
-      <div className="flex relative w-full h-40 md:h-60 overflow-hidden -mt-[70px] opacity-20 border-t-[10px] border-x-[10px] border-transparent ">
+      <div className="relative -mt-[70px] flex h-40 w-full overflow-hidden border-x-[10px] border-t-[10px] border-transparent opacity-20 md:h-60 ">
         {creator.background && creator.background.length > 0 && (
           <>
             {
@@ -196,35 +196,37 @@ export const CreatorProfile = ({ creator }: Props) => {
                   src={creator.background[0].thumbnails.large.url}
                   alt=""
                   loading="lazy"
-                  className="bg-gray-800 rounded-lg"
+                  className="rounded-lg bg-gray-800"
                   quality={10}
                   fill
                   sizes="100vw"
                   style={{
-                    objectFit: "cover"
-                  }} />
+                    objectFit: "cover",
+                  }}
+                />
               ) : (
                 <Image
                   //@ts-ignore
                   src={creator.background[0].url}
                   alt=""
                   loading="lazy"
-                  className="bg-gray-800 rounded-lg"
+                  className="rounded-lg bg-gray-800"
                   quality={10}
                   fill
                   sizes="100vw"
                   style={{
-                    objectFit: "cover"
-                  }} />
+                    objectFit: "cover",
+                  }}
+                />
               )
             }
           </>
         )}
       </div>
       <div className="mx-auto px-5 lg:px-8">
-        <div className="-mt-[58px] relative flex justify-between items-end mb-2">
+        <div className="relative -mt-[58px] mb-2 flex items-end justify-between">
           <div className="relative flex">
-            <div className="rounded-full border-[5px] border-gray-800 overflow-hidden flex items-center justify-center z-10 bg-gray-800 w-[110px] h-[110px]">
+            <div className="z-10 flex h-[110px] w-[110px] items-center justify-center overflow-hidden rounded-full border-[5px] border-gray-800 bg-gray-800">
               {creator.avatar && creator.avatar.length > 0 ? (
                 <Image
                   //@ts-ignore
@@ -236,8 +238,9 @@ export const CreatorProfile = ({ creator }: Props) => {
                   style={{
                     maxWidth: "100%",
                     height: "auto",
-                    objectFit: "cover"
-                  }} />
+                    objectFit: "cover",
+                  }}
+                />
               ) : (
                 <Image
                   //@ts-ignore
@@ -249,12 +252,13 @@ export const CreatorProfile = ({ creator }: Props) => {
                   style={{
                     maxWidth: "100%",
                     height: "auto",
-                    objectFit: "cover"
-                  }} />
+                    objectFit: "cover",
+                  }}
+                />
               )}
             </div>
 
-            <div className="absolute top-5 left-full flex items-center gap-4 ml-2">
+            <div className="absolute top-5 left-full ml-2 flex items-center gap-4">
               {/* <p
                 className={` -ml-6 pl-[24px] pr-3 rounded-tr-full rounded-br-full text-sm capitalize flex justify-center items-center gap-[6px] ${
                   creator.type == "creator"
@@ -275,8 +279,8 @@ export const CreatorProfile = ({ creator }: Props) => {
               />
             </div>
           </div>
-          <div className="flex justify-between flex-1 w-full ml-3">
-            <div className=" gap-5 capitalize flex justify-center items-center">
+          <div className="ml-3 flex w-full flex-1 justify-between">
+            <div className=" flex items-center justify-center gap-5 capitalize">
               {/* <ProfileDropdown
                 icon={<BsFillShareFill className="text-gray-500" />}
                 dropdown={shareDropdown}
@@ -302,12 +306,12 @@ export const CreatorProfile = ({ creator }: Props) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-1 gap-16 justify-between">
+        <div className="flex flex-1 justify-between gap-16">
           <div className="flex flex-col gap-2">
-            <h1 className="text-2xl sm:text-3xl text-gray-100 font-bold inline justify-center items-center">
+            <h1 className="inline items-center justify-center text-2xl font-bold text-gray-100 sm:text-3xl">
               {creator.username}{" "}
               {creator.verified == true && (
-                <MdVerified className="text-gray-500 text-xl inline ml-1" />
+                <MdVerified className="ml-1 inline text-xl text-gray-500" />
               )}
             </h1>
             <div className="flex items-center gap-1 text-xs text-gray-400">
@@ -319,21 +323,22 @@ export const CreatorProfile = ({ creator }: Props) => {
                 style={{
                   maxWidth: "100%",
                   height: "auto",
-                  objectFit: "cover"
-                }} />
+                  objectFit: "cover",
+                }}
+              />
               <CopyText
                 text={creator.address}
                 alertText="ETH address has copied!"
               />
             </div>
             <div className="flex flex-col gap-1">
-              <p className="text-gray-100 mt-1 text-justify break-all text-sm sm:text-base transition-all duration-200 ">
+              <p className="mt-1 break-all text-justify text-sm text-gray-100 transition-all duration-200 sm:text-base ">
                 {showDescription ? description : slicedDescription}
               </p>
               {description && description.length > 80 && (
                 <>
                   <button
-                    className="inline-flex text-gray-500 items-center gap-1"
+                    className="inline-flex items-center gap-1 text-gray-500"
                     onClick={() => {
                       showDescription
                         ? setShowDescription(false)
@@ -356,13 +361,13 @@ export const CreatorProfile = ({ creator }: Props) => {
               )}
             </div>
           </div>
-          <div className="flex flex-col mt-1">
+          <div className="mt-1 flex flex-col">
             <StatsBox>
               {twitterFollowers && (
                 <Stats
                   field="Followers"
                   value={
-                    <div className="flex gap-2 items-center w-full justify-end">
+                    <div className="flex w-full items-center justify-end gap-2">
                       <FaTwitter className="text-sm opacity-60" />
                       {twitterFollowers}
                     </div>
@@ -377,7 +382,7 @@ export const CreatorProfile = ({ creator }: Props) => {
                 <Stats
                   field="Tags"
                   value={
-                    <div className="flex gap-2 justify-end w-full">
+                    <div className="flex w-full justify-end gap-2">
                       {creator.tags.map((tag, index) => (
                         <Label key={index} name={tag} type="creator" />
                       ))}

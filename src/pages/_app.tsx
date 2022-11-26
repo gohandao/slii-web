@@ -385,7 +385,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               // setSocials,
             }}
           >
-            <div className="flex flex-col min-h-screen bg-stripe overflow-hidden">
+            <div className="bg-stripe flex min-h-screen flex-col overflow-hidden">
               <Component {...pageProps} />
             </div>
           </BaseContext.Provider>

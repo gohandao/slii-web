@@ -48,7 +48,7 @@ export const SmallTab = ({ title, path }: Props) => {
       legacyBehavior
     >
       <a
-        className={`text-gray-100 rounded-full px-5 py-1  text-xs ${passiveClass}`}
+        className={`rounded-full px-5 py-1 text-xs  text-gray-100 ${passiveClass}`}
       >
         {title}
       </a>

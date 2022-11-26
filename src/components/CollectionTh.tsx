@@ -168,25 +168,25 @@ export const Th = ({ title }: Props) => {
           } ${thClass}`}
         >
           <button
-            className="flex gap-2 items-center"
+            className="flex items-center gap-2"
             onClick={() => {
               changeParams();
             }}
           >
             {termArea && (
               <p
-                className="capitalize text-xs px-[6px] py-[2px] rounded bg-gray-700 text-gray-300"
+                className="rounded bg-gray-700 px-[6px] py-[2px] text-xs capitalize text-gray-300"
                 suppressHydrationWarning={true}
               >
                 {termTag}
               </p>
             )}
-            <p className="flex gap-2 items-center whitespace-nowrap">
+            <p className="flex items-center gap-2 whitespace-nowrap">
               {TitleIcon ? TitleIcon : title}
               {(!sort && title == "Upvotes") || (active && order == "desc") ? (
-                <TiArrowSortedDown className="transition-all duration-300 text-gray-300" />
+                <TiArrowSortedDown className="text-gray-300 transition-all duration-300" />
               ) : active && order == "asc" ? (
-                <TiArrowSortedDown className="transition-all duration-300 rotate-180 text-gray-300" />
+                <TiArrowSortedDown className="rotate-180 text-gray-300 transition-all duration-300" />
               ) : (
                 <FaSort className="text-gray-700" />
               )}
@@ -194,7 +194,7 @@ export const Th = ({ title }: Props) => {
           </button>
         </th>
       ) : (
-        <th className="py-3.5 text-left text-sm font-medium text-gray-400 min-w-[28px]"></th>
+        <th className="min-w-[28px] py-3.5 text-left text-sm font-medium text-gray-400"></th>
       )}
     </>
   );

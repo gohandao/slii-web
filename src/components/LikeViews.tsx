@@ -32,7 +32,7 @@ export const LikeViews = ({ id, type }: Props) => {
   };
   return (
     <div className="flex justify-center gap-3">
-      <div className="flex gap-1 items-center">
+      <div className="flex items-center gap-1">
         {liked ? (
           <button
             onClick={(e) => {
@@ -52,11 +52,11 @@ export const LikeViews = ({ id, type }: Props) => {
             <AiOutlineHeart className="text-xl text-white opacity-30" />
           </button>
         )}
-        <p className="text-gray-500 text-sm">100</p>
+        <p className="text-sm text-gray-500">100</p>
       </div>
-      <div className="flex gap-1 items-center">
-        <AiOutlineEye className="text-2xl text-white opacity-30 text-lg" />
-        <p className="text-gray-500 text-sm">100</p>
+      <div className="flex items-center gap-1">
+        <AiOutlineEye className="text-2xl text-lg text-white opacity-30" />
+        <p className="text-sm text-gray-500">100</p>
       </div>
     </div>
   );

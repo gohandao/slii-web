@@ -158,19 +158,19 @@ const AccountPage: NextPage = () => {
       </Head> */}
       <BaseLayout>
         <div className="mt-8 px-5">
-          <div className="max-w-2xl mx-auto  ">
+          <div className="mx-auto max-w-2xl  ">
             {user ? (
               <>
-                <div className="relative bg-gray-800 pb-10 rounded overflow-hidden">
-                  <div className="relative flex gap-5 justify-between items-center py-2 z-10 px-5">
+                <div className="relative overflow-hidden rounded bg-gray-800 pb-10">
+                  <div className="relative z-10 flex items-center justify-between gap-5 py-2 px-5">
                     <button
-                      className="w-[36px] h-[36px] flex items-center justify-center rounded-full bg-gray-600 text-gray-300 "
+                      className="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-gray-600 text-gray-300 "
                       onClick={() => router.back()}
                     >
                       <IoChevronBackOutline className="text-gray-400" />
                     </button>
                     <button
-                      className="w-[90px] py-2 px-5 rounded-full bg-green-600 text-green-100 overflow-hidden"
+                      className="w-[90px] overflow-hidden rounded-full bg-green-600 py-2 px-5 text-green-100"
                       onClick={() => updateProfile()}
                       disabled={loading}
                     >
@@ -178,7 +178,7 @@ const AccountPage: NextPage = () => {
                     </button>
                   </div>
                   <div className="relative px-5 md:px-16 ">
-                    <div className="absolute w-full left-0 top-0 h-[120px] flex justify-center items-center">
+                    <div className="absolute left-0 top-0 flex h-[120px] w-full items-center justify-center">
                       <UploadBackground
                         image={background}
                         newImage={background}
@@ -213,7 +213,7 @@ const AccountPage: NextPage = () => {
                           onChange={setUsername}
                         />
                         <Link href={`/${username}`} legacyBehavior>
-                          <a className="inline-block text-blue-500 underline hover:no-underline mt-1 text-sm">
+                          <a className="mt-1 inline-block text-sm text-blue-500 underline hover:no-underline">
                             https://nftotaku.xyz/{username}
                           </a>
                         </Link>

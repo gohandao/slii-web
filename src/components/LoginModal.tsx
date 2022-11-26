@@ -57,8 +57,8 @@ export const LoginModal = () => {
   };
   return (
     <BaseModal modalIsOpen={loginModal} setModalIsOpen={setLoginModal}>
-      <div className="flex flex-center max-w-xl w-full mx-auto rounded bg-gray-800 pt-8 pb-10 px-8 ">
-        <div className="w-[400px] mx-auto flex flex-col gap-4">
+      <div className="flex-center mx-auto flex w-full max-w-xl rounded bg-gray-800 px-8 pt-8 pb-10 ">
+        <div className="mx-auto flex w-[400px] flex-col gap-4">
           <div className="">
             <h1 className="text-center text-2xl text-gray-100">
               Login with email{" "}
@@ -68,7 +68,7 @@ export const LoginModal = () => {
             </p>
           </div>
           <input
-            className="block px-5 py-3 rounded bg-white w-full"
+            className="block w-full rounded bg-white px-5 py-3"
             type="email"
             placeholder="Your email"
             name="email"
@@ -89,7 +89,7 @@ export const LoginModal = () => {
                 e.preventDefault();
                 handleLogin(email);
               }}
-              className="block rounded bg-blue-500 text-blue-100 text-center px-5 py-3"
+              className="block rounded bg-blue-500 px-5 py-3 text-center text-blue-100"
               disabled={loading}
             >
               <span>{loading ? "Sending" : "Send verification code"}</span>
@@ -97,7 +97,7 @@ export const LoginModal = () => {
           </div>
           {sentCode && (
             <div>
-              <p className="text-center text-lg text-gray-100 mt-3 mb-1">
+              <p className="mt-3 mb-1 text-center text-lg text-gray-100">
                 Verify code
               </p>
               <ReactCodeInput
@@ -110,13 +110,13 @@ export const LoginModal = () => {
                 autoFocus={false}
                 onChange={(e) => setOtpToken(e)}
               />
-              <div className="flex justify-center mt-4">
+              <div className="mt-4 flex justify-center">
                 <button
                   onClick={(e) => {
                     e.preventDefault();
                     handleVerify();
                   }}
-                  className="block rounded bg-blue-500 text-blue-100 text-center px-10 py-3"
+                  className="block rounded bg-blue-500 px-10 py-3 text-center text-blue-100"
                   disabled={checking}
                 >
                   <span>{checking ? "Checking" : "Login"}</span>

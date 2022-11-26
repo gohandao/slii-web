@@ -14,7 +14,7 @@ export const BaseLayout = ({ children }: Props) => {
   useRedirections();
 
   return (
-    <div className="flex flex-col h-full min-h-screen">
+    <div className="flex h-full min-h-screen flex-col">
       <div id="container">
         <div className="flex flex-col">
           <LoginModal />

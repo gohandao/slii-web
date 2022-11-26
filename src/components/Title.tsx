@@ -14,7 +14,7 @@ export const Title = ({ children, addClass, property = "h2" }: Props) => {
     case "h2": {
       return (
         <h2
-          className={`font-bold text-2xl text-white tracking-wider flex items-center ${addClass}`}
+          className={`flex items-center text-2xl font-bold tracking-wider text-white ${addClass}`}
         >
           {children}
         </h2>
@@ -24,7 +24,7 @@ export const Title = ({ children, addClass, property = "h2" }: Props) => {
     case "h3": {
       return (
         <h3
-          className={`font-bold text-white tracking-wider text-xl ${addClass}`}
+          className={`text-xl font-bold tracking-wider text-white ${addClass}`}
         >
           {children}
         </h3>

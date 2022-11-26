@@ -92,12 +92,12 @@ const TagsPage: NextPage = () => {
           />
   </div>*/}
         <div className="">
-          <div className="mx-auto px-5 md:px-8 mt-3">
-            <h1 className="text-gray-500 text-sm tracking-[0.2em] mb-3">
+          <div className="mx-auto mt-3 px-5 md:px-8">
+            <h1 className="mb-3 text-sm tracking-[0.2em] text-gray-500">
               Tags for search.
             </h1>
           </div>
-          <section className="mx-auto px-5 md:px-8 mt-5">
+          <section className="mx-auto mt-5 px-5 md:px-8">
             {/* <div className="mb-2">
               <TagList tags={creatorTags} type="creator" />
             </div>

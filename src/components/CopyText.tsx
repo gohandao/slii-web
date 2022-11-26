@@ -24,7 +24,7 @@ export const CopyText = ({ text, alertText }: Props) => {
         {text}
       </button>
       {show && (
-        <div className="absolute -top-[50px] left-1/2 transform -translate-x-1/2 m-auto bg-gray-800 border border-gray-700 rounded px-5 py-3 z-10 whitespace-nowrap ">
+        <div className="absolute -top-[50px] left-1/2 z-10 m-auto -translate-x-1/2 transform whitespace-nowrap rounded border border-gray-700 bg-gray-800 px-5 py-3 ">
           <p>{alertText}</p>
         </div>
       )}

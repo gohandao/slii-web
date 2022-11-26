@@ -32,7 +32,7 @@ export const Pagination = ({ currentPage, length, limit }: Props) => {
     }
     return (
       <button
-        className={`w-9 h-9 border rounded flex items-center justify-center text-gray-300 ${activeClass}`}
+        className={`flex h-9 w-9 items-center justify-center rounded border text-gray-300 ${activeClass}`}
         onClick={() => {
           setParams({
             type: type && (type as string),

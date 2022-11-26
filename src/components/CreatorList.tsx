@@ -67,12 +67,12 @@ export const CreatorList = ({ creators, limit }: Props) => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3 w-full justify-center">
+    <div className="grid w-full grid-cols-1 justify-center gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
       {currentCreators.length > 0 &&
         currentCreators.map((creator, index) => {
           return (
             <div
-              className="relative flex hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1"
+              className="relative flex transform transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
               key={index}
             >
               <Link
@@ -111,21 +111,21 @@ export const CreatorList = ({ creators, limit }: Props) => {
                   //     { scroll: false }
                   //   );
                   // }}
-                  className="relative flex flex-col border border-gray-800 rounded-lg w-full items-center shadow-lg bg-gray-800 overflow-hidden pb-2"
+                  className="relative flex w-full flex-col items-center overflow-hidden rounded-lg border border-gray-800 bg-gray-800 pb-2 shadow-lg"
                 >
                   <div className="absolute -left-[1px] -top-[1px] z-10 opacity-60">
                     <div className="lt-triangle"></div>
                   </div>
-                  <div className="flex absolute left-[6px] top-1 z-20">
-                    <p className="text-gray-500 text-xs">
+                  <div className="absolute left-[6px] top-1 z-20 flex">
+                    <p className="text-xs text-gray-500">
                       #{" "}
                       {limit
                         ? index + 1 + (currentPage - 1) * limit
                         : index + 1}
                     </p>
                   </div>
-                  <div className="flex w-full h-20 overflow-hidden opacity-[30%] relative border-4 border-transparent">
-                    <div className="relative w-full h-full bg-gray-500 rounded">
+                  <div className="relative flex h-20 w-full overflow-hidden border-4 border-transparent opacity-[30%]">
+                    <div className="relative h-full w-full rounded bg-gray-500">
                       {creator.background && (
                         <Image
                           //@ts-ignore
@@ -143,10 +143,10 @@ export const CreatorList = ({ creators, limit }: Props) => {
                       )}
                     </div>
                   </div>
-                  <div className="px-4 w-full">
-                    <div className="flex w-full gap-2 items-center">
+                  <div className="w-full px-4">
+                    <div className="flex w-full items-center gap-2">
                       <div className="relative -mt-[60px]">
-                        <div className="rounded-full border-[5px] -ml-[5px] overflow-hidden flex items-center justify-center z-10 bg-gray-100 border-gray-700 relative w-[70px] h-[70px] min-w-[70px]">
+                        <div className="relative z-10 -ml-[5px] flex h-[70px] w-[70px] min-w-[70px] items-center justify-center overflow-hidden rounded-full border-[5px] border-gray-700 bg-gray-100">
                           {creator.avatar && (
                             <Image
                               //@ts-ignore
@@ -164,7 +164,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
                             />
                           )}
                         </div>
-                        <div className="absolute bottom-[22px] left-full flex items-center gap-1 ml-2 z-10">
+                        <div className="absolute bottom-[22px] left-full z-10 ml-2 flex items-center gap-1">
                           <ProfileLinks
                             address={creator.address}
                             twitter_id={creator.twitter_id}
@@ -189,12 +189,12 @@ export const CreatorList = ({ creators, limit }: Props) => {
                           {creator.type}
                         </div> */}
                     </div>
-                    <div className="flex flex-col w-full flex-1  max-w-full min-w-[0px] gap-1">
-                      <div className="flex items-center pt-1 relative justify-between max-w-full">
-                        <h3 className="text-sm items-center  font-bold ellipsis text-gray-100 max-w-full min-w-[0] pr-3">
+                    <div className="flex w-full min-w-[0px] max-w-full  flex-1 flex-col gap-1">
+                      <div className="relative flex max-w-full items-center justify-between pt-1">
+                        <h3 className="ellipsis min-w-[0]  max-w-full items-center pr-3 text-sm font-bold text-gray-100">
                           {creator.username}
                           {creator.verified == true && (
-                            <MdVerified className="-mt-[2px] text-gray-500 ml-2 inline-block" />
+                            <MdVerified className="-mt-[2px] ml-2 inline-block text-gray-500" />
                           )}
                         </h3>
                         <div className="flex gap-2">
@@ -218,20 +218,20 @@ export const CreatorList = ({ creators, limit }: Props) => {
                           </div>
                         </div>
                       </div>
-                      <div className="flex justify-between w-full">
+                      <div className="flex w-full justify-between">
                         <div
-                          className={`relative flex justify-between items-center -mx-1 gap-4 py-[2px] z-10 rounded text-xs md:text-xs capitalize text-gray-500 flex-1`}
+                          className={`relative z-10 -mx-1 flex flex-1 items-center justify-between gap-4 rounded py-[2px] text-xs capitalize text-gray-500 md:text-xs`}
                         >
                           {creator.twitter_followers && (
                             <div
-                              className={`relative flex justify-center items-center gap-2 left-0 top-0 py-[2px] px-[2px] z-10 rounded text-xs md:text-xs capitalize text-gray-500 `}
+                              className={`relative left-0 top-0 z-10 flex items-center justify-center gap-2 rounded py-[2px] px-[2px] text-xs capitalize text-gray-500 md:text-xs `}
                             >
                               <BsTwitter />
                               {creator.twitter_followers.toLocaleString()}
                             </div>
                           )}
                           {creator.listed_at && (
-                            <div className="flex items-center gap-2 ml-auto">
+                            <div className="ml-auto flex items-center gap-2">
                               <IoMdListBox />
                               <Moment format="DD.MM.YYYY">
                                 {creator.listed_at}

@@ -11,10 +11,10 @@ export const NoticeBar = () => {
       {show && (
         <a
           href=""
-          className="relative flex justify-center items-center bg-gradient text-gray-100 py-[6px] px-5 gap-4 tracking-wider z-10"
+          className="bg-gradient relative z-10 flex items-center justify-center gap-4 py-[6px] px-5 tracking-wider text-gray-100"
         >
           NFT OTAKU ver0.0.1 released!
-          <div className="rounded px-2 py-[2px] bg-pink-500 text-pink-100">
+          <div className="rounded bg-pink-500 px-2 py-[2px] text-pink-100">
             Check!
           </div>
           <button
@@ -22,7 +22,7 @@ export const NoticeBar = () => {
               e.preventDefault();
               setShow(false);
             }}
-            className="absolute right-4 h-full flex justify-center items-center"
+            className="absolute right-4 flex h-full items-center justify-center"
           >
             <IoMdClose className="text-white" />
           </button>

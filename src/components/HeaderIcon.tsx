@@ -86,10 +86,10 @@ export const HeaderIcon = () => {
         className={`${showClassName}`}
       >
         {property == "back" && (
-          <BsFillArrowLeftCircleFill className={`text-gray-500 text-xl `} />
+          <BsFillArrowLeftCircleFill className={`text-xl text-gray-500 `} />
         )}
         {property == "next" && (
-          <BsFillArrowRightCircleFill className={`text-gray-500 text-xl `} />
+          <BsFillArrowRightCircleFill className={`text-xl text-gray-500 `} />
         )}
       </button>
     );
@@ -97,16 +97,16 @@ export const HeaderIcon = () => {
   return (
     <>
       {/* <DrawerMenu status={status} setStatus={setStatus} /> */}
-      <div className="lg:min-w-[160px] flex items-center gap-3">
+      <div className="flex items-center gap-3 lg:min-w-[160px]">
         <div className="flex gap-3 md:hidden">
           <BackButton property="back" />
         </div>
         {/* <NextButton /> */}
         {headerIcon.emoji.length > 0 ? (
           <Link href={headerIcon.path} legacyBehavior>
-            <a className="relative h-7 font-bold text-base text-white tracking-wider flex items-center mt-[2px]">
+            <a className="relative mt-[2px] flex h-7 items-center text-base font-bold tracking-wider text-white">
               {headerIcon.emoji && (
-                <span className="text-3xl mr-2 -mt-[2px]">
+                <span className="mr-2 -mt-[2px] text-3xl">
                   {headerIcon.emoji}
                 </span>
               )}
@@ -115,9 +115,9 @@ export const HeaderIcon = () => {
           </Link>
         ) : headerIcon.element ? (
           <Link href={headerIcon.path} legacyBehavior>
-            <a className="relative h-7 font-bold text-base text-white tracking-wider flex items-center mt-[2px]">
+            <a className="relative mt-[2px] flex h-7 items-center text-base font-bold tracking-wider text-white">
               {headerIcon.element && (
-                <span className="text-3xl mr-2 -mt-[2px]">
+                <span className="mr-2 -mt-[2px] text-3xl">
                   {headerIcon.element}
                 </span>
               )}
@@ -126,9 +126,9 @@ export const HeaderIcon = () => {
           </Link>
         ) : headerIcon.avatar.length > 0 ? (
           <Link href={headerIcon.path} legacyBehavior>
-            <a className="relative h-7 font-bold text-2xl text-white tracking-wider flex items-center gap-2">
+            <a className="relative flex h-7 items-center gap-2 text-2xl font-bold tracking-wider text-white">
               {headerIcon.avatar && (
-                <div className="w-[44px] h-[44px] rounded-full overflow-hidden relative border-[3px] border-gray-700">
+                <div className="relative h-[44px] w-[44px] overflow-hidden rounded-full border-[3px] border-gray-700">
                   <Image
                     src={headerIcon.avatar}
                     alt=""
@@ -141,19 +141,19 @@ export const HeaderIcon = () => {
                   />
                 </div>
               )}
-              <p className="text-sm ellipsis max-w-[180px]">
+              <p className="ellipsis max-w-[180px] text-sm">
                 {headerIcon.title}
               </p>
             </a>
           </Link>
         ) : headerIcon.type != "home" ? (
           <Link href={headerIcon.path} legacyBehavior>
-            <a className="relative tracking-wider flex items-center gap-2 py-[2px]">
+            <a className="relative flex items-center gap-2 py-[2px] tracking-wider">
               <div className="flex flex-col gap-[2px]">
-                <p className="text-lg ellipsis max-w-[180px] font-bold text-gray-100 leading-none">
+                <p className="ellipsis max-w-[180px] text-lg font-bold leading-none text-gray-100">
                   {headerIcon.title}
                 </p>
-                <div className="opacity-70  text-gray-300 text-sm">
+                <div className="text-sm  text-gray-300 opacity-70">
                   {headerIcon.subTitle && headerIcon.subTitle}
                 </div>
               </div>
@@ -161,8 +161,8 @@ export const HeaderIcon = () => {
           </Link>
         ) : (
           <Link href="/" legacyBehavior>
-            <a className="relative flex h-7 font-bold text-base text-gray-100 tracking-wider items-center mt-[2px]">
-              <span className="text-3xl mr-2 -mt-[2px]">
+            <a className="relative mt-[2px] flex h-7 items-center text-base font-bold tracking-wider text-gray-100">
+              <span className="mr-2 -mt-[2px] text-3xl">
                 <BiHomeAlt />
               </span>
               Home

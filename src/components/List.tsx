@@ -6,7 +6,7 @@ export const List = () => {
   const { creators } = useContext(BaseContext);
   const [list, setList] = useState();
   return (
-    <ul className="flex flex-wrap gap-5 w-full justify-center">
+    <ul className="flex w-full flex-wrap justify-center gap-5">
       {creators.length > 0 &&
         creators.map((creator, index) => (
           <div key={index} className="w-full max-w-lg">

@@ -79,10 +79,10 @@ export const Header = () => {
   }, [currentPath]);
 
   return (
-    <header className="relative py-3 z-50" x-data="{expanded: false}">
-      <div className="mx-auto px-5 md:px-8 flex justify-between">
-        <div className="flex items-center gap-20 justify-between flex-1">
-          <div className="flex flex-shrink-0 gap-8 items-center">
+    <header className="relative z-50 py-3" x-data="{expanded: false}">
+      <div className="mx-auto flex justify-between px-5 md:px-8">
+        <div className="flex flex-1 items-center justify-between gap-20">
+          <div className="flex flex-shrink-0 items-center gap-8">
             <HeaderIcon />
             {/* <div className="w-[360px] hidden lg:block">
               <Searchbox />
@@ -91,12 +91,12 @@ export const Header = () => {
           {/* <a className="absolute left-0 right-0 top-0 mx-auto inline-flex justify-center h-6 bg-gray-800 w-[100px] rounded-b-lg py-2 opacity-90">
             <Image src="/logo.svg" width={100} height={14} alt="" />
           </a> */}
-          <div className="gap-10 hidden lg:flex pr-16 ">
+          <div className="hidden gap-10 pr-16 lg:flex ">
             <Link href="/" legacyBehavior>
               <a
-                className={`text-sm font-bold text-gray-100 tracking-wider flex items-center ${homeClass}`}
+                className={`flex items-center text-sm font-bold tracking-wider text-gray-100 ${homeClass}`}
               >
-                <span className="mr-2 text-xl -mt-[1px]">
+                <span className="mr-2 -mt-[1px] text-xl">
                   <BiHomeAlt />
                 </span>
                 Home
@@ -104,9 +104,9 @@ export const Header = () => {
             </Link>
             <Link href="/stats" legacyBehavior>
               <a
-                className={`text-sm font-bold text-gray-100 tracking-wider flex items-center ${statsClass}`}
+                className={`flex items-center text-sm font-bold tracking-wider text-gray-100 ${statsClass}`}
               >
-                <span className="mr-2 text-xl -mt-[1px]">
+                <span className="mr-2 -mt-[1px] text-xl">
                   <TbDiamond />
                 </span>
                 Stats
@@ -114,9 +114,9 @@ export const Header = () => {
             </Link>
             <Link href="/tags" legacyBehavior>
               <a
-                className={`text-sm font-bold text-gray-100 tracking-wider flex items-center ${tagsClass}`}
+                className={`flex items-center text-sm font-bold tracking-wider text-gray-100 ${tagsClass}`}
               >
-                <span className="mr-2 text-xl -mt-[1px]">
+                <span className="mr-2 -mt-[1px] text-xl">
                   <BiPurchaseTagAlt />
                 </span>
                 Tags
@@ -132,7 +132,7 @@ export const Header = () => {
               onClick={() => {
                 setLoginModal(true);
               }}
-              className="bg-gray-800 text-gray-400 border border-gray-700 font-bold w-10 h-10 rounded-full flex justify-center items-center gap-3"
+              className="flex h-10 w-10 items-center justify-center gap-3 rounded-full border border-gray-700 bg-gray-800 font-bold text-gray-400"
             >
               <RiLoginBoxLine />
             </button>
@@ -141,7 +141,7 @@ export const Header = () => {
               onClick={() => {
                 setDropdown(!dropdown);
               }}
-              className="relative bg-gray-800 text-gray-400 font-bold w-[44px] h-[44px] rounded-full flex justify-center items-center gap-3 text-xl overflow-hidden border-[3px] border-gray-700"
+              className="relative flex h-[44px] w-[44px] items-center justify-center gap-3 overflow-hidden rounded-full border-[3px] border-gray-700 bg-gray-800 text-xl font-bold text-gray-400"
             >
               {avatar ? (
                 <Image
@@ -174,17 +174,17 @@ export const Header = () => {
           )}
           {dropdown && (
             <div
-              className={`absolute top-full right-0 rounded border border-gray-700 bg-gray-800 w-40 mt-2 z-20`}
+              className={`absolute top-full right-0 z-20 mt-2 w-40 rounded border border-gray-700 bg-gray-800`}
             >
               {user && (
                 <>
                   <Link href={`/${profile.username}`} legacyBehavior>
-                    <a className="block px-5 py-3 border-b border-gray-700 text-sm text-gray-400">
+                    <a className="block border-b border-gray-700 px-5 py-3 text-sm text-gray-400">
                       Profile
                     </a>
                   </Link>
                   <Link href="/account" legacyBehavior>
-                    <a className="block px-5 py-3 border-b border-gray-700 text-sm text-gray-400">
+                    <a className="block border-b border-gray-700 px-5 py-3 text-sm text-gray-400">
                       Account
                     </a>
                   </Link>

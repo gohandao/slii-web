@@ -40,9 +40,9 @@ export const DrawerMenu = ({ status, setStatus }: Props) => {
   const statusClass = !status ? "-left-full" : "w-full left-0";
   return (
     <div
-      className={`max-w-[360px] fixed h-screen left-0 top-0 bg-gray-800 z-50 ${statusClass} transition-all duration-500`}
+      className={`fixed left-0 top-0 z-50 h-screen max-w-[360px] bg-gray-800 ${statusClass} transition-all duration-500`}
     >
-      <div className={`relative flex justify-center pt-4 mb-2 `}>
+      <div className={`relative mb-2 flex justify-center pt-4 `}>
         <Link href="/" legacyBehavior>
           <a className="relative flex h-7">
             <Image
@@ -52,8 +52,9 @@ export const DrawerMenu = ({ status, setStatus }: Props) => {
               alt=""
               style={{
                 maxWidth: "100%",
-                height: "auto"
-              }} />
+                height: "auto",
+              }}
+            />
           </a>
         </Link>
         <button
@@ -63,22 +64,22 @@ export const DrawerMenu = ({ status, setStatus }: Props) => {
           }}
         >
           <BsArrowLeftCircle
-            className={`text-gray-500 ml-3 text-xl ${
+            className={`ml-3 text-xl text-gray-500 ${
               !status && "rotate-180"
             } transition-all duration-700`}
           />
         </button>
       </div>
-      <p className={`text-gray-500 mb-4 text-center text-xs sm:text-sm `}>
+      <p className={`mb-4 text-center text-xs text-gray-500 sm:text-sm `}>
         Japanese NFT Creators / Collections Database
       </p>
       <div className={`flex flex-col`}>
         {menus.map((menu, index) => (
           <Link href={menu.path} key={index} legacyBehavior>
             <a
-              className={`relative  font-bold text-base text-white tracking-wider flex items-center py-3 px-5 odd:bg-gray-700`}
+              className={`relative  flex items-center py-3 px-5 text-base font-bold tracking-wider text-white odd:bg-gray-700`}
             >
-              <span className={`text-3xl mr-3 -mt-[2px]`}>{menu.emoji}</span>
+              <span className={`mr-3 -mt-[2px] text-3xl`}>{menu.emoji}</span>
               {menu.title}
             </a>
             {/*<a className="relative flex h-7">

@@ -132,7 +132,7 @@ export const CreatorScreen = ({ property }: Props) => {
         ? setHeaderIcon({
             title: creator.username,
             subTitle: (
-              <div className="flex gap-1 text-[10px] items-center text-gray-400 leading-none">
+              <div className="flex items-center gap-1 text-[10px] leading-none text-gray-400">
                 <JP title="Japan" className="h-[10px] rounded-sm" />
                 Creator
               </div>
@@ -156,7 +156,7 @@ export const CreatorScreen = ({ property }: Props) => {
     <>
       {creator.username}{" "}
       {creator.verified == true && (
-        <MdVerified className="text-gray-500 text-xl inline ml-1" />
+        <MdVerified className="ml-1 inline text-xl text-gray-500" />
       )}
     </>
   );
@@ -276,7 +276,7 @@ export const CreatorScreen = ({ property }: Props) => {
           />
         )}
         {creatorCollections.length != 0 && (
-          <div className="mx-auto w-full px-5 lg:px-8 flex gap-6">
+          <div className="mx-auto flex w-full gap-6 px-5 lg:px-8">
             {creatorCollections.map((collection, index) => (
               <CollectionCard
                 username={username}
@@ -288,7 +288,7 @@ export const CreatorScreen = ({ property }: Props) => {
         )}
         {assets && assets.length > 0 && (
           <div className="px-5 lg:px-8">
-            <div className="relative flex gap-3 z-20 justify-between mb-5 sm:gap-5">
+            <div className="relative z-20 mb-5 flex justify-between gap-3 sm:gap-5">
               {custom_menu.length > 0 && (
                 <Dropdown
                   position="left"

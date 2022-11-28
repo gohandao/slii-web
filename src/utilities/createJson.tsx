@@ -1,5 +1,5 @@
 const fs = require("fs");
-export const createJson = async (pathName: string, source: any[]) => {
+export const createJson = async (pathName: string, source: any) => {
   // const isExist = await dupliCheck(pathName); //booleanを挟む
   // if (isExist) return console.log("既存のパスが見つかりました"); //エラーメッセを返す
   const toJSON = JSON.stringify(source);

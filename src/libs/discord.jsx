@@ -23,8 +23,8 @@ export const getDiscordMembers = async (discord_id) => {
       console.log("error");
       console.log(error);
     });
-  console.log("success discord");
-  console.log(response);
+  // console.log("success discord");
+  // console.log(response);
   return response;
   // return JSON.stringify(response.approximate_member_count);
 };

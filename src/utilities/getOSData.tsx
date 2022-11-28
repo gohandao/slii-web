@@ -1,31 +1,43 @@
-import collections from "@/json/collections.json";
+import collectionsJson from "@/json/collections.json";
+// const collections = JSON.parse(collectionsJson);
+// const creators = JSON.parse(creatorsJson);
+const collections = JSON.parse(collectionsJson);
 
-export const getOSUserBackground = async (username: string) => {
-  //api.opensea.io/user/ProjuiceAudio
-  const filteredCollections =
-    collections &&
-    collections.filter((collection) => collection.creator_id == username);
-  const background_image =
-    filteredCollections.length > 0 &&
-    filteredCollections[0].banner_image_url &&
-    filteredCollections[0].banner_image_url;
-  return background_image;
-};
+// export const getOSUserBackground = async (username: string) => {
+//   //api.opensea.io/user/ProjuiceAudio
+//   const filteredCollections =
+//     collections &&
+//     collections.filter((collection) => collection.creator_id == username);
+//   const background_image =
+//     filteredCollections.length > 0 &&
+//     filteredCollections[0].banner_image_url &&
+//     filteredCollections[0].banner_image_url;
+//   return background_image;
+// };
 
 export const getOSData = async (username: string) => {
   const filteredCollections =
-    collections &&
-    collections.filter((collection) => collection.creator_id == username);
+    collections.length > 0 &&
+    collections.filter((collection: any) => collection.creator_id == username);
+  // console.log("filteredCollections");
+  // console.log(filteredCollections);
+  // console.log(collections);
 
-  const token_symbol = filteredCollections[0].payment_tokens[0].symbol;
-  const total_volume = filteredCollections.reduce((prev, collection) => {
-    const new_total_volume = (prev + collection.stats.total_volume) as number;
-    return new_total_volume;
-  }, 0);
+  const token_symbol =
+    filteredCollections.length > 0 && filteredCollections[0].payment_tokens[0]
+      ? filteredCollections[0].payment_tokens[0].symbol
+      : undefined;
+  const total_volume = filteredCollections.reduce(
+    (prev: any, collection: any) => {
+      const new_total_volume = (prev + collection.stats.total_volume) as number;
+      return new_total_volume;
+    },
+    0
+  );
   const average_volume = total_volume / filteredCollections.length;
   let average_num = 0;
   const total_floor_price = filteredCollections.reduce(
-    (prev: number | null, collection) => {
+    (prev: number | null, collection: any) => {
       const floor_price = collection.stats.floor_price
         ? collection.stats.floor_price
         : null;
@@ -45,11 +57,14 @@ export const getOSData = async (username: string) => {
     total_floor_price && total_floor_price / average_num;
 
   const total_collections = filteredCollections.length;
-  let total_supply = filteredCollections.reduce((prev, collection) => {
-    const new_total_supply = (prev + collection.stats.total_supply) as number;
-    return new_total_supply;
-  }, 0);
-  let total_sales = filteredCollections.reduce((prev, collection) => {
+  let total_supply = filteredCollections.reduce(
+    (prev: any, collection: any) => {
+      const new_total_supply = (prev + collection.stats.total_supply) as number;
+      return new_total_supply;
+    },
+    0
+  );
+  let total_sales = filteredCollections.reduce((prev: any, collection: any) => {
     const new_total_sales = (prev + collection.stats.total_sales) as number;
     return new_total_sales;
   }, 0);

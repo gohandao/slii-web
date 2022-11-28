@@ -19,7 +19,7 @@ type ItemProps = {
 export const Pagination = ({ currentPage, length, limit }: Props) => {
   const prevPage = currentPage - 1;
   const nextPage = currentPage + 1;
-  const lastPage = Math.floor(length / limit) + 1;
+  const lastPage = Math.floor(length / limit);
   const router = useRouter();
   const { order, sort, term, page, type, search, screen } = router.query;
 

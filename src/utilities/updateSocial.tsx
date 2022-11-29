@@ -18,13 +18,6 @@ type Props = {
   setSocials: React.Dispatch<React.SetStateAction<Social[]>>;
 };
 
-// const new_twitter_followers = twitterData
-//   ? twitterData.public_metrics.followers_count
-//   : twitter_followers;
-// const new_discord_members = discordData
-//   ? discordData.approximate_presence_count
-//   : discord_members;
-
 export const updateSocial = async ({
   record_id,
   creator_username,

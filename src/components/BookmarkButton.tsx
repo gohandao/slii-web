@@ -1,12 +1,11 @@
-import { AuthContext } from "@/contexts/AuthContext";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import { supabase } from "@/libs/supabase";
 import React, { useContext, useEffect, useState } from "react";
-
-import { AiFillHeart, AiOutlineEye, AiOutlineHeart } from "react-icons/ai";
-import { BsBookmarkPlus } from "react-icons/bs";
 import { FaBookmark } from "react-icons/fa";
 import { FiBookmark } from "react-icons/fi";
+// libs
+import { supabase } from "@/libs/supabase";
+// contexts
+import { AuthContext } from "@/contexts/AuthContext";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 type Props = {
   id: string;
@@ -16,9 +15,6 @@ type Props = {
 export const BookmarkButton = ({ id, property = "default", type }: Props) => {
   const { user, bookmarks, setBookmarks, upvotes } = useContext(AuthContext);
   const { baseUrl, setLoginModal } = useContext(UtilitiesContext);
-
-  const [followers, setFollowers] = useState<number>();
-
   const [bookmarked, setBookmarked] = useState<boolean>(false);
 
   const creator_id = type == "creator" && id;
@@ -130,7 +126,6 @@ export const BookmarkButton = ({ id, property = "default", type }: Props) => {
             {/* <AiOutlineHeart className="text-lg text-white opacity-30" /> */}
           </button>
         )}
-        {/*<p className="text-gray-600 text-sm">100</p>*/}
       </div>
     </div>
   );

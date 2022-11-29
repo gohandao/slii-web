@@ -1,20 +1,17 @@
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import { NextSeo } from "next-seo";
+import { useRouter } from "next/router";
+import React, { useState, useEffect } from "react";
 
 import { ParsedUrlQuery } from "node:querystring";
-
-import React, { useState, useEffect, useContext } from "react";
-import { useRouter } from "next/router";
-import { getImageUrl, supabase } from "@/libs/supabase";
+import { supabase } from "@/libs/supabase";
+import { UserPageTemplate } from "@/components/UserPageTemplate";
 import { Bookmark } from "@/types/bookmark";
 import { getUserId } from "@/utilities/getUserId";
-import { getNFTs } from "@/utilities/getNFTs";
-import { UserPageTemplate } from "@/components/UserPageTemplate";
 
 const BookmarksPage: NextPage = (props: any) => {
   const router = useRouter();
   const { username } = router.query;
-
   const [userBookmarks, setUserBookmarks] = useState<Bookmark[] | undefined>(
     []
   );
@@ -157,10 +154,8 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   return {
     props: {
       // OGP画像は絶対URLで記述する必要があります
-      //ogImageUrl: `${baseUrl}/api/ogp?title=${creator.username}&page=creators`,
       title: `${username}'s bookmarks page | NFT OTAKU`,
       description: description,
-      //description: `${records[0].fields.description}`,
       ogImageUrl: `${baseUrl}/api/ogp?title=${username}&label=${label}&type=user&avatar=${avatar}&background=${background}`,
       revalidate: 10,
     },

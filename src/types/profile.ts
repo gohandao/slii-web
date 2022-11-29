@@ -1,5 +1,3 @@
-import { Tag } from "./tag";
-
 export type Profile = {
   address: string | undefined;
   username: string;

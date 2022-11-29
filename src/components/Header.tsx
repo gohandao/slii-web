@@ -1,49 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-
-import { Searchbox } from "@/components/Searchbox";
-import { AuthContext } from "@/contexts/AuthContext";
-import { FaRegUser } from "react-icons/fa";
-import { FiLogIn } from "react-icons/fi";
-import {
-  RiHeartsFill,
-  RiHeartsLine,
-  RiLoginBoxFill,
-  RiLoginBoxLine,
-} from "react-icons/ri";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { useRouter } from "next/router";
-import { HeaderIcon } from "./HeaderIcon";
-import { VscSignIn } from "react-icons/vsc";
-import { BsDoorOpen } from "react-icons/bs";
-import { IoMdLogIn } from "react-icons/io";
-import { getImageUrl, supabase } from "@/libs/supabase";
+import Image from "next/image";
+import Link from "next/link";
+import React, { useContext, useEffect, useState } from "react";
+import { RiLoginBoxLine } from "react-icons/ri";
 import { BiHomeAlt, BiPurchaseTagAlt } from "react-icons/bi";
 import { TbDiamond } from "react-icons/tb";
+// libs
+import { supabase } from "@/libs/supabase";
+// contexts
+import { AuthContext } from "@/contexts/AuthContext";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+// components
+import { HeaderIcon } from "@/components/HeaderIcon";
 
 export const Header = () => {
   const router = useRouter();
-
-  const { user, profile, avatar, setAvatar } = useContext(AuthContext);
-  // const [avatar, setAvatar] = useState<File>();
-
-  // let avatar_url;
-  // let avatar_blob;
-
-  // const getAvatarBlob = async () => {
-  //   avatar_blob =
-  //     profile && profile.avatar_url && (await getImageUrl(profile.avatar_url));
-  //   setAvatar(avatar_blob);
-  // };
-  // profile && !avatar && getAvatarBlob;
-  // useEffect(() => {
-  //   !avatar && getAvatarBlob();
-  // }, [profile]);
-
-  const { loginModal, setLoginModal, headerIcon } =
-    useContext(UtilitiesContext);
-  const [username, setUsername] = useState<string>("");
+  const { user, profile, avatar } = useContext(AuthContext);
+  const { setLoginModal } = useContext(UtilitiesContext);
   const [dropdown, setDropdown] = useState<boolean>(false);
 
   function delQuery(url: string) {
@@ -51,15 +24,9 @@ export const Header = () => {
   }
   let currentPath = router.asPath;
   currentPath = delQuery(currentPath);
-  let loginPath = "/login?prev=" + currentPath;
-  if (currentPath == "/") {
-    let loginPath = "/login";
-  }
 
   const [homeClass, setHomeClass] = useState<string>("hidden");
-
   const [statsClass, setStatsClass] = useState<string>("hidden");
-
   const [tagsClass, setTagsClass] = useState<string>("hidden");
 
   useEffect(() => {
@@ -84,9 +51,6 @@ export const Header = () => {
         <div className="flex flex-1 items-center justify-between gap-20">
           <div className="flex flex-shrink-0 items-center gap-8">
             <HeaderIcon />
-            {/* <div className="w-[360px] hidden lg:block">
-              <Searchbox />
-            </div> */}
           </div>
           {/* <a className="absolute left-0 right-0 top-0 mx-auto inline-flex justify-center h-6 bg-gray-800 w-[100px] rounded-b-lg py-2 opacity-90">
             <Image src="/logo.svg" width={100} height={14} alt="" />
@@ -125,8 +89,6 @@ export const Header = () => {
           </div>
         </div>
         <div className="relative flex items-center gap-5">
-          {/* <RiHeartsFill className="text-pink-500 text-xl" /> */}
-          {/*<RiHeartsLine className="text-gray-500 text-xl" />*/}
           {!user ? (
             <button
               onClick={() => {

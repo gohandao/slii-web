@@ -1,42 +1,20 @@
-import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
-
 import React, { useState, useEffect, useContext } from "react";
-
-import { CreatorList } from "@/components/CreatorList";
-import { CollectionTable } from "@/components/CollectionTable";
-import { SearchArea } from "@/components/SearchArea";
-
-import { BreadCrumbs } from "@/components/BreadCrumbs";
-
-import { Mainvisual } from "@/components/Mainvisual";
-import { Pagination } from "@/components/Pagination";
-import { BaseLayout } from "@/components/BaseLayout";
-import { Hr } from "@/components/Hr";
-import { Title } from "@/components/Title";
-import { LinkButton } from "@/components/LinkButton";
-
-import { TagList } from "@/components/TagList";
-
-import { CreatorsContext } from "@/contexts/CreatorsContext";
+// libs
+import { sortList } from "@/libs/sortList";
+// contexts
 import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-
-import { Tag } from "@/types/tag";
+// components
+import { Pagination } from "@/components/Pagination";
 import { Searchbox } from "@/components/Searchbox";
-import { Tab } from "@/components/Tab";
 import { Dropdown } from "@/components/Dropdown";
 import { OrderButton } from "@/components/OrderButton";
 import { CollectionList } from "@/components/CollectionList";
-import { Collection } from "@/types/collection";
-import { sortList } from "@/libs/sortList";
 import { TabIndex } from "@/components/TabIndex";
+// types
+import { Collection } from "@/types/collection";
 import { Params } from "@/types/params";
-import { JP } from "country-flag-icons/react/3x2";
-import { Creator } from "@/types/creator";
 
 type Props = {
   params: Params;
@@ -45,13 +23,12 @@ export const CollectionsIndexScreen = ({ params }: Props) => {
   const router = useRouter();
   const { order, sort, term, page, type, search, screen } = router.query;
   const currentPage = page ? Number(page) : 1;
-  const currentPath = router.pathname;
   const limit = 10;
   const [sortedCollections, setSortedCollections] = useState<Collection[]>([]);
   const [checkInitial, setCheckInitial] = useState<boolean>(false);
 
-  const { creators, collections, tags } = useContext(BaseContext);
-  const { setHeaderIcon, tempCollections, setTempCollections, hiddenParams } =
+  const { collections } = useContext(BaseContext);
+  const { tempCollections, setTempCollections, hiddenParams } =
     useContext(UtilitiesContext);
 
   const currentCollections =

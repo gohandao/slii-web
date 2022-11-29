@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { Tab } from "./Tab";
+// components
+import { Tab } from "@/components/Tab";
 
 type Props = {
   property?: "tag" | "user";

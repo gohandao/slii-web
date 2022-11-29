@@ -1,21 +1,12 @@
-import React from "react";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import React from "react";
 
 type Props = {
   name: string;
   type: "creator" | "collection";
 };
 export const Label = ({ name, type }: Props) => {
-  const router = useRouter();
-
   let typeClass = " border-gray-500 text-gray-600";
-  // if (type == "creator") {
-  //   typeClass = "bg-blue-900 text-blue-100";
-  // } else if (type == "collection") {
-  //   typeClass = "bg-green-900 text-green-100";
-  // }
-
   return (
     <object>
       <Link href={`/tags/${name}?type=${type}`} legacyBehavior>

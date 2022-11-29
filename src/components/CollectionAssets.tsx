@@ -1,16 +1,11 @@
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import Moment from "react-moment";
-
-import { abbreviateNumber } from "@/utilities/abbreviateNumber";
-
 export const CollectionAssets = ({ collectionAssets }: any) => {
   return (
     <div className="grid w-full grid-cols-2 justify-center gap-4 md:grid-cols-4 xl:grid-cols-6">
       {collectionAssets &&
         collectionAssets.map((collectionAsset: any) => (
-          // <Link key={collectionAsset.id} href={collectionAsset.asset.permalink}>
           <a
             key={collectionAsset.id}
             target="_blank"
@@ -88,7 +83,6 @@ export const CollectionAssets = ({ collectionAssets }: any) => {
               </div>
             </div>
           </a>
-          // </Link>
         ))}
     </div>
   );

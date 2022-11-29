@@ -1,7 +1,4 @@
-import { Collection } from "@/types/collection";
 import { base } from "@/libs/airtable";
-import { getImageUrl, supabase } from "@/libs/supabase";
-import { sortList } from "@/libs/sortList";
 import { Social } from "@/types/social";
 
 export const getSocials = async () => {
@@ -27,8 +24,6 @@ export const getSocials = async () => {
               record_id: fields.record_id,
             } as Social,
           ];
-          //console.log("creators", new_records);
-          //console.log("Retrieved", record.fields);
         });
         new_records = Array.from(new Set(new_records));
         try {

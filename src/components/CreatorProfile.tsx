@@ -1,45 +1,29 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useRouter } from "next/router";
 import Image from "next/image";
-import Link from "next/link";
+import React, { useState } from "react";
 import Modal from "react-modal";
-
-import { FaDiscord, FaReact, FaRegFlag, FaTwitter } from "react-icons/fa";
-import { SiTypescript } from "react-icons/si";
-import { AiOutlineClockCircle, AiOutlineTwitter } from "react-icons/ai";
-import { VscChecklist } from "react-icons/vsc";
-import { FaPlay } from "react-icons/fa";
-import { HiOutlineShare } from "react-icons/hi";
-
-import { ProfileLinks } from "@/components/ProfileLinks";
-import { Label } from "@/components/Label";
-
-import { Creator } from "@/types/creator";
+import { FaRegFlag, FaTwitter } from "react-icons/fa";
 import {
   MdKeyboardArrowDown,
   MdKeyboardArrowUp,
   MdVerified,
 } from "react-icons/md";
-import { LikeViews } from "@/components/LikeViews";
-import { JP } from "country-flag-icons/react/3x2";
-import { BsFillShareFill, BsThreeDots, BsTwitter } from "react-icons/bs";
+import { BsThreeDots, BsTwitter } from "react-icons/bs";
+// components
+import { ProfileLinks } from "@/components/ProfileLinks";
+import { Label } from "@/components/Label";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { CopyText } from "@/components/CopyText";
-import { useRouter } from "next/router";
-import { FiCopy } from "react-icons/fi";
-import { Social } from "@/types/social";
-import { BaseContext } from "@/contexts/BaseContext";
-import { ViewsCount } from "@/components/ViewsCount";
-import { VoteButton } from "./VoteButton";
-import { BookmarkButton } from "./BookmarkButton";
-import { StatsBox } from "./StatsBox";
-import { Stats } from "./Stats";
-import { getTwitterFollowers } from "@/libs/twitter";
-import { updateSocial } from "@/utilities/updateSocial";
+import { UpvoteButton } from "@/components/UpvoteButton";
+import { BookmarkButton } from "@/components/BookmarkButton";
+import { StatsBox } from "@/components/StatsBox";
+import { Stats } from "@/components/Stats";
+// types
+import { Creator } from "@/types/creator";
 
 type Props = {
   creator: Creator;
 };
-
 export const CreatorProfile = ({ creator }: Props) => {
   const router = useRouter();
   let baseUrl = "" as string;
@@ -49,16 +33,7 @@ export const CreatorProfile = ({ creator }: Props) => {
       development: "http://localhost:3000",
     }[process.env.NODE_ENV];
   }
-  // const { socials, setSocials } = useContext(BaseContext);
-
-  const [social, setSocial] = useState<Social>();
-
   const [requestDropdown, setRequestDropdown] = useState<boolean>(false);
-  const [shareDropdown, setShareDropdown] = useState<boolean>(false);
-  const twitterId = creator.twitter_id && creator.twitter_id;
-  const discordId =
-    creator.discord_url &&
-    creator.discord_url.substring(creator.discord_url.lastIndexOf("/") + 1);
 
   const customStyles = {
     overlay: {
@@ -93,48 +68,7 @@ export const CreatorProfile = ({ creator }: Props) => {
   const closeModal = () => {
     setIsOpen(false);
   };
-
   const [twitterFollowers, setTwitterFollowers] = useState<number>();
-  const [discordMembers, setDiscordMembers] = useState<number>();
-  const [checkSocial, setCheckSocial] = useState<boolean>(false);
-  // const getSocialCounts = async () => {
-  //   const data =
-  //     social &&
-  //     (await updateSocial({
-  //       record_id: social.record_id,
-  //       creator_username: creator.username,
-  //       twitter_id: twitterId,
-  //       twitter_followers: social.twitter_followers,
-  //       discord_id: discordId,
-  //       discord_members: social.discord_members,
-  //       socials: socials,
-  //       setSocials: setSocials,
-  //     }));
-  //   setTwitterFollowers(data && data.twitter_followers);
-  //   setDiscordMembers(data && data.discord_members);
-
-  //   setCheckSocial(true);
-  // };
-  // !checkSocial && social && getSocialCounts();
-
-  // useEffect(() => {
-  //   if (socials && creator.username) {
-  //     //set collection
-  //     const socials_filter = socials.filter(
-  //       (social) => creator.username === social.creator_username
-  //     );
-  //     socials_filter.length > 0 && setSocial(socials_filter[0]);
-  //     if (socials_filter.length == 0) {
-  //       setSocial({
-  //         collection_slug: "",
-  //         creator_username: "",
-  //         twitter_followers: null,
-  //         discord_members: null,
-  //         record_id: null,
-  //       });
-  //     }
-  //   }
-  // }, [socials]);
 
   // シェアボタンのリンク先
   const currentUrl = baseUrl + router.asPath;
@@ -168,23 +102,7 @@ export const CreatorProfile = ({ creator }: Props) => {
       : description;
   const [showDescription, setShowDescription] = useState<boolean>(false);
   return (
-    <section className="ttt">
-      {/*<button onClick={openModal} className="text-white">
-        Open Modal
-  </button>*/}
-      <Modal
-        // isOpenがtrueならモダールが起動する
-        isOpen={modalIsOpen}
-        // モーダルが開いた後の処理を定義
-        onAfterOpen={afterOpenModal}
-        // モーダルを閉じる処理を定義
-        onRequestClose={closeModal}
-        //@ts-ignore
-        style={customStyles}
-      >
-        <h2>Hello</h2>
-        <button onClick={closeModal}>close</button>
-      </Modal>
+    <section className="">
       <div className="relative -mt-[70px] flex h-40 w-full overflow-hidden border-x-[10px] border-t-[10px] border-transparent opacity-20 md:h-60 ">
         {creator.background && creator.background.length > 0 && (
           <>
@@ -259,16 +177,6 @@ export const CreatorProfile = ({ creator }: Props) => {
             </div>
 
             <div className="absolute top-5 left-full ml-2 flex items-center gap-4">
-              {/* <p
-                className={` -ml-6 pl-[24px] pr-3 rounded-tr-full rounded-br-full text-sm capitalize flex justify-center items-center gap-[6px] ${
-                  creator.type == "creator"
-                    ? "bg-yellow-500 text-yellow-100"
-                    : "bg-blue-500 text-blue-100"
-                }`}
-              >
-                <JP title="Japan" className="h-3 rounded-sm" />
-                {creator.type}
-              </p> */}
               <ProfileLinks
                 address={creator.address}
                 twitter_id={creator.twitter_id}
@@ -297,7 +205,7 @@ export const CreatorProfile = ({ creator }: Props) => {
             </div>
             <div className="flex items-center gap-3">
               <BookmarkButton id={creator.username} type="creator" />
-              <VoteButton
+              <UpvoteButton
                 id={creator.username}
                 property="default"
                 type="creator"

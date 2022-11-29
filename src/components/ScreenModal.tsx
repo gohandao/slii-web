@@ -1,9 +1,11 @@
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
 import router from "next/router";
 import React, { ReactNode, useContext, useState } from "react";
-import { IoIosClose } from "react-icons/io";
 import Modal from "react-modal";
+import { IoIosClose } from "react-icons/io";
+// utilities
+import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
+// contexts
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 type Props = {
   children: ReactNode;
@@ -29,22 +31,17 @@ export const ScreenModal = ({
       overflow: "auto",
       backdropFilter: "blur(3px)",
     },
-
     content: {
       top: "20px",
-      // left: "50%",
       left: "0",
       right: "0",
       bottom: "auto",
       margin: "auto",
-      // marginRight: "-50%",
       paddingBottom: "40px",
       border: "none",
       background: "none",
       width: "1000px",
       maxWidth: "100%",
-      // height: "300px",
-      // transform: "translate(-50%, -50%)",
     },
   };
   Modal.setAppElement("#__next");
@@ -60,16 +57,6 @@ export const ScreenModal = ({
   const new_query = hiddenParams && removeUndefinedObject(hiddenParams);
   const closeModal = () => {
     setModalIsOpen(false);
-    // router.back();
-
-    // if (window.history.state && window.history.state.idx > 0) {
-    //   router.back();
-    // } else
-    // if (path) {
-    //   router.push(path);
-    // } else {
-    //   router.push("/");
-    // }
     if (path) {
       router.push({
         pathname: path,

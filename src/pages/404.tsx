@@ -1,50 +1,14 @@
 import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
+import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 
-import { CreatorList } from "@/components/CreatorList";
-import { CollectionTable } from "@/components/CollectionTable";
-import { SearchArea } from "@/components/SearchArea";
-
-import { Mainvisual } from "@/components/Mainvisual";
-import { Pagination } from "@/components/Pagination";
+// conponents
 import { BaseLayout } from "@/components/BaseLayout";
-import { Hr } from "@/components/Hr";
-import { Title } from "@/components/Title";
-import { LinkButton } from "@/components/LinkButton";
-import { useContext, useEffect } from "react";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import { NextSeo } from "next-seo";
 
 export const Custom404: NextPage = () => {
   const router = useRouter();
-  const { page } = router.query;
-
-  // const { setBreadcrumbList } = useContext(UtilitiesContext);
-  // const breadcrumbList = [
-  //   {
-  //     name: "Home",
-  //     path: "/",
-  //   },
-  //   {
-  //     name: "404",
-  //     path: "/",
-  //   },
-  // ];
-  // useEffect(() => {
-  //   setBreadcrumbList(breadcrumbList);
-  // }, []);
   return (
     <div>
-      {/* <Head>
-        <title>404 Error | NFT OTAKU</title>
-        <meta
-          name="description"
-          content="Sorry, we could not find this page."
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head> */}
       <NextSeo
         title="404 Error | NFT OTAKU"
         description="Sorry, we could not find this page."

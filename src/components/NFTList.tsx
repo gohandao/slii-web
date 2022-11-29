@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { useRouter } from "next/router";
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
+import { IconEth } from "@/components/IconEth";
 
 type Props = {
   assets: any[];
@@ -11,31 +12,9 @@ export const NFTList = ({ assets }: Props) => {
   const [currentAssets, setCurrentAssets] = useState<any[]>([]);
 
   useEffect(() => {
-    console.log("worked");
-
     setCurrentAssets((currentAssets) => assets);
   }, [assets]);
 
-  const Hyphen = () => {
-    return <span className="text-gray-400">-</span>;
-  };
-  const EthIcon = () => {
-    return (
-      <div className="flex w-4 items-center">
-        <Image
-          src="/icon-eth.svg"
-          width={16}
-          height={16}
-          alt=""
-          className=""
-          style={{
-            maxWidth: "100%",
-            height: "auto",
-          }}
-        />
-      </div>
-    );
-  };
   return (
     <div
       className={`mb-10 grid w-full grid-cols-3 justify-center  overflow-hidden rounded-lg sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 ${
@@ -97,7 +76,7 @@ export const NFTList = ({ assets }: Props) => {
                   </span>
                 </span>
                 {(asset.last_sale_symbol == "ETH" ||
-                  asset.last_sale_symbol == "WETH") && <EthIcon />}
+                  asset.last_sale_symbol == "WETH") && <IconEth />}
                 {asset.last_sale_price / 1000000000000000000}
               </div>
             </div>

@@ -1,10 +1,7 @@
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
-
 import { FaDiscord } from "react-icons/fa";
 import { BsTwitter, BsInstagram, BsGlobe2 } from "react-icons/bs";
-
 type Props = {
   twitter_id?: string;
   instagram_id?: string;
@@ -21,15 +18,6 @@ export const CardLinks = ({
 }: Props) => {
   return (
     <div className="mt-auto flex w-full items-center justify-end gap-3 py-1 opacity-30">
-      {/*twitter_id && (
-        <object>
-          <Link href={`https://twitter.com/${twitter_id}`}>
-            <a>
-              <Image src="/icon-opensea.svg" width={20} height={20} />
-            </a>
-          </Link>
-        </object>
-      )*/}
       {opensea_url && (
         <button
           onClick={() => {

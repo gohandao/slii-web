@@ -1,5 +1,4 @@
-import React, { createContext, useState } from "react";
-
+import { createContext } from "react";
 /*types*/
 import { Creator } from "@/types/creator";
 
@@ -23,20 +22,3 @@ export const CreatorsContext = createContext<Creator[]>([
     tags: [],
   },
 ]);
-
-/*
-export const SongsContext = createContext<Song[]>([
-  {
-    id: '',
-    title: '',
-    youtube: '',
-    song_title: '',
-    works: '',
-    artist: '',
-    type: '',
-    year: null,
-    createdAt: null,
-    updatedAt: null,
-  },
-])
-*/

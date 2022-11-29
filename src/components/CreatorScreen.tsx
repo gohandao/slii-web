@@ -1,26 +1,28 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-
+import { JP } from "country-flag-icons/react/3x2";
+import { MdVerified } from "react-icons/md";
+// libs
+import { sortNFTs } from "@/libs/sortNFTs";
+// utilities
+import { getNFTs } from "@/utilities/getNFTs";
+import { randomize } from "@/utilities/randomize";
+// contexts
 import { BaseContext } from "@/contexts/BaseContext";
-
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+// components
+import { ProfileHeader } from "@/components/ProfileHeader";
 import { CollectionCard } from "@/components/CollectionCard";
 import { Pagination } from "@/components/Pagination";
-
-import { Creator } from "@/types/creator";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import { JP } from "country-flag-icons/react/3x2";
-import { ProfileHeader } from "@/components/ProfileHeader";
 import { CopyText } from "@/components/CopyText";
-import { MdVerified } from "react-icons/md";
-import { getNFTs } from "@/utilities/getNFTs";
 import { Dropdown } from "@/components/Dropdown";
 import { Searchbox } from "@/components/Searchbox";
 import { OrderButton } from "@/components/OrderButton";
-import { sortNFTs } from "@/libs/sortNFTs";
-import { randomize } from "@/utilities/randomize";
 import { RandomButton } from "@/components/RandomButton";
 import { NFTList } from "@/components/NFTList";
+// types
+import { Creator } from "@/types/creator";
 
 type Props = {
   property?: "modal";
@@ -31,23 +33,19 @@ export const CreatorScreen = ({ property }: Props) => {
     router.query;
   const currentPage = page ? Number(page) : 1;
   const limit = 20;
+  const { creators, collections } = useContext(BaseContext);
+  const { setHeaderIcon, setKeyword, keyword, NFTKeyword } =
+    useContext(UtilitiesContext);
+
   const [checkAssets, setCheckAssets] = useState(false);
   const [sortedAssets, setSortedAssets] = useState<any[]>([]);
   const [random, setRandom] = useState<boolean>(false);
 
   const [creator, setCreator] = useState<Creator>();
-
   const [creatorCollections, setCreatorCollections] = useState<any[]>([]);
 
-  const [loading, setLoading] = useState<boolean>(false);
   const [assets, setAssets] = useState<any[]>([]);
   const [currentAssets, setCurrentAssets] = useState<any[]>([]);
-  // const currentAssets = useRef<any[]>([]);
-
-  const { creators, collections } = useContext(BaseContext);
-  // const collections = useContext(CollectionsContext);
-  const { setHeaderIcon, setKeyword, keyword, NFTKeyword } =
-    useContext(UtilitiesContext);
 
   if (!creator && username && creators && creators.length > 0) {
     //set creator

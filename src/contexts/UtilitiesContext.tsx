@@ -18,8 +18,6 @@ export const UtilitiesContext = createContext<Utilities>({
   },
   setHeaderIcon: () => {},
   setUserProfile: () => {},
-  breadcrumbList: undefined,
-  setBreadcrumbList: () => {},
   scrollY: undefined,
   setScrollY: () => {},
   prevHeight: undefined,

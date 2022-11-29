@@ -1,5 +1,5 @@
 import React from "react";
-
+// components
 import { Title } from "@/components/Title";
 
 type Props = {
@@ -13,9 +13,6 @@ export const Headline = ({ pageTitle, title, emoji, length, label }: Props) => {
   return (
     <div className=" mb-4">
       <div className="mb-4 flex gap-3">
-        {/*<div className="flex items-center">
-          <div className="animated-dot"></div>
-  </div>*/}
         <div className="flex items-baseline gap-3">
           <Title property="h2" addClass="">
             {emoji && <span className="mr-2 text-xl">{emoji}</span>}

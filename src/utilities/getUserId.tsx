@@ -14,7 +14,6 @@ export const getUserId = async (username: string) => {
     if (error && status !== 406) {
       throw error;
     }
-
     //@ts-ignore
     test = data && (data.id as string);
   } catch (error: any) {

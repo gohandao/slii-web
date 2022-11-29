@@ -11,7 +11,6 @@ type Props = {
 export const SmallTab = ({ title, path }: Props) => {
   const router = useRouter();
   const currentPath = router.pathname;
-
   const { order, sort, term, page, type, search, tab, username } = router.query;
 
   let new_query = {
@@ -38,8 +37,6 @@ export const SmallTab = ({ title, path }: Props) => {
 
   const users = { id: 1, name: "tanaka", text: "暖かくなってきたね！" };
   return (
-    // <Link href={{ pathname: '/search', query: { keyword: 'this way' } }}><a>path</a></Link>
-
     <Link
       href={{
         pathname: pathName,

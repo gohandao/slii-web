@@ -1,5 +1,4 @@
-import React, { createContext, useState } from "react";
-
+import { createContext } from "react";
 /*types*/
 import { Collection } from "@/types/collection";
 
@@ -19,20 +18,3 @@ export const CollectionsContext = createContext<Collection[]>([
     discord_members: null,
   },
 ]);
-
-/*
-export const SongsContext = createContext<Song[]>([
-  {
-    id: '',
-    title: '',
-    youtube: '',
-    song_title: '',
-    works: '',
-    artist: '',
-    type: '',
-    year: null,
-    createdAt: null,
-    updatedAt: null,
-  },
-])
-*/

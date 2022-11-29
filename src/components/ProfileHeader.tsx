@@ -1,23 +1,18 @@
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-
+import React, { useState } from "react";
 import { BsThreeDots, BsTwitter } from "react-icons/bs";
 import { FaRegFlag, FaTwitter } from "react-icons/fa";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
-import { BookmarkButton } from "./BookmarkButton";
-import { CopyText } from "./CopyText";
-import { ProfileDropdown } from "./ProfileDropdown";
-import { ProfileLinks } from "./ProfileLinks";
-import { Stats } from "./Stats";
-import { StatsBox } from "./StatsBox";
-import { VoteButton } from "./VoteButton";
-import { Label } from "./Label";
 
-import { getTwitterFollowers } from "@/libs/twitter";
-import { updateSocial } from "@/utilities/updateSocial";
-import { BaseContext } from "@/contexts/BaseContext";
-import { Social } from "@/types/social";
+// components
+import { BookmarkButton } from "@/components/BookmarkButton";
+import { ProfileDropdown } from "@/components/ProfileDropdown";
+import { ProfileLinks } from "@/components/ProfileLinks";
+import { Stats } from "@/components/Stats";
+import { StatsBox } from "@/components/StatsBox";
+import { UpvoteButton } from "@/components/UpvoteButton";
+import { Label } from "@/components/Label";
 
 type Props = {
   page: string;
@@ -63,13 +58,6 @@ export const ProfileHeader = ({
 }: Props) => {
   const router = useRouter();
   const { screen } = router.query;
-  // const { socials, setSocials } = useContext(BaseContext);
-
-  // const [social, setSocial] = useState<Social>();
-
-  // const [twitterFollowers, setTwitterFollowers] = useState<number>();
-  // const [discordMembers, setDiscordMembers] = useState<number>();
-  // const [checkSocial, setCheckSocial] = useState<boolean>(false);
   const [requestDropdown, setRequestDropdown] = useState<boolean>(false);
   const [shareDropdown, setShareDropdown] = useState<boolean>(false);
 
@@ -195,7 +183,7 @@ export const ProfileHeader = ({
                 <>
                   <BookmarkButton id={id} type={page} />
                   {upvotes_count != null && (
-                    <VoteButton
+                    <UpvoteButton
                       id={id}
                       property="default"
                       type={page}

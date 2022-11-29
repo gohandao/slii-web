@@ -1,41 +1,17 @@
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import { NextSeo } from "next-seo";
-import CollectionsJson from "@/json/collections.json";
-
-import { ParsedUrlQuery } from "node:querystring";
-import React, { useState, useEffect, useContext } from "react";
-import Head from "next/head";
-import Image from "next/image";
-import Link from "next/link";
-
-import { base } from "@/libs/airtable";
-
 import { useRouter } from "next/router";
+import React, { useState, useEffect, useContext } from "react";
+import { ParsedUrlQuery } from "node:querystring";
 
-import { BaseContext } from "@/contexts/BaseContext";
-import { CollectionsContext } from "@/contexts/CollectionsContext";
+// json
+import collectionsJson from "@/json/collections.json";
 
-import { List } from "@/components/List";
-import { Title } from "@/components/Title";
-import { Pagination } from "@/components/Pagination";
+// contexts
 import { BaseLayout } from "@/components/BaseLayout";
-import { CreatorProfile } from "@/components/CreatorProfile";
-import { CollectionAssets } from "@/components/CollectionAssets";
-
-import { Creator } from "@/types/creator";
-import { Collection } from "@/types/collection";
-import { Dropdown } from "@/components/Dropdown";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import { JP } from "country-flag-icons/react/3x2";
-import { ProfileHeader } from "@/components/ProfileHeader";
-import { MdVerified } from "react-icons/md";
-import { RandomButton } from "@/components/RandomButton";
-import { Searchbox } from "@/components/Searchbox";
-import { OrderButton } from "@/components/OrderButton";
-import { sortNFTs } from "@/libs/sortNFTs";
-import { randomize } from "@/utilities/randomize";
-import { NFTList } from "@/components/NFTList";
-import { getNFTs } from "@/utilities/getNFTs";
+
+// components
 import { CollectionScreen } from "@/components/CollectionScreen";
 import { ScreenModal } from "@/components/ScreenModal";
 import { CollectionsIndexScreen } from "@/components/CollectionsIndexScreen";
@@ -44,7 +20,7 @@ const CollectionIndex: NextPage = (props: any) => {
   const router = useRouter();
   const { username, order, sort, term, page, type, search, slug, screen } =
     router.query;
-  const { setHeaderIcon, hiddenParams, scrollY } = useContext(UtilitiesContext);
+  const { hiddenParams, scrollY } = useContext(UtilitiesContext);
   const [collectionModal, setCollectionModal] = useState<boolean>(
     screen ? true : false
   );
@@ -115,12 +91,7 @@ type Params = ParsedUrlQuery & {
 };
 
 export const getStaticPaths = async () => {
-  // const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
-  // const response = await fetch(
-  //   `https://api.airtable.com/v0/appFYknMhbtkUTFgt/collections?api_key=${AIRTABLE_API_KEY}`
-  // );
-  // const { records } = await response.json();
-  const collections = CollectionsJson;
+  const collections = JSON.parse(collectionsJson);
   //console.log("testrecords");
   //console.log(records);
   return {
@@ -135,8 +106,8 @@ export const getStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   params,
 }) => {
+  const collections = JSON.parse(collectionsJson);
   const slug = params && params.slug;
-  const collections = CollectionsJson;
   const filtered_collections = collections.filter(
     (collection: any) => collection.slug === slug
   );
@@ -169,29 +140,3 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
     },
   };
 };
-
-/*
-export const getStaticProps: GetStaticProps<PathProps, Params> = ({
-  params,
-}) => {
-  const slug = params && params.slug;
-  const collections = useContext(CollectionsContext);
-  const collection = collections.filter(
-    (collection) => collection.slug === slug
-  );
-  let baseUrl;
-  if (process.env.NODE_ENV != "test") {
-    baseUrl = {
-      production: "https://gachi-collection.vercel.app",
-      development: "http://localhost:3000",
-    }[process.env.NODE_ENV];
-  }
-  return {
-    props: {
-      // OGP画像は絶対URLで記述する必要があります
-      ogImageUrl: `${baseUrl}/api/ogp?key=${slug}&page=creators`,
-      revalidate: 10,
-    },
-  };
-};
-*/

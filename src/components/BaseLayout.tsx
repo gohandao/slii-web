@@ -1,11 +1,11 @@
-import React, { ReactNode, useContext } from "react";
+import React, { ReactNode } from "react";
+// utilities
+import { useRedirections } from "@/utilities/useRedirections";
+// components
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { NoticeBar } from "@/components/NoticeBar";
-import Head from "next/head";
-import { useRedirections } from "@/utilities/useRedirections";
-import { LoginModal } from "./LoginModal";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { LoginModal } from "@/components/LoginModal";
 
 type Props = {
   children: ReactNode;

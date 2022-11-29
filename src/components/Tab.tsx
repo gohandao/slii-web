@@ -11,14 +11,11 @@ type Tab = {
 
 export const Tab = ({ title, path, param }: Tab) => {
   const router = useRouter();
-  // const currentPath = router.pathname;
   const { tab, search } = router.query;
   const removeParams = (asPath: string) => {
     return asPath.split("?")[0];
   };
   const currentPath = removeParams(router.asPath);
-  // console.log("currentPathiii");
-  // console.log(currentPath);
 
   let passiveClass = "text-gray-500";
   if (currentPath == path) {
@@ -79,13 +76,5 @@ export const Tab = ({ title, path, param }: Tab) => {
         </button>
       )}
     </>
-    // <Link href={path}>
-    //   <a
-    //     className={`relative text-sm text-gray-100 font-bold py-2 pl-3 pr-4 border-2 rounded-lg flex justify-center items-center transition-all duration-300 ${passiveClass} ${colorClass}`}
-    //   >
-    //     <span className="mr-2">{emoji}</span>
-    //     {title}
-    //   </a>
-    // </Link>
   );
 };

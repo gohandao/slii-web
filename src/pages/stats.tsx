@@ -1,52 +1,31 @@
 import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
+import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
+import { TbDiamond } from "react-icons/tb";
 
-import { CreatorList } from "@/components/CreatorList";
-import { CollectionTable } from "@/components/CollectionTable";
-import { SearchArea } from "@/components/SearchArea";
-
-import { Mainvisual } from "@/components/Mainvisual";
-import { Pagination } from "@/components/Pagination";
-import { BaseLayout } from "@/components/BaseLayout";
-import { Hr } from "@/components/Hr";
-import { Title } from "@/components/Title";
-import { LinkButton } from "@/components/LinkButton";
-
-import { Dropdown } from "@/components/Dropdown";
-
-import { CreatorsContext } from "@/contexts/CreatorsContext";
-import { CollectionsContext } from "@/contexts/CollectionsContext";
+// contexts
 import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
-import { Creator } from "@/types/creator";
-import { Collection } from "@/types/collection";
-import { Headline } from "@/components/Headline";
-import { BreadCrumbs } from "@/components/BreadCrumbs";
+// components
+import { CollectionTable } from "@/components/CollectionTable";
+import { Pagination } from "@/components/Pagination";
+import { BaseLayout } from "@/components/BaseLayout";
+import { Dropdown } from "@/components/Dropdown";
 import { TermSort } from "@/components/TermSort";
 import { Searchbox } from "@/components/Searchbox";
-import { TbDiamond } from "react-icons/tb";
-import { NextSeo } from "next-seo";
+
+// types
+import { Collection } from "@/types/collection";
+
 const StatsPage: NextPage = () => {
   const router = useRouter();
   const { order, sort, term, page, type, search } = router.query;
   const currentPage = page ? Number(page) : 1;
   const limit = 10;
 
-  const { setBreadcrumbList, setHeaderIcon } = useContext(UtilitiesContext);
-  // const breadcrumbList = [
-  //   {
-  //     name: "Home",
-  //     path: "/",
-  //   },
-  //   {
-  //     name: "Collection stats",
-  //     path: "/stats",
-  //   },
-  // ];
+  const { setHeaderIcon } = useContext(UtilitiesContext);
   useEffect(() => {
     setHeaderIcon({
       title: "Collection stats",
@@ -55,10 +34,9 @@ const StatsPage: NextPage = () => {
       avatar: "",
       path: "/stats",
     });
-    // setBreadcrumbList(breadcrumbList);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const { creators, collections } = useContext(BaseContext);
+  const { collections } = useContext(BaseContext);
 
   const filteredCollections =
     type && type != "all"
@@ -85,8 +63,6 @@ const StatsPage: NextPage = () => {
   } else {
     searchedCollections = filteredCollections;
   }
-  //const [collectionsMenu, setCollectionMenu] =
-  //useState<string[]>(collectionsMenus);
 
   return (
     <div>

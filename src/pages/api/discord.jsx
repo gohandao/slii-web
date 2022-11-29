@@ -1,9 +1,7 @@
 import React from "react";
 
 const getDiscordMembers = async (req, res) => {
-  //let { twitter_id, type } = req.query;
   const discord_id = req.query.discord_id;
-
   var options = {
     method: "GET",
   };

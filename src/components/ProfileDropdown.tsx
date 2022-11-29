@@ -1,8 +1,4 @@
-import router from "next/router";
 import React from "react";
-import { IconType } from "react-icons";
-import { BsThreeDots } from "react-icons/bs";
-import { FaRegFlag } from "react-icons/fa";
 
 type Props = {
   position: "left" | "right";

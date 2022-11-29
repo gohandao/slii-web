@@ -1,24 +1,19 @@
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import {
-  BsArrowLeftCircle,
-  BsArrowRightCircle,
   BsFillArrowLeftCircleFill,
   BsFillArrowRightCircleFill,
 } from "react-icons/bs";
-import { DrawerMenu } from "@/components/DrawerMenu";
 import { BiHomeAlt } from "react-icons/bi";
+// contexts
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 export const HeaderIcon = () => {
   const router = useRouter();
-  const [status, setStatus] = useState<boolean>(false);
-
-  const { headerIcon } = useContext(UtilitiesContext);
-
   const currentPath = router.pathname;
+  const { headerIcon } = useContext(UtilitiesContext);
 
   let uri;
   let uri_domain: string;
@@ -31,11 +26,6 @@ export const HeaderIcon = () => {
     ref = document.referrer && new URL(document.referrer);
     ref_domain = ref && ref.hostname;
     //@ts-ignore
-
-    // console.log("uri_domain");
-    // console.log(uri_domain);
-    // console.log(ref_domain);
-    // console.log(document.referrer);
   }
 
   type Props = {
@@ -65,9 +55,6 @@ export const HeaderIcon = () => {
         }
       }
     }
-    // if (uri_domain != ref_domain || !ref_domain) {
-    //   showClassName = "hidden";
-    // }
     return (
       <button
         onClick={() => {
@@ -96,11 +83,12 @@ export const HeaderIcon = () => {
   };
   return (
     <>
-      {/* <DrawerMenu status={status} setStatus={setStatus} /> */}
       <div className="flex items-center gap-3 lg:min-w-[160px]">
-        <div className="flex gap-3 md:hidden">
-          <BackButton property="back" />
-        </div>
+        {typeof window != "undefined" && window.history.length >= 2 && (
+          <div className="flex gap-3 md:hidden">
+            <BackButton property="back" />
+          </div>
+        )}
         {/* <NextButton /> */}
         {headerIcon.emoji.length > 0 ? (
           <Link href={headerIcon.path} legacyBehavior>
@@ -167,9 +155,6 @@ export const HeaderIcon = () => {
               </span>
               Home
             </a>
-            {/* <a className="relative flex h-7">
-            <Image src="/logo.svg" width={142} height={20} alt="" />
-          </a> */}
           </Link>
         )}
       </div>

@@ -1,11 +1,8 @@
 export const getTwitterFollowers = async (twitter_id) => {
-  //let { twitter_id, type } = req.query;
-  // const twitter_id = req.query.twitter_id;
   var options = {
     method: "GET",
     headers: {
-      Authorization:
-        "Bearer AAAAAAAAAAAAAAAAAAAAAIc8gQEAAAAA7thtQNPI%2Bg7IFFPUNHAmH7vhym8%3DxL9dSqxmxVLOAathsxLlqf7ddwOdOwbkiomYzLm0IdWBXRJcUG",
+      Authorization: `Bearer ${NEXT_PUBLIC_TWITTER_BEARER_TOKEN}`,
       "Content-Type": "application/json",
     },
   };
@@ -14,8 +11,6 @@ export const getTwitterFollowers = async (twitter_id) => {
     options
   )
     .then((response) => {
-      // console.log("success twitter");
-      // console.log(response);
       return response.json();
     })
     .catch((error) => {
@@ -23,5 +18,4 @@ export const getTwitterFollowers = async (twitter_id) => {
       console.log(error);
     });
   return response;
-  // return JSON.stringify(response);
 };

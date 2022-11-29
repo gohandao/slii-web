@@ -1,32 +1,28 @@
-import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
-import { NextSeo } from "next-seo";
-import { ParsedUrlQuery } from "node:querystring";
-import React, { useState, useEffect, useContext } from "react";
-
 import { useRouter } from "next/router";
-
+import React, { useState, useEffect, useContext } from "react";
+import { MdVerified } from "react-icons/md";
+// libs
+import { getImageUrl, supabase } from "@/libs/supabase";
+import { sortList } from "@/libs/sortList";
+// contexts
 import { BaseContext } from "@/contexts/BaseContext";
+// components
 import { Pagination } from "@/components/Pagination";
 import { BaseLayout } from "@/components/BaseLayout";
-import { Creator } from "@/types/creator";
-import { Collection } from "@/types/collection";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import { getImageUrl, supabase } from "@/libs/supabase";
-import { Profile } from "@/types/profile";
 import { CreatorList } from "@/components/CreatorList";
 import { Dropdown } from "@/components/Dropdown";
 import { OrderButton } from "@/components/OrderButton";
 import { ProfileHeader } from "@/components/ProfileHeader";
-import { MdVerified } from "react-icons/md";
 import { Searchbox } from "@/components/Searchbox";
 import { CollectionList } from "@/components/CollectionList";
-import { sortList } from "@/libs/sortList";
 import { TabIndex } from "@/components/TabIndex";
+import { SmallTab } from "@/components/SmallTab";
+// types
+import { Creator } from "@/types/creator";
+import { Collection } from "@/types/collection";
 import { Upvote } from "@/types/upvote";
 import { Bookmark } from "@/types/bookmark";
-import { getUserId } from "@/utilities/getUserId";
-import { getNFTs } from "@/utilities/getNFTs";
-import { SmallTab } from "./SmallTab";
 
 type Props = {
   creatorList: Upvote[] | Bookmark[] | undefined;
@@ -77,13 +73,9 @@ export const UserPageTemplate = ({
   userProfile && !userBackground && getBackgroundBlob;
   !userBackground && getBackgroundBlob();
 
-  const [userUpvotes, setUserUpvotes] = useState<Upvote[] | undefined>([]);
-  const [userBookmarks, setUserBookmarks] = useState<Upvote[] | undefined>([]);
-
   const [sortedCreators, setSortedCreators] = useState<Creator[]>([]);
   const [sortedCollections, setSortedCollections] = useState<Collection[]>([]);
 
-  // const collections = useContext(CollectionsContext);
   const { setHeaderIcon } = useContext(UtilitiesContext);
   useEffect(() => {
     {
@@ -289,12 +281,6 @@ export const UserPageTemplate = ({
             <div className="flex gap-2">
               <SmallTab title="Upvoted" path="upvotes" />
               <SmallTab title="Bookmarks" path="bookmarks" />
-              {/* <button className="text-gray-100 rounded-full px-5 py-1 bg-gray-800 text-xs">
-                Upvotes
-              </button>
-              <button className="text-gray-400 rounded-full px-5 py-1 text-xs">
-                Bookmark
-              </button> */}
             </div>
             <div className="mb-2">
               <TabIndex property="user" />

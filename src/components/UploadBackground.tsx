@@ -1,12 +1,8 @@
-import React, { useState, useContext, useEffect } from "react";
 import Image from "next/image";
-import axios from "axios";
-import { AuthContext } from "@/contexts/AuthContext";
-import { TiDelete } from "react-icons/ti";
+import React from "react";
 import { RiImageAddLine } from "react-icons/ri";
+import { IoClose } from "react-icons/io5";
 import imageCompression from "browser-image-compression";
-import { getImageUrl, supabase } from "@/libs/supabase";
-import { IoClose, IoCloseOutline } from "react-icons/io5";
 
 export type Props = {
   // uploadImages: File[];
@@ -36,13 +32,7 @@ export const UploadBackground = ({ image, newImage, setNewImage }: Props) => {
           e.target.files[0],
           options
         );
-        // const compressed_file = e.target.files[0];
         setNewImage(compressed_file);
-        // console.log("e.target.files[0]");
-        // console.log(e.target.files[0]);
-        // console.log(Object.getPrototypeOf(e.target.files[0]));
-        // console.log(compressed_file);
-        // console.log(Object.getPrototypeOf(compressed_file));
       }
     }
     // setImages([...images, ...e.target.files]);

@@ -1,5 +1,3 @@
-import React from "react";
-
 export const Hr = () => {
   return (
     <div className="-ml-[2px] px-[2%] pt-20 pb-16">

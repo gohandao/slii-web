@@ -1,11 +1,10 @@
-import React, { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
-
+import React, { useState, useContext, useEffect } from "react";
+import { BiSearchAlt2 } from "react-icons/bi";
+// contexts
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-
-import { BiSearchAlt, BiSearchAlt2 } from "react-icons/bi";
+// utilities
 import { setParams } from "@/utilities/setParams";
-import { IoSearchCircleSharp } from "react-icons/io5";
 
 type Props = {
   id: string;
@@ -19,7 +18,6 @@ export const Searchbox = ({ id, property }: Props) => {
 
   const { keyword, setKeyword, NFTKeyword, setNFTKeyword } =
     useContext(UtilitiesContext);
-  const currentKeyword = property == "nft" ? NFTKeyword : keyword;
 
   useEffect(() => {
     if (property == "nft") {
@@ -61,12 +59,6 @@ export const Searchbox = ({ id, property }: Props) => {
     });
   };
 
-  // const inputElement = useRef<HTMLInputElement | null>(null);
-  // useEffect(() => {
-  //   if (inputElement.current && autofocus == true) {
-  //     inputElement.current.focus();
-  //   }
-  // }, []);
   return (
     <>
       <div className="relative w-full flex-1 overflow-hidden rounded-lg">

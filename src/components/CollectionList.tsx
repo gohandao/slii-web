@@ -1,37 +1,20 @@
-import React, { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
-
 import Image from "next/image";
 import Link from "next/link";
-
-import { JP } from "country-flag-icons/react/3x2";
-import { FaDiscord, FaEthereum } from "react-icons/fa";
-import { IoAppsSharp } from "react-icons/io5";
-import { MdVerified } from "react-icons/md";
-
-import { CollectionsContext } from "@/contexts/CollectionsContext";
-
-import { CardLinks } from "@/components/CardLinks";
-import { TagList } from "@/components/TagList";
-import { Label } from "@/components/Label";
-import { LikeViews } from "@/components/LikeViews";
-
-import {
-  AiFillHeart,
-  AiOutlineAreaChart,
-  AiOutlineDotChart,
-  AiOutlineEye,
-  AiOutlineHeart,
-} from "react-icons/ai";
-import { VoteButton } from "./VoteButton";
-import { BookmarkButton } from "./BookmarkButton";
-import { Collection } from "@/types/collection";
-import { abbreviateNumber } from "@/utilities/abbreviateNumber";
-import { BsTwitter, BsXDiamondFill } from "react-icons/bs";
-import { RiBubbleChartFill } from "react-icons/ri";
+import React, { useState } from "react";
 import Moment from "react-moment";
+import { JP } from "country-flag-icons/react/3x2";
+import { FaDiscord } from "react-icons/fa";
+import { MdVerified } from "react-icons/md";
+import { BsTwitter } from "react-icons/bs";
 import { IoMdListBox } from "react-icons/io";
-import { ProfileLinks } from "./ProfileLinks";
+// utilities
+import { abbreviateNumber } from "@/utilities/abbreviateNumber";
+// components
+import { UpvoteButton } from "@/components/UpvoteButton";
+import { BookmarkButton } from "@/components/BookmarkButton";
+import { IconEth } from "@/components/IconEth";
+import { Hyphen } from "@/components/Hyphen";
 
 type Props = {
   collections: any[];
@@ -43,50 +26,6 @@ export const CollectionList = ({ collections, limit }: Props) => {
   const currentPath = router.pathname;
   const currentPage = page ? Number(page) : 1;
   const { order, sort, term } = router.query;
-
-  const [liked, setLiked] = useState<boolean>(false);
-  const addLikeHandler = async () => {
-    setLiked(true);
-  };
-  const removeLikeHandler = async () => {
-    setLiked(false);
-  };
-
-  //const collections = useContext(CollectionsContext);
-  // const [filteredCollections, setFilteredCollections] = useState(collections);
-  // //console.log("collectionsaaaa");
-  // useEffect(() => {
-  //   if (limit) {
-  //     let new_collections = [] as any[];
-  //     for (let index = 0; index < limit; index++) {
-  //       new_collections = [...new_collections, collections[index]];
-  //     }
-  //     setFilteredCollections(new_collections);
-  //   }
-  // }, []);
-  // const currentCollections = limit ? filteredCollections : collections;
-
-  const Hyphen = () => {
-    return <span className="text-gray-400">-</span>;
-  };
-  const EthIcon = () => {
-    return (
-      <div className="relative flex w-4 items-center">
-        <Image
-          src="/icon-eth.svg"
-          width={16}
-          height={16}
-          alt=""
-          sizes="16px"
-          className=""
-          style={{
-            maxWidth: "100%",
-            height: "auto",
-          }}
-        />
-      </div>
-    );
-  };
 
   type StatsProps = {
     icon: JSX.Element | JSX.Element[];
@@ -211,7 +150,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
                             property="simple"
                           />
                           <div className="-mr-[2px]">
-                            <VoteButton
+                            <UpvoteButton
                               property="simple"
                               type="collection"
                               id={collection.slug}
@@ -230,7 +169,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
                             <div className="-ml-1 flex items-center gap-1 font-bold text-gray-400">
                               {collection.payment_tokens &&
                                 collection.payment_tokens[0].symbol ==
-                                  "ETH" && <EthIcon />}
+                                  "ETH" && <IconEth />}
                               {collection.stats &&
                               collection.stats.floor_price > 0 ? (
                                 abbreviateNumber(collection.stats.floor_price)
@@ -258,7 +197,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
                                 <>
                                   {collection.payment_tokens &&
                                     collection.payment_tokens[0].symbol ==
-                                      "ETH" && <EthIcon />}
+                                      "ETH" && <IconEth />}
                                   {abbreviateNumber(
                                     collection.stats.total_volume
                                   )}
@@ -268,7 +207,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
                                 <>
                                   {collection.payment_tokens &&
                                     collection.payment_tokens[0].symbol ==
-                                      "ETH" && <EthIcon />}
+                                      "ETH" && <IconEth />}
                                   {abbreviateNumber(
                                     collection.stats.one_day_volume
                                   )}
@@ -278,7 +217,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
                                 <>
                                   {collection.payment_tokens &&
                                     collection.payment_tokens[0].symbol ==
-                                      "ETH" && <EthIcon />}
+                                      "ETH" && <IconEth />}
                                   {abbreviateNumber(
                                     collection.stats.seven_day_volume
                                   )}
@@ -288,7 +227,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
                                 <>
                                   {collection.payment_tokens &&
                                     collection.payment_tokens[0].symbol ==
-                                      "ETH" && <EthIcon />}
+                                      "ETH" && <IconEth />}
                                   {abbreviateNumber(
                                     collection.stats.thirty_day_volume
                                   )}

@@ -5,42 +5,27 @@ import * as gtag from "@/libs/gtag";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { DefaultSeo } from "next-seo";
-
-//import { MoralisProvider } from "react-moralis";
-
-import React, { useState, useEffect, useContext, useRef } from "react";
 import { useRouter } from "next/router";
-
+import React, { useState, useEffect } from "react";
 import { getImageUrl, supabase } from "@/libs/supabase";
-import { base } from "@/libs/airtable";
 
+// jsons
+import creatorsJson from "@/json/creators.json";
+import collectionsJson from "@/json/collections.json";
+import tagsJson from "@/json/tags.json";
+const creators_data = JSON.parse(creatorsJson) as Creator[];
+const collections_data = JSON.parse(collectionsJson);
+const tags = JSON.parse(tagsJson);
+
+// contexts
 import { AuthContext } from "@/contexts/AuthContext";
-
-import { CreatorsContext } from "@/contexts/CreatorsContext";
-import { CollectionsContext } from "@/contexts/CollectionsContext";
 import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import { SocialsContext } from "@/contexts/SocialsContext";
 
-import { List } from "@/components/List";
+// types
 import { Creator } from "@/types/creator";
-import { Collection } from "@/types/collection";
-import { Tag } from "@/types/tag";
-import { Utilities } from "@/types/utilities";
-import { Footer } from "@/components/Footer";
-import { BreadcrumbList } from "@/types/breadcrumbList";
-import creatorsJson from "@/json/creators.json";
-
-import collectionsJson from "@/json/collections.json";
-import tags from "@/json/tags.json";
-import { Social } from "@/types/social";
-import { stringify } from "querystring";
-
-import { Like } from "@/types/like";
 import { Upvote } from "@/types/upvote";
 import { Bookmark } from "@/types/bookmark";
-import { isBuffer } from "util";
-import { IconType } from "react-icons";
 import { Profile } from "@/types/profile";
 import { Params } from "@/types/params";
 
@@ -51,28 +36,27 @@ function MyApp({ Component, pageProps }: AppProps) {
   const { screen } = router.query;
   const currentPath = router.pathname;
 
-  const [creators, setCreators] = useState<Creator[]>(creatorsJson);
-  const [collections, setCollections] = useState<any[]>(collectionsJson);
-
-  const [tempCreators, setTempCreators] = useState<Creator[]>([]);
-  const [tempCollections, setTempCollections] = useState<any[]>([]);
-
-  const [loginModal, setLoginModal] = useState(false);
-  const [user, setUser] = useState<any>();
-  // const [creatorSocial, setCreatorSocial] = useState<boolean>(false);
-  const [profile, setProfile] = useState<any>();
-  const [userProfile, setUserProfile] = useState<Profile>();
+  const [page, setPage] = useState<number | undefined>(1);
+  const limit = 10;
+  const [loading, setLoading] = useState<boolean>(false);
+  const [keyword, setKeyword] = useState<string | undefined>();
+  const [hiddenParams, setHiddenParams] = useState<Params>({});
   const [scrollY, setScrollY] = useState<number>();
   const [prevHeight, setPrevHeight] = useState<number>();
 
-  const [likes, setLikes] = useState<Like[]>([]);
-  // const [allList, setAllList] = useState<any[]>([]);
-  const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+  const [user, setUser] = useState<any>();
+  const [profile, setProfile] = useState<any>();
+  const [userProfile, setUserProfile] = useState<Profile>();
+  const [avatar, setAvatar] = useState<File>();
+  const [loginModal, setLoginModal] = useState(false);
+
+  const [creators, setCreators] = useState<Creator[]>(creators_data);
+  const [collections, setCollections] = useState<any[]>(collections_data);
+  const [tempCreators, setTempCreators] = useState<Creator[]>([]);
+  const [tempCollections, setTempCollections] = useState<any[]>([]);
+
   const [upvotes, setUpvotes] = useState<Upvote[]>([]);
-  // console.log("user");
-  // console.log(user);
-  // console.log("profile");
-  // console.log(profile);
+  const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
 
   let baseUrl = "" as string;
   if (process.env.NODE_ENV != "test") {
@@ -81,6 +65,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       development: "http://localhost:3000",
     }[process.env.NODE_ENV];
   }
+
   useEffect(() => {
     const handleRouteChange = (url: string) => {
       gtag.pageview(url);
@@ -107,42 +92,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     element: "",
     path: "",
   });
-  const [keyword, setKeyword] = useState<string | undefined>();
-  const [hiddenParams, setHiddenParams] = useState<Params>({});
-  const [NFTKeyword, setNFTKeyword] = useState<string | undefined>();
-  const [indexTab, setIndexTab] = useState<"all" | "op" | "ed" | undefined>(
-    "all"
-  );
 
-  const AIRTABLE_API_KEY = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
-  /*const [utilities, setUtilities] = useState<Utilities>({
-    search: search,
-    setSearch: setSearch,
-    indexTab: indexTab,
-    setIndexTab: setIndexTab,
-  })*/
-
-  const [breadcrumbList, setBreadcrumbList] = useState<BreadcrumbList>();
-  // const [creators, setCreators] = useState<Creator[]>();
-  // const [collections, setCollections] = useState<any[]>([]);
-  // const [OSCollections, setOSCollections] = useState<Collection[]>([]);
-  // const [tags, setTags] = useState<Tag[]>([]);
-  // const [creatorTags, setCreatorTags] = useState<Tag[]>([]);
-  // const [collectionTags, setCollectionTags] = useState<Tag[]>([]);
-  // const [socials, setSocials] = useState<Social[]>([]);
-
-  //const { page } = router.query
-  const MORALIS_APP_ID = process.env.NEXT_PUBLIC_MORALIS_APP_ID as string;
-  const MORALIS_SERVER_URL = process.env
-    .NEXT_PUBLIC_MORALIS_SERVER_URL as string;
-
-  const [page, setPage] = useState<number | undefined>(1);
-  const limit = 10;
-
-  const [loading, setLoading] = useState<boolean>(false);
-  const [avatar, setAvatar] = useState<File>();
-
-  let avatar_url;
   let avatar_blob;
 
   const getAvatarBlob = async () => {
@@ -157,8 +107,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
-  // user && !likes getLikes();
-  // user && !upvotes getUpvotes();
   useEffect(() => {
     getBookmarks();
     getUpvotes();
@@ -178,9 +126,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         if (error && status !== 406) {
           throw error;
         }
-        const new_bookmarks = data as Like[];
-        console.log("new_bookmarks");
-        console.log(new_bookmarks);
+        const new_bookmarks = data as Bookmark[];
         setBookmarks(new_bookmarks);
       }
     } catch (error: any) {
@@ -202,10 +148,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         if (error && status !== 406) {
           throw error;
         }
-        const new_upvotes = data as Like[];
-        console.log("new_upvotes");
-        console.log(new_upvotes);
-        setUpvotes(new_upvotes);
+        const new_upvotes = data as Upvote[];
       }
     } catch (error: any) {
       alert(error.message);
@@ -213,8 +156,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       //setLoading(false)
     }
   };
+
   const createProfile = async () => {
-    // dより前の文字が欲しい
     let init_username = shortid.generate();
     const updates = {
       id: user.id,
@@ -224,11 +167,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     let { error } = await supabase.from("profiles").upsert(updates, {
       returning: "minimal", // Don't return the value after inserting
     });
-
     if (error) {
       throw error;
     }
   };
+
   const getProfile = async () => {
     try {
       setLoading(true);
@@ -328,8 +271,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           ],
         }}
         twitter={{
-          handle: "@nftotaku_dao",
-          //site: "@ik_takagishi",
+          handle: `@${twitter_id}`,
           cardType: "summary_large_image",
         }}
       />
@@ -358,8 +300,6 @@ function MyApp({ Component, pageProps }: AppProps) {
             setNFTKeyword: setKeyword,
             headerIcon: headerIcon,
             setHeaderIcon: setHeaderIcon,
-            breadcrumbList: breadcrumbList,
-            setBreadcrumbList: setBreadcrumbList,
             userProfile: userProfile,
             setUserProfile: setUserProfile,
             scrollY: scrollY,
@@ -370,8 +310,6 @@ function MyApp({ Component, pageProps }: AppProps) {
             tempCollections,
             setTempCreators,
             setTempCollections,
-            //collectionsMenu: collectionsMenu,
-            //setCollectionsMenu: setCollectionsMenu,
           }}
         >
           <BaseContext.Provider
@@ -381,8 +319,6 @@ function MyApp({ Component, pageProps }: AppProps) {
               setCreators,
               setCollections,
               tags,
-              // socials,
-              // setSocials,
             }}
           >
             <div className="bg-stripe flex min-h-screen flex-col overflow-hidden">

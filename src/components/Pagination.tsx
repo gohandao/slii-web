@@ -1,11 +1,7 @@
-import React, { useContext } from "react";
-import router, { useRouter } from "next/router";
-
-import Router from "next/router";
-import Link from "next/link";
-import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
+import React from "react";
+import { useRouter } from "next/router";
+// utilities
 import { setParams } from "@/utilities/setParams";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 type Props = {
   currentPage: number;

@@ -1,4 +1,5 @@
 import React from "react";
+// contexts
 import { Searchbox } from "@/components/Searchbox";
 
 type Props = {

@@ -16,6 +16,7 @@ const nextConfig = withPWA({
       "gachi-collection.vercel.app",
       "hxyufkirxytryojpqkne.supabase.co",
       "i.seadn.io",
+      "storage.googleapis.com",
       "weev.media",
     ],
   },

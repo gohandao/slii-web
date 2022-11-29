@@ -1,38 +1,16 @@
 /* pages/api/ogp.js */
-// import "@/styles/style.scss";
 import "@/styles/ogp.scss";
-
-// import "@/styles/globals.css";
-// import Head from "next/head";
-import { ImageResponse } from "@vercel/og";
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiResponse } from "next";
 import { NextRequest } from "next/server";
 import { MdVerified } from "react-icons/md";
-
-// import { OgpDefault } from "@/components/OgpDefault";
-// import ReactDOM from "react-dom/server";
-// import Image from "next/image";
-// import { totalmem } from "os";
-// import { MdVerified } from "react-icons/md";
-
-// import Image from "next/image";
-// import Script from "next/script";
-
-// import ReactDOM from "react-dom/server";
-// import * as playwright from "playwright-aws-lambda";
-
-const styles = `
-  @import url("https://use.typekit.net/xbj6ysr.css");
-`;
+import { ImageResponse } from "@vercel/og";
 
 export const config = {
   runtime: "experimental-edge",
 };
-
 type Data = {
   name: string;
 };
-
 const font = fetch(
   new URL("../../assets/PressStart2P-Regular.ttf", import.meta.url)
 ).then((res) => res.arrayBuffer());
@@ -45,8 +23,6 @@ export const OGPImage = async (
 
   try {
     const { searchParams } = new URL(req.url);
-    // const { title, label, type, avatar, background, verified } = searchParams;
-    // ?title=<title>
     const hasTitle = searchParams.has("title");
     const title = hasTitle
       ? searchParams.get("title")?.slice(0, 100)
@@ -69,38 +45,23 @@ export const OGPImage = async (
     const new_title = (
       <>
         {title}{" "}
-        {verified == "true" && (
+        {verified == "true" &&
           // <MdVerified tw="-mt-[2px] text-4xl text-gray-500 inline-block" />
-          <p>test</p>
-        )}
+          ""}
       </>
     );
     return new ImageResponse(
       (
         <div
           style={{
-            // fontSize: 128,
-            // background: "white",
             width: "100%",
             height: "100%",
             display: "flex",
             position: "relative",
             fontFamily: "lores-12",
             fontWeight: "700",
-            // textAlign: "center",
-            // alignItems: "center",
-            // justifyContent: "center",
           }}
         >
-          {/* <p tw="text-gray-500">mjjjjj</p> */}
-          {/* <OgpDefault
-            type={type as "user" | "tag" | undefined}
-            title={title as string | undefined}
-            label={label as string | undefined}
-            avatar={avatar as string | undefined}
-            background={background as string | undefined}
-            verified={verified as boolean | undefined}
-          /> */}
           <div tw="flex absolute left-0 top-0 w-full h-full">
             <img
               src={`https://weev.media/wp-content/uploads/2022/11/ogp-base.jpg`}

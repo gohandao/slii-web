@@ -1,18 +1,16 @@
-import { useContext, useEffect, useState } from "react";
-import { supabase } from "@/libs/supabase";
-import { BaseLayout } from "@/components/BaseLayout";
-import Head from "next/head";
+import { useRouter } from "next/router";
+import { useContext, useState } from "react";
 import ReactCodeInput from "react-code-input";
+// libs
+import { supabase } from "@/libs/supabase";
+// contexts
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import router, { useRouter } from "next/router";
 import { AuthContext } from "@/contexts/AuthContext";
-import { useRedirections } from "@/utilities/useRedirections";
-import { BaseModal } from "./BaseModal";
+// components
+import { BaseModal } from "@/components/BaseModal";
 
 export const LoginModal = () => {
   const router = useRouter();
-  const { prev } = router.query;
-
   const { user } = useContext(AuthContext);
   const { loginModal, setLoginModal } = useContext(UtilitiesContext);
   const [loading, setLoading] = useState(false);

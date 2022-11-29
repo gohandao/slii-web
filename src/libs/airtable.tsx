@@ -1,8 +1,6 @@
 import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
-import { Tag } from "@/types/tag";
 
-//const base = require('airtable').base('appDF2UQxmr5KBu4T')
 const Airtable = require("airtable");
 Airtable.configure({
   endpointUrl: "https://api.airtable.com",
@@ -85,8 +83,6 @@ export const getCollections = () => {
                 tags: fields.tags,
               } as Collection,
             ];
-            //console.log("collections", new_records);
-            //console.log("Retrieved", record.fields);
           } catch (error) {
             console.log(error);
             return;

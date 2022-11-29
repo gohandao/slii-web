@@ -1,29 +1,3 @@
-import React from "react";
-
-type sortInitProps = {
-  list: any;
-  limit?: number;
-};
-/*export const sortInitList = (list: any, limit: any) => {
-  let new_list = [];
-  new_list = list.sort(function (a: any, b: any) {
-    if (a.stats.total_volume < b.stats.total_volume) return 1;
-    if (a.stats.total_volume > b.stats.total_volume) return -1;
-    return 0;
-  });
-  const unique_list = Array.from(new Set(new_list));
-  new_list = unique_list;
-  //setList(new_list);
-  if (limit) {
-    let limited_list = [] as any[];
-    for (let index = 0; index < limit; index++) {
-      limited_list = [...limited_list, unique_list[index]];
-    }
-    new_list = limited_list;
-  }
-  return new_list;
-};*/
-
 type sortProps = {
   page?: number;
   property: "creators" | "collections";
@@ -34,7 +8,6 @@ type sortProps = {
   limit?: number;
 };
 export const sortList = (args: sortProps) => {
-  console.log("kkkkkkk");
   let new_list = [];
   let new_order = args.order == "desc" ? "asc" : "desc";
   switch (args.sort) {
@@ -1262,11 +1235,6 @@ export const sortList = (args: sortProps) => {
         limited_list = [...limited_list, new_list[index]];
       }
     }
-    // if (args.list.length > 0) {
-    //   for (let index = 0; index < args.limit; index++) {
-    //     limited_list = [...limited_list, new_list[index]];
-    //   }
-    // }
     return limited_list;
   } else {
     return new_list;

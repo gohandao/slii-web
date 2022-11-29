@@ -1,5 +1,5 @@
-import React, { useState, ReactNode } from "react";
-import { Count } from "./Count";
+import React, { useState } from "react";
+import { Count } from "@/components/Count";
 
 type Props = {
   id?: string;
@@ -7,7 +7,6 @@ type Props = {
   setText: React.Dispatch<React.SetStateAction<string | undefined>>;
   placeholder?: string;
   required: boolean;
-  // onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   maxLength?: number;
   value?: string;
 };

@@ -3,18 +3,16 @@ import { NextSeo } from "next-seo";
 
 import { ParsedUrlQuery } from "node:querystring";
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { getImageUrl, supabase } from "@/libs/supabase";
+import { supabase } from "@/libs/supabase";
 import { Upvote } from "@/types/upvote";
 import { getUserId } from "@/utilities/getUserId";
-import { getNFTs } from "@/utilities/getNFTs";
 import { UserPageTemplate } from "@/components/UserPageTemplate";
 
 const UserPage: NextPage = (props: any) => {
   const router = useRouter();
   const { username } = router.query;
-
   const [userUpvotes, setUserUpvotes] = useState<Upvote[] | undefined>([]);
 
   const getUserUpvotes = async (username: string) => {
@@ -154,10 +152,8 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   return {
     props: {
       // OGP画像は絶対URLで記述する必要があります
-      //ogImageUrl: `${baseUrl}/api/ogp?title=${creator.username}&page=creators`,
       title: `${username}'s profile | NFT OTAKU`,
       description: description,
-      //description: `${records[0].fields.description}`,
       ogImageUrl: `${baseUrl}/api/ogp?title=${username}&label=${label}&type=user&avatar=${avatar}&background=${background}`,
       revalidate: 10,
     },

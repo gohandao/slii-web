@@ -1,34 +1,26 @@
 import { NextPage } from "next";
-
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import Link from "next/link";
-import router, { Router } from "next/router";
-import { useState, useEffect, SetStateAction, useContext } from "react";
+import router from "next/router";
+import { useState, useEffect, useContext } from "react";
+import { CgUserlane } from "react-icons/cg";
+import { IoChevronBackOutline } from "react-icons/io5";
+import { v4 as uuidv4 } from "uuid";
 import { getImageUrl, supabase } from "@/libs/supabase";
+
+// contexts
+import { AuthContext } from "@/contexts/AuthContext";
+
+// conponents
 import { BaseLayout } from "@/components/BaseLayout";
-
-// import imageCompression from "browser-image-compression";
-
 import { Input } from "@/components/Input";
 import { UploadImage } from "@/components/UploadImage";
-import { AuthContext } from "@/contexts/AuthContext";
-import { v4 as uuidv4 } from "uuid";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { UploadBackground } from "@/components/UploadBackground";
-import { HiOutlineUserCircle } from "react-icons/hi";
-import { RiMapPinUserLine, RiUser3Line } from "react-icons/ri";
-import { BiUser } from "react-icons/bi";
-import { TbArrowBack, TbUser } from "react-icons/tb";
-import { FaRegUser } from "react-icons/fa";
 import { Textarea } from "@/components/Textarea";
-import { CgUserlane } from "react-icons/cg";
-import { IoIosClose } from "react-icons/io";
-import { IoChevronBackOutline } from "react-icons/io5";
-import { NextSeo } from "next-seo";
 
 const AccountPage: NextPage = () => {
   const { setHeaderIcon } = useContext(UtilitiesContext);
-
   useEffect(() => {
     setHeaderIcon({
       title: "Account",
@@ -45,20 +37,15 @@ const AccountPage: NextPage = () => {
   const [label, setLabel] = useState<string>();
   const [description, setDescription] = useState<string>();
   const [background, setBackground] = useState<File>();
-  const [newBackground, setNewBackground] = useState<File>();
   const [loading, setLoading] = useState(false);
-  // const [avatar, setAvatar] = useState<File>();
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
-  //const [website, setWebsite] = useState<string>('')
   const [avatarUrl, setAvatarUrl] = useState<string>("");
 
   const options = {
     maxSizeMB: 1, // 最大ファイルサイズ
     maxWidthOrHeight: 80, // 最大画像幅もしくは高さ
   };
-  // const file = await imageCompression(images[0].files[0], options);
-
   useEffect(() => {
     if (!user) {
       router.push("/");
@@ -72,7 +59,6 @@ const AccountPage: NextPage = () => {
     if (profile) {
       setUsername(profile.username);
       setAvatarUrl(profile.avatar_url);
-
       let background_blob;
       const getBackgroundBlob = async () => {
         background_blob =
@@ -96,6 +82,7 @@ const AccountPage: NextPage = () => {
       });
     return data;
   };
+
   const updateProfile = async () => {
     try {
       setLoading(true);
@@ -125,7 +112,6 @@ const AccountPage: NextPage = () => {
           returning: "minimal", // Don't return the value after inserting
         });
         alert("upload success");
-
         if (error) {
           throw error;
         }
@@ -151,11 +137,6 @@ const AccountPage: NextPage = () => {
             "Discover favorite Japanese NFT creators, projects and collections. NFT OTAKU is one of the biggest NFT creator search application in Japan.",
         }}
       />
-      {/* <Head>
-        <title>Account Page | NFT OTAKU</title>
-        <meta name="description" content="Please login." />
-        <link rel="icon" href="/favicon.ico" />
-      </Head> */}
       <BaseLayout>
         <div className="mt-8 px-5">
           <div className="mx-auto max-w-2xl  ">
@@ -282,21 +263,6 @@ const AccountPage: NextPage = () => {
                     </div>
                   </div>
                 </div>
-                {/* <div className="flex gap-5 justify-center items-center mt-6">
-                  <button
-                    className="w-[120px] sm:w-[200px] py-3 px-5 rounded bg-gray-600 text-gray-300 border-b-[6px] border-gray-700"
-                    onClick={() => router.back()}
-                  >
-                    Back
-                  </button>
-                  <button
-                    className="w-[120px] sm:w-[200px] py-3 px-5 rounded bg-green-600 text-green-100  border-b-[6px] border-green-800"
-                    onClick={() => updateProfile()}
-                    disabled={loading}
-                  >
-                    {loading ? "Loading ..." : "Save"}
-                  </button>
-                </div> */}
               </>
             ) : (
               <>

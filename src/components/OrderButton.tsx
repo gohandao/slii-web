@@ -1,8 +1,8 @@
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import { setParams } from "@/utilities/setParams";
 import { useRouter } from "next/router";
-import React, { useContext } from "react";
+import React from "react";
 import { TbArrowBigDownLine, TbArrowBigUpLine } from "react-icons/tb";
+// utilities
+import { setParams } from "@/utilities/setParams";
 
 export const OrderButton = () => {
   const router = useRouter();

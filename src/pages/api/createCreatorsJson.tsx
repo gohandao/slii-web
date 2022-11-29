@@ -1,19 +1,18 @@
 const fs = require("fs");
+import collectionsJson from "@/json/collections.json";
 import socialsJson from "@/json/socials.json";
 
-import { Creator } from "@/types/creator";
+// libs
 import { base } from "@/libs/airtable";
-import { getSocials } from "@/utilities/getSocials";
+import { supabase } from "@/libs/supabase";
 import { sortList } from "@/libs/sortList";
-
-import { getImageUrl, supabase } from "@/libs/supabase";
+// utilities
 import { getOSUser } from "@/utilities/getOSUser";
-import { getOSUserBackground } from "@/utilities/getOSUserBackground";
 import { createJson } from "@/utilities/createJson";
 import { getOSData } from "@/utilities/getOSData";
-import { getDiscordMembers } from "@/libs/discord";
-import { getTwitterFollowers } from "@/libs/twitter";
+import { Creator } from "@/types/creator";
 
+const collections = JSON.parse(collectionsJson);
 const socials = JSON.parse(socialsJson);
 
 const createCreatorJson = async (req: any, res: any) => {
@@ -43,7 +42,7 @@ const getCreators = async () => {
   await base("creators")
     .select({
       // Selecting the first 3 records in All:
-      maxRecords: 10,
+      // maxRecords: 10,
       view: "All",
     })
     .eachPage(
@@ -54,10 +53,7 @@ const getCreators = async () => {
           new_records = [
             ...new_records,
             {
-              // username: fields.username,
               description: fields.description,
-              // avatar: OSUserAvatar,
-              // background: OSUserBackground,
               address: fields.address,
               website_url: fields.website_url,
               twitter_id: fields.twitter_id,
@@ -73,8 +69,6 @@ const getCreators = async () => {
               listed_at: fields.listedAt,
             } as Creator,
           ];
-          //console.log("creators", new_records);
-          //console.log("Retrieved", record.fields);
         });
         try {
           fetchNextPage();
@@ -89,8 +83,6 @@ const getCreators = async () => {
 };
 
 const getCreatorOptions = async (creators: Creator[]) => {
-  // await Promise.all(
-  //   creators.map(async (creator) => {
   for (let index = 0; index < creators.length; index++) {
     await sleep(300);
     if (index % 10 == 0) {
@@ -112,8 +104,7 @@ const getCreatorOptions = async (creators: Creator[]) => {
     const avatar = OSUser.account.profile_img_url;
     const username = OSUser.username;
     const verified = OSUser.account.config == "verified" ? true : false;
-    // const OSUserBackground = await getOSUserBackground(creator.username);
-    const data = await getOSData(creators[index].username);
+    const data = await getOSData(username);
     creators[index].username = username as string;
     creators[index].avatar = avatar as string | undefined;
     creators[index].token_symbol = data.token_symbol as string;
@@ -134,10 +125,7 @@ const getCreatorOptions = async (creators: Creator[]) => {
 };
 
 const updateSocial = async (creators: Creator[]) => {
-  // const socials = await getSocials();
   let new_creators = [] as any[];
-  // await Promise.all(
-  //   creators.map(async (creator, index) => {
   for (let index = 0; index < creators.length; index++) {
     let new_creator = creators[index];
     //1.add upvotes

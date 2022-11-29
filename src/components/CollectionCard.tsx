@@ -1,12 +1,15 @@
-import React from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
-import Moment from "react-moment";
-import { abbreviateNumber } from "@/utilities/abbreviateNumber";
+import React from "react";
 import { MdVerified } from "react-icons/md";
-import { VoteButton } from "./VoteButton";
-import { BookmarkButton } from "./BookmarkButton";
-import { useRouter } from "next/router";
+// utilities
+import { abbreviateNumber } from "@/utilities/abbreviateNumber";
+// components
+import { UpvoteButton } from "@/components/UpvoteButton";
+import { BookmarkButton } from "@/components/BookmarkButton";
+import { Hyphen } from "@/components/Hyphen";
+import { IconEth } from "@/components/IconEth";
 
 type StatsProps = {
   title: string;
@@ -34,26 +37,6 @@ export const CollectionCard = ({ username, collection, index }: any) => {
       ? description.slice(0, 80) + "…"
       : description;
 
-  const Hyphen = () => {
-    return <span className="text-gray-400">-</span>;
-  };
-  const EthIcon = () => {
-    return (
-      <div className="flex w-4 items-center">
-        <Image
-          src="/icon-eth.svg"
-          width={16}
-          height={16}
-          alt=""
-          className=""
-          style={{
-            maxWidth: "100%",
-            height: "auto",
-          }}
-        />
-      </div>
-    );
-  };
   return (
     <Link href={`/collection/${collection.slug}`} key={index} legacyBehavior>
       <a className="relative block w-full max-w-[480px] transform overflow-hidden rounded-lg border border-gray-700 bg-gray-800 px-1 pt-1 pb-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
@@ -110,13 +93,12 @@ export const CollectionCard = ({ username, collection, index }: any) => {
                 property="simple"
               />
               <div className="-mr-[2px]">
-                <VoteButton
+                <UpvoteButton
                   property="simple"
                   type="collection"
                   id={collection.slug}
                   count={collection.upvotes_count}
                 />
-                {/*<AiOutlineHeart className=" text-gray-400 opacity-50" />*/}
               </div>
             </div>
           </div>
@@ -125,7 +107,7 @@ export const CollectionCard = ({ username, collection, index }: any) => {
               <p className="text-sm font-bold text-gray-500">Floor Proce</p>
               <div className="-ml-1 flex items-center gap-1 font-bold text-gray-400">
                 {collection.payment_tokens &&
-                  collection.payment_tokens[0].symbol == "ETH" && <EthIcon />}
+                  collection.payment_tokens[0].symbol == "ETH" && <IconEth />}
                 {collection.stats && collection.stats.floor_price > 0 ? (
                   abbreviateNumber(collection.stats.floor_price)
                 ) : (
@@ -137,7 +119,7 @@ export const CollectionCard = ({ username, collection, index }: any) => {
               <p className="text-sm font-bold text-gray-500">Total Volume</p>
               <div className="-ml-1 flex items-center gap-1 font-bold text-gray-400">
                 {collection.payment_tokens &&
-                  collection.payment_tokens[0].symbol == "ETH" && <EthIcon />}
+                  collection.payment_tokens[0].symbol == "ETH" && <IconEth />}
                 {collection.stats && collection.stats.total_volume > 0 ? (
                   abbreviateNumber(collection.stats.total_volume)
                 ) : (

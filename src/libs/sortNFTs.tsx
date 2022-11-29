@@ -1,10 +1,3 @@
-import React from "react";
-
-type sortInitProps = {
-  list: any;
-  limit?: number;
-};
-
 type sortProps = {
   page?: number;
   list: any[];

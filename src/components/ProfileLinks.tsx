@@ -1,5 +1,5 @@
-import React, { ReactNode } from "react";
 import Image from "next/image";
+import React, { ReactNode } from "react";
 
 import { FaDiscord, FaRegChartBar } from "react-icons/fa";
 import { BsTwitter, BsInstagram, BsGlobe2 } from "react-icons/bs";
@@ -33,7 +33,7 @@ export const ProfileLinks = ({
           //router.push(`https://twitter.com/${twitter_id}`);
           window.open(`${url}`, "_blank");
         }}
-        className=" w-6 h-7 flex items-center text-xs justify-center text-white opacity-80"
+        className=" flex h-7 w-6 items-center justify-center text-xs text-white opacity-80"
       >
         {children}
       </button>
@@ -41,7 +41,7 @@ export const ProfileLinks = ({
   };
   return (
     <div className="flex justify-center">
-      <div className="flex mt-auto w-auto justify-center items-center max-w-lg rounded-full opacity-70 overflow-hidden px-2 bg-gray-900">
+      <div className="mt-auto flex w-auto max-w-lg items-center justify-center overflow-hidden rounded-full bg-gray-900 px-2 opacity-70">
         {address && (
           <Button url={`https://etherscan.io/address/${address}`}>
             <FaRegChartBar />

@@ -1,10 +1,10 @@
-import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
-import { setParams } from "@/utilities/setParams";
-import router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import React from "react";
 import { BsTriangleFill, BsTwitter } from "react-icons/bs";
 import { FaDiscord, FaSort, FaSortDown } from "react-icons/fa";
 import { TiArrowSortedDown } from "react-icons/ti";
+// utilities
+import { setParams } from "@/utilities/setParams";
 
 type Props = {
   title: string;
@@ -120,7 +120,6 @@ export const Th = ({ title }: Props) => {
         search: search as string,
       });
     }
-    //setParams({ sort: titleParam, order: "desc", term: term as string });
     //window.scrollTo({ top: test, behavior: "smooth" });
   };
 

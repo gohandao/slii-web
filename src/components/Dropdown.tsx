@@ -1,17 +1,11 @@
-import React, { useState, useEffect, useContext, ReactNode } from "react";
-import { useQueryState } from "next-usequerystate";
-
-import Link from "next/link";
-import { BsCheck, BsFilter, BsFolder2Open } from "react-icons/bs";
-import { BiSortAlt2, BiCategory, BiFilterAlt } from "react-icons/bi";
-import { TbUsers } from "react-icons/tb";
-
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { useRouter } from "next/router";
-import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
-import { Params } from "@/types/params";
-import { setParams } from "@/utilities/setParams";
+import React, { useState, useEffect, ReactNode } from "react";
+import { BsCheck, BsFilter, BsFolder2Open } from "react-icons/bs";
+import { BiCategory, BiFilterAlt } from "react-icons/bi";
+import { TbUsers } from "react-icons/tb";
 import { AiOutlineClockCircle } from "react-icons/ai";
+// contexts
+import { setParams } from "@/utilities/setParams";
 
 type Props = {
   position: "left" | "right";

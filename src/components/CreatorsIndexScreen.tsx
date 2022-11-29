@@ -1,72 +1,36 @@
-import type { NextPage } from "next";
-import Head from "next/head";
-import * as Scroll from "react-scroll";
-
-import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
-
 import React, { useState, useEffect, useContext } from "react";
-
-import { CreatorList } from "@/components/CreatorList";
-import { CollectionTable } from "@/components/CollectionTable";
-import { SearchArea } from "@/components/SearchArea";
-
-import { BreadCrumbs } from "@/components/BreadCrumbs";
-
-import { Mainvisual } from "@/components/Mainvisual";
-import { Pagination } from "@/components/Pagination";
-import { BaseLayout } from "@/components/BaseLayout";
-import { Hr } from "@/components/Hr";
-import { Title } from "@/components/Title";
-import { LinkButton } from "@/components/LinkButton";
-
-import { TagList } from "@/components/TagList";
-
-import { CreatorsContext } from "@/contexts/CreatorsContext";
+// libs
+import { sortList } from "@/libs/sortList";
+// conetxts
 import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-
-import { Tag } from "@/types/tag";
+// components
+import { CreatorList } from "@/components/CreatorList";
+import { Pagination } from "@/components/Pagination";
 import { Searchbox } from "@/components/Searchbox";
-import { Tab } from "@/components/Tab";
 import { Dropdown } from "@/components/Dropdown";
-import { FaLongArrowAltDown } from "react-icons/fa";
-import { BsArrowDown, BsArrowUp } from "react-icons/bs";
-import { TbArrowBigDownLine, TbArrowBigUpLine } from "react-icons/tb";
-import { setParams } from "@/utilities/setParams";
 import { OrderButton } from "@/components/OrderButton";
+// types
 import { Creator } from "@/types/creator";
-import { sortList } from "@/libs/sortList";
 import { TabIndex } from "@/components/TabIndex";
-import { getNFTs } from "@/utilities/getNFTs";
-import { ScreenModal } from "@/components/ScreenModal";
-import { CreatorScreen } from "@/components/CreatorScreen";
 import { Params } from "@/types/params";
 
 type Props = {
   params: Params;
-  // type?: string;
-  // page?: number;
-  // search?: string;
-  // order?: string;
-  // sort?: string;
-  // term?: string;
 };
 export const CreatorsIndexScreen = ({ params }: Props) => {
   const router = useRouter();
   const { type, page, search, order, sort, term, screen } = params;
-
   const currentPage = page ? Number(page) : 1;
-  const [creatorModal, setCreatorModal] = useState<boolean>(false);
-
   const limit = 10;
-  const [sortedCreators, setSortedCreators] = useState<Creator[]>([]);
-  const [checkInitial, setCheckInitial] = useState<boolean>(false);
-
   const { creators, collections, tags } = useContext(BaseContext);
   const { setHeaderIcon, hiddenParams, tempCreators, setTempCreators } =
     useContext(UtilitiesContext);
+
+  const [sortedCreators, setSortedCreators] = useState<Creator[]>([]);
+  const [checkInitial, setCheckInitial] = useState<boolean>(false);
+
   const currentCreators =
     tempCreators.length > 0 && !checkInitial ? tempCreators : sortedCreators;
 
@@ -114,7 +78,6 @@ export const CreatorsIndexScreen = ({ params }: Props) => {
     order: order as "desc" | "asc" | undefined,
     sort: sort as string | undefined,
     term: term as "24h" | "7d" | "30d" | "all" | undefined,
-    //category: collectionsSort,
     limit: limit,
   };
   //モーダルを閉じた際の処理
@@ -135,9 +98,6 @@ export const CreatorsIndexScreen = ({ params }: Props) => {
   useEffect(() => {
     if (checkInitial && creators.length > 0) {
       const data = sortList(args);
-      console.log("data");
-      console.log(data);
-
       setSortedCreators((sortedCreators) => data);
       setTempCreators(data);
     }

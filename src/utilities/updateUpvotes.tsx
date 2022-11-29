@@ -4,6 +4,9 @@ import { Creator } from "@/types/creator";
 import creatorsJson from "@/json/creators.json";
 import collectionsJson from "@/json/collections.json";
 
+const creators = JSON.parse(creatorsJson);
+const collections = JSON.parse(collectionsJson);
+
 type Props = {
   upvotes_count: number;
   creator_username?: string;
@@ -16,7 +19,7 @@ export const updateUpvotes = ({
 }: Props) => {
   if (creator_username && creator_username.length > 0) {
     let new_creators = [] as Creator[];
-    creatorsJson.map((creator, index) => {
+    creators.map((creator: Creator, index: number) => {
       const new_creator =
         creator.username == creator_username
           ? ({ ...creator, upvotes_count: upvotes_count } as Creator)
@@ -27,7 +30,7 @@ export const updateUpvotes = ({
   }
   if (collection_slug && collection_slug.length > 0) {
     let new_collections = [] as any[];
-    collectionsJson.map((collection, index) => {
+    collections.map((collection: any, index: number) => {
       const new_collection =
         collection.slug == collection_slug
           ? ({

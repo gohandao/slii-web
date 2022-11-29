@@ -1,15 +1,12 @@
 const fs = require("fs");
 import socialsJson from "@/json/socials.json";
 
-import { Collection } from "@/types/collection";
+// libs
 import { base } from "@/libs/airtable";
-import { Social } from "@/types/social";
-import { getImageUrl, supabase } from "@/libs/supabase";
+import { supabase } from "@/libs/supabase";
 import { sortList } from "@/libs/sortList";
-import { getSocials } from "@/utilities/getSocials";
 import { createJson } from "@/utilities/createJson";
-import { getDiscordMembers } from "@/libs/discord";
-import { getTwitterFollowers } from "@/libs/twitter";
+import { Collection } from "@/types/collection";
 
 const socials = JSON.parse(socialsJson);
 
@@ -38,7 +35,7 @@ const getCollections = async () => {
   await base("collections")
     .select({
       // maxRecords: 1000,
-      maxRecords: 10,
+      // maxRecords: 10,
       view: "All",
     })
     .eachPage(
@@ -66,8 +63,6 @@ const getCollections = async () => {
             console.log(error);
             return;
           }
-          //console.log("collections", new_records);
-          //console.log("Retrieved", record.fields);
         });
         try {
           fetchNextPage();
@@ -81,11 +76,8 @@ const getCollections = async () => {
 };
 const getOSCollections = async (collections: Collection[]) => {
   const options = { method: "GET" };
-  // const socials = await getSocials();
   const getNewData = async () => {
     let new_list: any = [];
-    // await Promise.all(
-    //   collections.map(async (collection, index) => {
     for (let index = 0; index < collections.length; index++) {
       await sleep(300);
       if (index % 10 == 0) {
@@ -102,7 +94,6 @@ const getOSCollections = async (collections: Collection[]) => {
       const discord_members = socials_filter[0]
         ? socials_filter[0].discord_members
         : null;
-
       //2.insert upvotes
       let upvotes_count = 0;
       const { data, error, status } = await supabase
@@ -142,17 +133,7 @@ const getOSCollections = async (collections: Collection[]) => {
     }
     return new_list;
   };
-  //await getSocialCount();
   const data = await getNewData();
-  // console.log("OSnewList.current data");
-  // console.log(newList.current);
-  // console.log("OSnewList.current");
-  // console.log(collections);
-  // const new_collections = Array.from(new Set(data));
-  // // const result = newOSCollections.current.filter(
-  // //   (element, index, self) =>
-  // //     self.findIndex((e) => e.slug === element.slug) === index
-  // // );
   return data;
 };
 
@@ -161,7 +142,6 @@ const sortCollections = async (collections: any) => {
     property: "collections" as "creators" | "collections",
     list: collections,
     order: "desc" as "desc" | "asc" | undefined,
-    // sort: "volume",
   };
   const data = sortList(args);
   return data;

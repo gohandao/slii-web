@@ -1,6 +1,6 @@
+const ls = require("local-storage");
 import React, { useState } from "react";
 import { IoMdClose } from "react-icons/io";
-const ls = require("local-storage");
 
 export const NoticeBar = () => {
   const [show, setShow] = useState<boolean>(true);

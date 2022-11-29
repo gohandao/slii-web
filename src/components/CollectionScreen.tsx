@@ -1,69 +1,45 @@
-import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
-import { NextSeo } from "next-seo";
-
-import { ParsedUrlQuery } from "node:querystring";
-import React, { useState, useEffect, useContext } from "react";
-import Head from "next/head";
-import Image from "next/image";
 import Link from "next/link";
-
-import { base } from "@/libs/airtable";
-
 import { useRouter } from "next/router";
-
-import { BaseContext } from "@/contexts/BaseContext";
-import { CollectionsContext } from "@/contexts/CollectionsContext";
-
-import { List } from "@/components/List";
-import { Title } from "@/components/Title";
-import { Pagination } from "@/components/Pagination";
-import { BaseLayout } from "@/components/BaseLayout";
-import { CreatorProfile } from "@/components/CreatorProfile";
-import { CollectionAssets } from "@/components/CollectionAssets";
-
-import { Creator } from "@/types/creator";
-import { Collection } from "@/types/collection";
-import { Dropdown } from "@/components/Dropdown";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import React, { useState, useEffect, useContext } from "react";
 import { JP } from "country-flag-icons/react/3x2";
-import { ProfileHeader } from "@/components/ProfileHeader";
 import { MdVerified } from "react-icons/md";
+// libs
+import { sortNFTs } from "@/libs/sortNFTs";
+// utilities
+import { randomize } from "@/utilities/randomize";
+import { getNFTs } from "@/utilities/getNFTs";
+// contexts
+import { BaseContext } from "@/contexts/BaseContext";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+// components
+import { Pagination } from "@/components/Pagination";
+import { Dropdown } from "@/components/Dropdown";
+import { ProfileHeader } from "@/components/ProfileHeader";
 import { RandomButton } from "@/components/RandomButton";
 import { Searchbox } from "@/components/Searchbox";
 import { OrderButton } from "@/components/OrderButton";
-import { sortNFTs } from "@/libs/sortNFTs";
-import { randomize } from "@/utilities/randomize";
 import { NFTList } from "@/components/NFTList";
-import { getNFTs } from "@/utilities/getNFTs";
+// types
+import { Creator } from "@/types/creator";
 
 type Props = {
   property?: "modal";
 };
 export const CollectionScreen = ({ property }: Props) => {
-  const OPENSEA_API_KEY = process.env.NEXT_PUBLIC_OPENSEA_API_KEY as string;
-
   const router = useRouter();
   const { username, order, sort, term, page, type, search, slug, screen } =
     router.query;
   const currentPage = page ? Number(page) : 1;
   const limit = 50;
+  const { setHeaderIcon, setKeyword } = useContext(UtilitiesContext);
   const [checkAssets, setCheckAssets] = useState(false);
-
   const [sortedAssets, setSortedAssets] = useState<any[]>([]);
   const [random, setRandom] = useState<boolean>(false);
-
-  const [loading, setLoading] = useState<boolean>(false);
   const [collection, setCollection] = useState<any>();
-  const [airtableCollection, setAirtableCollection] = useState<Collection>();
   const { creators, collections } = useContext(BaseContext);
+  const [creator, setCreator] = useState<Creator>();
   const [assets, setAssets] = useState<any[]>([]);
   const [currentAssets, setCurrentAssets] = useState<any[]>([]);
-
-  const [existence, setExistence] = useState<boolean>(false);
-  const [creator, setCreator] = useState<Creator>();
-  const [collectionAssets, setCollectionAssets] = useState<[]>([]);
-
-  const { setHeaderIcon, setKeyword } = useContext(UtilitiesContext);
 
   useEffect(() => {
     {

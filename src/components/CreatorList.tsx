@@ -1,34 +1,17 @@
-import React, { useState, useContext, useEffect } from "react";
-import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
+import React, { useState, useContext, useEffect } from "react";
+import { useRouter } from "next/router";
 import Moment from "react-moment";
-
-import { JP } from "country-flag-icons/react/3x2";
-import { FaClipboardList, FaEthereum } from "react-icons/fa";
-import { MdChecklist, MdVerified } from "react-icons/md";
-
-import { CreatorsContext } from "@/contexts/CreatorsContext";
-
-import { CardLinks } from "@/components/CardLinks";
-import { TagList } from "@/components/TagList";
-import { Label } from "@/components/Label";
-import { LikeViews } from "@/components/LikeViews";
-
-import { Creator } from "@/types/creator";
-import {
-  AiFillHeart,
-  AiOutlineEye,
-  AiOutlineHeart,
-  AiTwotoneCalendar,
-} from "react-icons/ai";
-import { VoteButton } from "./VoteButton";
-import { BookmarkButton } from "./BookmarkButton";
+import { MdVerified } from "react-icons/md";
 import { BsTwitter } from "react-icons/bs";
-import { TbChecklist } from "react-icons/tb";
 import { IoMdListBox } from "react-icons/io";
-import { ProfileLinks } from "./ProfileLinks";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+// components
+import { UpvoteButton } from "@/components/UpvoteButton";
+import { BookmarkButton } from "@/components/BookmarkButton";
+import { ProfileLinks } from "@/components/ProfileLinks";
+// types
+import { Creator } from "@/types/creator";
 
 type Props = {
   creators: Creator[];
@@ -38,26 +21,11 @@ export const CreatorList = ({ creators, limit }: Props) => {
   const router = useRouter();
   const { page, order, sort, term, type, search } = router.query;
   const currentPath = router.pathname;
-
-  const params = process.browser && location.search;
-  const { setHiddenParams } = useContext(UtilitiesContext);
-
   const currentPage = page ? Number(page) : 1;
   const [currentCreators, setCurrentCreators] = useState<Creator[]>(creators);
 
-  const [liked, setLiked] = useState<boolean>(false);
-  const addLikeHandler = async () => {
-    setLiked(true);
-  };
-  const removeLikeHandler = async () => {
-    setLiked(false);
-  };
-
   useEffect(() => {
     setCurrentCreators(creators);
-    // console.log("uuu currnet creators");
-    // console.log(currentCreators);
-    // console.log(creators);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creators]);
 
@@ -78,41 +46,8 @@ export const CreatorList = ({ creators, limit }: Props) => {
               <Link
                 href={`/creator/${creator.username}${modal_param}`}
                 legacyBehavior
-                // href={{
-                //   pathname: `/?username=${creator.username}`,
-                //   query: {
-                //     page,
-                //     order,
-                //     sort,
-                //     term,
-                //     type,
-                //     search,
-                //   },
-                // }}
-                // as={`/creator/${creator.username}`}
               >
-                <a
-                  // onClick={async () => {
-                  //   await setHiddenUrl(`/${params}`);
-                  //   router.push(
-                  //     {
-                  //       pathname: `/`,
-                  //       query: {
-                  //         page: page,
-                  //         order: order,
-                  //         sort: sort,
-                  //         term: term,
-                  //         type: type,
-                  //         search: search,
-                  //         username: creator.username,
-                  //       },
-                  //     },
-                  //     `/creator/${creator.username}`,
-                  //     { scroll: false }
-                  //   );
-                  // }}
-                  className="relative flex w-full flex-col items-center overflow-hidden rounded-lg border border-gray-800 bg-gray-800 pb-2 shadow-lg"
-                >
+                <a className="relative flex w-full flex-col items-center overflow-hidden rounded-lg border border-gray-800 bg-gray-800 pb-2 shadow-lg">
                   <div className="absolute -left-[1px] -top-[1px] z-10 opacity-60">
                     <div className="lt-triangle"></div>
                   </div>
@@ -175,19 +110,6 @@ export const CreatorList = ({ creators, limit }: Props) => {
                           />
                         </div>
                       </div>
-                      {/* <div
-                          className={`relative flex justify-center items-center gap-2 left-0 top-0 py-[2px] px-2 z-10 rounded text-xs md:text-xs capitalize bg-gray-700 text-gray-400 `}
-                        >
-                          <div
-                            className={`absolute left-[3px] top-[2px] w-2 h-2 z-10 rounded-full ${
-                              creator.type == "creator"
-                                ? "bg-yellow-500"
-                                : "bg-blue-500"
-                            }`}
-                          ></div>
-                          <JP title="Japan" className="h-3 rounded-sm" />
-                          {creator.type}
-                        </div> */}
                     </div>
                     <div className="flex w-full min-w-[0px] max-w-full  flex-1 flex-col gap-1">
                       <div className="relative flex max-w-full items-center justify-between pt-1">
@@ -204,7 +126,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
                             property="simple"
                           />
                           <div className="-mr-[2px]">
-                            <VoteButton
+                            <UpvoteButton
                               property="simple"
                               type="creator"
                               id={creator.username}
@@ -214,7 +136,6 @@ export const CreatorList = ({ creators, limit }: Props) => {
                                   : 0
                               }
                             />
-                            {/*<AiOutlineHeart className=" text-gray-400 opacity-50" />*/}
                           </div>
                         </div>
                       </div>

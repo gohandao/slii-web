@@ -1,54 +1,30 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useContext,
-  ReactNode,
-} from "react";
-import ReactLoading from "react-loading";
-
-import { sortList } from "@/libs/sortList";
-
-import { FaDiscord, FaSort } from "react-icons/fa";
-import { CreatorsContext } from "@/contexts/CreatorsContext";
-import { BaseContext } from "@/contexts/BaseContext";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-
-import { Card } from "@/components/Card";
-import { CollectionTr } from "@/components/CollectionTr";
-
-import { Collection } from "@/types/collection";
-import { Creator } from "@/types/creator";
-import { BsTwitter } from "react-icons/bs";
-import { IconType } from "react-icons";
-import { getDiscordMembers } from "@/libs/discord";
-import { getTwitterFollowers } from "@/libs/twitter";
 import { useRouter } from "next/router";
-import { SocialsContext } from "@/contexts/SocialsContext";
+import React, { useState, useEffect } from "react";
+import ReactLoading from "react-loading";
+// libs
+import { sortList } from "@/libs/sortList";
+// utilities
+import { BaseContext } from "@/contexts/BaseContext";
+// components
+import { CollectionTr } from "@/components/CollectionTr";
 import { Th } from "@/components/CollectionTh";
+// types
+import { Collection } from "@/types/collection";
 
-type ThProps = {
-  children: ReactNode;
-};
 type Props = {
   collections: Collection[];
   limit?: number;
 };
 export const CollectionTable = ({ collections, limit }: Props) => {
-  const { creators, tags } = useContext(BaseContext);
   const router = useRouter();
 
   const { order, sort, term, page, type, search } = router.query;
   const currentPage = page ? Number(page) : 1;
 
-  // const { socials } = useContext(SocialsContext);
-
   const [loading, setLoading] = useState<boolean>(false);
-  //const [order, setOrder] = useState<"desc" | "asc">("desc");
   const [sortedCollections, setSortedCollections] = useState<Collection[]>([]);
 
-  const [test, setTest] = useState(0);
-  //②set initial collections data
+  //set initial collections data
   useEffect(() => {
     const args = {
       property: "collections" as "creators" | "collections",
@@ -57,7 +33,6 @@ export const CollectionTable = ({ collections, limit }: Props) => {
       order: order as "desc" | "asc" | undefined,
       sort: sort as string | undefined,
       term: term as "24h" | "7d" | "30d" | "all" | undefined,
-      //category: collectionsSort,
       limit: limit,
     };
     const data = sortList(args);
@@ -100,7 +75,6 @@ export const CollectionTable = ({ collections, limit }: Props) => {
                         limit={limit}
                         key={sort ? (sort as string) + index : index}
                       />
-                      //<CollectionTr collection={collection} key={index} />
                     ))}
                 </tbody>
               )}

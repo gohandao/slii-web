@@ -1,6 +1,6 @@
-import React from "react";
 import Link from "next/link";
-
+import React from "react";
+// types
 import { Tag } from "@/types/tag";
 
 type Props = {

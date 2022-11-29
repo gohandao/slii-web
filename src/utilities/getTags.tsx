@@ -28,8 +28,6 @@ export const getTags = async (
               count: fields.count,
             } as Tag,
           ];
-          //console.log("creators", new_records);
-          //console.log("Retrieved", record.fields);
         });
         //sort
         new_records = new_records.sort(function (a, b) {

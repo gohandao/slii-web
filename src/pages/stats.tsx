@@ -23,7 +23,7 @@ const StatsPage: NextPage = () => {
   const router = useRouter();
   const { order, sort, term, page, type, search } = router.query;
   const currentPage = page ? Number(page) : 1;
-  const limit = 10;
+  const limit = 100;
 
   const { setHeaderIcon } = useContext(UtilitiesContext);
   useEffect(() => {

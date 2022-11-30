@@ -25,15 +25,15 @@ export const HeaderIcon = () => {
     uri_domain = uri.hostname;
     ref = document.referrer && new URL(document.referrer);
     ref_domain = ref && ref.hostname;
-    //@ts-ignore
   }
 
   type Props = {
     property: "back" | "next";
   };
+
+  let showClassName = "";
+  let to = "";
   const BackButton = ({ property }: Props) => {
-    let showClassName = "";
-    let to = "";
     if (currentPath != "/") {
       if (typeof window != "undefined") {
         if (window.history.length >= 2) {
@@ -84,11 +84,9 @@ export const HeaderIcon = () => {
   return (
     <>
       <div className="flex items-center gap-3 lg:min-w-[160px]">
-        {typeof window != "undefined" && window.history.length >= 2 && (
-          <div className="flex gap-3 md:hidden">
-            <BackButton property="back" />
-          </div>
-        )}
+        <div className={`flex gap-3 md:hidden ${showClassName}`}>
+          <BackButton property="back" />
+        </div>
         {/* <NextButton /> */}
         {headerIcon.emoji.length > 0 ? (
           <Link href={headerIcon.path} legacyBehavior>
@@ -120,9 +118,9 @@ export const HeaderIcon = () => {
                   <Image
                     src={headerIcon.avatar}
                     alt=""
-                    quality={40}
+                    quality={20}
                     fill
-                    sizes="100vw"
+                    sizes="100px"
                     style={{
                       objectFit: "cover",
                     }}

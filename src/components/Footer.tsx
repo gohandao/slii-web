@@ -48,18 +48,18 @@ export const Footer = () => {
         className={`mx-auto mb-5 flex max-w-3xl flex-col gap-3 md:flex-row md:gap-5`}
       >
         <a
-          href="https://discord.gg/EAWuqPsh"
+          href="https://mrgishi.notion.site/about-NFT-OTAKU-41f9dcea9d89494b8986b9d18eddd791"
           target="_blank"
-          rel="norefferer"
+          rel="noreferrer"
           className={`border-gray-500 pl-4 pr-5 text-gray-500 hover:bg-gray-700 hover:text-gray-100 ${buttonClass}`}
         >
           <SiNotion className="absolute left-5 top-0 flex h-full items-center justify-center" />
           About Us
         </a>
         <a
-          href="https://discord.gg/EAWuqPsh"
+          href="https://docs.google.com/forms/d/e/1FAIpQLSfd0_agN6SLqM0PlYxjL4E9HiLdq6_9KN3i65Z2byNWCBj11w/viewform"
           target="_blank"
-          rel="norefferer"
+          rel="noreferrer"
           className={`border-gray-500 pl-4 pr-5 text-gray-500 hover:bg-gray-700 hover:text-gray-100 ${buttonClass}`}
         >
           <TbMailbox className="absolute left-5 top-0 flex h-full items-center justify-center" />
@@ -68,7 +68,7 @@ export const Footer = () => {
         <a
           href="https://discord.gg/EAWuqPsh"
           target="_blank"
-          rel="norefferer"
+          rel="noreferrer"
           className={`border-purple-700 pr-5 pl-8 text-purple-700 hover:bg-purple-700 hover:text-purple-100 ${buttonClass}`}
         >
           <FaDiscord className="absolute left-5 top-0 flex h-full items-center justify-center" />

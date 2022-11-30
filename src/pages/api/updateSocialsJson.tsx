@@ -6,8 +6,9 @@ import { createJson } from "@/utilities/createJson";
 import { Social } from "@/types/social";
 import { Creator } from "@/types/creator";
 
-const creators = JSON.parse(creatorsJson);
-const collections = JSON.parse(collectionsJson);
+//@ts-ignore
+const creators = creatorsJson as Creator[];
+const collections = collectionsJson as any[];
 
 const callback = () => console.log("waiting...");
 const sleep = (delay = 1000) => {
@@ -23,19 +24,16 @@ export const updateSocialsJson = async (req: any, res: any) => {
   const creators_pathName = "creators.json";
   const creators_socials = await getCreatorSocials();
   const creators_source = await updateCreatorSocials(creators_socials);
-  const creators_json = JSON.stringify(creators_source);
-  await createJson(creators_pathName, creators_json);
+  await createJson(creators_pathName, creators_source);
   res.end();
   const collections_pathName = "collections.json";
   const collections_socials = await getColelctionSocials();
   const collections_source = await updateCollectionSocials(collections_socials);
-  const collections_json = JSON.stringify(collections_source);
-  await createJson(collections_pathName, collections_json);
+  await createJson(collections_pathName, collections_source);
   res.end();
   const pathName = "socials.json";
   const source = [...collections_socials, ...creators_socials];
-  const json = JSON.stringify(source);
-  await createJson(pathName, json);
+  await createJson(pathName, source);
   res.end();
 };
 

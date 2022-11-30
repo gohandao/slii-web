@@ -2,7 +2,7 @@ export const getTwitterFollowers = async (twitter_id) => {
   var options = {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${NEXT_PUBLIC_TWITTER_BEARER_TOKEN}`,
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_TWITTER_BEARER_TOKEN}`,
       "Content-Type": "application/json",
     },
   };

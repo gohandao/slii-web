@@ -1,6 +1,8 @@
-const fs = require("fs");
 import collectionsJson from "@/json/collections.json";
 import socialsJson from "@/json/socials.json";
+const collections = JSON.parse(JSON.stringify(collectionsJson)) as any[];
+const socials = JSON.parse(JSON.stringify(socialsJson));
+// const socials = socialsJson as Social[];
 
 // libs
 import { base } from "@/libs/airtable";
@@ -11,9 +13,7 @@ import { getOSUser } from "@/utilities/getOSUser";
 import { createJson } from "@/utilities/createJson";
 import { getOSData } from "@/utilities/getOSData";
 import { Creator } from "@/types/creator";
-
-const collections = JSON.parse(collectionsJson);
-const socials = JSON.parse(socialsJson);
+import { Social } from "@/types/social";
 
 const createCreatorJson = async (req: any, res: any) => {
   let pathName = "creators.json";
@@ -21,8 +21,7 @@ const createCreatorJson = async (req: any, res: any) => {
   let data = await getCreatorOptions(creators);
   let update_data = await updateSocial(data);
   let source = await sortCreators(update_data);
-  let json = JSON.stringify(source);
-  await createJson(pathName, json);
+  await createJson(pathName, source);
   res.end();
 };
 

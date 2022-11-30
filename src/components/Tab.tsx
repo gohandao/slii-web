@@ -1,6 +1,7 @@
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useContext } from "react";
 
 type Tab = {
   title: string;
@@ -12,6 +13,8 @@ type Tab = {
 export const Tab = ({ title, path, param }: Tab) => {
   const router = useRouter();
   const { tab, search } = router.query;
+  const { setPrevHeight } = useContext(UtilitiesContext);
+
   const removeParams = (asPath: string) => {
     return asPath.split("?")[0];
   };
@@ -39,12 +42,17 @@ export const Tab = ({ title, path, param }: Tab) => {
   return (
     <>
       {path && (
-        <Link href={path} legacyBehavior>
-          <a
+        <Link
+          href={path}
+          onClick={() => {
+            setPrevHeight(0);
+          }}
+        >
+          <div
             className={`relative flex items-center justify-center rounded-lg py-2 text-2xl font-bold transition-all duration-300 ${passiveClass}`}
           >
             {title}
-          </a>
+          </div>
         </Link>
       )}
       {param && (

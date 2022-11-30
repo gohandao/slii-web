@@ -1,5 +1,10 @@
 import collectionsJson from "@/json/collections.json";
-const collections = JSON.parse(collectionsJson);
+//@ts-ignore
+const collections = JSON.parse(JSON.stringify(collectionsJson));
+// const fs = require("fs");
+// const collections = JSON.parse(
+//   fs.readFileSync("@/json/collections.json", "utf8")
+// );
 
 export const getOSUserBackground = async (username: string) => {
   //api.opensea.io/user/ProjuiceAudio

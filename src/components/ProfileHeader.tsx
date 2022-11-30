@@ -113,7 +113,7 @@ export const ProfileHeader = ({
                 className="rounded-lg"
                 quality={10}
                 fill
-                sizes="100vw"
+                sizes="300px"
                 style={{
                   objectFit: "cover",
                 }}
@@ -142,6 +142,7 @@ export const ProfileHeader = ({
                   height={100}
                   alt=""
                   quality={10}
+                  size="200px"
                   style={{
                     maxWidth: "100%",
                     height: "auto",
@@ -265,7 +266,6 @@ export const ProfileHeader = ({
                 <Stats field="Collections" value={twitter_followers} />
                 <Stats field="Created" value={twitter_followers} />
                 <Stats field="Collected" value={twitter_followers} />
-                <Stats field="Views" value="100" />
               </StatsBox>
             </div>
           ))}

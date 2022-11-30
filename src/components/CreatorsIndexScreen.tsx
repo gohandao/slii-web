@@ -23,7 +23,7 @@ export const CreatorsIndexScreen = ({ params }: Props) => {
   const router = useRouter();
   const { type, page, search, order, sort, term, screen } = params;
   const currentPage = page ? Number(page) : 1;
-  const limit = 10;
+  const limit = 100;
   const { creators, collections, tags } = useContext(BaseContext);
   const { setHeaderIcon, hiddenParams, tempCreators, setTempCreators } =
     useContext(UtilitiesContext);
@@ -43,13 +43,15 @@ export const CreatorsIndexScreen = ({ params }: Props) => {
 
   const uppperKeyword = typeof search == "string" && search.toUpperCase();
   //1.match username
-  const searchedCreators01 = filteredCreators.filter(
-    (creator) =>
-      typeof search == "string" &&
-      //すべて大文字にして大文字小文字の区別をなくす
-      //@ts-ignore
-      creator.username.toUpperCase().includes(uppperKeyword) == true
-  );
+  const searchedCreators01 = uppperKeyword
+    ? filteredCreators.filter(
+        (creator) =>
+          typeof search == "string" &&
+          //すべて大文字にして大文字小文字の区別をなくす
+          creator.username != null &&
+          creator.username.toUpperCase().includes(uppperKeyword) == true
+      )
+    : filteredCreators;
   // //2.match description
   // const searchedCreators02 = filteredCreators.filter(
   //   (creator) =>
@@ -82,6 +84,7 @@ export const CreatorsIndexScreen = ({ params }: Props) => {
   };
   //モーダルを閉じた際の処理
   if (
+    tempCreators.length == 0 &&
     hiddenParams.page != page &&
     hiddenParams.order != order &&
     hiddenParams.sort != sort &&

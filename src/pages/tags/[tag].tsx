@@ -4,8 +4,9 @@ import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 
 import { ParsedUrlQuery } from "node:querystring";
-import TagsJson from "@/json/tags.json";
 
+// json
+import tagsJson from "@/json/tags.json";
 // libs
 import { sortList } from "@/libs/sortList";
 
@@ -25,12 +26,13 @@ import { OrderButton } from "@/components/OrderButton";
 // types
 import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
+import { Tag } from "@/types/tag";
 
 const TagPage: NextPage = (props: any) => {
   const router = useRouter();
   const { tag, tab, order, sort, term, page, type, search } = router.query;
   const currentPage = page ? Number(page) : 1;
-  const limit = 10;
+  const limit = 100;
 
   const { creators, collections } = useContext(BaseContext);
   const [sortedCreators, setSortedCreators] = useState<Creator[]>([]);
@@ -217,7 +219,10 @@ const TagPage: NextPage = (props: any) => {
 export default TagPage;
 
 export const getStaticPaths = async () => {
-  const tags = JSON.parse(TagsJson);
+  // const fs = require("fs");
+  // const tags = JSON.parse(fs.readFileSync("@/json/tags.json", "utf8"));
+  const tags = JSON.parse(JSON.stringify(tagsJson)) as Tag[];
+
   return {
     paths: tags.map((tag: any) => `/tags/${tag.name}`),
     //fallback: false,
@@ -235,7 +240,7 @@ type Params = ParsedUrlQuery & {
 export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   params,
 }) => {
-  const tags = JSON.parse(TagsJson);
+  const tags = JSON.parse(tagsJson);
   const tag_name = params && params.tag;
   const filtered_tags = tags.filter((tag: any) => tag.name === tag_name);
   const tag = filtered_tags[0];

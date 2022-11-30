@@ -1,22 +1,20 @@
-const fs = require("fs");
 import socialsJson from "@/json/socials.json";
-
+const socials = JSON.parse(JSON.stringify(socialsJson));
 // libs
 import { base } from "@/libs/airtable";
 import { supabase } from "@/libs/supabase";
 import { sortList } from "@/libs/sortList";
+// utilities
 import { createJson } from "@/utilities/createJson";
+// types
 import { Collection } from "@/types/collection";
-
-const socials = JSON.parse(socialsJson);
 
 const createCollectionJson = async (req: any, res: any) => {
   let pathName = "collections.json";
   let base = await getCollections();
   let data = await getOSCollections(base);
   let source = await sortCollections(data);
-  let json = JSON.stringify(source);
-  await createJson(pathName, json);
+  await createJson(pathName, source);
   res.end();
 };
 

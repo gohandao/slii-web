@@ -117,7 +117,7 @@ export const CreatorProfile = ({ creator }: Props) => {
                   className="rounded-lg bg-gray-800"
                   quality={10}
                   fill
-                  sizes="100vw"
+                  sizes="300px"
                   style={{
                     objectFit: "cover",
                   }}
@@ -131,7 +131,7 @@ export const CreatorProfile = ({ creator }: Props) => {
                   className="rounded-lg bg-gray-800"
                   quality={10}
                   fill
-                  sizes="100vw"
+                  sizes="300px"
                   style={{
                     objectFit: "cover",
                   }}
@@ -153,6 +153,7 @@ export const CreatorProfile = ({ creator }: Props) => {
                   height={100}
                   alt=""
                   quality={10}
+                  sizes="200px"
                   style={{
                     maxWidth: "100%",
                     height: "auto",
@@ -167,6 +168,7 @@ export const CreatorProfile = ({ creator }: Props) => {
                   height={100}
                   alt=""
                   quality={10}
+                  sizes="200px"
                   style={{
                     maxWidth: "100%",
                     height: "auto",

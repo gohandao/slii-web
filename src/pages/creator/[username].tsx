@@ -6,7 +6,6 @@ import { ParsedUrlQuery } from "node:querystring";
 
 // json
 import creatorsJson from "@/json/creators.json";
-
 // contexts
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
@@ -15,6 +14,7 @@ import { BaseLayout } from "@/components/BaseLayout";
 import { CreatorScreen } from "@/components/CreatorScreen";
 import { ScreenModal } from "@/components/ScreenModal";
 import { CreatorsIndexScreen } from "@/components/CreatorsIndexScreen";
+import { Creator } from "@/types/creator";
 
 const CreatorIndex: NextPage = (props: any) => {
   const router = useRouter();
@@ -94,7 +94,9 @@ type Params = ParsedUrlQuery & {
 };
 
 export const getStaticPaths = async () => {
-  const creators = JSON.parse(creatorsJson);
+  // const fs = require("fs");
+  // const creators = JSON.parse(fs.readFileSync("@/json/creators.json", "utf8"));
+  const creators = JSON.parse(JSON.stringify(creatorsJson)) as Creator[];
   return {
     paths: creators.map((creator: any) => `/creator/${creator.username}`),
     //fallback: false,
@@ -105,7 +107,9 @@ export const getStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   params,
 }) => {
-  const creators = JSON.parse(creatorsJson);
+  // const fs = require("fs");
+  // const creators = JSON.parse(fs.readFileSync("@/json/creators.json", "utf8"));
+  const creators = JSON.parse(JSON.stringify(creatorsJson)) as Creator[];
   const username = params && params.username;
   const filtered_creators = creators.filter(
     (creator: any) => creator.username === username

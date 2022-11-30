@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Moment from "react-moment";
 import { MdVerified } from "react-icons/md";
@@ -12,6 +12,11 @@ import { BookmarkButton } from "@/components/BookmarkButton";
 import { ProfileLinks } from "@/components/ProfileLinks";
 // types
 import { Creator } from "@/types/creator";
+import { FaDiscord } from "react-icons/fa";
+import { ListSocial } from "@/components/ListSocial";
+import { ListStats } from "./ListStats";
+import { IconEth } from "./IconEth";
+import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 
 type Props = {
   creators: Creator[];
@@ -90,7 +95,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
                               height={80}
                               alt=""
                               quality={10}
-                              sizes="300px"
+                              sizes="100px"
                               style={{
                                 maxWidth: "100%",
                                 height: "auto",
@@ -100,14 +105,28 @@ export const CreatorList = ({ creators, limit }: Props) => {
                           )}
                         </div>
                         <div className="absolute bottom-[22px] left-full z-10 ml-2 flex items-center gap-1">
-                          <ProfileLinks
+                          <div className="flex gap-2 rounded-full bg-gray-900 px-3 py-[2px] opacity-80">
+                            {creator.twitter_followers && (
+                              <ListSocial
+                                icon={<BsTwitter />}
+                                text={creator.twitter_followers}
+                              />
+                            )}
+                            {creator.discord_members && (
+                              <ListSocial
+                                icon={<FaDiscord />}
+                                text={creator.discord_members}
+                              />
+                            )}
+                          </div>
+                          {/* <ProfileLinks
                             address={creator.address}
                             twitter_id={creator.twitter_id}
                             instagram_id={creator.instagram_id}
                             discord_url={creator.discord_url}
                             website_url={creator.website_url}
                             opensea_username={creator.username}
-                          />
+                          /> */}
                         </div>
                       </div>
                     </div>
@@ -139,27 +158,49 @@ export const CreatorList = ({ creators, limit }: Props) => {
                           </div>
                         </div>
                       </div>
-                      <div className="flex w-full justify-between">
-                        <div
-                          className={`relative z-10 -mx-1 flex flex-1 items-center justify-between gap-4 rounded py-[2px] text-xs capitalize text-gray-500 md:text-xs`}
-                        >
-                          {creator.twitter_followers && (
-                            <div
-                              className={`relative left-0 top-0 z-10 flex items-center justify-center gap-2 rounded py-[2px] px-[2px] text-xs capitalize text-gray-500 md:text-xs `}
-                            >
-                              <BsTwitter />
-                              {creator.twitter_followers.toLocaleString()}
-                            </div>
+                      <div className="flex items-end justify-between gap-5">
+                        <div className="flex gap-5">
+                          {creator.total_volume && (
+                            <ListStats
+                              label="Total Volume"
+                              field={
+                                <>
+                                  {creator.token_symbol &&
+                                    creator.token_symbol == "ETH" && (
+                                      <IconEth />
+                                    )}
+                                  {abbreviateNumber(creator.total_volume)}
+                                </>
+                              }
+                            />
                           )}
-                          {creator.listed_at && (
-                            <div className="ml-auto flex items-center gap-2">
-                              <IoMdListBox />
+                          {creator.average_floor_price && (
+                            <ListStats
+                              label="Ave. Floor Price"
+                              field={
+                                <>
+                                  {creator.token_symbol &&
+                                    creator.token_symbol == "ETH" && (
+                                      <IconEth />
+                                    )}
+                                  {abbreviateNumber(
+                                    creator.average_floor_price
+                                  )}
+                                </>
+                              }
+                            />
+                          )}
+                        </div>
+                        {creator.listed_at && (
+                          <ListSocial
+                            icon={<IoMdListBox />}
+                            text={
                               <Moment format="DD.MM.YYYY">
                                 {creator.listed_at}
                               </Moment>
-                            </div>
-                          )}
-                        </div>
+                            }
+                          />
+                        )}
                       </div>
                     </div>
                   </div>

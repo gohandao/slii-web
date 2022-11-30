@@ -48,15 +48,20 @@ const Home: NextPage = () => {
   }, []);
 
   let body_height = 0;
+  let list_height = 0;
+  let inner_height = 0;
   if (typeof window === "object") {
     const body_element = document.getElementById("container");
+    const list_element = document.getElementById("list");
     body_height = body_element ? body_element.scrollHeight : 0;
+    list_height = list_element ? list_element.scrollHeight : 0;
+    inner_height = window.innerHeight;
   }
   const contents_height = getContentsHeight();
 
   useEffect(() => {
     new_height.current = contents_height;
-    if (new_height.current) {
+    if (new_height.current && inner_height != new_height.current) {
       setPrevHeight(new_height.current);
     }
     window.addEventListener("scroll", async () => {

@@ -32,7 +32,7 @@ export const CreatorScreen = ({ property }: Props) => {
   const { username, order, sort, term, page, type, search, slug, screen } =
     router.query;
   const currentPage = page ? Number(page) : 1;
-  const limit = 20;
+  const limit = 100;
   const { creators, collections } = useContext(BaseContext);
   const { setHeaderIcon, setKeyword, keyword, NFTKeyword } =
     useContext(UtilitiesContext);
@@ -184,6 +184,8 @@ export const CreatorScreen = ({ property }: Props) => {
   //1.match username
   const searchedAssets01 = filteredAssets.filter(
     (asset) =>
+      asset.name &&
+      asset.name.length > 0 &&
       typeof NFTKeyword == "string" &&
       //すべて大文字にして大文字小文字の区別をなくす
       //@ts-ignore
@@ -240,7 +242,7 @@ export const CreatorScreen = ({ property }: Props) => {
 
   const stats = [
     {
-      field: "twitter",
+      field: "Total Volume",
       value: "twitter",
     },
   ];

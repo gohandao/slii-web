@@ -1,10 +1,13 @@
 import collectionsJson from "@/json/collections.json";
-const collections = JSON.parse(collectionsJson);
+const collections = collectionsJson as any[];
 
 export const getOSData = async (username: string) => {
   const filteredCollections =
-    collections.length > 0 &&
-    collections.filter((collection: any) => collection.creator_id == username);
+    collections.length > 0
+      ? collections.filter(
+          (collection: any) => collection.creator_id == username
+        )
+      : [];
 
   const token_symbol =
     filteredCollections.length > 0 && filteredCollections[0].payment_tokens[0]

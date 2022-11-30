@@ -1,17 +1,13 @@
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
-
 import React, { useEffect, useContext, useRef } from "react";
 import * as Scroll from "react-scroll";
-
 // contexts
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-
 // conponents
 import { BaseLayout } from "@/components/BaseLayout";
 import { CollectionsIndexScreen } from "@/components/CollectionsIndexScreen";
-
 // utilities
 import { getContentsHeight } from "@/utilities/getContentsHeight";
 

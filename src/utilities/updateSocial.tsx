@@ -160,10 +160,7 @@ const getTwitterFollowers = async (twitter_id: string) => {
   await fetch(`${baseUrl}/api/twitter?twitter_id=${twitter_id}`)
     .then((response) => response.json())
     .then((response) => {
-      //console.log("JSON.parse(response)");
-      //console.log(JSON.parse(response));
       followers = JSON.parse(response);
-      //setTwitterData(JSON.parse(response));
       return followers;
     })
     .catch((error) => {

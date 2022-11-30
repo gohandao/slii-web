@@ -13,9 +13,9 @@ import { getImageUrl, supabase } from "@/libs/supabase";
 import creatorsJson from "@/json/creators.json";
 import collectionsJson from "@/json/collections.json";
 import tagsJson from "@/json/tags.json";
-const creators_data = JSON.parse(creatorsJson) as Creator[];
-const collections_data = JSON.parse(collectionsJson);
-const tags = JSON.parse(tagsJson);
+const creators_data = JSON.parse(JSON.stringify(creatorsJson)) as Creator[];
+const collections_data = JSON.parse(JSON.stringify(collectionsJson)) as any[];
+const tags = JSON.parse(JSON.stringify(tagsJson)) as Tag[];
 
 // contexts
 import { AuthContext } from "@/contexts/AuthContext";
@@ -28,6 +28,7 @@ import { Upvote } from "@/types/upvote";
 import { Bookmark } from "@/types/bookmark";
 import { Profile } from "@/types/profile";
 import { Params } from "@/types/params";
+import { Tag } from "@/types/tag";
 
 const shortid = require("shortid");
 
@@ -37,7 +38,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const currentPath = router.pathname;
 
   const [page, setPage] = useState<number | undefined>(1);
-  const limit = 10;
+  const limit = 100;
   const [loading, setLoading] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string | undefined>();
   const [hiddenParams, setHiddenParams] = useState<Params>({});

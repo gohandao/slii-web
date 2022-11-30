@@ -23,7 +23,7 @@ export const CollectionsIndexScreen = ({ params }: Props) => {
   const router = useRouter();
   const { order, sort, term, page, type, search, screen } = router.query;
   const currentPage = page ? Number(page) : 1;
-  const limit = 10;
+  const limit = 100;
   const [sortedCollections, setSortedCollections] = useState<Collection[]>([]);
   const [checkInitial, setCheckInitial] = useState<boolean>(false);
 

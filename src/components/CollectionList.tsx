@@ -15,6 +15,8 @@ import { UpvoteButton } from "@/components/UpvoteButton";
 import { BookmarkButton } from "@/components/BookmarkButton";
 import { IconEth } from "@/components/IconEth";
 import { Hyphen } from "@/components/Hyphen";
+import { ListSocial } from "@/components/ListSocial";
+import { ListStats } from "./ListStats";
 
 type Props = {
   collections: any[];
@@ -26,22 +28,6 @@ export const CollectionList = ({ collections, limit }: Props) => {
   const currentPath = router.pathname;
   const currentPage = page ? Number(page) : 1;
   const { order, sort, term } = router.query;
-
-  type StatsProps = {
-    icon: JSX.Element | JSX.Element[];
-    text: JSX.Element | JSX.Element[];
-  };
-  const Stats = ({ icon, text }: StatsProps) => {
-    return (
-      <div
-        className={`relative left-0 top-0 z-10 flex items-center justify-center gap-2 rounded py-[2px] px-[2px] text-xs capitalize text-gray-500 md:text-xs `}
-      >
-        {icon}
-        {text}
-      </div>
-    );
-  };
-
   const modal_param = currentPath == "/collections" ? "?screen=modal" : "";
 
   return (
@@ -107,7 +93,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
                               alt=""
                               quality={10}
                               fill
-                              sizes="200px"
+                              sizes="100px"
                               style={{
                                 objectFit: "cover",
                               }}
@@ -119,13 +105,13 @@ export const CollectionList = ({ collections, limit }: Props) => {
                           <div className="absolute bottom-[22px] left-full z-10 ml-2 flex w-full flex-col items-start gap-0">
                             <div className="flex gap-2 rounded-full bg-gray-900 px-3 py-[2px] opacity-80">
                               {collection.twitter_followers && (
-                                <Stats
+                                <ListSocial
                                   icon={<BsTwitter />}
                                   text={collection.twitter_followers}
                                 />
                               )}
                               {collection.discord_members && (
-                                <Stats
+                                <ListSocial
                                   icon={<FaDiscord />}
                                   text={collection.discord_members}
                                 />
@@ -162,84 +148,88 @@ export const CollectionList = ({ collections, limit }: Props) => {
                       </div>
                       <div className="flex items-end justify-between gap-5">
                         <div className="flex gap-5">
-                          <div className="">
-                            <p className="sp:text-sm text-xs font-bold text-gray-500">
-                              Floor Price
-                            </p>
-                            <div className="-ml-1 flex items-center gap-1 font-bold text-gray-400">
-                              {collection.payment_tokens &&
-                                collection.payment_tokens[0].symbol ==
-                                  "ETH" && <IconEth />}
-                              {collection.stats &&
-                              collection.stats.floor_price > 0 ? (
-                                abbreviateNumber(collection.stats.floor_price)
-                              ) : (
-                                <Hyphen />
-                              )}
-                            </div>
-                          </div>
-                          <div className="">
-                            <p className="sp:text-sm text-xs font-bold text-gray-500">
-                              {term == "all" || !term
-                                ? "Total"
-                                : term == "24h"
-                                ? "24h"
-                                : term == "7d"
-                                ? "7d"
-                                : term == "30d" && "30d"}{" "}
-                              Volume
-                            </p>
-                            <div className="-ml-1 flex items-center gap-1 font-bold text-gray-400">
-                              {term == "all" ||
-                              (!term &&
-                                collection.stats &&
-                                collection.stats.total_volume > 0) ? (
-                                <>
-                                  {collection.payment_tokens &&
-                                    collection.payment_tokens[0].symbol ==
-                                      "ETH" && <IconEth />}
-                                  {abbreviateNumber(
-                                    collection.stats.total_volume
-                                  )}
-                                </>
-                              ) : term == "24h" &&
-                                collection.stats.one_day_volume > 0 ? (
-                                <>
-                                  {collection.payment_tokens &&
-                                    collection.payment_tokens[0].symbol ==
-                                      "ETH" && <IconEth />}
-                                  {abbreviateNumber(
-                                    collection.stats.one_day_volume
-                                  )}
-                                </>
-                              ) : term == "7d" &&
-                                collection.stats.seven_day_volume > 0 ? (
-                                <>
-                                  {collection.payment_tokens &&
-                                    collection.payment_tokens[0].symbol ==
-                                      "ETH" && <IconEth />}
-                                  {abbreviateNumber(
-                                    collection.stats.seven_day_volume
-                                  )}
-                                </>
-                              ) : term == "30d" &&
-                                collection.stats.thirty_day_volume > 0 ? (
-                                <>
-                                  {collection.payment_tokens &&
-                                    collection.payment_tokens[0].symbol ==
-                                      "ETH" && <IconEth />}
-                                  {abbreviateNumber(
-                                    collection.stats.thirty_day_volume
-                                  )}
-                                </>
-                              ) : (
-                                <Hyphen />
-                              )}
-                            </div>
-                          </div>
+                          <ListStats
+                            label="Floor Price"
+                            field={
+                              <>
+                                {collection.payment_tokens &&
+                                  collection.payment_tokens[0].symbol ==
+                                    "ETH" && <IconEth />}
+                                {collection.stats &&
+                                collection.stats.floor_price > 0 ? (
+                                  abbreviateNumber(collection.stats.floor_price)
+                                ) : (
+                                  <Hyphen />
+                                )}
+                              </>
+                            }
+                          />
+                          <ListStats
+                            label={
+                              <>
+                                {term == "all" || !term
+                                  ? "Total"
+                                  : term == "24h"
+                                  ? "24h"
+                                  : term == "7d"
+                                  ? "7d"
+                                  : term == "30d" && "30d"}{" "}
+                                Volume
+                              </>
+                            }
+                            field={
+                              <>
+                                {term == "all" ||
+                                (!term &&
+                                  collection.stats &&
+                                  collection.stats.total_volume > 0) ? (
+                                  <>
+                                    {collection.payment_tokens &&
+                                      collection.payment_tokens[0].symbol ==
+                                        "ETH" && <IconEth />}
+                                    {abbreviateNumber(
+                                      collection.stats.total_volume
+                                    )}
+                                  </>
+                                ) : term == "24h" &&
+                                  collection.stats.one_day_volume > 0 ? (
+                                  <>
+                                    {collection.payment_tokens &&
+                                      collection.payment_tokens[0].symbol ==
+                                        "ETH" && <IconEth />}
+                                    {abbreviateNumber(
+                                      collection.stats.one_day_volume
+                                    )}
+                                  </>
+                                ) : term == "7d" &&
+                                  collection.stats.seven_day_volume > 0 ? (
+                                  <>
+                                    {collection.payment_tokens &&
+                                      collection.payment_tokens[0].symbol ==
+                                        "ETH" && <IconEth />}
+                                    {abbreviateNumber(
+                                      collection.stats.seven_day_volume
+                                    )}
+                                  </>
+                                ) : term == "30d" &&
+                                  collection.stats.thirty_day_volume > 0 ? (
+                                  <>
+                                    {collection.payment_tokens &&
+                                      collection.payment_tokens[0].symbol ==
+                                        "ETH" && <IconEth />}
+                                    {abbreviateNumber(
+                                      collection.stats.thirty_day_volume
+                                    )}
+                                  </>
+                                ) : (
+                                  <Hyphen />
+                                )}
+                              </>
+                            }
+                          />
                         </div>
                         {collection.listed_at && (
-                          <Stats
+                          <ListSocial
                             icon={<IoMdListBox />}
                             text={
                               <Moment format="DD.MM.YYYY">

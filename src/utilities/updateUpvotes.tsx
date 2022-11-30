@@ -1,11 +1,11 @@
-import { BaseContext } from "@/contexts/BaseContext";
-import { useContext } from "react";
-import { Creator } from "@/types/creator";
+// json
 import creatorsJson from "@/json/creators.json";
 import collectionsJson from "@/json/collections.json";
+// types
+import { Creator } from "@/types/creator";
 
-const creators = JSON.parse(creatorsJson);
-const collections = JSON.parse(collectionsJson);
+const creators = JSON.parse(JSON.stringify(creatorsJson)) as Creator[];
+const collections = JSON.parse(JSON.stringify(collectionsJson));
 
 type Props = {
   upvotes_count: number;

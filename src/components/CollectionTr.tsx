@@ -75,7 +75,7 @@ export const CollectionTr = ({ item, index, limit }: any) => {
                       alt=""
                       quality={10}
                       fill
-                      sizes="100vw"
+                      sizes="300px"
                       style={{
                         objectFit: "cover",
                       }}
@@ -91,7 +91,7 @@ export const CollectionTr = ({ item, index, limit }: any) => {
                         alt=""
                         quality={10}
                         fill
-                        sizes="100vw"
+                        sizes="200px"
                         style={{
                           objectFit: "cover",
                         }}

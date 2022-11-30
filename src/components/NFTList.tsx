@@ -49,21 +49,23 @@ export const NFTList = ({ assets }: Props) => {
                 height: "10px",
               }}
             />
-            <Image
-              src={asset.image_thumbnail_url}
-              alt=""
-              loading="lazy"
-              width={300}
-              height={300}
-              className="w-full"
-              quality={10}
-              style={{
-                maxWidth: "100%",
-                height: "auto",
-                objectFit: "cover",
-              }}
-            />
-
+            {asset.image_thumbnail_url && (
+              <Image
+                src={asset.image_thumbnail_url}
+                alt=""
+                loading="lazy"
+                width={300}
+                height={300}
+                className="w-full"
+                quality={10}
+                sizes="300px"
+                style={{
+                  maxWidth: "100%",
+                  height: "auto",
+                  objectFit: "cover",
+                }}
+              />
+            )}
             <div className="absolute left-0 bottom-0 rounded-tr-lg bg-gray-800 bg-opacity-90 px-3 py-[2px]	">
               <div className="-ml-1 flex items-center gap-1 text-xs font-bold text-gray-400">
                 <span className="">

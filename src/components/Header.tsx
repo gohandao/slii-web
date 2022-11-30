@@ -111,9 +111,9 @@ export const Header = () => {
                   alt=""
                   loading="lazy"
                   className=""
-                  quality={20}
+                  quality={10}
                   fill
-                  sizes="100vw"
+                  sizes="100px"
                   style={{
                     objectFit: "cover",
                   }}
@@ -125,7 +125,8 @@ export const Header = () => {
                   loading="lazy"
                   className=""
                   fill
-                  sizes="300px"
+                  quality={10}
+                  sizes="100px"
                   style={{
                     objectFit: "cover",
                   }}

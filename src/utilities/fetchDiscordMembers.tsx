@@ -5,8 +5,8 @@ export const fetchDiscordMembers = async (discord_id: string) => {
   )
     .then((response) => response.json())
     .then((response) => {
-      console.log("JSON.parse(response)");
-      console.log(response);
+      // console.log("JSON.parse(response)");
+      // console.log(response);
       //setDiscordData(response);
       members = response;
       return members;

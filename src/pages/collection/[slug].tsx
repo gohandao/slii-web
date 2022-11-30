@@ -6,7 +6,6 @@ import { ParsedUrlQuery } from "node:querystring";
 
 // json
 import collectionsJson from "@/json/collections.json";
-
 // contexts
 import { BaseLayout } from "@/components/BaseLayout";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
@@ -91,9 +90,11 @@ type Params = ParsedUrlQuery & {
 };
 
 export const getStaticPaths = async () => {
-  const collections = JSON.parse(collectionsJson);
-  //console.log("testrecords");
-  //console.log(records);
+  // const fs = require("fs");
+  // const collections = JSON.parse(
+  //   fs.readFileSync("@/json/collections.json", "utf8")
+  // );
+  const collections = JSON.parse(JSON.stringify(collectionsJson));
   return {
     paths: collections.map(
       (colelction: any) => `/collection/${colelction.slug}`
@@ -106,7 +107,11 @@ export const getStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   params,
 }) => {
-  const collections = JSON.parse(collectionsJson);
+  // const fs = require("fs");
+  // const collections = JSON.parse(
+  //   fs.readFileSync("@/json/collections.json", "utf8")
+  // );
+  const collections = JSON.parse(JSON.stringify(collectionsJson));
   const slug = params && params.slug;
   const filtered_collections = collections.filter(
     (collection: any) => collection.slug === slug

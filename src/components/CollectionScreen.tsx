@@ -30,7 +30,7 @@ export const CollectionScreen = ({ property }: Props) => {
   const { username, order, sort, term, page, type, search, slug, screen } =
     router.query;
   const currentPage = page ? Number(page) : 1;
-  const limit = 50;
+  const limit = 100;
   const { setHeaderIcon, setKeyword } = useContext(UtilitiesContext);
   const [checkAssets, setCheckAssets] = useState(false);
   const [sortedAssets, setSortedAssets] = useState<any[]>([]);
@@ -236,7 +236,7 @@ export const CollectionScreen = ({ property }: Props) => {
     instagram_id: collection?.instagram_id,
     discord_url: collection?.discord_url,
     website_url: collection?.website_url,
-    opensea_username: collection?.slug,
+    opensea_username: collection && "collection/" + collection.slug,
   };
 
   const stats = [

@@ -115,6 +115,11 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
     (creator: any) => creator.username === username
   );
   const creator = filtered_creators[0];
+  if (!creator) {
+    return {
+      notFound: true,
+    };
+  }
   const description = creator && creator.description ? creator.description : "";
   let baseUrl;
   if (process.env.NODE_ENV != "test") {

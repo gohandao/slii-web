@@ -1,4 +1,4 @@
-import router from "next/router";
+import router, { useRouter } from "next/router";
 import React, { ReactNode, useContext, useState } from "react";
 import Modal from "react-modal";
 import { IoIosClose } from "react-icons/io";
@@ -19,6 +19,8 @@ export const ScreenModal = ({
   modalIsOpen,
   setModalIsOpen,
 }: Props) => {
+  const router = useRouter();
+  const { screen } = router.query;
   const { hiddenParams } = useContext(UtilitiesContext);
 
   const customStyles = {
@@ -77,10 +79,14 @@ export const ScreenModal = ({
       onRequestClose={closeModal}
       //@ts-ignore
       style={customStyles}
-      className="hide-scrollbar"
+      className="hide-scrollbar	"
     >
-      <div className="relative bg-transparent p-5 ">
-        <div className="bg-stripe h-full w-full rounded pt-[66px]">
+      <div className="relative bg-transparent p-5">
+        <div
+          className={`bg-stripe h-full w-full rounded pt-[66px] ${
+            screen == "modal" && "lg:px-6"
+          }`}
+        >
           {children}
           <button
             onClick={closeModal}

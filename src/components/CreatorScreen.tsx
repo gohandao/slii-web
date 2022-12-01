@@ -8,6 +8,7 @@ import { sortNFTs } from "@/libs/sortNFTs";
 // utilities
 import { getNFTs } from "@/utilities/getNFTs";
 import { randomize } from "@/utilities/randomize";
+import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 // contexts
 import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
@@ -21,6 +22,7 @@ import { Searchbox } from "@/components/Searchbox";
 import { OrderButton } from "@/components/OrderButton";
 import { RandomButton } from "@/components/RandomButton";
 import { NFTList } from "@/components/NFTList";
+import { IconEth } from "@/components/IconEth";
 // types
 import { Creator } from "@/types/creator";
 
@@ -32,7 +34,7 @@ export const CreatorScreen = ({ property }: Props) => {
   const { username, order, sort, term, page, type, search, slug, screen } =
     router.query;
   const currentPage = page ? Number(page) : 1;
-  const limit = 100;
+  const limit = 50;
   const { creators, collections } = useContext(BaseContext);
   const { setHeaderIcon, setKeyword, keyword, NFTKeyword } =
     useContext(UtilitiesContext);
@@ -93,6 +95,9 @@ export const CreatorScreen = ({ property }: Props) => {
       await Promise.all(
         creatorCollections.map(async (collection) => {
           const data = await getNFTs(collection.slug);
+          console.log("assets data");
+          console.log(data);
+
           if (data) {
             new_assets = [...new_assets, ...data];
           }
@@ -111,6 +116,8 @@ export const CreatorScreen = ({ property }: Props) => {
         await Promise.all(
           creatorCollections.map(async (collection) => {
             const data = await getNFTs(collection.slug);
+            console.log("assets data");
+            console.log(data);
             if (data) {
               new_assets = [...new_assets, ...data];
             }
@@ -243,7 +250,38 @@ export const CreatorScreen = ({ property }: Props) => {
   const stats = [
     {
       field: "Total Volume",
-      value: "twitter",
+      value: creator && creator.total_volume && (
+        <>
+          {creator.token_symbol && creator.token_symbol == "ETH" && <IconEth />}
+          {abbreviateNumber(creator.total_volume)}
+        </>
+      ),
+    },
+    {
+      field: "Ave. Volume",
+      value: creator && creator.average_volume && (
+        <>
+          {creator.token_symbol && creator.token_symbol == "ETH" && <IconEth />}
+          {abbreviateNumber(creator.average_volume)}
+        </>
+      ),
+    },
+    {
+      field: "Ave. Floor Price",
+      value: creator && creator.average_floor_price && (
+        <>
+          {creator.token_symbol && creator.token_symbol == "ETH" && <IconEth />}
+          {abbreviateNumber(creator.average_floor_price)}
+        </>
+      ),
+    },
+    {
+      field: "Total Supply",
+      value: creator?.total_supply,
+    },
+    {
+      field: "Total Sales",
+      value: creator?.total_sales,
     },
   ];
 
@@ -256,7 +294,7 @@ export const CreatorScreen = ({ property }: Props) => {
 
   return (
     <>
-      <div className="flex flex-col gap-10 pb-10">
+      <div className={`flex flex-col gap-10 pb-10 `}>
         {creator && (
           <ProfileHeader
             page="creator"
@@ -276,7 +314,7 @@ export const CreatorScreen = ({ property }: Props) => {
           />
         )}
         {creatorCollections.length != 0 && (
-          <div className="mx-auto flex w-full gap-6 px-5 lg:px-8">
+          <div className="hide-scrollbar mx-auto -mt-7 flex w-full gap-6 overflow-x-auto rounded px-5 pt-5 lg:px-8">
             {creatorCollections.map((collection, index) => (
               <CollectionCard
                 username={username}
@@ -289,13 +327,13 @@ export const CreatorScreen = ({ property }: Props) => {
         {assets && assets.length > 0 && (
           <div className="px-5 lg:px-8">
             <div className="relative z-20 mb-5 flex justify-between gap-3 sm:gap-5">
-              {custom_menu.length > 0 && (
+              {/* {custom_menu.length > 0 && (
                 <Dropdown
                   position="left"
                   property="nftType"
                   custom_menu={custom_menu}
                 />
-              )}
+              )} */}
               <Searchbox property="nft" id="nft" />
               <div className="flex items-center gap-3">
                 <Dropdown position="right" property="nftSort" />

@@ -51,37 +51,38 @@ export const upsertNFTs = async (req: any, res: any) => {
         break;
       }
     }
-    // console.log("last assets");
-    // console.log(assets);
-    return assets;
+    return assets[0];
   };
   for (let index = 0; index < collections.length; index++) {
-    await sleep(300);
+    // for (let index = 0; index < 5; index++) {
+    // await sleep(300);
     if (index % 10 == 0) {
-      console.log((index * 300) / 1000 + "seconds");
+      console.log(index + " collections");
     }
     const assets = await getData(collections[index].slug);
     const upsertData = async (assets: any) => {
       let new_assets = [] as any[];
-      assets &&
+      assets.length > 0 &&
         assets.map(async (asset: any, index: any) => {
-          const new_data = {
-            id: asset.id,
-            collection_slug: collections[index].slug,
-            name: asset.name,
-            description: asset.name,
-            image_url: asset.image_url,
-            image_original_url: asset.image_original_url,
-            image_thumbnail_url: asset.image_thumbnail_url,
-            permalink: asset.permalink,
-            last_sale_symbol:
-              asset.last_sale && asset.last_sale.payment_token.symbol,
-            last_sale_price:
-              asset.last_sale && Number(asset.last_sale.total_price),
-            num_sales: asset.num_sales,
-            token_id: asset.token_id,
-          };
-          new_assets = [...new_assets, new_data];
+          if (asset && asset.collection && asset.collection.slug) {
+            const new_data = {
+              id: asset.id,
+              collection_slug: asset.collection.slug,
+              name: asset.name,
+              description: asset.name,
+              image_url: asset.image_url,
+              image_original_url: asset.image_original_url,
+              image_thumbnail_url: asset.image_thumbnail_url,
+              permalink: asset.permalink,
+              last_sale_symbol:
+                asset.last_sale && asset.last_sale.payment_token.symbol,
+              last_sale_price:
+                asset.last_sale && Number(asset.last_sale.total_price),
+              num_sales: asset.num_sales,
+              token_id: asset.token_id,
+            };
+            new_assets = [...new_assets, new_data];
+          }
         });
       const { data, error } = await supabase
         .from("nfts")

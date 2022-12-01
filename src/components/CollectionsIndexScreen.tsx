@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useState, useEffect, useContext } from "react";
+import { IoMdSync } from "react-icons/io";
 // libs
 import { sortList } from "@/libs/sortList";
 // contexts
@@ -101,9 +102,13 @@ export const CollectionsIndexScreen = ({ params }: Props) => {
         <TabIndex />
       </div>
       <div className="mb-2 flex gap-3">
-        <div className="flex items-baseline gap-3">
+        <div className="flex w-full items-baseline justify-between gap-3">
           <p className="text-sm text-gray-500">
             {searchedCollections.length} Collections
+          </p>
+          <p className="flex items-center gap-2 text-sm text-gray-500">
+            <IoMdSync />
+            every 24h
           </p>
         </div>
       </div>

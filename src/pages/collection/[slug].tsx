@@ -107,17 +107,17 @@ export const getStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   params,
 }) => {
-  // const fs = require("fs");
-  // const collections = JSON.parse(
-  //   fs.readFileSync("@/json/collections.json", "utf8")
-  // );
   const collections = JSON.parse(JSON.stringify(collectionsJson));
   const slug = params && params.slug;
   const filtered_collections = collections.filter(
     (collection: any) => collection.slug === slug
   );
   const collection = filtered_collections[0];
-
+  if (!collection) {
+    return {
+      notFound: true,
+    };
+  }
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {

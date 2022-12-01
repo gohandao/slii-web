@@ -31,7 +31,7 @@ type Props = {
     opensea_username?: string;
   };
   tags?: any[];
-  stats?: { field: string; value: string }[];
+  stats?: { field: any; value: any }[];
   twitter_id?: string;
   twitter_followers?: number | null;
   discord_url?: string;
@@ -210,14 +210,14 @@ export const ProfileHeader = ({
               {/* <Image src="/icon-eth.svg" width={16} height={16} alt="" />
               <CopyText text={address} alertText="ETH address has copied!" /> */}
             </div>
-            <div className="flex flex-col gap-1">
-              <p className="mt-1 break-all text-justify text-sm text-gray-100 transition-all duration-200 sm:text-base ">
+            <div className="flex max-w-5xl flex-col gap-1">
+              <p className="mt-1 break-all text-justify text-sm text-gray-100 transition-all duration-200 md:text-[15px] ">
                 {showDescription ? description : slicedDescription}
               </p>
               {description && description.length > 80 && (
                 <>
                   <button
-                    className="inline-flex items-center gap-1 text-gray-500"
+                    className="inline-flex items-center gap-1 text-sm text-gray-500"
                     onClick={() => {
                       showDescription
                         ? setShowDescription(false)
@@ -247,28 +247,26 @@ export const ProfileHeader = ({
             </div>
           </div>
         </div>
-        {stats &&
-          stats.length > 0 &&
-          stats.map((data, index) => (
-            <div key={index} className="mt-1 flex flex-col items-start">
-              <StatsBox>
-                {twitter_followers && (
-                  <Stats
-                    field="Followers"
-                    value={
-                      <div className="flex w-full items-center justify-end gap-2">
-                        <FaTwitter className="text-sm opacity-60" />
-                        {twitter_followers}
-                      </div>
-                    }
-                  />
-                )}
-                <Stats field="Collections" value={twitter_followers} />
-                <Stats field="Created" value={twitter_followers} />
-                <Stats field="Collected" value={twitter_followers} />
-              </StatsBox>
-            </div>
-          ))}
+        <div className="mt-1 flex flex-wrap items-start gap-4">
+          {stats &&
+            stats.length > 0 &&
+            stats.map((data, index) => (
+              <div key={index}>
+                <StatsBox>
+                  {data.field && data.value && (
+                    <Stats
+                      field={data.field}
+                      value={
+                        <div className="flex w-full items-center justify-end gap-2">
+                          {data.value}
+                        </div>
+                      }
+                    />
+                  )}
+                </StatsBox>
+              </div>
+            ))}
+        </div>
       </div>
     </section>
   );

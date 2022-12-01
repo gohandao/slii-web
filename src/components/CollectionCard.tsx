@@ -39,9 +39,9 @@ export const CollectionCard = ({ username, collection, index }: any) => {
 
   return (
     <Link href={`/collection/${collection.slug}`} key={index} legacyBehavior>
-      <a className="relative block w-full max-w-[480px] transform overflow-hidden rounded-lg border border-gray-700 bg-gray-800 px-1 pt-1 pb-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+      <a className="relative block min-w-[320px] transform overflow-hidden rounded-lg border border-gray-700 bg-gray-800 px-1 pt-[3px] pb-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg md:min-w-[360px]">
         <div
-          className={`mw-full relative h-20 overflow-hidden rounded bg-gray-900 opacity-40 ${
+          className={`relative h-20 w-full overflow-hidden rounded bg-gray-900 opacity-40 ${
             screen != "modal" && "lg:h-24 "
           }`}
         >

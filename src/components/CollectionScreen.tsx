@@ -8,12 +8,14 @@ import { sortNFTs } from "@/libs/sortNFTs";
 // utilities
 import { randomize } from "@/utilities/randomize";
 import { getNFTs } from "@/utilities/getNFTs";
+import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 // contexts
 import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 // components
 import { Pagination } from "@/components/Pagination";
 import { Dropdown } from "@/components/Dropdown";
+import { IconEth } from "@/components/IconEth";
 import { ProfileHeader } from "@/components/ProfileHeader";
 import { RandomButton } from "@/components/RandomButton";
 import { Searchbox } from "@/components/Searchbox";
@@ -30,7 +32,7 @@ export const CollectionScreen = ({ property }: Props) => {
   const { username, order, sort, term, page, type, search, slug, screen } =
     router.query;
   const currentPage = page ? Number(page) : 1;
-  const limit = 100;
+  const limit = 50;
   const { setHeaderIcon, setKeyword } = useContext(UtilitiesContext);
   const [checkAssets, setCheckAssets] = useState(false);
   const [sortedAssets, setSortedAssets] = useState<any[]>([]);
@@ -241,8 +243,46 @@ export const CollectionScreen = ({ property }: Props) => {
 
   const stats = [
     {
-      field: "twitter",
-      value: "twitter",
+      field: "Total Volume",
+      value: collection && collection.stats.total_volume && (
+        <>
+          {collection.payment_tokens &&
+            collection.payment_tokens[0].symbol == "ETH" && <IconEth />}
+          {abbreviateNumber(collection.stats.total_volume)}
+        </>
+      ),
+    },
+    {
+      field: "Floor Price",
+      value: collection && collection.stats.floor_price && (
+        <>
+          {collection.payment_tokens &&
+            collection.payment_tokens[0].symbol == "ETH" && <IconEth />}
+          {abbreviateNumber(collection.stats.floor_price)}
+        </>
+      ),
+    },
+    {
+      field: "Ave. Price",
+      value: collection && collection.stats.average_price && (
+        <>
+          {collection.payment_tokens &&
+            collection.payment_tokens[0].symbol == "ETH" && <IconEth />}
+          {abbreviateNumber(collection.stats.average_price)}
+        </>
+      ),
+    },
+    {
+      field: "Total Supply",
+      value: collection && collection.stats.total_supply,
+    },
+    {
+      field: "Total Owneres",
+      value: collection && collection.stats.num_owners,
+    },
+    {
+      field: "Total Sales",
+      value: collection && collection.stats.total_sales,
     },
   ];
 

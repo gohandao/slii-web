@@ -88,18 +88,7 @@ export const HeaderIcon = () => {
           <BackButton property="back" />
         </div>
         {/* <NextButton /> */}
-        {headerIcon.emoji.length > 0 ? (
-          <Link href={headerIcon.path} legacyBehavior>
-            <a className="relative mt-[2px] flex h-7 items-center text-base font-bold tracking-wider text-white">
-              {headerIcon.emoji && (
-                <span className="mr-2 -mt-[2px] text-3xl">
-                  {headerIcon.emoji}
-                </span>
-              )}
-              {headerIcon.title}
-            </a>
-          </Link>
-        ) : headerIcon.element ? (
+        {headerIcon.element ? (
           <Link href={headerIcon.path} legacyBehavior>
             <a className="relative mt-[2px] flex h-7 items-center text-base font-bold tracking-wider text-white">
               {headerIcon.element && (

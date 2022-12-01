@@ -15,6 +15,7 @@ import { OrderButton } from "@/components/OrderButton";
 import { Creator } from "@/types/creator";
 import { TabIndex } from "@/components/TabIndex";
 import { Params } from "@/types/params";
+import { IoMdSync } from "react-icons/io";
 
 type Props = {
   params: Params;
@@ -125,9 +126,13 @@ export const CreatorsIndexScreen = ({ params }: Props) => {
           <TabIndex />
         </div>
         <div className="mb-2 flex gap-3">
-          <div className="flex items-baseline gap-3">
+          <div className="flex w-full items-baseline justify-between gap-3">
             <p className="text-sm text-gray-500">
               {searchedCreators.length} Creators
+            </p>
+            <p className="flex items-center gap-2 text-sm text-gray-500">
+              <IoMdSync />
+              every 24h
             </p>
           </div>
         </div>

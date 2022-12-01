@@ -131,7 +131,11 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
     })
     .eq("username", username)
     .single();
-
+  if (!data) {
+    return {
+      notFound: true,
+    };
+  }
   const description =
     data && data.description
       ? data.description.slice(0, 200)

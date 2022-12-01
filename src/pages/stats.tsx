@@ -3,11 +3,11 @@ import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect } from "react";
 import { TbDiamond } from "react-icons/tb";
+import { IoMdSync } from "react-icons/io";
 
 // contexts
 import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-
 // components
 import { CollectionTable } from "@/components/CollectionTable";
 import { Pagination } from "@/components/Pagination";
@@ -15,7 +15,6 @@ import { BaseLayout } from "@/components/BaseLayout";
 import { Dropdown } from "@/components/Dropdown";
 import { TermSort } from "@/components/TermSort";
 import { Searchbox } from "@/components/Searchbox";
-
 // types
 import { Collection } from "@/types/collection";
 
@@ -82,9 +81,15 @@ const StatsPage: NextPage = () => {
             Japanese awesome NFT collections stats.
           </h1>
           {collections && (
-            <p className="mb-2 text-sm text-gray-500">
-              {collections.length} collections
-            </p>
+            <div className="mb-2 flex w-full items-baseline justify-between gap-3">
+              <p className="text-sm text-gray-500">
+                {collections.length} collections
+              </p>
+              <p className="flex items-center gap-2 text-sm text-gray-500">
+                <IoMdSync />
+                every 24h
+              </p>
+            </div>
           )}
           <div className="mb-4 flex items-center justify-between gap-3 sm:gap-5">
             <Dropdown position="left" property="collectionType" />

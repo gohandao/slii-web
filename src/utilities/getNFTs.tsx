@@ -9,8 +9,5 @@ export const getNFTs = async (collection_slug: string) => {
       head: false,
     })
     .eq("collection_slug", `${collection_slug}`);
-  console.log("data ");
-  console.log(data);
-
   return data;
 };

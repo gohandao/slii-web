@@ -34,9 +34,9 @@ export const UpvoteButton = ({
     if (upvoted == true && count == 0) {
       initial_count = 1;
     }
-    if (upvoted == false && count && count > 0) {
-      initial_count = count - 1;
-    }
+    // if (upvoted == false && count && count > 0) {
+    //   initial_count = count - 1;
+    // }
     setCurrentCount(initial_count);
   }, [count, upvoted]);
 

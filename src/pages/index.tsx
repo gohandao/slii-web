@@ -2,16 +2,13 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useContext, useRef } from "react";
 import * as Scroll from "react-scroll";
-
+// utilities
+import { getContentsHeight } from "@/utilities/getContentsHeight";
 // contexts
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-
 // components
 import { BaseLayout } from "@/components/BaseLayout";
 import { CreatorsIndexScreen } from "@/components/CreatorsIndexScreen";
-
-// utilities
-import { getContentsHeight } from "@/utilities/getContentsHeight";
 
 const Home: NextPage = () => {
   const router = useRouter();

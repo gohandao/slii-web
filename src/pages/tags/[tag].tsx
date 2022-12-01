@@ -2,18 +2,14 @@ import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
-
 import { ParsedUrlQuery } from "node:querystring";
-
 // json
 import tagsJson from "@/json/tags.json";
 // libs
 import { sortList } from "@/libs/sortList";
-
 // contexts
 import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-
 // components
 import { CreatorList } from "@/components/CreatorList";
 import { BaseLayout } from "@/components/BaseLayout";
@@ -22,7 +18,6 @@ import { CollectionList } from "@/components/CollectionList";
 import { Dropdown } from "@/components/Dropdown";
 import { Searchbox } from "@/components/Searchbox";
 import { OrderButton } from "@/components/OrderButton";
-
 // types
 import { Creator } from "@/types/creator";
 import { Collection } from "@/types/collection";
@@ -240,10 +235,15 @@ type Params = ParsedUrlQuery & {
 export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   params,
 }) => {
-  const tags = JSON.parse(tagsJson);
+  const tags = JSON.parse(JSON.stringify(tagsJson)) as Tag[];
   const tag_name = params && params.tag;
   const filtered_tags = tags.filter((tag: any) => tag.name === tag_name);
   const tag = filtered_tags[0];
+  if (!tag) {
+    return {
+      notFound: true,
+    };
+  }
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {

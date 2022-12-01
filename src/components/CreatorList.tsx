@@ -104,30 +104,25 @@ export const CreatorList = ({ creators, limit }: Props) => {
                             />
                           )}
                         </div>
-                        <div className="absolute bottom-[22px] left-full z-10 ml-2 flex items-center gap-1">
-                          <div className="flex gap-2 rounded-full bg-gray-900 px-3 py-[2px] opacity-80">
-                            {creator.twitter_followers && (
-                              <ListSocial
-                                icon={<BsTwitter />}
-                                text={creator.twitter_followers}
-                              />
-                            )}
-                            {creator.discord_members && (
-                              <ListSocial
-                                icon={<FaDiscord />}
-                                text={creator.discord_members}
-                              />
-                            )}
+                        {(creator.twitter_followers ||
+                          creator.discord_members) && (
+                          <div className="absolute bottom-[22px] left-full z-10 ml-2 flex items-center gap-1">
+                            <div className="flex gap-2 rounded-full bg-gray-900 px-3 py-[2px] opacity-80">
+                              {creator.twitter_followers && (
+                                <ListSocial
+                                  icon={<BsTwitter />}
+                                  text={creator.twitter_followers}
+                                />
+                              )}
+                              {creator.discord_members && (
+                                <ListSocial
+                                  icon={<FaDiscord />}
+                                  text={creator.discord_members}
+                                />
+                              )}
+                            </div>
                           </div>
-                          {/* <ProfileLinks
-                            address={creator.address}
-                            twitter_id={creator.twitter_id}
-                            instagram_id={creator.instagram_id}
-                            discord_url={creator.discord_url}
-                            website_url={creator.website_url}
-                            opensea_username={creator.username}
-                          /> */}
-                        </div>
+                        )}
                       </div>
                     </div>
                     <div className="flex w-full min-w-[0px] max-w-full  flex-1 flex-col gap-1">

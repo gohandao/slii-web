@@ -1,5 +1,5 @@
 import "@/styles/style.scss";
-import "@/styles/ogp.scss";
+// import "@/styles/ogp.scss";
 import "@/styles/globals.css";
 import * as gtag from "@/libs/gtag";
 import type { AppProps } from "next/app";
@@ -322,7 +322,9 @@ function MyApp({ Component, pageProps }: AppProps) {
               tags,
             }}
           >
-            <div className="bg-stripe flex min-h-screen flex-col overflow-hidden">
+            <div
+              className={`bg-stripe flex min-h-screen flex-col overflow-hidden`}
+            >
               <Component {...pageProps} />
             </div>
           </BaseContext.Provider>

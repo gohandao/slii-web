@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@alch/alchemy-sdk": "^1.2.0",
-    "@next/font": "^13.0.4",
+    "@next/font": "^13.0.5",
     "@supabase/supabase-js": "^1.35.6",
     "@tailwindcss/line-clamp": "^0.4.2",
     "@vercel/og": "^0.0.21",

@@ -103,9 +103,7 @@ export const Footer = () => {
             <FaRegUserCircle />
           </FixedMenu>
         ) : (
-          <FixedMenu href="/login">
-            <RiLoginBoxLine />
-          </FixedMenu>
+          <></>
         )}
       </div>
     </>

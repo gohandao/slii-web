@@ -43,7 +43,7 @@ export const UpvoteButton = ({
   let baseUrl = "" as string;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
-      production: "https://nftotaku.com",
+      production: "https://nftotaku.xyz",
       development: "http://localhost:3000",
     }[process.env.NODE_ENV];
   }

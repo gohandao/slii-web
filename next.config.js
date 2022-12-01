@@ -14,7 +14,7 @@ const nextConfig = withPWA({
       "lh3.googleusercontent.com",
       "openseauserdata.com",
       "nftotaku.vercel.app",
-      "nftotaku.com",
+      "nftotaku.xyz",
       "hxyufkirxytryojpqkne.supabase.co",
       "i.seadn.io",
       "storage.googleapis.com",

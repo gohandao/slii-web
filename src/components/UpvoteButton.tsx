@@ -43,7 +43,7 @@ export const UpvoteButton = ({
   let baseUrl = "" as string;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
-      production: "https://gachi-collection.vercel.app",
+      production: "https://nftotaku.com",
       development: "http://localhost:3000",
     }[process.env.NODE_ENV];
   }

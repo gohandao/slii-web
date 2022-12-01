@@ -143,7 +143,7 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
-      production: "https://gachi-collection.vercel.app",
+      production: "https://nftotaku.com",
       development: "http://localhost:3000",
     }[process.env.NODE_ENV];
   }

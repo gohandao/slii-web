@@ -4,16 +4,6 @@ const collections = JSON.parse(JSON.stringify(collectionsJson)) as any[];
 // libs
 import { supabase } from "@/libs/supabase";
 
-const callback = () => console.log("waiting...");
-const sleep = (delay = 1000) => {
-  return new Promise<void>((resolve) => {
-    return setTimeout(() => {
-      callback();
-      return resolve();
-    }, delay);
-  });
-};
-
 export const upsertNFTs = async (req: any, res: any) => {
   // const collection_slug = "the-double-face";
   const getData = async (collection_slug: string) => {
@@ -34,7 +24,6 @@ export const upsertNFTs = async (req: any, res: any) => {
       )
         .then((response) => response.json())
         .then((response) => {
-          // console.log(response);
           return response;
         })
         .catch((err) => console.error(err));
@@ -45,20 +34,19 @@ export const upsertNFTs = async (req: any, res: any) => {
     for (let index = 0; index < 10000; index++) {
       console.log(index + "times");
       const data: any = await fetchData(next);
-      assets = data && data.assets ? [...assets, data.assets] : assets;
+      assets = data && data.assets ? [...assets, ...data.assets] : assets;
       next = data && data.next;
       if (!data || !data.next || data.next == null) {
         break;
       }
     }
-    return assets[0];
+    return assets;
   };
   for (let index = 0; index < collections.length; index++) {
-    // for (let index = 0; index < 5; index++) {
-    // await sleep(300);
-    if (index % 10 == 0) {
-      console.log(index + " collections");
-    }
+    // for (let index = 0; index < 3; index++) {
+    // if (index % 10 == 0) {
+    //   console.log(index + " collections");
+    // }
     const assets = await getData(collections[index].slug);
     const upsertData = async (assets: any) => {
       let new_assets = [] as any[];

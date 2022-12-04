@@ -23,8 +23,8 @@ const Home: NextPage = () => {
   const { prevHeight, scrollY, setHeaderIcon, setHiddenParams, setPrevHeight, setScrollY } =
     useContext(UtilitiesContext);
 
-  const new_scrollY = useRef(scrollY);
-  const new_height = useRef(0);
+  const new_scrollY = useRef<number | undefined>(scrollY);
+  const new_height = useRef<number>(0);
   useEffect(() => {
     const scroll = Scroll.animateScroll;
     if (scrollY) {

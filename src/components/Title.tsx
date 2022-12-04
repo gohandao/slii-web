@@ -1,11 +1,11 @@
-import type { ReactNode } from "react";
+import type { FC, ReactNode } from "react";
 
 type Props = {
   addClass?: string;
   children: ReactNode;
   property?: "h1" | "h2" | "h3" | "h4" | "h5";
 };
-export const Title = ({ addClass, children, property = "h2" }: Props) => {
+export const Title: FC<Props> = ({ addClass, children, property = "h2" }) => {
   switch (property) {
     case "h1": {
       return <h1 className={`${addClass}`}>{children}</h1>;

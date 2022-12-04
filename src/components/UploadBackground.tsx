@@ -1,5 +1,6 @@
 import imageCompression from "browser-image-compression";
 import Image from "next/image";
+import type { FC } from "react";
 import { IoClose } from "react-icons/io5";
 import { RiImageAddLine } from "react-icons/ri";
 
@@ -8,7 +9,7 @@ export type Props = {
   newImage: File | undefined;
   setNewImage: (value: React.SetStateAction<File | undefined>) => void;
 };
-export const UploadBackground = ({ image, newImage, setNewImage }: Props) => {
+export const UploadBackground: FC<Props> = ({ image, newImage, setNewImage }) => {
   const options = {
     maxSizeMB: 1, // 最大ファイルサイズ
     maxWidthOrHeight: 500, // 最大画像幅もしくは高さ

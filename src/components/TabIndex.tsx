@@ -1,9 +1,11 @@
+import type { FC } from "react";
+
 import { Tab } from "@/components/Tab";
 
 type Props = {
   property?: "tag" | "user";
 };
-export const TabIndex = ({ property }: Props) => {
+export const TabIndex: FC<Props> = ({ property }) => {
   return (
     <div className="flex gap-5">
       {property == "tag" ? (

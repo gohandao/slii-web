@@ -1,3 +1,4 @@
+import type { FC } from "react";
 import { useContext, useEffect, useState } from "react";
 import { FaBookmark } from "react-icons/fa";
 import { FiBookmark } from "react-icons/fi";
@@ -10,7 +11,7 @@ type Props = {
   id: string;
   type: string;
 };
-export const BookmarkButton = ({ id, type }: Props) => {
+export const BookmarkButton: FC<Props> = ({ id, type }) => {
   const { bookmarks, setBookmarks, user } = useContext(AuthContext);
   const { setLoginModal } = useContext(UtilitiesContext);
   const [bookmarked, setBookmarked] = useState<boolean>(false);

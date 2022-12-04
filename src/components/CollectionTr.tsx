@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import type { ReactNode } from "react";
+import type { FC, ReactNode } from "react";
 import { MdVerified } from "react-icons/md";
 
 import { BookmarkButton } from "@/components/BookmarkButton";
@@ -13,7 +13,7 @@ import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 type Props = {
   children: ReactNode;
 };
-export const CollectionTr = ({ index, item, limit }: any) => {
+export const CollectionTr: FC<any> = ({ index, item, limit }) => {
   const router = useRouter();
   const { page, term } = router.query;
   const currentPage = page ? Number(page) : 1;

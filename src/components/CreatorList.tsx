@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import { useEffect, useState } from "react";
 import { BsTwitter } from "react-icons/bs";
 import { FaDiscord } from "react-icons/fa";
@@ -21,7 +22,7 @@ type Props = {
   creators: Creator[];
   limit?: number;
 };
-export const CreatorList = ({ creators, limit }: Props) => {
+export const CreatorList: FC<Props> = ({ creators, limit }) => {
   const router = useRouter();
   const { page } = router.query;
   const currentPath = router.pathname;

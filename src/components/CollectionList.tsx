@@ -2,6 +2,7 @@ import { JP } from "country-flag-icons/react/3x2";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import { BsTwitter } from "react-icons/bs";
 import { FaDiscord } from "react-icons/fa";
 import { IoMdListBox } from "react-icons/io";
@@ -21,7 +22,7 @@ type Props = {
   collections: any[];
   limit?: number;
 };
-export const CollectionList = ({ collections, limit }: Props) => {
+export const CollectionList: FC<Props> = ({ collections, limit }) => {
   const router = useRouter();
   const { page } = router.query;
   const currentPath = router.pathname;

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import { useEffect, useState } from "react";
 
 import { IconEth } from "@/components/IconEth";
@@ -8,7 +9,7 @@ import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 type Props = {
   assets: any[];
 };
-export const NFTList = ({ assets }: Props) => {
+export const NFTList: FC<Props> = ({ assets }) => {
   const router = useRouter();
   const { screen } = router.query;
   const [currentAssets, setCurrentAssets] = useState<any[]>([]);

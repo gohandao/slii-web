@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import { useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { FaRegFlag } from "react-icons/fa";
@@ -38,7 +39,7 @@ type Props = {
   twitter_id?: string;
   upvotes_count?: number;
 };
-export const ProfileHeader = ({
+export const ProfileHeader: FC<Props> = ({
   id,
   avatar_url,
   background_url,
@@ -50,7 +51,7 @@ export const ProfileHeader = ({
   tags,
   title,
   upvotes_count,
-}: Props) => {
+}) => {
   const router = useRouter();
   const { screen } = router.query;
   const [requestDropdown, setRequestDropdown] = useState<boolean>(false);

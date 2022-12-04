@@ -1,11 +1,12 @@
 import { useRouter } from "next/router";
+import type { FC } from "react";
 
 import { setParams } from "@/utilities/setParams";
 
 type Props = {
   term?: string;
 };
-export const TermSort = ({ term }: Props) => {
+export const TermSort: FC<Props> = ({ term }) => {
   const router = useRouter();
   const { order, screen, search, sort, type } = router.query;
 

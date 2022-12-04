@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import { useContext, useEffect, useState } from "react";
 import { MdVerified } from "react-icons/md";
 
@@ -26,7 +27,7 @@ type Props = {
   creatorList: Upvote[] | Bookmark[] | undefined;
   property: "upvoted" | "bookmarks";
 };
-export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
+export const UserPageTemplate: FC<Props> = ({ collectionList, creatorList }) => {
   const router = useRouter();
   const { order, page, search, sort, tab, term, type, username } = router.query;
   const currentPage = page ? Number(page) : 1;

@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import type { FC } from "react";
 
 import { setParams } from "@/utilities/setParams";
 
@@ -10,7 +11,7 @@ type Props = {
 type ItemProps = {
   count: number;
 };
-export const Pagination = ({ currentPage, length, limit }: Props) => {
+export const Pagination: FC<Props> = ({ currentPage, length, limit }) => {
   const prevPage = currentPage - 1;
   const nextPage = currentPage + 1;
   const lastPage = Math.floor(length / limit) + 1;

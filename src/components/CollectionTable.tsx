@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import { useEffect, useState } from "react";
 import ReactLoading from "react-loading";
 
@@ -11,7 +12,7 @@ type Props = {
   collections: Collection[];
   limit?: number;
 };
-export const CollectionTable = ({ collections, limit }: Props) => {
+export const CollectionTable: FC<Props> = ({ collections, limit }) => {
   const router = useRouter();
 
   const { order, page, search, sort, term, type } = router.query;

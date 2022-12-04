@@ -1,3 +1,4 @@
+import type { FC } from "react";
 import { useContext, useEffect, useState } from "react";
 import { IoMdSync } from "react-icons/io";
 
@@ -16,7 +17,7 @@ import type { Params } from "@/types/params";
 type Props = {
   params: Params;
 };
-export const CreatorsIndexScreen = ({ params }: Props) => {
+export const CreatorsIndexScreen: FC<Props> = ({ params }) => {
   const { order, page, search, sort, term, type } = params;
   const currentPage = page ? Number(page) : 1;
   const limit = 100;

@@ -1,10 +1,11 @@
+import type { FC } from "react";
 import { useState } from "react";
 
 type Props = {
   alertText: string;
   text: string;
 };
-export const CopyText = ({ alertText, text }: Props) => {
+export const CopyText: FC<Props> = ({ alertText, text }) => {
   const [show, setShow] = useState<boolean>(false);
   const copyTextHandler = (text: string) => {
     navigator.clipboard.writeText(text);

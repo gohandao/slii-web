@@ -1,20 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import { useContext } from "react";
 import { BiHomeAlt } from "react-icons/bi";
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from "react-icons/bs";
 
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
-export const HeaderIcon = () => {
+type Props = {
+  property: "back" | "next";
+};
+export const HeaderIcon: FC = () => {
   const router = useRouter();
   const currentPath = router.pathname;
   const { headerIcon } = useContext(UtilitiesContext);
-
-  type Props = {
-    property: "back" | "next";
-  };
 
   let showClassName = "";
   let to = "";

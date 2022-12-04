@@ -1,6 +1,7 @@
 import { JP } from "country-flag-icons/react/3x2";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import { useContext, useEffect, useState } from "react";
 import { MdVerified } from "react-icons/md";
 
@@ -22,7 +23,7 @@ import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 import { getNFTs } from "@/utilities/getNFTs";
 import { randomize } from "@/utilities/randomize";
 
-export const CreatorScreen = () => {
+export const CreatorScreen: FC = () => {
   const router = useRouter();
   const { order, page, screen, search, slug, sort, term, type, username } = router.query;
   const currentPage = page ? Number(page) : 1;

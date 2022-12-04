@@ -1,3 +1,5 @@
+import type { FC } from "react";
+
 type Props = {
   id: string;
   label?: string;
@@ -6,7 +8,7 @@ type Props = {
   type: string;
   value?: string;
 };
-export const Input = ({ id, label, onChange, placeholder, type, value }: Props) => {
+export const Input: FC<Props> = ({ id, label, onChange, placeholder, type, value }) => {
   return (
     <>
       <div className="flex flex-col gap-1">

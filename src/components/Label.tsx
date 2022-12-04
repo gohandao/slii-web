@@ -1,10 +1,11 @@
 import Link from "next/link";
+import type { FC } from "react";
 
 type Props = {
   name: string;
   type: "creator" | "collection";
 };
-export const Label = ({ name, type }: Props) => {
+export const Label: FC<Props> = ({ name, type }) => {
   const typeClass = " border-gray-500 text-gray-600";
   return (
     <object>

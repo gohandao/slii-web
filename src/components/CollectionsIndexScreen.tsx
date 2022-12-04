@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import { useContext, useEffect, useState } from "react";
 import { IoMdSync } from "react-icons/io";
 
@@ -13,7 +14,7 @@ import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { sortList } from "@/libs/sortList";
 import type { Collection } from "@/types/collection";
 
-export const CollectionsIndexScreen = () => {
+export const CollectionsIndexScreen: FC = () => {
   const router = useRouter();
   const { order, page, search, sort, term, type } = router.query;
   const currentPage = page ? Number(page) : 1;

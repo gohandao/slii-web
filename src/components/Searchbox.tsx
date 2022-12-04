@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import { useContext, useEffect, useState } from "react";
 import { BiSearchAlt2 } from "react-icons/bi";
 
@@ -9,7 +10,7 @@ type Props = {
   id: string;
   property?: "default" | "nft";
 };
-export const Searchbox = ({ id, property }: Props) => {
+export const Searchbox: FC<Props> = ({ id, property }) => {
   const router = useRouter();
   const { order, screen, search, sort, tab, term, type } = router.query;
   const { hiddenParams } = useContext(UtilitiesContext);

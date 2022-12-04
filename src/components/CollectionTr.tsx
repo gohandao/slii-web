@@ -94,7 +94,7 @@ export const CollectionTr: FC<any> = ({ index, item, limit }) => {
                   </div>
                   <div className="ml-4 grid">
                     <div className="flex w-[200px] items-center justify-between md:w-[280px]">
-                      <p className="ellipsis min-w-[0] max-w-full items-center pr-2 pr-2 text-base font-bold text-gray-100">
+                      <p className="ellipsis min-w-[0] max-w-full items-center pr-2 text-base font-bold text-gray-100">
                         {item.name}
                         {item.safelist_request_status == "verified" && (
                           <MdVerified className="-mt-[2px] ml-2 inline-block text-gray-500" />

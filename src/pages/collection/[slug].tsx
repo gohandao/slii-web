@@ -18,8 +18,7 @@ type Props = {
   slug: string;
   title: string;
 };
-const CollectionIndex: NextPage<Props> = (props) => {
-  const { description, ogImageUrl, slug, title } = props;
+const CollectionIndex: NextPage<Props> = ({ description, ogImageUrl, slug, title }) => {
   const router = useRouter();
   const { screen } = router.query;
   const { scrollY } = useContext(UtilitiesContext);

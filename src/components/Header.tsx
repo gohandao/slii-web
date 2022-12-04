@@ -1,27 +1,25 @@
-import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useContext, useEffect, useState } from "react";
-import { RiLoginBoxLine } from "react-icons/ri";
+import { useRouter } from "next/router";
+import { useContext, useEffect, useState } from "react";
 import { BiHomeAlt, BiPurchaseTagAlt } from "react-icons/bi";
+import { RiLoginBoxLine } from "react-icons/ri";
 import { TbDiamond } from "react-icons/tb";
-// libs
-import { supabase } from "@/libs/supabase";
-// contexts
+
+import { HeaderIcon } from "@/components/HeaderIcon";
 import { AuthContext } from "@/contexts/AuthContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-// components
-import { HeaderIcon } from "@/components/HeaderIcon";
+import { supabase } from "@/libs/supabase";
 
 export const Header = () => {
   const router = useRouter();
-  const { user, profile, avatar } = useContext(AuthContext);
+  const { avatar, profile, user } = useContext(AuthContext);
   const { setLoginModal } = useContext(UtilitiesContext);
   const [dropdown, setDropdown] = useState<boolean>(false);
 
-  function delQuery(url: string) {
+  const delQuery = (url: string) => {
     return url.split("?")[0];
-  }
+  };
   let currentPath = router.asPath;
   currentPath = delQuery(currentPath);
 
@@ -30,11 +28,7 @@ export const Header = () => {
   const [tagsClass, setTagsClass] = useState<string>("hidden");
 
   useEffect(() => {
-    if (
-      currentPath != "/" &&
-      currentPath != "/collections" &&
-      currentPath != "/login"
-    ) {
+    if (currentPath != "/" && currentPath != "/collections" && currentPath != "/login") {
       setHomeClass("");
     }
     if (currentPath != "/stats") {
@@ -52,14 +46,9 @@ export const Header = () => {
           <div className="flex flex-shrink-0 items-center gap-8">
             <HeaderIcon />
           </div>
-          {/* <a className="absolute left-0 right-0 top-0 mx-auto inline-flex justify-center h-6 bg-gray-800 w-[100px] rounded-b-lg py-2 opacity-90">
-            <Image src="/logo.svg" width={100} height={14} alt="" />
-          </a> */}
           <div className="hidden gap-10 pr-16 lg:flex ">
             <Link href="/" legacyBehavior>
-              <a
-                className={`flex items-center text-sm font-bold tracking-wider text-gray-100 ${homeClass}`}
-              >
+              <a className={`flex items-center text-sm font-bold tracking-wider text-gray-100 ${homeClass}`}>
                 <span className="mr-2 -mt-[1px] text-xl">
                   <BiHomeAlt />
                 </span>
@@ -67,9 +56,7 @@ export const Header = () => {
               </a>
             </Link>
             <Link href="/stats" legacyBehavior>
-              <a
-                className={`flex items-center text-sm font-bold tracking-wider text-gray-100 ${statsClass}`}
-              >
+              <a className={`flex items-center text-sm font-bold tracking-wider text-gray-100 ${statsClass}`}>
                 <span className="mr-2 -mt-[1px] text-xl">
                   <TbDiamond />
                 </span>
@@ -77,9 +64,7 @@ export const Header = () => {
               </a>
             </Link>
             <Link href="/tags" legacyBehavior>
-              <a
-                className={`flex items-center text-sm font-bold tracking-wider text-gray-100 ${tagsClass}`}
-              >
+              <a className={`flex items-center text-sm font-bold tracking-wider text-gray-100 ${tagsClass}`}>
                 <span className="mr-2 -mt-[1px] text-xl">
                   <BiPurchaseTagAlt />
                 </span>
@@ -136,24 +121,18 @@ export const Header = () => {
             </button>
           )}
           {dropdown && (
-            <div
-              className={`absolute top-full right-0 z-20 mt-2 w-40 rounded border border-gray-700 bg-gray-800`}
-            >
+            <div className={`absolute top-full right-0 z-20 mt-2 w-40 rounded border border-gray-700 bg-gray-800`}>
               {user && (
                 <>
                   <Link href={`/${profile.username}`} legacyBehavior>
-                    <a className="block border-b border-gray-700 px-5 py-3 text-sm text-gray-400">
-                      Profile
-                    </a>
+                    <a className="block border-b border-gray-700 px-5 py-3 text-sm text-gray-400">Profile</a>
                   </Link>
                   <Link href="/account" legacyBehavior>
-                    <a className="block border-b border-gray-700 px-5 py-3 text-sm text-gray-400">
-                      Account
-                    </a>
+                    <a className="block border-b border-gray-700 px-5 py-3 text-sm text-gray-400">Account</a>
                   </Link>
                   <button
                     onClick={async () => {
-                      const { error } = await supabase.auth.signOut();
+                      await supabase.auth.signOut();
                       location.reload();
                     }}
                     className="block px-5 py-3 text-sm text-gray-400"

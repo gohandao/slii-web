@@ -1,65 +1,44 @@
-import Image from "next/image";
-import React from "react";
-import { RiImageAddLine } from "react-icons/ri";
-import { IoClose } from "react-icons/io5";
 import imageCompression from "browser-image-compression";
+import Image from "next/image";
+import { IoClose } from "react-icons/io5";
+import { RiImageAddLine } from "react-icons/ri";
 
 export type Props = {
-  // uploadImages: File[];
-  // setUploadImages: (value: React.SetStateAction<File[]>) => void;
   image: File | undefined;
   newImage: File | undefined;
   setNewImage: (value: React.SetStateAction<File | undefined>) => void;
 };
-
 export const UploadBackground = ({ image, newImage, setNewImage }: Props) => {
-  // const [images, setImages] = useState<File[]>([]);
-  // const [image, setImage] = useState<File>();
-
   const options = {
     maxSizeMB: 1, // 最大ファイルサイズ
     maxWidthOrHeight: 500, // 最大画像幅もしくは高さ
     maxWidthOrWidth: 500, // 最大画像幅もしくは高さ
   };
-
   const handleOnAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     if (e.target.files[0]) {
-      let current_prototype = image && Object.getPrototypeOf(image);
-      let new_prototype = Object.getPrototypeOf(e.target.files[0]);
+      const current_prototype = image && Object.getPrototypeOf(image);
+      const new_prototype = Object.getPrototypeOf(e.target.files[0]);
       if (new_prototype != current_prototype) {
-        const compressed_file = await imageCompression(
-          e.target.files[0],
-          options
-        );
+        const compressed_file = await imageCompression(e.target.files[0], options);
         setNewImage(compressed_file);
       }
     }
-    // setImages([...images, ...e.target.files]);
   };
-
   const handleOnRemoveImage = () => {
     setNewImage(undefined);
   };
-  // const handleOnRemoveImage = (index: number) => {
-  //   // 選択した画像は削除可能
-  //   const newImages = [...images];
-  //   newImages.splice(index, 1);
-  //   setImages(newImages);
-  // };
 
   return (
     <div className="h-full w-full">
-      {/* 1つのボタンで画像を選択する */}
       <label htmlFor="background_image" className="">
         <input
           id="background_image"
           type="file"
-          // multiple
           accept="image/*,.png,.jpg,.jpeg,.gif"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            handleOnAddImage(e)
-          }
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            return handleOnAddImage(e);
+          }}
           className="hidden"
         />
         <div className="relative flex h-full w-full items-center justify-center overflow-hidden bg-gray-700">
@@ -79,22 +58,7 @@ export const UploadBackground = ({ image, newImage, setNewImage }: Props) => {
           ) : (
             image && (
               <>
-                {/* <img src={URL.createObjectURL(images[0])} alt="" className="" /> */}
-                {/* <img
-                  //@ts-ignore
-                  // src={URL.createObjectURL(images[0])}
-                  src={URL.createObjectURL(image)}
-                  alt=""
-                  loading="lazy"
-                  className="image-fill opacity-50"
-                  /> */}
-                <Image
-                  src={URL.createObjectURL(image)}
-                  alt=""
-                  quality={40}
-                  fill
-                  sizes="100vw"
-                />
+                <Image src={URL.createObjectURL(image)} alt="" quality={40} fill sizes="100vw" />
               </>
             )
           )}

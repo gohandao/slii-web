@@ -1,23 +1,16 @@
-import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import ReactCodeInput from "react-code-input";
-// libs
-import { supabase } from "@/libs/supabase";
-// contexts
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import { AuthContext } from "@/contexts/AuthContext";
-// components
+
 import { BaseModal } from "@/components/BaseModal";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { supabase } from "@/libs/supabase";
 
 export const LoginModal = () => {
-  const router = useRouter();
-  const { user } = useContext(AuthContext);
   const { loginModal, setLoginModal } = useContext(UtilitiesContext);
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(false);
   const [email, setEmail] = useState("");
   const [otpToken, setOtpToken] = useState("");
-
   const [sentCode, setSentCode] = useState<boolean>(false);
 
   const handleLogin = async (email: string) => {
@@ -44,9 +37,7 @@ export const LoginModal = () => {
       });
       if (error) throw error;
       alert("Login success!");
-    } catch (error) {
-      // alert("Login failed!");
-      //@ts-ignore
+    } catch (error: any) {
       alert(error.error_description || error.message);
     } finally {
       setChecking(false);
@@ -58,12 +49,8 @@ export const LoginModal = () => {
       <div className="flex-center mx-auto flex w-full max-w-xl rounded bg-gray-800 px-8 pt-8 pb-10 ">
         <div className="mx-auto flex w-[400px] flex-col gap-4">
           <div className="">
-            <h1 className="text-center text-2xl text-gray-100">
-              Login with email{" "}
-            </h1>
-            <p className="text-center text-xs text-gray-500">
-              You can login only with email.
-            </p>
+            <h1 className="text-center text-2xl text-gray-100">Login with email </h1>
+            <p className="text-center text-xs text-gray-500">You can login only with email.</p>
           </div>
           <input
             className="block w-full rounded bg-white px-5 py-3"
@@ -72,15 +59,10 @@ export const LoginModal = () => {
             name="email"
             autoComplete="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              return setEmail(e.target.value);
+            }}
           />
-          {/*<input
-                className="block px-5 py-3 rounded bg-white w-full"
-                type="text"
-                placeholder="One-time password"
-                value={otpToken}
-                onChange={(e) => setOtpToken(e.target.value)}
-  />*/}
           <div className="flex justify-center">
             <button
               onClick={(e) => {
@@ -95,9 +77,7 @@ export const LoginModal = () => {
           </div>
           {sentCode && (
             <div>
-              <p className="mt-3 mb-1 text-center text-lg text-gray-100">
-                Verify code
-              </p>
+              <p className="mt-3 mb-1 text-center text-lg text-gray-100">Verify code</p>
               <ReactCodeInput
                 type="text"
                 fields={6}
@@ -106,7 +86,9 @@ export const LoginModal = () => {
                 value={otpToken}
                 placeholder="000000"
                 autoFocus={false}
-                onChange={(e) => setOtpToken(e)}
+                onChange={(e) => {
+                  return setOtpToken(e);
+                }}
               />
               <div className="mt-4 flex justify-center">
                 <button

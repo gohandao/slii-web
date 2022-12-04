@@ -1,19 +1,18 @@
 import { useRouter } from "next/router";
-import React from "react";
 import { BsTriangleFill, BsTwitter } from "react-icons/bs";
-import { FaDiscord, FaSort, FaSortDown } from "react-icons/fa";
+import { FaDiscord, FaSort } from "react-icons/fa";
 import { TiArrowSortedDown } from "react-icons/ti";
-// utilities
+
 import { setParams } from "@/utilities/setParams";
 
 type Props = {
-  title: string;
   sort: string;
+  title: string;
 };
 
 export const Th = ({ title }: Props) => {
   const router = useRouter();
-  const { order, sort, term, search } = router.query;
+  const { order, search, sort, term } = router.query;
 
   const titleToParam = (title: string) => {
     let sortParam;
@@ -65,62 +64,61 @@ export const Th = ({ title }: Props) => {
     titleParam = titleToParam(title) as string;
     if (!order && sort == "upvotes") {
       setParams({
-        sort: "",
         order: "asc",
-        term: term as string,
         search: search as string,
+        sort: "",
+        term: term as string,
       });
     } else if (titleParam != sort && titleParam == "name") {
       setParams({
-        sort: titleParam as string,
         order: "asc",
-        term: term as string,
         search: search as string,
+        sort: titleParam as string,
+        term: term as string,
       });
     } else if (!sort && titleParam == "upvotes") {
       setParams({
-        sort: "",
         order: order == "desc" ? "asc" : "desc",
-        term: term as string,
         search: search as string,
+        sort: "",
+        term: term as string,
       });
     } else if (titleParam == "upvotes") {
       setParams({
-        sort: "",
         order: order == "desc" ? "asc" : "desc",
-        term: term as string,
         search: search as string,
+        sort: "",
+        term: term as string,
       });
     } else if (titleParam != sort) {
       setParams({
-        sort: titleParam as string,
         order: "desc",
-        term: term as string,
         search: search as string,
+        sort: titleParam as string,
+        term: term as string,
       });
     } else if (order && titleParam == sort) {
       order == "desc"
         ? setParams({
-            sort: titleParam,
             order: "asc",
-            term: term as string,
             search: search as string,
+            sort: titleParam,
+            term: term as string,
           })
         : setParams({
-            sort: titleParam,
             order: "desc",
-            term: term as string,
             search: search as string,
+            sort: titleParam,
+            term: term as string,
           });
     } else {
       setParams({
-        sort: titleParam,
         order: "desc",
-        term: term as string,
         search: search as string,
+        sort: titleParam,
+        term: term as string,
       });
     }
-    //window.scrollTo({ top: test, behavior: "smooth" });
   };
 
   let thClass = "";
@@ -144,12 +142,7 @@ export const Th = ({ title }: Props) => {
 
   let termArea;
   let termTag;
-  if (
-    title == "Volume" ||
-    title == "Ave. Price" ||
-    title == "% Change" ||
-    title == "Sales"
-  ) {
+  if (title == "Volume" || title == "Ave. Price" || title == "% Change" || title == "Sales") {
     if (term && term != "all") {
       termTag = term;
     } else if (!term || term == "all") {

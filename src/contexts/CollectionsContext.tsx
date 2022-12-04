@@ -1,20 +1,20 @@
 import { createContext } from "react";
-/*types*/
-import { Collection } from "@/types/collection";
+
+import type { Collection } from "@/types/collection";
 
 export const CollectionsContext = createContext<Collection[]>([
   {
-    record_id: "",
-    name: "",
-    slug: "",
-    creator_id: "",
-    type: "",
-    listed_at: null,
-    updatedAt: null,
     category: "",
-    verified: false,
+    creator_id: "",
+    discord_members: null,
+    listed_at: null,
+    name: "",
+    record_id: "",
+    slug: "",
     tags: [],
     twitter_followers: null,
-    discord_members: null,
+    type: "",
+    updatedAt: null,
+    verified: false,
   },
 ]);

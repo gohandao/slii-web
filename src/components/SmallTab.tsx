@@ -1,25 +1,25 @@
-import { useRouter } from "next/router";
-import React from "react";
-import { Params } from "@/types/params";
-import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
 import Link from "next/link";
+import { useRouter } from "next/router";
+
+import type { Params } from "@/types/params";
+import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
 
 type Props = {
-  title: string;
   path: string;
+  title: string;
 };
-export const SmallTab = ({ title, path }: Props) => {
+export const SmallTab = ({ path, title }: Props) => {
   const router = useRouter();
   const currentPath = router.pathname;
-  const { order, sort, term, page, type, search, tab, username } = router.query;
+  const { order, search, sort, tab, term, type, username } = router.query;
 
   let new_query = {
-    tab: tab,
-    type: type,
-    sort: sort,
-    term: term,
     order: order,
     search: search,
+    sort: sort,
+    tab: tab,
+    term: term,
+    type: type,
   } as Params;
   new_query = removeUndefinedObject(new_query);
 
@@ -29,13 +29,11 @@ export const SmallTab = ({ title, path }: Props) => {
   } else if (currentPath == "/[username]/bookmarks" && path == "bookmarks") {
     passiveClass = "bg-gray-800";
   }
-
   let pathName = "/" + username;
   if (path == "bookmarks") {
     pathName = "/" + username + "/bookmarks";
   }
 
-  const users = { id: 1, name: "tanaka", text: "暖かくなってきたね！" };
   return (
     <Link
       href={{
@@ -44,26 +42,7 @@ export const SmallTab = ({ title, path }: Props) => {
       }}
       legacyBehavior
     >
-      <a
-        className={`rounded-full px-5 py-1 text-xs  text-gray-100 ${passiveClass}`}
-      >
-        {title}
-      </a>
+      <a className={`rounded-full px-5 py-1 text-xs  text-gray-100 ${passiveClass}`}>{title}</a>
     </Link>
-    // <button
-    //   className={`text-gray-100 rounded-full px-5 py-1  text-xs ${passiveClass}`}
-    //   onClick={() => {
-    //     router.push(
-    //       {
-    //         pathname: pathName,
-    //         query: new_query,
-    //       },
-    //       undefined,
-    //       { scroll: false }
-    //     );
-    //   }}
-    // >
-    //   {title}
-    // </button>
   );
 };

@@ -1,4 +1,5 @@
 import Image from "next/image";
+
 export const IconEth = () => {
   return (
     <div className="flex w-4 items-center">
@@ -9,8 +10,8 @@ export const IconEth = () => {
         alt=""
         className=""
         style={{
-          maxWidth: "100%",
           height: "auto",
+          maxWidth: "100%",
         }}
       />
     </div>

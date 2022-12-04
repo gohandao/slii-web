@@ -1,6 +1,5 @@
-import React from "react";
 import { useRouter } from "next/router";
-// utilities
+
 import { setParams } from "@/utilities/setParams";
 
 type Props = {
@@ -11,13 +10,12 @@ type Props = {
 type ItemProps = {
   count: number;
 };
-
 export const Pagination = ({ currentPage, length, limit }: Props) => {
   const prevPage = currentPage - 1;
   const nextPage = currentPage + 1;
   const lastPage = Math.floor(length / limit) + 1;
   const router = useRouter();
-  const { order, sort, term, page, type, search, screen } = router.query;
+  const { order, screen, search, sort, term, type } = router.query;
 
   const PaginationItem = ({ count }: ItemProps) => {
     let activeClass;
@@ -31,13 +29,13 @@ export const Pagination = ({ currentPage, length, limit }: Props) => {
         className={`flex h-9 w-9 items-center justify-center rounded border text-gray-300 ${activeClass}`}
         onClick={() => {
           setParams({
-            type: type && (type as string),
-            sort: sort && (sort as string),
             order: order && (order as string),
-            term: term && (term as string),
             page: count,
-            search: search && (search as string),
             screen: screen && (screen as string),
+            search: search && (search as string),
+            sort: sort && (sort as string),
+            term: term && (term as string),
+            type: type && (type as string),
           });
         }}
       >

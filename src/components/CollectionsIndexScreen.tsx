@@ -1,56 +1,47 @@
 import { useRouter } from "next/router";
-import React, { useState, useEffect, useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IoMdSync } from "react-icons/io";
-// libs
-import { sortList } from "@/libs/sortList";
-// contexts
-import { BaseContext } from "@/contexts/BaseContext";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-// components
-import { Pagination } from "@/components/Pagination";
-import { Searchbox } from "@/components/Searchbox";
+
+import { CollectionList } from "@/components/CollectionList";
 import { Dropdown } from "@/components/Dropdown";
 import { OrderButton } from "@/components/OrderButton";
-import { CollectionList } from "@/components/CollectionList";
+import { Pagination } from "@/components/Pagination";
+import { Searchbox } from "@/components/Searchbox";
 import { TabIndex } from "@/components/TabIndex";
-// types
-import { Collection } from "@/types/collection";
-import { Params } from "@/types/params";
+import { BaseContext } from "@/contexts/BaseContext";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { sortList } from "@/libs/sortList";
+import type { Collection } from "@/types/collection";
 
-type Props = {
-  params: Params;
-};
-export const CollectionsIndexScreen = ({ params }: Props) => {
+export const CollectionsIndexScreen = () => {
   const router = useRouter();
-  const { order, sort, term, page, type, search, screen } = router.query;
+  const { order, page, search, sort, term, type } = router.query;
   const currentPage = page ? Number(page) : 1;
   const limit = 100;
   const [sortedCollections, setSortedCollections] = useState<Collection[]>([]);
   const [checkInitial, setCheckInitial] = useState<boolean>(false);
 
   const { collections } = useContext(BaseContext);
-  const { tempCollections, setTempCollections, hiddenParams } =
-    useContext(UtilitiesContext);
+  const { hiddenParams, setTempCollections, tempCollections } = useContext(UtilitiesContext);
 
-  const currentCollections =
-    tempCollections.length > 0 && !checkInitial
-      ? tempCollections
-      : sortedCollections;
+  const currentCollections = tempCollections.length > 0 && !checkInitial ? tempCollections : sortedCollections;
 
   const filteredCollections =
     type && type != "all"
-      ? collections.filter((collection) => collection.type === type)
+      ? collections.filter((collection) => {
+          return collection.type === type;
+        })
       : collections;
 
   const uppperKeyword = typeof search == "string" && search.toUpperCase();
   //1.match username
-  const searchedCollections01 = filteredCollections.filter(
-    (collection) =>
+  const searchedCollections01 = filteredCollections.filter((collection) => {
+    return (
       typeof search == "string" &&
       //すべて大文字にして大文字小文字の区別をなくす
-      //@ts-ignore
       collection.name.toUpperCase().includes(uppperKeyword) == true
-  );
+    );
+  });
   const origin_searchedCollections = [
     ...searchedCollections01,
     // ...searchedCreators02,
@@ -64,14 +55,14 @@ export const CollectionsIndexScreen = ({ params }: Props) => {
   }
 
   const args = {
-    property: "collections" as "creators" | "collections",
-    list: searchedCollections,
-    page: currentPage,
-    order: order as "desc" | "asc" | undefined,
-    sort: sort as string | undefined,
-    term: term as "24h" | "7d" | "30d" | "all" | undefined,
     //category: collectionsSort,
     limit: limit,
+    list: searchedCollections,
+    order: order as "desc" | "asc" | undefined,
+    page: currentPage,
+    property: "collections" as "creators" | "collections",
+    sort: sort as string | undefined,
+    term: term as "24h" | "7d" | "30d" | "all" | undefined,
   };
   //モーダルを閉じた際の処理
   if (
@@ -82,7 +73,9 @@ export const CollectionsIndexScreen = ({ params }: Props) => {
     !checkInitial
   ) {
     const data = sortList(args);
-    setSortedCollections((sortedCollections) => data);
+    setSortedCollections(() => {
+      return data;
+    });
   }
   if (!checkInitial) {
     setCheckInitial(true);
@@ -90,7 +83,9 @@ export const CollectionsIndexScreen = ({ params }: Props) => {
   useEffect(() => {
     if (tempCollections.length == 0 || checkInitial) {
       const data = sortList(args);
-      setSortedCollections((sortedCollections) => data);
+      setSortedCollections(() => {
+        return data;
+      });
       setTempCollections(data);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -103,9 +98,7 @@ export const CollectionsIndexScreen = ({ params }: Props) => {
       </div>
       <div className="mb-2 flex gap-3">
         <div className="flex w-full items-baseline justify-between gap-3">
-          <p className="text-sm text-gray-500">
-            {searchedCollections.length} Collections
-          </p>
+          <p className="text-sm text-gray-500">{searchedCollections.length} Collections</p>
           <p className="flex items-center gap-2 text-sm text-gray-500">
             <IoMdSync />
             every 24h
@@ -121,16 +114,10 @@ export const CollectionsIndexScreen = ({ params }: Props) => {
         </div>
       </div>
       <div className="mb-10">
-        {searchedCollections.length > 0 && (
-          <CollectionList collections={currentCollections} limit={limit} />
-        )}
+        {searchedCollections.length > 0 && <CollectionList collections={currentCollections} limit={limit} />}
       </div>
       <div className="flex justify-center">
-        <Pagination
-          currentPage={currentPage}
-          length={searchedCollections.length}
-          limit={limit}
-        />
+        <Pagination currentPage={currentPage} length={searchedCollections.length} limit={limit} />
       </div>
     </section>
   );

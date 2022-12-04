@@ -1,21 +1,22 @@
-import React, { createContext, useState } from "react";
+import { createContext } from "react";
 
-/*types*/
-import { Social } from "@/types/social";
+import type { Social } from "@/types/social";
 
 type Props = {
-  socials: Social[];
   setSocials: React.Dispatch<React.SetStateAction<Social[]>>;
+  socials: Social[];
 };
 export const SocialsContext = createContext<Props>({
+  setSocials: () => {
+    return;
+  },
   socials: [
     {
-      creator_username: "",
       collection_slug: "",
-      twitter_followers: null,
+      creator_username: "",
       discord_members: null,
       record_id: "",
+      twitter_followers: null,
     },
   ],
-  setSocials: () => {},
 });

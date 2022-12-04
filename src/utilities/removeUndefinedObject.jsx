@@ -1,7 +1,8 @@
 export const removeUndefinedObject = (object) => {
   return Object.fromEntries(
-    Object.entries(object).filter(
-      ([k, v]) => v !== undefined && v !== null && v !== ""
-    )
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    Object.entries(object).filter(([k, v]) => {
+      return v !== undefined && v !== null && v !== "";
+    })
   );
 };

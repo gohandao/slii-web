@@ -1,21 +1,9 @@
-/*.text-gradient {
-    background: linear-gradient(90deg, #4ac7fa 0%, #e649f5 100%);
-            background-clip: text;
-
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    //text-fill-color: transparent;
-}*/
-
 .font-digital {
-    // font-weight: 400;
     font-style: normal;
     font-weight: 700;
     font-family: lores-12, sans-serif;
-    // font-family: "Press Start 2P", cursive, sans-serif;
 }
 .text-gradient {
-    //background: linear-gradient(to right, #ee9ca7, #ffdde1, #2193b0, #6dd5ed);
     background: linear-gradient(90deg, #4ac7fa 0%, #e649f5 100%);
     background-size: 300%;
     background-clip: text;
@@ -24,15 +12,12 @@
     -webkit-text-fill-color: transparent;
 }
 .ogp-text-gradient {
-    //background: linear-gradient(to right, #ee9ca7, #ffdde1, #2193b0, #6dd5ed);
-    // background: linear-gradient(90deg, #4ac7fa 0%, #e649f5 100%);
     background: linear-gradient(90deg, #4ac7fa 0%, #e649f5 100%);
             background-clip: text;
 
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
             text-fill-color: transparent;
-    // background-size: 300%;
     -webkit-text-fill-color: transparent;
 }
 .bg-gradient {

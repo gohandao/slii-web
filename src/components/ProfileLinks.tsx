@@ -1,36 +1,34 @@
 import Image from "next/image";
-import React, { ReactNode } from "react";
-
+import type { ReactNode } from "react";
+import { BsGlobe2, BsInstagram, BsTwitter } from "react-icons/bs";
 import { FaDiscord, FaRegChartBar } from "react-icons/fa";
-import { BsTwitter, BsInstagram, BsGlobe2 } from "react-icons/bs";
 
 type Props = {
   address?: string;
-  twitter_id?: string;
-  instagram_id?: string;
   discord_url?: string;
-  website_url?: string;
-  opensea_username?: string;
+  instagram_id?: string;
   opensea_slug?: string;
+  opensea_username?: string;
+  twitter_id?: string;
+  website_url?: string;
 };
 type ButtonProps = {
-  url: string;
   children: ReactNode;
+  url: string;
 };
 export const ProfileLinks = ({
   address,
-  twitter_id,
-  instagram_id,
   discord_url,
-  website_url,
-  opensea_username,
+  instagram_id,
   opensea_slug,
+  opensea_username,
+  twitter_id,
+  website_url,
 }: Props) => {
   const Button = ({ children, url }: ButtonProps) => {
     return (
       <button
         onClick={() => {
-          //router.push(`https://twitter.com/${twitter_id}`);
           window.open(`${url}`, "_blank");
         }}
         className=" flex h-7 w-6 items-center justify-center text-xs text-white opacity-80"
@@ -55,9 +53,9 @@ export const ProfileLinks = ({
               height={14}
               alt=""
               style={{
+                height: "12px",
                 maxWidth: "100%",
                 width: "auto",
-                height: "12px",
               }}
             />
           </Button>
@@ -70,9 +68,9 @@ export const ProfileLinks = ({
               height={14}
               alt=""
               style={{
+                height: "12px",
                 maxWidth: "100%",
                 width: "auto",
-                height: "12px",
               }}
             />
           </Button>

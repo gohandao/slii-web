@@ -1,45 +1,36 @@
 import type { NextPage } from "next";
-import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
-import React, { useEffect, useContext, useRef } from "react";
+import { NextSeo } from "next-seo";
+import { useContext, useEffect, useRef } from "react";
 import * as Scroll from "react-scroll";
-// contexts
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-// conponents
+
 import { BaseLayout } from "@/components/BaseLayout";
 import { CollectionsIndexScreen } from "@/components/CollectionsIndexScreen";
-// utilities
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { getContentsHeight } from "@/utilities/getContentsHeight";
 
 const CollectionsPage: NextPage = () => {
   const router = useRouter();
-  const { order, sort, term, page, type, search, username, screen } =
-    router.query;
+  const { order, page, search, sort, term, type, username } = router.query;
   const currentPage = page ? Number(page) : undefined;
 
   const params = {
-    type: type as string,
+    order: order as string,
     page: currentPage,
     search: search as string,
-    order: order as string,
     sort: sort as string,
     term: term as string,
+    type: type as string,
   };
 
-  const {
-    setHeaderIcon,
-    setHiddenParams,
-    setScrollY,
-    scrollY,
-    prevHeight,
-    setPrevHeight,
-  } = useContext(UtilitiesContext);
+  const { prevHeight, scrollY, setHeaderIcon, setHiddenParams, setPrevHeight, setScrollY } =
+    useContext(UtilitiesContext);
 
   const new_scrollY = useRef(scrollY);
   const new_height = useRef(0);
 
   useEffect(() => {
-    var scroll = Scroll.animateScroll;
+    const scroll = Scroll.animateScroll;
     if (scrollY) {
       scroll.scrollTo(scrollY, { duration: 0 });
     }
@@ -73,10 +64,10 @@ const CollectionsPage: NextPage = () => {
   }, [order, sort, term, page, type, search, username]);
   useEffect(() => {
     setHeaderIcon({
-      title: "",
-      emoji: "",
       avatar: "",
+      emoji: "",
       path: "/",
+      title: "",
       type: "home",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -88,11 +79,10 @@ const CollectionsPage: NextPage = () => {
         title="All NFT Collections in Japan | NFT OTAKU"
         description="Find NFT colllections created by Japanese NFT artists and projects."
         openGraph={{
+          description: "Find NFT colllections created by Japanese NFT artists and projects.",
+          title: "All NFT Collections in Japan | NFT OTAKU",
           type: "article",
           url: process.env.NEXT_PUBLIC_SITE_URL + "/collections",
-          title: "All NFT Collections in Japan | NFT OTAKU",
-          description:
-            "Find NFT colllections created by Japanese NFT artists and projects.",
         }}
       />
       <div
@@ -101,7 +91,7 @@ const CollectionsPage: NextPage = () => {
         }}
       >
         <BaseLayout>
-          <CollectionsIndexScreen params={params} />
+          <CollectionsIndexScreen />
         </BaseLayout>
       </div>
     </div>

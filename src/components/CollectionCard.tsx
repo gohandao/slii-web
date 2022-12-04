@@ -1,41 +1,17 @@
-import { useRouter } from "next/router";
-import Link from "next/link";
 import Image from "next/image";
-import React from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { MdVerified } from "react-icons/md";
-// utilities
-import { abbreviateNumber } from "@/utilities/abbreviateNumber";
-// components
-import { UpvoteButton } from "@/components/UpvoteButton";
+
 import { BookmarkButton } from "@/components/BookmarkButton";
 import { Hyphen } from "@/components/Hyphen";
 import { IconEth } from "@/components/IconEth";
+import { UpvoteButton } from "@/components/UpvoteButton";
+import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 
-type StatsProps = {
-  title: string;
-  element: any;
-};
-export const CollectionCard = ({ username, collection, index }: any) => {
+export const CollectionCard = ({ collection, index }: any) => {
   const router = useRouter();
   const { screen } = router.query;
-  const Stats = ({ title, element }: StatsProps) => {
-    return (
-      <div className="inline-flex min-w-[120px] flex-col rounded border-2 border-gray-100 bg-gray-50 p-2">
-        <p className="text-xs font-medium tracking-wide text-gray-400">
-          {title}
-        </p>
-        <p className="mt-1 text-sm font-bold text-gray-800">{element}</p>
-      </div>
-    );
-  };
-  const unit =
-    collection.payment_tokens && " " + collection.payment_tokens[0].symbol;
-
-  const description = collection.description;
-  const slicedDescription =
-    description && description.length > 80
-      ? description.slice(0, 80) + "…"
-      : description;
 
   return (
     <Link href={`/collection/${collection.slug}`} key={index} legacyBehavior>
@@ -47,7 +23,6 @@ export const CollectionCard = ({ username, collection, index }: any) => {
         >
           {collection.banner_image_url && (
             <Image
-              //@ts-ignore
               src={collection.banner_image_url}
               alt=""
               quality={10}
@@ -67,7 +42,6 @@ export const CollectionCard = ({ username, collection, index }: any) => {
           >
             {collection.image_url && (
               <Image
-                //@ts-ignore
                 src={collection.image_url}
                 alt=""
                 quality={10}
@@ -87,11 +61,7 @@ export const CollectionCard = ({ username, collection, index }: any) => {
               )}
             </p>
             <div className="flex gap-2">
-              <BookmarkButton
-                id={collection.slug}
-                type="collection"
-                property="simple"
-              />
+              <BookmarkButton id={collection.slug} type="collection" />
               <div className="-mr-[2px]">
                 <UpvoteButton
                   property="simple"
@@ -106,8 +76,7 @@ export const CollectionCard = ({ username, collection, index }: any) => {
             <div className="">
               <p className="text-sm font-bold text-gray-500">Floor Proce</p>
               <div className="-ml-1 flex items-center gap-1 font-bold text-gray-400">
-                {collection.payment_tokens &&
-                  collection.payment_tokens[0].symbol == "ETH" && <IconEth />}
+                {collection.payment_tokens && collection.payment_tokens[0].symbol == "ETH" && <IconEth />}
                 {collection.stats && collection.stats.floor_price > 0 ? (
                   abbreviateNumber(collection.stats.floor_price)
                 ) : (
@@ -118,8 +87,7 @@ export const CollectionCard = ({ username, collection, index }: any) => {
             <div className="">
               <p className="text-sm font-bold text-gray-500">Total Volume</p>
               <div className="-ml-1 flex items-center gap-1 font-bold text-gray-400">
-                {collection.payment_tokens &&
-                  collection.payment_tokens[0].symbol == "ETH" && <IconEth />}
+                {collection.payment_tokens && collection.payment_tokens[0].symbol == "ETH" && <IconEth />}
                 {collection.stats && collection.stats.total_volume > 0 ? (
                   abbreviateNumber(collection.stats.total_volume)
                 ) : (

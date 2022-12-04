@@ -1,8 +1,8 @@
-import Image from "next/image";
-import React, { useContext } from "react";
-import { RiImageAddLine } from "react-icons/ri";
 import imageCompression from "browser-image-compression";
-// contexts
+import Image from "next/image";
+import { useContext } from "react";
+import { RiImageAddLine } from "react-icons/ri";
+
 import { AuthContext } from "@/contexts/AuthContext";
 
 export type Props = {
@@ -14,7 +14,7 @@ export type Props = {
 };
 
 export const UploadImage = ({ image, newImage, setNewImage }: Props) => {
-  const { user, profile, avatar, setAvatar } = useContext(AuthContext);
+  const { avatar } = useContext(AuthContext);
   // const [images, setImages] = useState<File[]>([]);
   // const [image, setImage] = useState<File>();
   const options = {
@@ -26,13 +26,10 @@ export const UploadImage = ({ image, newImage, setNewImage }: Props) => {
   const handleOnAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     if (e.target.files[0]) {
-      let current_prototype = image && Object.getPrototypeOf(image);
-      let new_prototype = Object.getPrototypeOf(e.target.files[0]);
+      const current_prototype = image && Object.getPrototypeOf(image);
+      const new_prototype = Object.getPrototypeOf(e.target.files[0]);
       if (new_prototype != current_prototype) {
-        const compressed_file = await imageCompression(
-          e.target.files[0],
-          options
-        );
+        const compressed_file = await imageCompression(e.target.files[0], options);
         setNewImage(compressed_file);
       }
     }
@@ -48,16 +45,15 @@ export const UploadImage = ({ image, newImage, setNewImage }: Props) => {
 
   return (
     <div>
-      {/* 1つのボタンで画像を選択する */}
       <label htmlFor="profile_image" className="inline-flex">
         <input
           id="profile_image"
           type="file"
           // multiple
           accept="image/*,.png,.jpg,.jpeg,.gif"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            handleOnAddImage(e)
-          }
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            return handleOnAddImage(e);
+          }}
           className="hidden"
         />
         <div className="relative flex h-[100px] w-[100px] items-center justify-center overflow-hidden rounded-full border-4 border-gray-700 bg-gray-800">
@@ -86,16 +82,7 @@ export const UploadImage = ({ image, newImage, setNewImage }: Props) => {
                   loading="lazy"
                   className="image-fill"
                 /> */}
-                <Image
-                  //@ts-ignore
-                  // src={URL.createObjectURL(images[0])}
-                  src={URL.createObjectURL(newImage)}
-                  alt=""
-                  loading="lazy"
-                  quality={40}
-                  fill
-                  sizes="100vw"
-                />
+                <Image src={URL.createObjectURL(newImage)} alt="" loading="lazy" quality={40} fill sizes="100vw" />
                 {/*<button
                   onClick={() => handleOnRemoveImage(0)}
                   className="left-0 top-0"

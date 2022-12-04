@@ -1,9 +1,8 @@
 import { useRouter } from "next/router";
-import React, { useState, useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { BiSearchAlt2 } from "react-icons/bi";
-// contexts
+
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-// utilities
 import { setParams } from "@/utilities/setParams";
 
 type Props = {
@@ -12,12 +11,11 @@ type Props = {
 };
 export const Searchbox = ({ id, property }: Props) => {
   const router = useRouter();
-  const { order, sort, term, page, type, search, tab, screen } = router.query;
+  const { order, screen, search, sort, tab, term, type } = router.query;
   const { hiddenParams } = useContext(UtilitiesContext);
   const [value, setValue] = useState<string>("");
 
-  const { keyword, setKeyword, NFTKeyword, setNFTKeyword } =
-    useContext(UtilitiesContext);
+  const { NFTKeyword, setKeyword, setNFTKeyword } = useContext(UtilitiesContext);
 
   useEffect(() => {
     if (property == "nft") {
@@ -49,13 +47,13 @@ export const Searchbox = ({ id, property }: Props) => {
   const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
     setParams({
-      type: type && (type as string),
-      sort: sort && (sort as string),
       order: order && (order as string),
-      term: term && (term as string),
-      search: e.target.value && (e.target.value as string),
-      tab: tab && (tab as string),
       screen: screen && (screen as string),
+      search: e.target.value && (e.target.value as string),
+      sort: sort && (sort as string),
+      tab: tab && (tab as string),
+      term: term && (term as string),
+      type: type && (type as string),
     });
   };
 
@@ -71,22 +69,9 @@ export const Searchbox = ({ id, property }: Props) => {
           onChange={(e) => {
             onChangeText(e);
           }}
-          // onKeyPress={(e) => {
-          //   if (e.key == "Enter") {
-          //     searchHandler();
-          //   }
-          // }}
           className="block w-full rounded-lg bg-gray-800 py-[11px] pl-4 pr-4 text-base text-gray-400 sm:pl-12"
         />
         <BiSearchAlt2 className="absolute left-[16px] top-[14px] hidden text-xl text-gray-400 sm:inline-block" />
-        {/* <button
-          className="absolute right-0 top-0 w-10 flex h-full justify-center items-center bg-blue-500"
-          onClick={() => {
-            searchHandler();
-          }}
-        >
-          <BiSearchAlt className="text-white" />
-        </button> */}
       </div>
     </>
   );

@@ -1,7 +1,7 @@
 import { supabase } from "@/libs/supabase";
 
 export const getUserId = async (username: string) => {
-  let test = "";
+  let userId = "";
   try {
     const { data, error, status } = await supabase
       .from("profiles")
@@ -14,15 +14,9 @@ export const getUserId = async (username: string) => {
     if (error && status !== 406) {
       throw error;
     }
-    //@ts-ignore
-    test = data && (data.id as string);
+    userId = data && (data.id as string);
   } catch (error: any) {
     alert(error.message);
-  } finally {
-    //setLoading(false)
   }
-  console.log("getuserId");
-  console.log(test);
-
-  return test;
+  return userId;
 };

@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
+
 import { Count } from "@/components/Count";
 
 type Props = {
   id?: string;
-  text?: string;
-  setText: React.Dispatch<React.SetStateAction<string | undefined>>;
+  maxLength?: number;
   placeholder?: string;
   required: boolean;
-  maxLength?: number;
+  setText: React.Dispatch<React.SetStateAction<string | undefined>>;
+  text?: string;
   value?: string;
 };
 
@@ -21,14 +22,7 @@ type Props = {
   addClass = ""
 />
 */
-export const Textarea = ({
-  id,
-  required = false,
-  maxLength,
-  text,
-  setText,
-  ...props
-}: Props) => {
+export const Textarea = ({ id, maxLength, required = false, setText, text, ...props }: Props) => {
   const [count, setCount] = useState<number>(0);
   const countHandler = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     setCount(e.currentTarget.value.length);
@@ -46,13 +40,12 @@ export const Textarea = ({
           onKeyUp={(e) => {
             countHandler(e);
           }}
+          required={required}
           maxLength={maxLength}
           value={text}
           placeholder="Maximum 200 characters"
         />
-        {maxLength && (
-          <Count count={count} maxLength={maxLength} property="textarea" />
-        )}
+        {maxLength && <Count count={count} maxLength={maxLength} property="textarea" />}
       </div>
     </>
   );

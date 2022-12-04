@@ -1,9 +1,9 @@
 export type Tag = {
-  name: string;
-  createdAt: Date | null;
-  creators?: [];
   collections?: [];
-  creators_count: number;
   collections_count: number;
   count: number;
+  createdAt: Date | null;
+  creators?: [];
+  creators_count: number;
+  name: string;
 };

@@ -1,47 +1,51 @@
 import { createContext } from "react";
-/*types*/
-import { Creator } from "@/types/creator";
+
+import type { Creator } from "@/types/creator";
 
 type Props = {
-  setCreators: React.Dispatch<React.SetStateAction<Creator[]>>;
-  setCollections: React.Dispatch<React.SetStateAction<any[]>>;
-  creators: Creator[];
   collections: any[];
+  creators: Creator[];
+  setCollections: React.Dispatch<React.SetStateAction<any[]>>;
+  setCreators: React.Dispatch<React.SetStateAction<Creator[]>>;
   tags: any[];
 };
 export const BaseContext = createContext<Props>({
-  setCreators: () => {},
-  setCollections: () => {},
+  collections: [],
   creators: [
     {
-      username: "",
-      description: "",
+      address: "",
       avatar: "",
       background: "",
-      address: "",
-      website_url: "",
-      twitter_id: "",
-      instagram_id: "",
-      discord_url: "",
-      verified: false,
-      type: "",
-      listed_at: null,
-      updatedAt: null,
-      collections: [],
       category: "",
+      collections: [],
+      description: "",
+      discord_url: "",
+      instagram_id: "",
+      listed_at: null,
       tags: [],
+      twitter_id: "",
+      type: "",
+      updatedAt: null,
+      username: "",
+      verified: false,
+      website_url: "",
     },
   ],
-  collections: [],
+  setCollections: () => {
+    return;
+  },
+  setCreators: () => {
+    return;
+  },
   tags: [
     {
-      name: "",
-      createdAt: null,
-      creators: [],
       collections: [],
-      creators_count: 0,
       collections_count: 0,
       count: 0,
+      createdAt: null,
+      creators: [],
+      creators_count: 0,
+      name: "",
     },
   ],
 });

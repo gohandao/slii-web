@@ -1,13 +1,18 @@
 import { useRouter } from "next/router";
-import React, { useState, useEffect, ReactNode } from "react";
-import { BsCheck, BsFilter, BsFolder2Open } from "react-icons/bs";
-import { BiCategory, BiFilterAlt } from "react-icons/bi";
-import { TbUsers } from "react-icons/tb";
+import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineClockCircle } from "react-icons/ai";
-// contexts
+import { BiCategory, BiFilterAlt } from "react-icons/bi";
+import { BsCheck, BsFilter, BsFolder2Open } from "react-icons/bs";
+import { TbUsers } from "react-icons/tb";
+
 import { setParams } from "@/utilities/setParams";
 
 type Props = {
+  custom_menu?: {
+    key: string;
+    value: string;
+  }[];
   position: "left" | "right";
   property:
     | "creatorType"
@@ -18,14 +23,10 @@ type Props = {
     | "nftSort"
     | "assetsDropdown"
     | "term";
-  custom_menu?: {
-    key: string;
-    value: string;
-  }[];
 };
-export const Dropdown = ({ position, property, custom_menu }: Props) => {
+export const Dropdown = ({ custom_menu, position, property }: Props) => {
   const router = useRouter();
-  const { order, sort, term, page, type, search, slug, screen } = router.query;
+  const { order, screen, search, slug, sort, term, type } = router.query;
 
   const [status, setStatus] = useState<boolean>(false);
   const assetsDropdown = ["All", "Buy now", "On auction", "Price low to high"];
@@ -37,9 +38,7 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
     children: ReactNode;
   };
   const Title = ({ children }: TitleProps) => {
-    return (
-      <span className="hidden capitalize sm:inline-block">{children}</span>
-    );
+    return <span className="hidden capitalize sm:inline-block">{children}</span>;
   };
   //メニュー表示
   switch (property) {
@@ -147,7 +146,7 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
       }
       break;
     case "nftType":
-      let new_menus = custom_menu
+      const new_menus = custom_menu
         ? custom_menu.map((item, index) => {
             if (index == 0) {
               return item.value;
@@ -279,19 +278,18 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
     setStatus(!status);
   };
   const updateParamsHandler = (title: string) => {
-    let new_order;
     if (property == "term") {
       let new_term;
       if (title != "all") {
         new_term = title;
       }
       setParams({
-        type: type && (type as string),
+        order: order && (order as string),
+        screen: screen && (screen as string),
+        search: search && (search as string),
         sort: sort && (sort as string),
         term: new_term,
-        order: order && (order as string),
-        search: search && (search as string),
-        screen: screen && (screen as string),
+        type: type && (type as string),
       });
     }
     if (property == "nftType") {
@@ -300,11 +298,11 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
         new_type = title;
       }
       setParams({
+        order: order && (order as string),
+        screen: screen && (screen as string),
+        search: search && (search as string),
         slug: new_type,
         sort: sort && (sort as string),
-        order: order && (order as string),
-        search: search && (search as string),
-        screen: screen && (screen as string),
       });
     }
     if (property == "nftSort") {
@@ -330,11 +328,11 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
           break;
       }
       setParams({
+        order: order && (order as string),
+        screen: screen && (screen as string),
+        search: search && (search as string),
         slug: slug && (slug as string),
         sort: new_sort,
-        order: order && (order as string),
-        search: search && (search as string),
-        screen: screen && (screen as string),
       });
     }
     if (property == "creatorType") {
@@ -343,11 +341,11 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
         new_type = title;
       }
       setParams({
-        type: new_type,
-        sort: sort && (sort as string),
         order: order && (order as string),
-        search: search && (search as string),
         screen: screen && (screen as string),
+        search: search && (search as string),
+        sort: sort && (sort as string),
+        type: new_type,
       });
     }
     if (property == "creatorSort") {
@@ -358,11 +356,11 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
         new_sort = title;
       }
       setParams({
-        type: type && (type as string),
-        sort: new_sort,
         order: order && (order as string),
-        search: search && (search as string),
         screen: screen && (screen as string),
+        search: search && (search as string),
+        sort: new_sort,
+        type: type && (type as string),
       });
     }
     if (property == "collectionType") {
@@ -371,11 +369,11 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
         new_type = title;
       }
       setParams({
-        type: new_type,
-        sort: sort && (sort as string),
         order: order && (order as string),
-        search: search && (search as string),
         screen: screen && (screen as string),
+        search: search && (search as string),
+        sort: sort && (sort as string),
+        type: new_type,
       });
     }
     if (property == "collectionSort") {
@@ -406,12 +404,12 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
         new_term = "24h";
       }
       setParams({
-        slug: slug && (slug as string),
-        type: type && (type as string),
-        sort: new_sort,
         order: order && (order as string),
-        term: new_term && (new_term as string),
         search: search && (search as string),
+        slug: slug && (slug as string),
+        sort: new_sort,
+        term: new_term && (new_term as string),
+        type: type && (type as string),
       });
     }
     setStatus(false);
@@ -421,11 +419,7 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
 
   return (
     <>
-      <div
-        className={`relative z-50 inline-block text-left ${
-          menus.length < 2 && "_hidden"
-        }`}
-      >
+      <div className={`relative z-50 inline-block text-left ${menus.length < 2 && "_hidden"}`}>
         <div>
           <button
             type="button"
@@ -474,33 +468,19 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
                     case property == "term" && term == "1d" && "1d":
                     case property == "term" && term == "7d" && "7d":
                     case property == "term" && term == "30d" && "30d":
-                    case property == "collectionSort" &&
-                      sort == undefined &&
-                      "popular":
-                    case property == "collectionSort" &&
-                      sort == undefined &&
-                      "popular":
-                    case property == "creatorSort" &&
-                      sort == undefined &&
-                      "popular":
-                    case property == "collectionType" &&
-                      type == undefined &&
-                      "all":
-                    case property == "creatorType" &&
-                      type == undefined &&
-                      "all":
+                    case property == "collectionSort" && sort == undefined && "popular":
+                    case property == "collectionSort" && sort == undefined && "popular":
+                    case property == "creatorSort" && sort == undefined && "popular":
+                    case property == "collectionType" && type == undefined && "all":
+                    case property == "creatorType" && type == undefined && "all":
                     case property == "nftType" && slug == undefined && "all":
                       return true;
-                    case property == "nftSort" &&
-                      slug == undefined &&
-                      "token_id":
+                    case property == "nftSort" && slug == undefined && "token_id":
                       return true;
                       break;
                     case sort == "created_at" && "newest":
                     case sort == "listed_at" && "new listed":
-                    case sort == "volume" &&
-                      term == undefined &&
-                      "total volume":
+                    case sort == "volume" && term == undefined && "total volume":
                       return true;
                     case sort == "volume" && term == "24h" && "24h volume":
                     case sort == "volume" && term == "7d" && "7d volume":
@@ -524,9 +504,7 @@ export const Dropdown = ({ position, property, custom_menu }: Props) => {
                     }}
                     key={index}
                   >
-                    {iconCheck && (
-                      <BsCheck className="absolute left-3 top-0 flex h-full items-center text-green-500" />
-                    )}
+                    {iconCheck && <BsCheck className="absolute left-3 top-0 flex h-full items-center text-green-500" />}
                     {menu}
                   </button>
                 );

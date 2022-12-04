@@ -1,20 +1,12 @@
-import React from "react";
 type Props = {
-  label?: string;
   id: string;
+  label?: string;
+  onChange: (arg: string) => void;
+  placeholder: string;
   type: string;
   value?: string;
-  placeholder: string;
-  onChange: (arg: string) => void;
 };
-export const Input = ({
-  label,
-  id,
-  type,
-  value,
-  placeholder,
-  onChange,
-}: Props) => {
+export const Input = ({ id, label, onChange, placeholder, type, value }: Props) => {
   return (
     <>
       <div className="flex flex-col gap-1">
@@ -25,7 +17,9 @@ export const Input = ({
           id={id}
           type={type}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => {
+            return onChange(e.target.value);
+          }}
           className="rounded px-5 py-3"
           placeholder={placeholder}
         />

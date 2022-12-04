@@ -1,23 +1,15 @@
-import React from "react";
-
 type Props = {
-  position: "left" | "right";
-  icon: any;
   dropdown: boolean;
-  setDropdown: React.Dispatch<React.SetStateAction<boolean>>;
+  icon: any;
   menus: {
     icon?: any;
     title: string;
     url: string;
   }[];
+  position: "left" | "right";
+  setDropdown: React.Dispatch<React.SetStateAction<boolean>>;
 };
-export const ProfileDropdown = ({
-  position,
-  icon,
-  dropdown,
-  setDropdown,
-  menus,
-}: Props) => {
+export const ProfileDropdown = ({ dropdown, icon, menus, position, setDropdown }: Props) => {
   let possitionClass = "";
   switch (position) {
     case "left":
@@ -28,7 +20,6 @@ export const ProfileDropdown = ({
       break;
   }
   const onClickHandler = (url: string) => {
-    //router.push(url);
     window.open(`${url}`, "_blank");
     setDropdown(false);
   };
@@ -43,21 +34,21 @@ export const ProfileDropdown = ({
         {icon}
       </button>
       {dropdown && (
-        <div
-          className={`absolute z-20 w-48 rounded border border-gray-700 bg-gray-800 ${possitionClass}`}
-        >
-          {menus.map((menu, index) => (
-            <button
-              onClick={() => {
-                onClickHandler(menu.url);
-              }}
-              className="flex items-center gap-3 px-5 py-3 text-sm normal-case text-gray-400"
-              key={index}
-            >
-              {menu.icon}
-              {menu.title}
-            </button>
-          ))}
+        <div className={`absolute z-20 w-48 rounded border border-gray-700 bg-gray-800 ${possitionClass}`}>
+          {menus.map((menu, index) => {
+            return (
+              <button
+                onClick={() => {
+                  onClickHandler(menu.url);
+                }}
+                className="flex items-center gap-3 px-5 py-3 text-sm normal-case text-gray-400"
+                key={index}
+              >
+                {menu.icon}
+                {menu.title}
+              </button>
+            );
+          })}
         </div>
       )}
     </div>

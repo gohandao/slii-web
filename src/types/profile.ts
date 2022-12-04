@@ -1,14 +1,14 @@
 export type Profile = {
   address: string | undefined;
-  username: string;
-  sub_title: string;
-  verified?: boolean;
-  description: string;
   avatar_url?: string | Blob | MediaSource;
   background_url?: string;
-  updated_at: Date;
-  twitter_id?: string;
-  instagram_id?: string;
-  website_url?: string;
+  description: string;
   discord_url?: string;
+  instagram_id?: string;
+  sub_title: string;
+  twitter_id?: string;
+  updated_at: Date;
+  username: string;
+  verified?: boolean;
+  website_url?: string;
 };

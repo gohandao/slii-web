@@ -1,7 +1,6 @@
 import Link from "next/link";
-import React from "react";
-// types
-import { Tag } from "@/types/tag";
+
+import type { Tag } from "@/types/tag";
 
 type Props = {
   tags: Tag[];
@@ -28,9 +27,7 @@ export const TagList = ({ tags, type }: Props) => {
             <div key={index}>
               {tag && tag.name && (
                 <Link href={path} legacyBehavior>
-                  <a
-                    className={`inline-block rounded px-3 py-2 text-sm ${typeClass}`}
-                  >
+                  <a className={`inline-block rounded px-3 py-2 text-sm ${typeClass}`}>
                     #{tag.name} ({tag.count})
                   </a>
                 </Link>

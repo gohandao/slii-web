@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { IoIosClose } from "react-icons/io";
 import Modal from "react-modal";
 
@@ -8,36 +8,11 @@ type Props = {
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export const BaseModal = ({ children, modalIsOpen, setModalIsOpen }: Props) => {
-  const customStyles = {
-    overlay: {
-      position: "fixed",
-      top: 0,
-      left: 0,
-      backgroundColor: "rgba(0,0,0,0.5)",
-      zIndex: 9999,
-    },
-
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      padding: "0",
-      border: "none",
-      background: "none",
-      width: "500px",
-      maxWidth: "100%",
-      // height: "300px",
-      transform: "translate(-50%, -50%)",
-    },
-  };
   Modal.setAppElement("#__next");
-  // const [modalIsOpen, setModalIsOpen] = useState(false);
   // モーダルを開く処理
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
+  // const openModal = () => {
+  //   setModalIsOpen(true);
+  // };
   const afterOpenModal = () => {
     // モーダルが開いた後の処理
   };
@@ -53,8 +28,28 @@ export const BaseModal = ({ children, modalIsOpen, setModalIsOpen }: Props) => {
       onAfterOpen={afterOpenModal}
       // モーダルを閉じる処理を定義
       onRequestClose={closeModal}
-      //@ts-ignore
-      style={customStyles}
+      style={{
+        content: {
+          background: "none",
+          border: "none",
+          bottom: "auto",
+          left: "50%",
+          marginRight: "-50%",
+          maxWidth: "100%",
+          padding: "0",
+          right: "auto",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "500px",
+        },
+        overlay: {
+          backgroundColor: "rgba(0,0,0,0.5)",
+          left: 0,
+          position: "fixed",
+          top: 0,
+          zIndex: 9999,
+        },
+      }}
     >
       <div className="relative bg-transparent p-5 ">
         {children}

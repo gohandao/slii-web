@@ -57,9 +57,8 @@ const AccountPage: NextPage = () => {
     if (profile) {
       setUsername(profile.username);
       setAvatarUrl(profile.avatar_url);
-      let background_blob;
       const getBackgroundBlob = async () => {
-        background_blob = profile && profile.background_url && (await getImageUrl(profile.background_url));
+        const background_blob = profile && profile.background_url && (await getImageUrl(profile.background_url));
         setBackground(background_blob);
       };
       getBackgroundBlob();

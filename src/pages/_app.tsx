@@ -6,6 +6,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { DefaultSeo } from "next-seo";
 import { useEffect, useState } from "react";
+import shortid from "shortid";
 
 import { AuthContext } from "@/contexts/AuthContext";
 import { BaseContext } from "@/contexts/BaseContext";
@@ -25,8 +26,6 @@ import type { Upvote } from "@/types/upvote";
 const creators_data = JSON.parse(JSON.stringify(creatorsJson)) as Creator[];
 const collections_data = JSON.parse(JSON.stringify(collectionsJson)) as any[];
 const tags = JSON.parse(JSON.stringify(tagsJson)) as Tag[];
-
-const shortid = require("shortid");
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -54,13 +53,14 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const [upvotes, setUpvotes] = useState<Upvote[]>([]);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
 
-  let baseUrl = "" as string;
-  if (process.env.NODE_ENV != "test") {
-    baseUrl = {
-      development: "http://localhost:3000",
-      production: "https://nftotaku.xyz",
-    }[process.env.NODE_ENV];
-  }
+  const baseUrl = (() => {
+    if (process.env.NODE_ENV != "test") {
+      return {
+        development: "http://localhost:3000",
+        production: "https://nftotaku.xyz",
+      }[process.env.NODE_ENV];
+    }
+  })() as string;
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {

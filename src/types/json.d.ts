@@ -1,4 +1,5 @@
-import { Creator } from "@/types/creator";
+import type { Creator } from "@/types/creator";
+
 declare module "*/creators.json" {
   const value: Creator[];
   export = value;

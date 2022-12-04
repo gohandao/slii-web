@@ -1,28 +1,29 @@
-import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
-import { NextSeo } from "next-seo";
-import React, { useState, useEffect, useContext } from "react";
+import type { ParsedUrlQuery } from "node:querystring";
+
+import type { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import { ParsedUrlQuery } from "node:querystring";
+import { NextSeo } from "next-seo";
+import { useContext, useEffect, useState } from "react";
 
-// json
-import creatorsJson from "@/json/creators.json";
-// contexts
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-
-// components
 import { BaseLayout } from "@/components/BaseLayout";
 import { CreatorScreen } from "@/components/CreatorScreen";
-import { ScreenModal } from "@/components/ScreenModal";
 import { CreatorsIndexScreen } from "@/components/CreatorsIndexScreen";
-import { Creator } from "@/types/creator";
+import { ScreenModal } from "@/components/ScreenModal";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import creatorsJson from "@/json/creators.json";
+import type { Creator } from "@/types/creator";
 
-const CreatorIndex: NextPage = (props: any) => {
+type Props = {
+  description: string;
+  ogImageUrl: string;
+  title: string;
+};
+const CreatorIndex: NextPage<Props> = (props) => {
+  const { description, ogImageUrl, title } = props;
   const router = useRouter();
-  const { username, screen } = router.query;
+  const { screen, username } = router.query;
   const { hiddenParams, scrollY } = useContext(UtilitiesContext);
-  const [creatorModal, setCreatorModal] = useState<boolean>(
-    screen ? true : false
-  );
+  const [creatorModal, setCreatorModal] = useState<boolean>(screen ? true : false);
 
   useEffect(() => {
     if (hiddenParams) {
@@ -36,32 +37,28 @@ const CreatorIndex: NextPage = (props: any) => {
   return (
     <>
       <NextSeo
-        title={props.title}
-        description={props.description}
+        title={title}
+        description={description}
         openGraph={{
-          type: "article",
-          title: props.title,
-          description: props.description,
-          url: process.env.NEXT_PUBLIC_SITE_URL + `/creator/${username}`,
+          description: description,
           images: [
             {
-              url: props.ogImageUrl,
-              width: 1200,
+              alt: title,
               height: 630,
-              alt: props.title,
               type: "image/jpeg",
+              url: ogImageUrl,
+              width: 1200,
             },
           ],
+          title: title,
+          type: "article",
+          url: process.env.NEXT_PUBLIC_SITE_URL + `/creator/${username}`,
         }}
       />
       {screen == "modal" ? (
         <>
-          <ScreenModal
-            modalIsOpen={creatorModal}
-            setModalIsOpen={setCreatorModal}
-            path="/"
-          >
-            <CreatorScreen property="modal" />
+          <ScreenModal modalIsOpen={creatorModal} setModalIsOpen={setCreatorModal} path="/">
+            <CreatorScreen />
           </ScreenModal>
           <div
             className={`fixed left-0 w-full`}
@@ -85,61 +82,51 @@ const CreatorIndex: NextPage = (props: any) => {
 export default CreatorIndex;
 
 type PathProps = {
-  title: string;
   description: string;
   ogImageUrl: string;
+  title: string;
 };
 type Params = ParsedUrlQuery & {
   username: string;
 };
-
 export const getStaticPaths = async () => {
-  // const fs = require("fs");
-  // const creators = JSON.parse(fs.readFileSync("@/json/creators.json", "utf8"));
   const creators = JSON.parse(JSON.stringify(creatorsJson)) as Creator[];
   return {
-    paths: creators.map((creator: any) => `/creator/${creator.username}`),
-    //fallback: false,
     fallback: "blocking",
+    paths: creators.map((creator: any) => {
+      return `/creator/${creator.username}`;
+    }),
   };
 };
 
-export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
-  params,
-}) => {
-  // const fs = require("fs");
-  // const creators = JSON.parse(fs.readFileSync("@/json/creators.json", "utf8"));
+export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params }) => {
   const creators = JSON.parse(JSON.stringify(creatorsJson)) as Creator[];
   const username = params && params.username;
-  const filtered_creators = creators.filter(
-    (creator: any) => creator.username === username
-  );
+  const filtered_creators = creators.filter((creator: any) => {
+    return creator.username === username;
+  });
   const creator = filtered_creators[0];
   if (!creator) {
     return {
       notFound: true,
     };
   }
-  const description = creator && creator.description ? creator.description : "";
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
-      production: "https://nftotaku.xyz",
       development: "http://localhost:3000",
+      production: "https://nftotaku.xyz",
     }[process.env.NODE_ENV];
   }
-
   const avatar = creator.avatar ? creator.avatar : "";
   const background = creator.background ? creator.background : "";
-  //@ts-ignore
-  const varified = creator.varified ? creator.varified : "";
-
+  const verified = creator.verified ? creator.verified : "";
   return {
     props: {
-      title: `${username}'s NFT stats and collections | NFT OTAKU`,
       description: `${username} is a Japanese NFT creator / project.`,
-      ogImageUrl: `${baseUrl}/api/ogp?title=${username}&label=Creator&type=user&avatar=${avatar}&background=${background}&verified=${varified}`,
+      ogImageUrl: `${baseUrl}/api/ogp?title=${username}&label=Creator&type=user&avatar=${avatar}&background=${background}&verified=${verified}`,
       revalidate: 600,
+      title: `${username}'s NFT stats and collections | NFT OTAKU`,
     },
   };
 };

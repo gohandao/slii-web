@@ -1,8 +1,7 @@
 import { supabase } from "@/libs/supabase";
-import React from "react";
 
 export const getNFTs = async (collection_slug: string) => {
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("nfts")
     .select("*", {
       count: "exact",

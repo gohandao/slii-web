@@ -1,44 +1,39 @@
 import "@/styles/style.scss";
-// import "@/styles/ogp.scss";
 import "@/styles/globals.css";
-import * as gtag from "@/libs/gtag";
+
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import { DefaultSeo } from "next-seo";
 import { useRouter } from "next/router";
-import React, { useState, useEffect } from "react";
-import { getImageUrl, supabase } from "@/libs/supabase";
+import { DefaultSeo } from "next-seo";
+import { useEffect, useState } from "react";
 
-// jsons
-import creatorsJson from "@/json/creators.json";
+import { AuthContext } from "@/contexts/AuthContext";
+import { BaseContext } from "@/contexts/BaseContext";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import collectionsJson from "@/json/collections.json";
+import creatorsJson from "@/json/creators.json";
 import tagsJson from "@/json/tags.json";
+import * as gtag from "@/libs/gtag";
+import { getImageUrl, supabase } from "@/libs/supabase";
+import type { Bookmark } from "@/types/bookmark";
+import type { Creator } from "@/types/creator";
+import type { Params } from "@/types/params";
+import type { Profile } from "@/types/profile";
+import type { Tag } from "@/types/tag";
+import type { Upvote } from "@/types/upvote";
+
 const creators_data = JSON.parse(JSON.stringify(creatorsJson)) as Creator[];
 const collections_data = JSON.parse(JSON.stringify(collectionsJson)) as any[];
 const tags = JSON.parse(JSON.stringify(tagsJson)) as Tag[];
 
-// contexts
-import { AuthContext } from "@/contexts/AuthContext";
-import { BaseContext } from "@/contexts/BaseContext";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-
-// types
-import { Creator } from "@/types/creator";
-import { Upvote } from "@/types/upvote";
-import { Bookmark } from "@/types/bookmark";
-import { Profile } from "@/types/profile";
-import { Params } from "@/types/params";
-import { Tag } from "@/types/tag";
-
 const shortid = require("shortid");
 
-function MyApp({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const { screen } = router.query;
   const currentPath = router.pathname;
 
-  const [page, setPage] = useState<number | undefined>(1);
-  const limit = 100;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string | undefined>();
   const [hiddenParams, setHiddenParams] = useState<Params>({});
@@ -62,8 +57,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   let baseUrl = "" as string;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
-      production: "https://nftotaku.xyz",
       development: "http://localhost:3000",
+      production: "https://nftotaku.xyz",
     }[process.env.NODE_ENV];
   }
 
@@ -78,27 +73,25 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [router.events]);
 
   const [headerIcon, setHeaderIcon] = useState<{
-    title: string;
-    subTitle?: any;
-    emoji: string;
     avatar: any;
     element?: any;
+    emoji: string;
     path: string;
+    subTitle?: any;
+    title: string;
     type?: string;
   }>({
-    title: "",
-    subTitle: "",
-    emoji: "",
     avatar: "",
     element: "",
+    emoji: "",
     path: "",
+    subTitle: "",
+    title: "",
   });
 
   let avatar_blob;
-
   const getAvatarBlob = async () => {
-    avatar_blob =
-      profile && profile.avatar_url && (await getImageUrl(profile.avatar_url));
+    avatar_blob = profile && profile.avatar_url && (await getImageUrl(profile.avatar_url));
     setAvatar(avatar_blob);
   };
   profile && !avatar && getAvatarBlob;
@@ -132,8 +125,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       }
     } catch (error: any) {
       alert(error.message);
-    } finally {
-      //setLoading(false)
     }
   };
   const getUpvotes = async () => {
@@ -150,22 +141,21 @@ function MyApp({ Component, pageProps }: AppProps) {
           throw error;
         }
         const new_upvotes = data as Upvote[];
+        return new_upvotes;
       }
     } catch (error: any) {
       alert(error.message);
-    } finally {
-      //setLoading(false)
     }
   };
 
   const createProfile = async () => {
-    let init_username = shortid.generate();
+    const init_username = shortid.generate();
     const updates = {
       id: user.id,
-      username: init_username,
       updated_at: new Date(),
+      username: init_username,
     };
-    let { error } = await supabase.from("profiles").upsert(updates, {
+    const { error } = await supabase.from("profiles").upsert(updates, {
       returning: "minimal", // Don't return the value after inserting
     });
     if (error) {
@@ -178,11 +168,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       setLoading(true);
       const user = supabase.auth.user();
       if (user) {
-        let { data, error, status } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", user.id)
-          .single();
+        const { data, error, status } = await supabase.from("profiles").select("*").eq("id", user.id).single();
 
         if (error && status !== 406) {
           throw error;
@@ -203,18 +189,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     //ページ用に一時保存しているデータリセット
-    if (
-      currentPath &&
-      currentPath != "collections" &&
-      currentPath != "/collection/[slug]"
-    ) {
+    if (currentPath && currentPath != "collections" && currentPath != "/collection/[slug]") {
       setTempCollections([]);
     }
-    if (
-      currentPath &&
-      currentPath != "/" &&
-      currentPath != "/creator/[username]"
-    ) {
+    if (currentPath && currentPath != "/" && currentPath != "/creator/[username]") {
       setTempCreators([]);
     }
     if (
@@ -229,6 +207,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     ) {
       setPrevHeight(0);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPath]);
 
   useEffect(() => {
@@ -247,84 +226,80 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <meta
-          name="viewport"
-          content="minimum-scale=1, initial-scale=1, width=device-width"
-        />
+        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+        <link rel="stylesheet" href="https://use.typekit.net/xbj6ysr.css" />
       </Head>
       <DefaultSeo
         defaultTitle={title}
         description={description}
         openGraph={{
-          type: "website",
-          title: title,
           description: description,
-          site_name: site_name,
-          url: process.env.NEXT_PUBLIC_SITE_URL,
           images: [
             {
+              alt: title,
+              height: 630,
+              type: "image/jpeg",
               url: process.env.NEXT_PUBLIC_SITE_URL + "/ogp-default.jpg",
               width: 1200,
-              height: 630,
-              alt: title,
-              type: "image/jpeg",
             },
           ],
+          site_name: site_name,
+          title: title,
+          type: "website",
+          url: process.env.NEXT_PUBLIC_SITE_URL,
         }}
         twitter={{
-          handle: `@${twitter_id}`,
           cardType: "summary_large_image",
+          handle: `@${twitter_id}`,
         }}
       />
       <AuthContext.Provider
         value={{
-          user,
-          profile,
           avatar,
-          setAvatar,
           bookmarks,
+          profile,
+          setAvatar,
           setBookmarks,
-          upvotes,
           setUpvotes,
+          upvotes,
+          user,
         }}
       >
         <UtilitiesContext.Provider
           value={{
-            loginModal: loginModal,
-            setLoginModal: setLoginModal,
             baseUrl: baseUrl,
-            hiddenParams: hiddenParams,
-            setHiddenParams: setHiddenParams,
-            keyword: keyword,
-            setKeyword: setKeyword,
-            NFTKeyword: keyword,
-            setNFTKeyword: setKeyword,
             headerIcon: headerIcon,
-            setHeaderIcon: setHeaderIcon,
-            userProfile: userProfile,
-            setUserProfile: setUserProfile,
-            scrollY: scrollY,
-            setScrollY: setScrollY,
+            hiddenParams: hiddenParams,
+            keyword: keyword,
+            loginModal: loginModal,
+            NFTKeyword: keyword,
             prevHeight: prevHeight,
+            scrollY: scrollY,
+            setHeaderIcon: setHeaderIcon,
+            setHiddenParams: setHiddenParams,
+            setKeyword: setKeyword,
+            setLoginModal: setLoginModal,
+            setNFTKeyword: setKeyword,
             setPrevHeight: setPrevHeight,
-            tempCreators,
-            tempCollections,
-            setTempCreators,
+            setScrollY: setScrollY,
             setTempCollections,
+            setTempCreators,
+            setUserProfile: setUserProfile,
+            tempCollections,
+            tempCreators,
+            userProfile: userProfile,
           }}
         >
           <BaseContext.Provider
             value={{
-              creators,
               collections,
-              setCreators,
+              creators,
               setCollections,
+              setCreators,
               tags,
             }}
           >
-            <div
-              className={`bg-stripe flex min-h-screen flex-col overflow-hidden`}
-            >
+            <div className={`bg-stripe flex min-h-screen flex-col overflow-hidden`}>
               <Component {...pageProps} />
             </div>
           </BaseContext.Provider>
@@ -333,5 +308,3 @@ function MyApp({ Component, pageProps }: AppProps) {
     </>
   );
 }
-
-export default MyApp;

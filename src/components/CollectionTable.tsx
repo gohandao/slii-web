@@ -1,15 +1,11 @@
 import { useRouter } from "next/router";
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import ReactLoading from "react-loading";
-// libs
-import { sortList } from "@/libs/sortList";
-// utilities
-import { BaseContext } from "@/contexts/BaseContext";
-// components
-import { CollectionTr } from "@/components/CollectionTr";
+
 import { Th } from "@/components/CollectionTh";
-// types
-import { Collection } from "@/types/collection";
+import { CollectionTr } from "@/components/CollectionTr";
+import { sortList } from "@/libs/sortList";
+import type { Collection } from "@/types/collection";
 
 type Props = {
   collections: Collection[];
@@ -18,25 +14,27 @@ type Props = {
 export const CollectionTable = ({ collections, limit }: Props) => {
   const router = useRouter();
 
-  const { order, sort, term, page, type, search } = router.query;
+  const { order, page, search, sort, term, type } = router.query;
   const currentPage = page ? Number(page) : 1;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState<boolean>(false);
   const [sortedCollections, setSortedCollections] = useState<Collection[]>([]);
 
-  //set initial collections data
   useEffect(() => {
     const args = {
-      property: "collections" as "creators" | "collections",
+      limit: limit,
       list: collections,
-      page: currentPage,
       order: order as "desc" | "asc" | undefined,
+      page: currentPage,
+      property: "collections" as "creators" | "collections",
       sort: sort as string | undefined,
       term: term as "24h" | "7d" | "30d" | "all" | undefined,
-      limit: limit,
     };
     const data = sortList(args);
-    setSortedCollections((sortedCollections) => data);
+    setSortedCollections(() => {
+      return data;
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collections, order, sort, term, page, type, search]);
 
@@ -68,25 +66,22 @@ export const CollectionTable = ({ collections, limit }: Props) => {
               {sortedCollections.length > 0 && (
                 <tbody className="divide-y divide-gray-200 rounded border border-gray-200">
                   {sortedCollections &&
-                    sortedCollections.map((item, index) => (
-                      <CollectionTr
-                        item={item}
-                        index={index}
-                        limit={limit}
-                        key={sort ? (sort as string) + index : index}
-                      />
-                    ))}
+                    sortedCollections.map((item, index) => {
+                      return (
+                        <CollectionTr
+                          item={item}
+                          index={index}
+                          limit={limit}
+                          key={sort ? (sort as string) + index : index}
+                        />
+                      );
+                    })}
                 </tbody>
               )}
             </table>
             {loading && (
               <div className="py-5 px-5">
-                <ReactLoading
-                  type="spinningBubbles"
-                  color="#fff"
-                  height={40}
-                  width={40}
-                />
+                <ReactLoading type="spinningBubbles" color="#fff" height={40} width={40} />
               </div>
             )}
           </div>

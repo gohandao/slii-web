@@ -1,18 +1,17 @@
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useContext } from "react";
+import { useContext } from "react";
 
-type Tab = {
-  title: string;
-  // emoji: string;
-  path?: string;
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+
+type Props = {
   param?: string;
+  path?: string;
+  title: string;
 };
-
-export const Tab = ({ title, path, param }: Tab) => {
+export const Tab = ({ param, path, title }: Props) => {
   const router = useRouter();
-  const { tab, search } = router.query;
+  const { search, tab } = router.query;
   const { setPrevHeight } = useContext(UtilitiesContext);
 
   const removeParams = (asPath: string) => {
@@ -24,20 +23,18 @@ export const Tab = ({ title, path, param }: Tab) => {
   if (currentPath == path) {
     passiveClass = "text-gray-100";
   }
-  if (
-    (param == "creator" && tab == "creator") ||
-    (param == "creator" && !tab)
-  ) {
+  if ((param == "creator" && tab == "creator") || (param == "creator" && !tab)) {
     passiveClass = "text-gray-100";
   }
   if (param == "collection" && tab == "collection") {
     passiveClass = "text-gray-100";
   }
 
-  let new_query = { tab: param };
+  let new_query = {};
   if (typeof search == "string" && search.length > 0) {
-    //@ts-ignore
-    new_query = { tab: param, search: search };
+    new_query = { search: search, tab: param };
+  } else {
+    new_query = { tab: param };
   }
   return (
     <>

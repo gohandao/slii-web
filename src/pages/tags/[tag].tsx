@@ -1,45 +1,47 @@
-import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
-import { NextSeo } from "next-seo";
+import type { ParsedUrlQuery } from "node:querystring";
+
+import type { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
-import { ParsedUrlQuery } from "node:querystring";
-// json
-import tagsJson from "@/json/tags.json";
-// libs
-import { sortList } from "@/libs/sortList";
-// contexts
+import { NextSeo } from "next-seo";
+import { useContext, useEffect, useState } from "react";
+
+import { BaseLayout } from "@/components/BaseLayout";
+import { CollectionList } from "@/components/CollectionList";
+import { CreatorList } from "@/components/CreatorList";
+import { Dropdown } from "@/components/Dropdown";
+import { OrderButton } from "@/components/OrderButton";
+import { Searchbox } from "@/components/Searchbox";
+import { TabIndex } from "@/components/TabIndex";
 import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-// components
-import { CreatorList } from "@/components/CreatorList";
-import { BaseLayout } from "@/components/BaseLayout";
-import { TabIndex } from "@/components/TabIndex";
-import { CollectionList } from "@/components/CollectionList";
-import { Dropdown } from "@/components/Dropdown";
-import { Searchbox } from "@/components/Searchbox";
-import { OrderButton } from "@/components/OrderButton";
-// types
-import { Creator } from "@/types/creator";
-import { Collection } from "@/types/collection";
-import { Tag } from "@/types/tag";
+import tagsJson from "@/json/tags.json";
+import { sortList } from "@/libs/sortList";
+import type { Collection } from "@/types/collection";
+import type { Creator } from "@/types/creator";
+import type { Tag } from "@/types/tag";
 
-const TagPage: NextPage = (props: any) => {
+type Props = {
+  description: string;
+  title: string;
+};
+const TagPage: NextPage<Props> = (props) => {
+  const { description, title } = props;
   const router = useRouter();
-  const { tag, tab, order, sort, term, page, type, search } = router.query;
+  const { order, page, search, sort, tab, tag, term, type } = router.query;
   const currentPage = page ? Number(page) : 1;
   const limit = 100;
 
-  const { creators, collections } = useContext(BaseContext);
+  const { collections, creators } = useContext(BaseContext);
   const [sortedCreators, setSortedCreators] = useState<Creator[]>([]);
   const [sortedCollections, setSortedCollections] = useState<Collection[]>([]);
 
   const { setHeaderIcon } = useContext(UtilitiesContext);
   useEffect(() => {
     setHeaderIcon({
-      title: "Tags",
-      emoji: "",
       avatar: "",
+      emoji: "",
       path: `/tags`,
+      title: "Tags",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -47,25 +49,26 @@ const TagPage: NextPage = (props: any) => {
   // 1.filtered creators
   const uppperKeyword = typeof search == "string" && search.toUpperCase();
 
-  const filteredCreators01 = creators.filter(
-    //@ts-ignore
-    (item) => item.tags && item.tags.includes(tag) == true
-  );
+  const filteredCreators01 = creators.filter((item) => {
+    return item.tags && item.tags.includes(tag as string) == true;
+  });
   const filteredCreators02 =
     type && type != "all"
-      ? filteredCreators01.filter((creator) => creator.type === type)
+      ? filteredCreators01.filter((creator) => {
+          return creator.type === type;
+        })
       : filteredCreators01;
 
   const filteredCreators = filteredCreators02;
 
   //1.match username
-  const searchedCreators01 = filteredCreators.filter(
-    (creator) =>
+  const searchedCreators01 = filteredCreators.filter((creator) => {
+    return (
       typeof search == "string" &&
       //すべて大文字にして大文字小文字の区別をなくす
-      //@ts-ignore
-      creator.username.toUpperCase().includes(uppperKeyword) == true
-  );
+      creator.username.toUpperCase().includes(uppperKeyword as string) == true
+    );
+  });
   const origin_searchedCreators = [
     ...searchedCreators01,
     // ...searchedCreators02,
@@ -79,46 +82,44 @@ const TagPage: NextPage = (props: any) => {
   }
 
   const creators_args = {
-    property: "creators" as "creators" | "collections",
+    limit: limit,
     list: searchedCreators,
-    page: currentPage,
     order: order as "desc" | "asc" | undefined,
+    page: currentPage,
+    property: "creators" as "creators" | "collections",
     sort: sort as string | undefined,
     term: term as "24h" | "7d" | "30d" | "all" | undefined,
-    limit: limit,
   };
 
   // 2.filtered collections
-  const filteredCollections01 = collections.filter(
-    //@ts-ignore
-    (item) => item.tags && item.tags.includes(tag) == true
-  );
+  const filteredCollections01 = collections.filter((item) => {
+    return item.tags && item.tags.includes(tag) == true;
+  });
   const filteredCollections02 =
     type && type != "all"
-      ? filteredCollections01.filter((collection) => collection.type === type)
+      ? filteredCollections01.filter((collection) => {
+          return collection.type === type;
+        })
       : filteredCollections01;
   const filteredCollections = filteredCollections02;
 
   //1.match name
-  const searchedCollections01 = filteredCollections.filter(
-    (collection) =>
+  const searchedCollections01 = filteredCollections.filter((collection) => {
+    return (
       typeof search == "string" &&
       //すべて大文字にして大文字小文字の区別をなくす
-      //@ts-ignore
       collection.name.toUpperCase().includes(uppperKeyword) == true
-  );
+    );
+  });
   //1.match creator username
-  const searchedCollections02 = filteredCollections.filter(
-    (collection) =>
+  const searchedCollections02 = filteredCollections.filter((collection) => {
+    return (
       typeof search == "string" &&
       //すべて大文字にして大文字小文字の区別をなくす
-      //@ts-ignore
       collection.creator_id.toUpperCase().includes(uppperKeyword) == true
-  );
-  const origin_searchedCollections = [
-    ...searchedCollections01,
-    ...searchedCollections02,
-  ];
+    );
+  });
+  const origin_searchedCollections = [...searchedCollections01, ...searchedCollections02];
   //重複削除
   let searchedCollections = [] as Collection[];
   if (search && search.length > 0) {
@@ -128,23 +129,27 @@ const TagPage: NextPage = (props: any) => {
   }
 
   const collections_args = {
-    property: "collections" as "creators" | "collections",
-    list: searchedCollections,
-    page: currentPage,
-    order: order as "desc" | "asc" | undefined,
-    sort: sort as string | undefined,
-    term: term as "24h" | "7d" | "30d" | "all" | undefined,
     //category: collectionsSort,
     limit: limit,
+    list: searchedCollections,
+    order: order as "desc" | "asc" | undefined,
+    page: currentPage,
+    property: "collections" as "creators" | "collections",
+    sort: sort as string | undefined,
+    term: term as "24h" | "7d" | "30d" | "all" | undefined,
   };
 
   useEffect(() => {
     if (tab != "collection") {
       const data = sortList(creators_args);
-      setSortedCreators((sortedCreators) => data);
+      setSortedCreators(() => {
+        return data;
+      });
     } else {
       const data = sortList(collections_args);
-      setSortedCollections((sortedCollections) => data);
+      setSortedCollections(() => {
+        return data;
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collections, creators, order, sort, term, page, type, search, tab]);
@@ -152,13 +157,13 @@ const TagPage: NextPage = (props: any) => {
   return (
     <div>
       <NextSeo
-        title={props.title}
-        description={props.description}
+        title={title}
+        description={description}
         openGraph={{
+          description: description,
+          title: title,
           type: "article",
           url: process.env.NEXT_PUBLIC_SITE_URL + "/tags/" + tag,
-          title: props.title,
-          description: props.description,
         }}
       />
       <BaseLayout>
@@ -169,8 +174,7 @@ const TagPage: NextPage = (props: any) => {
           <div className="mb- flex gap-3">
             <div className="flex items-baseline gap-3">
               <p className="text-sm text-gray-400">
-                {searchedCreators.length} Creators, {searchedCollections.length}{" "}
-                Collections
+                {searchedCreators.length} Creators, {searchedCollections.length} Collections
               </p>
             </div>
           </div>
@@ -214,14 +218,13 @@ const TagPage: NextPage = (props: any) => {
 export default TagPage;
 
 export const getStaticPaths = async () => {
-  // const fs = require("fs");
-  // const tags = JSON.parse(fs.readFileSync("@/json/tags.json", "utf8"));
   const tags = JSON.parse(JSON.stringify(tagsJson)) as Tag[];
 
   return {
-    paths: tags.map((tag: any) => `/tags/${tag.name}`),
-    //fallback: false,
     fallback: "blocking",
+    paths: tags.map((tag: any) => {
+      return `/tags/${tag.name}`;
+    }),
   };
 };
 
@@ -232,12 +235,12 @@ type Params = ParsedUrlQuery & {
   slug: string;
 };
 
-export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
-  params,
-}) => {
+export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params }) => {
   const tags = JSON.parse(JSON.stringify(tagsJson)) as Tag[];
   const tag_name = params && params.tag;
-  const filtered_tags = tags.filter((tag: any) => tag.name === tag_name);
+  const filtered_tags = tags.filter((tag: any) => {
+    return tag.name === tag_name;
+  });
   const tag = filtered_tags[0];
   if (!tag) {
     return {
@@ -247,17 +250,17 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
-      production: "https://nftotaku.xyz",
       development: "http://localhost:3000",
+      production: "https://nftotaku.xyz",
     }[process.env.NODE_ENV];
   }
   return {
     props: {
-      // OGP画像は絶対URLで記述する必要があります
-      title: `${tag.name}'s NFT creators and collections in Japan | NFT OTAKU`,
       description: `Check ${tag.name}'s NFT creators and collections in Japan now.`,
       ogImageUrl: `${baseUrl}/api/ogp?title=${tag}&label=Tags`,
       revalidate: 600,
+      // OGP画像は絶対URLで記述する必要があります
+      title: `${tag.name}'s NFT creators and collections in Japan | NFT OTAKU`,
     },
   };
 };

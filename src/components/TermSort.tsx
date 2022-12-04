@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
-import React from "react";
-// utilities
+
 import { setParams } from "@/utilities/setParams";
 
 type Props = {
@@ -8,7 +7,7 @@ type Props = {
 };
 export const TermSort = ({ term }: Props) => {
   const router = useRouter();
-  const { order, sort, page, type, search, screen } = router.query;
+  const { order, screen, search, sort, type } = router.query;
 
   type Props = {
     title: string;
@@ -21,20 +20,19 @@ export const TermSort = ({ term }: Props) => {
     } else {
       activeClass = "border-gray-600 bg-gray-800";
     }
-    let new_order = order ? order : "desc";
+    const new_order = order ? order : "desc";
     return (
       <button
         className={`flex h-[46px] w-[44px] items-center justify-center border-r text-sm capitalize text-gray-300 last:border-r-0 ${activeClass}`}
         onClick={() => {
           setParams({
-            sort: sort as string,
             order: new_order as string,
+            screen: screen as string,
+            search: search as string,
+            sort: sort as string,
             term: title,
             type: type as string,
-            search: search as string,
-            screen: screen as string,
           });
-          //setTermParam(title);
         }}
       >
         {title}

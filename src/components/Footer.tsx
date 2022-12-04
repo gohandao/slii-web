@@ -1,36 +1,21 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
-import React, { ReactNode, useContext } from "react";
-import { TbDiamond, TbMailbox } from "react-icons/tb";
-import { BsMailbox } from "react-icons/bs";
+import type { ReactNode } from "react";
+import { useContext } from "react";
 import { BiHomeAlt, BiPurchaseTagAlt } from "react-icons/bi";
+import { BsMailbox } from "react-icons/bs";
 import { FaDiscord, FaRegUserCircle } from "react-icons/fa";
-import { RiLoginBoxLine } from "react-icons/ri";
 import { SiNotion } from "react-icons/si";
-// contexts
+import { TbDiamond, TbMailbox } from "react-icons/tb";
+
 import { AuthContext } from "@/contexts/AuthContext";
 
-type ButtonProps = {
-  url: string;
-  title: string;
-};
 type FixedMenuProps = {
-  href: string;
   children: ReactNode;
+  href: string;
 };
 export const Footer = () => {
-  const router = useRouter();
-  const { user, avatar } = useContext(AuthContext);
-  const Button = ({ url, title }: ButtonProps) => {
-    return (
-      <Link href={url} legacyBehavior>
-        <a className="flex items-center justify-center rounded bg-gray-900 px-5 py-5 text-white">
-          {title}
-        </a>
-      </Link>
-    );
-  };
-  const FixedMenu = ({ href, children }: FixedMenuProps) => {
+  const { user } = useContext(AuthContext);
+  const FixedMenu = ({ children, href }: FixedMenuProps) => {
     return (
       <Link href={href} legacyBehavior>
         <a className="flex w-full items-center justify-center border-r border-gray-700 px-3 py-[14px] text-2xl text-gray-400 last:border-none">
@@ -44,9 +29,7 @@ export const Footer = () => {
   return (
     <>
       <div className="pt-16"></div>
-      <div
-        className={`mx-auto mb-5 flex max-w-3xl flex-col gap-3 md:flex-row md:gap-5`}
-      >
+      <div className={`mx-auto mb-5 flex max-w-3xl flex-col gap-3 md:flex-row md:gap-5`}>
         <a
           href="https://mrgishi.notion.site/about-NFT-OTAKU-41f9dcea9d89494b8986b9d18eddd791"
           target="_blank"
@@ -77,22 +60,17 @@ export const Footer = () => {
       </div>
       <footer className="pb-20 md:pb-3">
         <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
-          <small className="flex justify-center text-center text-sm text-gray-400">
-            ©︎ NFT OTAKU 2022
-          </small>
+          <small className="flex justify-center text-center text-sm text-gray-400">©︎ NFT OTAKU 2022</small>
         </div>
       </footer>
       <div className="fixed bottom-0 left-0 z-20 mx-auto flex w-full border-t border-gray-700 bg-gray-800 md:hidden">
         <FixedMenu href="/">
-          {/*<AiOutlineHome />*/}
           <BiHomeAlt />
         </FixedMenu>
         <FixedMenu href="/stats">
-          {/*<TbUsers />*/}
           <TbDiamond />
         </FixedMenu>
         <FixedMenu href="/tags">
-          {/*<BsCollection />*/}
           <BiPurchaseTagAlt />
         </FixedMenu>
         <FixedMenu href="/">

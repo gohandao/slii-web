@@ -1,14 +1,14 @@
 export type Collection = {
-  record_id: string;
-  name: string;
-  slug: string;
-  creator_id: string;
-  type: string;
   category: string;
-  verified: boolean;
-  tags: string[];
-  listed_at: Date | null;
-  updatedAt: Date | null;
-  twitter_followers: number | null;
+  creator_id: string;
   discord_members: number | null;
+  listed_at: Date | null;
+  name: string;
+  record_id: string;
+  slug: string;
+  tags: string[];
+  twitter_followers: number | null;
+  type: string;
+  updatedAt: Date | null;
+  verified: boolean;
 };

@@ -1,38 +1,35 @@
-import { NextPage } from "next";
-import { NextSeo } from "next-seo";
+import type { NextPage } from "next";
 import Link from "next/link";
 import router from "next/router";
-import { useState, useEffect, useContext } from "react";
+import { NextSeo } from "next-seo";
+import { useContext, useEffect, useState } from "react";
 import { CgUserlane } from "react-icons/cg";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { v4 as uuidv4 } from "uuid";
-import { getImageUrl, supabase } from "@/libs/supabase";
 
-// contexts
-import { AuthContext } from "@/contexts/AuthContext";
-
-// conponents
 import { BaseLayout } from "@/components/BaseLayout";
 import { Input } from "@/components/Input";
-import { UploadImage } from "@/components/UploadImage";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import { UploadBackground } from "@/components/UploadBackground";
 import { Textarea } from "@/components/Textarea";
+import { UploadBackground } from "@/components/UploadBackground";
+import { UploadImage } from "@/components/UploadImage";
+import { AuthContext } from "@/contexts/AuthContext";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { getImageUrl, supabase } from "@/libs/supabase";
 
 const AccountPage: NextPage = () => {
   const { setHeaderIcon } = useContext(UtilitiesContext);
   useEffect(() => {
     setHeaderIcon({
-      title: "Account",
-      emoji: "",
-      element: <CgUserlane />,
       avatar: "",
+      element: <CgUserlane />,
+      emoji: "",
       path: `/account`,
+      title: "Account",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { user, profile, avatar, setAvatar } = useContext(AuthContext);
+  const { avatar, profile, user } = useContext(AuthContext);
   const [newAvatar, setNewAvatar] = useState<File>();
   const [label, setLabel] = useState<string>();
   const [description, setDescription] = useState<string>();
@@ -40,12 +37,13 @@ const AccountPage: NextPage = () => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [avatarUrl, setAvatarUrl] = useState<string>("");
 
-  const options = {
-    maxSizeMB: 1, // 最大ファイルサイズ
-    maxWidthOrHeight: 80, // 最大画像幅もしくは高さ
-  };
+  // const options = {
+  //   maxSizeMB: 1, // 最大ファイルサイズ
+  //   maxWidthOrHeight: 80, // 最大画像幅もしくは高さ
+  // };
   useEffect(() => {
     if (!user) {
       router.push("/");
@@ -61,10 +59,7 @@ const AccountPage: NextPage = () => {
       setAvatarUrl(profile.avatar_url);
       let background_blob;
       const getBackgroundBlob = async () => {
-        background_blob =
-          profile &&
-          profile.background_url &&
-          (await getImageUrl(profile.background_url));
+        background_blob = profile && profile.background_url && (await getImageUrl(profile.background_url));
         setBackground(background_blob);
       };
       getBackgroundBlob();
@@ -73,13 +68,10 @@ const AccountPage: NextPage = () => {
 
   const uploadImage = async (image: File, path: string) => {
     const uuid = uuidv4();
-
-    const { data, error } = await supabase.storage
-      .from(path)
-      .upload(`public/${uuid}.jpg`, image, {
-        cacheControl: "3600",
-        upsert: false,
-      });
+    const { data } = await supabase.storage.from(path).upload(`public/${uuid}.jpg`, image, {
+      cacheControl: "3600",
+      upsert: false,
+    });
     return data;
   };
 
@@ -100,15 +92,15 @@ const AccountPage: NextPage = () => {
         }
         const updates = {
           id: user.id,
-          username: username,
-          label: label,
-          description: description,
-          background_url: new_background_url,
           avatar_url: new_avatar_url,
+          background_url: new_background_url,
+          description: description,
+          label: label,
           updated_at: new Date(),
+          username: username,
         };
 
-        let { error } = await supabase.from("profiles").upsert(updates, {
+        const { error } = await supabase.from("profiles").upsert(updates, {
           returning: "minimal", // Don't return the value after inserting
         });
         alert("upload success");
@@ -120,7 +112,6 @@ const AccountPage: NextPage = () => {
       alert(error.message);
     } finally {
       setLoading(false);
-      //location.reload();
     }
   };
 
@@ -130,11 +121,11 @@ const AccountPage: NextPage = () => {
         title="Account Page | NFT OTAKU"
         description="Please login."
         openGraph={{
-          type: "article",
-          url: process.env.NEXT_PUBLIC_SITE_URL + "/",
-          title: "All NFT Collections in Japan | NFT OTAKU",
           description:
             "Discover favorite Japanese NFT creators, projects and collections. NFT OTAKU is one of the biggest NFT creator search application in Japan.",
+          title: "All NFT Collections in Japan | NFT OTAKU",
+          type: "article",
+          url: process.env.NEXT_PUBLIC_SITE_URL + "/",
         }}
       />
       <BaseLayout>
@@ -146,13 +137,17 @@ const AccountPage: NextPage = () => {
                   <div className="relative z-10 flex items-center justify-between gap-5 py-2 px-5">
                     <button
                       className="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-gray-600 text-gray-300 "
-                      onClick={() => router.back()}
+                      onClick={() => {
+                        return router.back();
+                      }}
                     >
                       <IoChevronBackOutline className="text-gray-400" />
                     </button>
                     <button
                       className="w-[90px] overflow-hidden rounded-full bg-green-600 py-2 px-5 text-green-100"
-                      onClick={() => updateProfile()}
+                      onClick={() => {
+                        return updateProfile();
+                      }}
                       disabled={loading}
                     >
                       {loading ? "Loading ..." : "Save"}
@@ -160,19 +155,11 @@ const AccountPage: NextPage = () => {
                   </div>
                   <div className="relative px-5 md:px-16 ">
                     <div className="absolute left-0 top-0 flex h-[120px] w-full items-center justify-center">
-                      <UploadBackground
-                        image={background}
-                        newImage={background}
-                        setNewImage={setBackground}
-                      />
+                      <UploadBackground image={background} newImage={background} setNewImage={setBackground} />
                     </div>
                     <div className=" pt-16 ">
                       <div className="mb-3 flex">
-                        <UploadImage
-                          image={avatar}
-                          newImage={newAvatar}
-                          setNewImage={setNewAvatar}
-                        />
+                        <UploadImage image={avatar} newImage={newAvatar} setNewImage={setNewAvatar} />
                       </div>
                       <div className="mb-5">
                         <Input

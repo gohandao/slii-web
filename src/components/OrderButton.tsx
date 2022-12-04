@@ -1,12 +1,11 @@
 import { useRouter } from "next/router";
-import React from "react";
 import { TbArrowBigDownLine, TbArrowBigUpLine } from "react-icons/tb";
-// utilities
+
 import { setParams } from "@/utilities/setParams";
 
 export const OrderButton = () => {
   const router = useRouter();
-  const { order, sort, term, page, type, search, screen } = router.query;
+  const { order, page, screen, search, sort, term, type } = router.query;
   const currentPage = page ? Number(page) : 1;
   return (
     <button
@@ -25,12 +24,13 @@ export const OrderButton = () => {
           new_order = "asc";
         }
         setParams({
-          type: type && (type as string),
-          sort: sort && (sort as string),
           order: new_order,
           page: new_page,
-          search: search && (search as string),
           screen: screen && (screen as string),
+          search: search && (search as string),
+          sort: sort && (sort as string),
+          term: term && (term as string),
+          type: type && (type as string),
         });
       }}
     >

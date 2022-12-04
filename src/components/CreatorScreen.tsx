@@ -1,45 +1,37 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import { JP } from "country-flag-icons/react/3x2";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { JP } from "country-flag-icons/react/3x2";
+import { useContext, useEffect, useState } from "react";
 import { MdVerified } from "react-icons/md";
-// libs
-import { sortNFTs } from "@/libs/sortNFTs";
-// utilities
-import { getNFTs } from "@/utilities/getNFTs";
-import { randomize } from "@/utilities/randomize";
-import { abbreviateNumber } from "@/utilities/abbreviateNumber";
-// contexts
-import { BaseContext } from "@/contexts/BaseContext";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-// components
-import { ProfileHeader } from "@/components/ProfileHeader";
+
 import { CollectionCard } from "@/components/CollectionCard";
-import { Pagination } from "@/components/Pagination";
 import { CopyText } from "@/components/CopyText";
 import { Dropdown } from "@/components/Dropdown";
-import { Searchbox } from "@/components/Searchbox";
-import { OrderButton } from "@/components/OrderButton";
-import { RandomButton } from "@/components/RandomButton";
-import { NFTList } from "@/components/NFTList";
 import { IconEth } from "@/components/IconEth";
-// types
-import { Creator } from "@/types/creator";
+import { NFTList } from "@/components/NFTList";
+import { OrderButton } from "@/components/OrderButton";
+import { Pagination } from "@/components/Pagination";
+import { ProfileHeader } from "@/components/ProfileHeader";
+import { RandomButton } from "@/components/RandomButton";
+import { Searchbox } from "@/components/Searchbox";
+import { BaseContext } from "@/contexts/BaseContext";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { sortNFTs } from "@/libs/sortNFTs";
+import type { Creator } from "@/types/creator";
+import { abbreviateNumber } from "@/utilities/abbreviateNumber";
+import { getNFTs } from "@/utilities/getNFTs";
+import { randomize } from "@/utilities/randomize";
 
-type Props = {
-  property?: "modal";
-};
-export const CreatorScreen = ({ property }: Props) => {
+export const CreatorScreen = () => {
   const router = useRouter();
-  const { username, order, sort, term, page, type, search, slug, screen } =
-    router.query;
+  const { order, page, screen, search, slug, sort, term, type, username } = router.query;
   const currentPage = page ? Number(page) : 1;
   const limit = 50;
-  const { creators, collections } = useContext(BaseContext);
-  const { setHeaderIcon, setKeyword, keyword, NFTKeyword } =
-    useContext(UtilitiesContext);
+  const { collections, creators } = useContext(BaseContext);
+  const { NFTKeyword, setHeaderIcon } = useContext(UtilitiesContext);
 
   const [checkAssets, setCheckAssets] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [sortedAssets, setSortedAssets] = useState<any[]>([]);
   const [random, setRandom] = useState<boolean>(false);
 
@@ -51,40 +43,35 @@ export const CreatorScreen = ({ property }: Props) => {
 
   if (!creator && username && creators && creators.length > 0) {
     //set creator
-    const creator_filter = creators.filter(
-      (creator) => creator.username === username
-    );
+    const creator_filter = creators.filter((creator) => {
+      return creator.username === username;
+    });
     if (creator_filter[0]) {
       setCreator(creator_filter[0]);
     }
   }
-  if (
-    !creatorCollections &&
-    username &&
-    collections &&
-    collections.length > 0
-  ) {
+  if (!creatorCollections && username && collections && collections.length > 0) {
     //set collection
-    const collection_filter = collections.filter(
-      (collection) => collection.creator_id === username
-    );
+    const collection_filter = collections.filter((collection) => {
+      return collection.creator_id === username;
+    });
     collection_filter.length > 0 && setCreatorCollections(collection_filter);
   }
   useEffect(() => {
     if (username && creators && creators.length > 0) {
       //set creator
-      const creator_filter = creators.filter(
-        (creator) => creator.username === username
-      );
+      const creator_filter = creators.filter((creator) => {
+        return creator.username === username;
+      });
       if (creator_filter[0]) {
         setCreator(creator_filter[0]);
       }
     }
     if (username && collections && collections.length > 0) {
       //set collection
-      const collection_filter = collections.filter(
-        (collection) => collection.creator_id === username
-      );
+      const collection_filter = collections.filter((collection) => {
+        return collection.creator_id === username;
+      });
       setCreatorCollections(collection_filter);
     }
   }, [creators, username, collections]);
@@ -135,22 +122,22 @@ export const CreatorScreen = ({ property }: Props) => {
     {
       creator && !screen
         ? setHeaderIcon({
-            title: creator.username,
+            avatar: "",
+            emoji: "",
+            path: `/creator/${creator.username}`,
             subTitle: (
               <div className="flex items-center gap-1 text-[10px] leading-none text-gray-400">
                 <JP title="Japan" className="h-[10px] rounded-sm" />
                 Creator
               </div>
             ),
-            emoji: "",
-            avatar: "",
-            path: `/creator/${creator.username}`,
+            title: creator.username,
           })
         : setHeaderIcon({
-            title: "",
-            emoji: "",
             avatar: "",
+            emoji: "",
             path: "/",
+            title: "",
             type: "home",
           });
     }
@@ -159,10 +146,7 @@ export const CreatorScreen = ({ property }: Props) => {
   //props
   const title = creator && (
     <>
-      {creator.username}{" "}
-      {creator.verified == true && (
-        <MdVerified className="ml-1 inline text-xl text-gray-500" />
-      )}
+      {creator.username} {creator.verified == true && <MdVerified className="ml-1 inline text-xl text-gray-500" />}
     </>
   );
   const sub_title = creator && (
@@ -173,8 +157,8 @@ export const CreatorScreen = ({ property }: Props) => {
         height={16}
         alt=""
         style={{
-          maxWidth: "100%",
           height: "auto",
+          maxWidth: "100%",
         }}
       />
       <CopyText text={creator.address} alertText="ETH address has copied!" />
@@ -183,21 +167,22 @@ export const CreatorScreen = ({ property }: Props) => {
 
   const filteredAssets =
     slug && slug != "all"
-      ? assets.filter((asset) => asset.collection_slug === slug)
+      ? assets.filter((asset) => {
+          return asset.collection_slug === slug;
+        })
       : assets;
 
-  const uppperKeyword =
-    typeof NFTKeyword == "string" && NFTKeyword.toUpperCase();
+  const uppperKeyword = typeof NFTKeyword == "string" && NFTKeyword.toUpperCase();
   //1.match username
-  const searchedAssets01 = filteredAssets.filter(
-    (asset) =>
+  const searchedAssets01 = filteredAssets.filter((asset) => {
+    return (
       asset.name &&
       asset.name.length > 0 &&
       typeof NFTKeyword == "string" &&
       //すべて大文字にして大文字小文字の区別をなくす
-      //@ts-ignore
       asset.name.toUpperCase().includes(uppperKeyword) == true
-  );
+    );
+  });
   // //2.match description
   const origin_searchedAssets = [
     ...searchedAssets01,
@@ -212,39 +197,38 @@ export const CreatorScreen = ({ property }: Props) => {
   }
 
   const args = {
-    property: "nfts" as "nfts" | "creators" | "collections",
-    list: searchedAssets,
-    page: Number(page),
-    order: order as "desc" | "asc" | undefined,
-    sort: sort as string | undefined,
     limit: limit,
+    list: searchedAssets,
+    order: order as "desc" | "asc" | undefined,
+    page: Number(page),
+    property: "nfts" as "nfts" | "creators" | "collections",
+    sort: sort as string | undefined,
   };
 
   useEffect(() => {
     if (sort != "random") {
       const data = sortNFTs(args);
-      setSortedAssets((sortedAssets) => data);
-      setCurrentAssets((currentAssets) => data);
+      setSortedAssets(() => {
+        return data;
+      });
+      setCurrentAssets(() => {
+        return data;
+      });
     } else if (sort == "random") {
-      setCurrentAssets((currentAssets) => randomize(searchedAssets));
+      setCurrentAssets(() => {
+        return randomize(searchedAssets);
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assets, creators, order, sort, term, page, type, search, random]);
 
-  // useEffect(() => {
-  //   if (sort == "random") {
-  //     setCurrentAssets((currentAssets) => randomize(searchedAssets));
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [sortedAssets, sort, random]);
-
   const links = {
     address: creator?.address,
-    twitter_id: creator?.twitter_id,
-    instagram_id: creator?.instagram_id,
     discord_url: creator?.discord_url,
-    website_url: creator?.website_url,
+    instagram_id: creator?.instagram_id,
     opensea_username: creator?.username,
+    twitter_id: creator?.twitter_id,
+    website_url: creator?.website_url,
   };
 
   const stats = [
@@ -285,12 +269,12 @@ export const CreatorScreen = ({ property }: Props) => {
     },
   ];
 
-  const custom_menu = creatorCollections.map((collection) => {
-    return {
-      key: collection.slug as string,
-      value: collection.name as string,
-    };
-  });
+  // const custom_menu = creatorCollections.map((collection) => {
+  //   return {
+  //     key: collection.slug as string,
+  //     value: collection.name as string,
+  //   };
+  // });
 
   return (
     <>
@@ -315,13 +299,9 @@ export const CreatorScreen = ({ property }: Props) => {
         )}
         {creatorCollections.length != 0 && (
           <div className="hide-scrollbar mx-auto -mt-7 flex w-full gap-6 overflow-x-auto rounded px-5 pt-5 lg:px-8">
-            {creatorCollections.map((collection, index) => (
-              <CollectionCard
-                username={username}
-                collection={collection}
-                key={index}
-              />
-            ))}
+            {creatorCollections.map((collection, index) => {
+              return <CollectionCard username={username} collection={collection} key={index} />;
+            })}
           </div>
         )}
         {assets && assets.length > 0 && (
@@ -337,21 +317,13 @@ export const CreatorScreen = ({ property }: Props) => {
               <Searchbox property="nft" id="nft" />
               <div className="flex items-center gap-3">
                 <Dropdown position="right" property="nftSort" />
-                {sort != "random" ? (
-                  <OrderButton />
-                ) : (
-                  <RandomButton random={random} setRandom={setRandom} />
-                )}
+                {sort != "random" ? <OrderButton /> : <RandomButton random={random} setRandom={setRandom} />}
               </div>
             </div>
             <NFTList assets={currentAssets} />
             {sort != "random" && searchedAssets.length > limit && (
               <div className="flex justify-center">
-                <Pagination
-                  currentPage={currentPage}
-                  length={searchedAssets.length}
-                  limit={limit}
-                />
+                <Pagination currentPage={currentPage} length={searchedAssets.length} limit={limit} />
               </div>
             )}
           </div>

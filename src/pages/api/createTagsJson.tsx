@@ -1,9 +1,8 @@
-const fs = require("fs");
-import { getTags } from "@/utilities/getTags";
 import { createJson } from "@/utilities/createJson";
+import { getTags } from "@/utilities/getTags";
 
 const createTagsJson = async (req: any, res: any) => {
-  let pathName = "tags.json";
+  const pathName = "tags.json";
   const source = await getTags("tags");
   await createJson(pathName, source);
   res.end();

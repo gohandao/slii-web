@@ -1,47 +1,45 @@
-import { IconType } from "react-icons";
-import { Creator } from "./creator";
-import { Params } from "./params";
-import { Profile } from "./profile";
+import type { Creator } from "@/types/creator";
+import type { Params } from "@/types/params";
+import type { Profile } from "@/types/profile";
 
 export type Utilities = {
-  // creatorSocial: boolean;
   baseUrl?: string;
-  loginModal: boolean;
-  setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
-  hiddenParams: Params;
-  setHiddenParams: React.Dispatch<React.SetStateAction<Params>>;
-  keyword?: string;
-  setKeyword: React.Dispatch<React.SetStateAction<string | undefined>>;
-  NFTKeyword?: string;
-  setNFTKeyword: React.Dispatch<React.SetStateAction<string | undefined>>;
   headerIcon: {
-    type?: string;
-    title: string;
-    subTitle?: any;
-    emoji: string;
     avatar: any;
     element?: any;
+    emoji: string;
     path: string;
+    subTitle?: any;
+    title: string;
+    type?: string;
   };
+  hiddenParams: Params;
+  keyword?: string;
+  loginModal: boolean;
+  NFTKeyword?: string;
+  prevHeight?: number;
+  scrollY?: number;
   setHeaderIcon: React.Dispatch<
     React.SetStateAction<{
-      title: string;
-      subTitle?: any;
       avatar: any;
-      emoji: string;
       element?: any;
+      emoji: string;
       path: string;
+      subTitle?: any;
+      title: string;
       type?: string;
     }>
   >;
-  userProfile?: Profile;
-  setUserProfile: React.Dispatch<React.SetStateAction<Profile | undefined>>;
-  scrollY?: number;
-  setScrollY: React.Dispatch<React.SetStateAction<number | undefined>>;
-  prevHeight?: number;
+  setHiddenParams: React.Dispatch<React.SetStateAction<Params>>;
+  setKeyword: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setNFTKeyword: React.Dispatch<React.SetStateAction<string | undefined>>;
   setPrevHeight: React.Dispatch<React.SetStateAction<number | undefined>>;
-  tempCreators: Creator[];
-  setTempCreators: React.Dispatch<React.SetStateAction<Creator[]>>;
-  tempCollections: any[];
+  setScrollY: React.Dispatch<React.SetStateAction<number | undefined>>;
   setTempCollections: React.Dispatch<React.SetStateAction<any[]>>;
+  setTempCreators: React.Dispatch<React.SetStateAction<Creator[]>>;
+  setUserProfile: React.Dispatch<React.SetStateAction<Profile | undefined>>;
+  tempCollections: any[];
+  tempCreators: Creator[];
+  userProfile?: Profile;
 };

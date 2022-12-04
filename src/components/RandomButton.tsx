@@ -1,4 +1,3 @@
-import React from "react";
 import { FaRandom } from "react-icons/fa";
 
 type Props = {

@@ -1,10 +1,11 @@
-import { Creator } from "@/types/creator";
-import { Collection } from "@/types/collection";
+import type { Collection } from "@/types/collection";
+import type { Creator } from "@/types/creator";
 
 const Airtable = require("airtable");
+
 Airtable.configure({
-  endpointUrl: "https://api.airtable.com",
   apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY,
+  endpointUrl: "https://api.airtable.com",
 });
 export const base = Airtable.base("appFYknMhbtkUTFgt");
 
@@ -18,29 +19,26 @@ export const getCreators = () => {
       view: "All",
     })
     .eachPage(
-      //@ts-ignore
-      function page(records: any[], fetchNextPage: () => void) {
-        records.forEach(function (record) {
+      (records: any[], fetchNextPage: () => void) => {
+        records.forEach((record) => {
           const fields = record.fields;
           new_records = [
             ...new_records,
             {
-              username: fields.username,
-              description: fields.description,
+              address: fields.address,
               avatar: fields.avatar,
               background: fields.background,
-              address: fields.address,
-              website_url: fields.website_url,
-              twitter_id: fields.twitter_id,
+              description: fields.description,
               instagram_id: fields.instagram_id,
-              type: fields.type,
               listed_at: fields.createdAt,
-              updatedAt: fields.updatedAt,
               tags: fields.tags,
+              twitter_id: fields.twitter_id,
+              type: fields.type,
+              updatedAt: fields.updatedAt,
+              username: fields.username,
+              website_url: fields.website_url,
             } as Creator,
           ];
-          //console.log("creators", new_records);
-          //console.log("Retrieved", record.fields);
         });
         try {
           fetchNextPage();
@@ -49,7 +47,7 @@ export const getCreators = () => {
           return;
         }
       },
-      function done(err: any) {
+      (err: any) => {
         if (err) {
           console.error(err);
           return;
@@ -67,20 +65,19 @@ export const getCollections = () => {
       view: "All",
     })
     .eachPage(
-      //@ts-ignore
-      function page(records: any[], fetchNextPage: () => void) {
-        records.forEach(function (record) {
+      (records: any[], fetchNextPage: () => void) => {
+        records.forEach((record) => {
           try {
             const fields = record.fields;
             new_records = [
               ...new_records,
               {
-                slug: fields.slug,
                 creator_id: fields.creator_id[0],
-                type: fields.type,
                 listed_at: fields.createdAt,
-                updatedAt: fields.updatedAt,
+                slug: fields.slug,
                 tags: fields.tags,
+                type: fields.type,
+                updatedAt: fields.updatedAt,
               } as Collection,
             ];
           } catch (error) {
@@ -95,7 +92,7 @@ export const getCollections = () => {
           return;
         }
       },
-      function done(err: any) {
+      (err: any) => {
         if (err) {
           console.error(err);
           return;

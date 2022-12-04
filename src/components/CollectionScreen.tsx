@@ -1,36 +1,28 @@
+import { JP } from "country-flag-icons/react/3x2";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState, useEffect, useContext } from "react";
-import { JP } from "country-flag-icons/react/3x2";
+import { useContext, useEffect, useState } from "react";
 import { MdVerified } from "react-icons/md";
-// libs
-import { sortNFTs } from "@/libs/sortNFTs";
-// utilities
-import { randomize } from "@/utilities/randomize";
-import { getNFTs } from "@/utilities/getNFTs";
-import { abbreviateNumber } from "@/utilities/abbreviateNumber";
-// contexts
-import { BaseContext } from "@/contexts/BaseContext";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-// components
-import { Pagination } from "@/components/Pagination";
+
 import { Dropdown } from "@/components/Dropdown";
 import { IconEth } from "@/components/IconEth";
+import { NFTList } from "@/components/NFTList";
+import { OrderButton } from "@/components/OrderButton";
+import { Pagination } from "@/components/Pagination";
 import { ProfileHeader } from "@/components/ProfileHeader";
 import { RandomButton } from "@/components/RandomButton";
 import { Searchbox } from "@/components/Searchbox";
-import { OrderButton } from "@/components/OrderButton";
-import { NFTList } from "@/components/NFTList";
-// types
-import { Creator } from "@/types/creator";
+import { BaseContext } from "@/contexts/BaseContext";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { sortNFTs } from "@/libs/sortNFTs";
+import type { Creator } from "@/types/creator";
+import { abbreviateNumber } from "@/utilities/abbreviateNumber";
+import { getNFTs } from "@/utilities/getNFTs";
+import { randomize } from "@/utilities/randomize";
 
-type Props = {
-  property?: "modal";
-};
-export const CollectionScreen = ({ property }: Props) => {
+export const CollectionScreen = () => {
   const router = useRouter();
-  const { username, order, sort, term, page, type, search, slug, screen } =
-    router.query;
+  const { order, page, screen, search, slug, sort, term, type, username } = router.query;
   const currentPage = page ? Number(page) : 1;
   const limit = 50;
   const { setHeaderIcon, setKeyword } = useContext(UtilitiesContext);
@@ -38,7 +30,7 @@ export const CollectionScreen = ({ property }: Props) => {
   const [sortedAssets, setSortedAssets] = useState<any[]>([]);
   const [random, setRandom] = useState<boolean>(false);
   const [collection, setCollection] = useState<any>();
-  const { creators, collections } = useContext(BaseContext);
+  const { collections, creators } = useContext(BaseContext);
   const [creator, setCreator] = useState<Creator>();
   const [assets, setAssets] = useState<any[]>([]);
   const [currentAssets, setCurrentAssets] = useState<any[]>([]);
@@ -47,22 +39,22 @@ export const CollectionScreen = ({ property }: Props) => {
     {
       creator && !screen
         ? setHeaderIcon({
-            title: creator.username,
+            avatar: "",
+            emoji: "",
+            path: `/creator/${collection.creator_id}`,
             subTitle: (
               <div className="flex items-center gap-1 text-[10px] leading-none text-gray-400">
                 <JP title="Japan" className="h-[10px] rounded-sm" />
                 {creator.type}
               </div>
             ),
-            emoji: "",
-            avatar: "",
-            path: `/creator/${collection.creator_id}`,
+            title: creator.username,
           })
         : setHeaderIcon({
-            title: "",
-            emoji: "",
             avatar: "",
+            emoji: "",
             path: "/",
+            title: "",
             type: "home",
           });
     }
@@ -75,52 +67,39 @@ export const CollectionScreen = ({ property }: Props) => {
 
   if (!creator && creators && collection && creators.length > 0) {
     //set creator
-    const creator_filter = creators.filter(
-      (creator) => creator.username === collection.creator_id
-    );
+    const creator_filter = creators.filter((creator) => {
+      return creator.username === collection.creator_id;
+    });
     if (creator_filter[0]) {
       setCreator(creator_filter[0]);
     }
   }
   if (!collection && collections && collections.length > 0) {
     //set collection
-    const collection_filter = collections.filter(
-      (collection) => collection.slug === slug
-    );
+    const collection_filter = collections.filter((collection) => {
+      return collection.slug === slug;
+    });
     collection_filter.length > 0 && setCollection(collection_filter[0]);
   }
   useEffect(() => {
     if (collection && creators && creators.length > 0) {
       //set creator
-      const creator_filter = creators.filter(
-        (creator) => creator.username === collection.slug
-      );
+      const creator_filter = creators.filter((creator) => {
+        return creator.username === collection.slug;
+      });
       if (creator_filter[0]) {
         setCreator(creator_filter[0]);
       }
     }
     if (!collection && collections && collections.length > 0) {
       //set collection
-      const collection_filter = collections.filter(
-        (collection) => collection.slug === slug
-      );
+      const collection_filter = collections.filter((collection) => {
+        return collection.slug === slug;
+      });
       collection_filter.length > 0 && setCollection(collection_filter[0]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creators, username, collections, collection]);
-
-  // if (!checkAssets && assets.length < 1 && collection) {
-  //   const fetchData = async () => {
-  //     let new_assets: any[] = [];
-  //     const data = await getNFTs(collection.slug);
-  //     if (data) {
-  //       new_assets = [...new_assets, ...data];
-  //     }
-  //     setAssets(new_assets);
-  //     setCheckAssets(true);
-  //   };
-  //   fetchData();
-  // }
 
   useEffect(() => {
     if (!checkAssets && assets.length < 1 && collection) {
@@ -140,18 +119,20 @@ export const CollectionScreen = ({ property }: Props) => {
 
   const filteredAssets =
     slug && slug != "all"
-      ? assets.filter((asset) => asset.collection_slug === slug)
+      ? assets.filter((asset) => {
+          return asset.collection_slug === slug;
+        })
       : assets;
 
   const uppperKeyword = typeof search == "string" && search.toUpperCase();
   //1.match username
-  const searchedAssets01 = filteredAssets.filter(
-    (asset) =>
+  const searchedAssets01 = filteredAssets.filter((asset) => {
+    return (
       typeof search == "string" &&
       //すべて大文字にして大文字小文字の区別をなくす
-      //@ts-ignore
       asset.name.toUpperCase().includes(uppperKeyword) == true
-  );
+    );
+  });
   // //2.match description
   const origin_searchedAssets = [
     ...searchedAssets01,
@@ -166,13 +147,13 @@ export const CollectionScreen = ({ property }: Props) => {
   }
 
   const args = {
-    property: "nfts" as "nfts" | "creators" | "collections",
-    list: searchedAssets,
-    page: Number(page),
-    order: order as "desc" | "asc" | undefined,
-    sort: sort as string | undefined,
     //category: collectionsSort,
     limit: limit,
+    list: searchedAssets,
+    order: order as "desc" | "asc" | undefined,
+    page: Number(page),
+    property: "nfts" as "nfts" | "creators" | "collections",
+    sort: sort as string | undefined,
   };
 
   useEffect(() => {
@@ -181,7 +162,9 @@ export const CollectionScreen = ({ property }: Props) => {
 
     if (sort != "random") {
       const data = sortNFTs(args);
-      setSortedAssets((sortedAssets) => data);
+      setSortedAssets(() => {
+        return data;
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assets, creators, order, sort, term, page, type, search]);
@@ -199,9 +182,7 @@ export const CollectionScreen = ({ property }: Props) => {
   const title = collection && (
     <>
       {collection.name}
-      {collection.safelist_request_status == "verified" && (
-        <MdVerified className="ml-2 inline text-xl text-gray-500" />
-      )}
+      {collection.safelist_request_status == "verified" && <MdVerified className="ml-2 inline text-xl text-gray-500" />}
     </>
   );
   const sub_title = creator && (
@@ -210,10 +191,7 @@ export const CollectionScreen = ({ property }: Props) => {
         By{" "}
         <Link href={`/creator/${creator.username}`} legacyBehavior>
           <a className="inline-flex items-center gap-1">
-            {creator.username}{" "}
-            {creator.verified == true && (
-              <MdVerified className="mt-[2px] text-gray-500" />
-            )}
+            {creator.username} {creator.verified == true && <MdVerified className="mt-[2px] text-gray-500" />}
           </a>
         </Link>
       </p>
@@ -234,11 +212,11 @@ export const CollectionScreen = ({ property }: Props) => {
   const background_url = getBackground() as string;
 
   const links = {
-    twitter_id: collection?.twitter_id,
-    instagram_id: collection?.instagram_id,
     discord_url: collection?.discord_url,
-    website_url: collection?.website_url,
+    instagram_id: collection?.instagram_id,
     opensea_username: collection && "collection/" + collection.slug,
+    twitter_id: collection?.twitter_id,
+    website_url: collection?.website_url,
   };
 
   const stats = [
@@ -246,8 +224,7 @@ export const CollectionScreen = ({ property }: Props) => {
       field: "Total Volume",
       value: collection && collection.stats.total_volume && (
         <>
-          {collection.payment_tokens &&
-            collection.payment_tokens[0].symbol == "ETH" && <IconEth />}
+          {collection.payment_tokens && collection.payment_tokens[0].symbol == "ETH" && <IconEth />}
           {abbreviateNumber(collection.stats.total_volume)}
         </>
       ),
@@ -256,8 +233,7 @@ export const CollectionScreen = ({ property }: Props) => {
       field: "Floor Price",
       value: collection && collection.stats.floor_price && (
         <>
-          {collection.payment_tokens &&
-            collection.payment_tokens[0].symbol == "ETH" && <IconEth />}
+          {collection.payment_tokens && collection.payment_tokens[0].symbol == "ETH" && <IconEth />}
           {abbreviateNumber(collection.stats.floor_price)}
         </>
       ),
@@ -266,8 +242,7 @@ export const CollectionScreen = ({ property }: Props) => {
       field: "Ave. Price",
       value: collection && collection.stats.average_price && (
         <>
-          {collection.payment_tokens &&
-            collection.payment_tokens[0].symbol == "ETH" && <IconEth />}
+          {collection.payment_tokens && collection.payment_tokens[0].symbol == "ETH" && <IconEth />}
           {abbreviateNumber(collection.stats.average_price)}
         </>
       ),
@@ -289,7 +264,6 @@ export const CollectionScreen = ({ property }: Props) => {
   return (
     <>
       <div className="flex flex-col gap-10 pb-10">
-        {/* {collection && <CollectionProfile collection={collection} />} */}
         {collection && (
           <ProfileHeader
             page="collection"
@@ -313,21 +287,13 @@ export const CollectionScreen = ({ property }: Props) => {
               <Searchbox id="nft" property="nft" />
               <div className="flex items-center gap-3">
                 <Dropdown position="right" property="nftSort" />
-                {sort != "random" ? (
-                  <OrderButton />
-                ) : (
-                  <RandomButton random={random} setRandom={setRandom} />
-                )}
+                {sort != "random" ? <OrderButton /> : <RandomButton random={random} setRandom={setRandom} />}
               </div>
             </div>
             <NFTList assets={currentAssets} />
             {sort != "random" && searchedAssets.length > limit && (
               <div className="flex justify-center">
-                <Pagination
-                  currentPage={currentPage}
-                  length={searchedAssets.length}
-                  limit={limit}
-                />
+                <Pagination currentPage={currentPage} length={searchedAssets.length} limit={limit} />
               </div>
             )}
           </div>

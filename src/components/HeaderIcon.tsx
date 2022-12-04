@@ -1,31 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useContext, useState } from "react";
-import {
-  BsFillArrowLeftCircleFill,
-  BsFillArrowRightCircleFill,
-} from "react-icons/bs";
+import { useContext } from "react";
 import { BiHomeAlt } from "react-icons/bi";
-// contexts
+import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from "react-icons/bs";
+
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 export const HeaderIcon = () => {
   const router = useRouter();
   const currentPath = router.pathname;
   const { headerIcon } = useContext(UtilitiesContext);
-
-  let uri;
-  let uri_domain: string;
-  let ref;
-  let ref_uri;
-  let ref_domain: string;
-  if (typeof window != "undefined") {
-    uri = new URL(window.location.href);
-    uri_domain = uri.hostname;
-    ref = document.referrer && new URL(document.referrer);
-    ref_domain = ref && ref.hostname;
-  }
 
   type Props = {
     property: "back" | "next";
@@ -40,8 +25,6 @@ export const HeaderIcon = () => {
           // 履歴が2個以上あれば、戻るリンクを表示
           to = "back";
         } else {
-          // document.write("履歴がないよ");
-          // showClassName = "hidden";
           to = "top";
         }
       }
@@ -72,12 +55,8 @@ export const HeaderIcon = () => {
         }}
         className={`${showClassName}`}
       >
-        {property == "back" && (
-          <BsFillArrowLeftCircleFill className={`text-xl text-gray-500 `} />
-        )}
-        {property == "next" && (
-          <BsFillArrowRightCircleFill className={`text-xl text-gray-500 `} />
-        )}
+        {property == "back" && <BsFillArrowLeftCircleFill className={`text-xl text-gray-500 `} />}
+        {property == "next" && <BsFillArrowRightCircleFill className={`text-xl text-gray-500 `} />}
       </button>
     );
   };
@@ -91,11 +70,7 @@ export const HeaderIcon = () => {
         {headerIcon.element ? (
           <Link href={headerIcon.path} legacyBehavior>
             <a className="relative mt-[2px] flex h-7 items-center text-base font-bold tracking-wider text-white">
-              {headerIcon.element && (
-                <span className="mr-2 -mt-[2px] text-3xl">
-                  {headerIcon.element}
-                </span>
-              )}
+              {headerIcon.element && <span className="mr-2 -mt-[2px] text-3xl">{headerIcon.element}</span>}
               {headerIcon.title}
             </a>
           </Link>
@@ -116,9 +91,7 @@ export const HeaderIcon = () => {
                   />
                 </div>
               )}
-              <p className="ellipsis max-w-[180px] text-sm">
-                {headerIcon.title}
-              </p>
+              <p className="ellipsis max-w-[180px] text-sm">{headerIcon.title}</p>
             </a>
           </Link>
         ) : headerIcon.type != "home" ? (
@@ -128,9 +101,7 @@ export const HeaderIcon = () => {
                 <p className="ellipsis max-w-[180px] text-lg font-bold leading-none text-gray-100">
                   {headerIcon.title}
                 </p>
-                <div className="text-sm  text-gray-300 opacity-70">
-                  {headerIcon.subTitle && headerIcon.subTitle}
-                </div>
+                <div className="text-sm  text-gray-300 opacity-70">{headerIcon.subTitle && headerIcon.subTitle}</div>
               </div>
             </a>
           </Link>

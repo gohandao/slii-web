@@ -1,37 +1,34 @@
 import type { NextPage } from "next";
-import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect } from "react";
-import { TbDiamond } from "react-icons/tb";
+import { NextSeo } from "next-seo";
+import { useContext, useEffect } from "react";
 import { IoMdSync } from "react-icons/io";
+import { TbDiamond } from "react-icons/tb";
 
-// contexts
+import { BaseLayout } from "@/components/BaseLayout";
+import { CollectionTable } from "@/components/CollectionTable";
+import { Dropdown } from "@/components/Dropdown";
+import { Pagination } from "@/components/Pagination";
+import { Searchbox } from "@/components/Searchbox";
+import { TermSort } from "@/components/TermSort";
 import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-// components
-import { CollectionTable } from "@/components/CollectionTable";
-import { Pagination } from "@/components/Pagination";
-import { BaseLayout } from "@/components/BaseLayout";
-import { Dropdown } from "@/components/Dropdown";
-import { TermSort } from "@/components/TermSort";
-import { Searchbox } from "@/components/Searchbox";
-// types
-import { Collection } from "@/types/collection";
+import type { Collection } from "@/types/collection";
 
 const StatsPage: NextPage = () => {
   const router = useRouter();
-  const { order, sort, term, page, type, search } = router.query;
+  const { page, search, term, type } = router.query;
   const currentPage = page ? Number(page) : 1;
   const limit = 100;
 
   const { setHeaderIcon } = useContext(UtilitiesContext);
   useEffect(() => {
     setHeaderIcon({
-      title: "Collection stats",
-      emoji: "",
-      element: <TbDiamond />,
       avatar: "",
+      element: <TbDiamond />,
+      emoji: "",
       path: "/stats",
+      title: "Collection stats",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -39,22 +36,21 @@ const StatsPage: NextPage = () => {
 
   const filteredCollections =
     type && type != "all"
-      ? collections.filter((collection) => collection.type === type)
+      ? collections.filter((collection) => {
+          return collection.type === type;
+        })
       : collections;
 
   const uppperKeyword = typeof search == "string" && search.toUpperCase();
   //1.match username
-  const searchedCollections01 = filteredCollections.filter(
-    (collection) =>
+  const searchedCollections01 = filteredCollections.filter((collection) => {
+    return (
       typeof search == "string" &&
       //すべて大文字にして大文字小文字の区別をなくす
-      //@ts-ignore
       collection.name.toUpperCase().includes(uppperKeyword) == true
-  );
-  const origin_searchedCollections = [
-    ...searchedCollections01,
-    // ...searchedCreators02,
-  ];
+    );
+  });
+  const origin_searchedCollections = [...searchedCollections01];
   //重複削除
   let searchedCollections = [] as Collection[];
   if (search && search.length > 0) {
@@ -69,22 +65,18 @@ const StatsPage: NextPage = () => {
         title="NFT Collection Stats in Japan | NFT OTAKU"
         description="Search and analize various Japanese NFT collections."
         openGraph={{
+          description: "Search and analize various Japanese NFT collections.",
+          title: "NFT Collection Stats in Japan | NFT OTAKU",
           type: "article",
           url: process.env.NEXT_PUBLIC_SITE_URL + "/stats",
-          title: "NFT Collection Stats in Japan | NFT OTAKU",
-          description: "Search and analize various Japanese NFT collections.",
         }}
       />
       <BaseLayout>
         <section className="mx-auto mt-3 px-5 md:px-8">
-          <h1 className="mb-3 text-sm tracking-[0.2em] text-gray-500">
-            Japanese awesome NFT collections stats.
-          </h1>
+          <h1 className="mb-3 text-sm tracking-[0.2em] text-gray-500">Japanese awesome NFT collections stats.</h1>
           {collections && (
             <div className="mb-2 flex w-full items-baseline justify-between gap-3">
-              <p className="text-sm text-gray-500">
-                {collections.length} collections
-              </p>
+              <p className="text-sm text-gray-500">{collections.length} collections</p>
               <p className="flex items-center gap-2 text-sm text-gray-500">
                 <IoMdSync />
                 every 24h
@@ -102,24 +94,14 @@ const StatsPage: NextPage = () => {
             </div>
           </div>
           <div className="mb-10">
-            {searchedCollections && (
-              <CollectionTable
-                collections={searchedCollections}
-                limit={limit}
-              />
-            )}
+            {searchedCollections && <CollectionTable collections={searchedCollections} limit={limit} />}
           </div>
           <div className="flex justify-center">
-            <Pagination
-              currentPage={currentPage}
-              length={searchedCollections.length}
-              limit={limit}
-            />
+            <Pagination currentPage={currentPage} length={searchedCollections.length} limit={limit} />
           </div>
         </section>
       </BaseLayout>
     </div>
   );
 };
-
 export default StatsPage;

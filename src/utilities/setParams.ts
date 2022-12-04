@@ -1,19 +1,11 @@
-import React, { useContext } from "react";
-import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
 import router from "next/router";
-import { Params } from "@/types/params";
 
-export const setParams = ({
-  slug,
-  sort,
-  order,
-  term,
-  page,
-  type,
-  search,
-  tab,
-  screen,
-}: Params) => {
+import type { Params } from "@/types/params";
+import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
+
+export const setParams = ({ order, page, screen, search, slug, sort, tab, term, type }: Params) => {
+  /* eslint-disable */
+  // パラメーター順序に意味がある
   const query = {
     slug: slug,
     tab: tab,
@@ -25,6 +17,8 @@ export const setParams = ({
     search: search,
     screen: screen,
   };
+  /* eslint-disable */
+
   const new_query: Params = removeUndefinedObject(query);
   const currentUrl = location.pathname;
   router.push(

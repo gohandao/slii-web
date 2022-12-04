@@ -1,90 +1,80 @@
-import { useRouter } from "next/router";
 import Image from "next/image";
-import React, { useState } from "react";
-import { BsThreeDots, BsTwitter } from "react-icons/bs";
-import { FaRegFlag, FaTwitter } from "react-icons/fa";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { BsThreeDots } from "react-icons/bs";
+import { FaRegFlag } from "react-icons/fa";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 
-// components
 import { BookmarkButton } from "@/components/BookmarkButton";
+import { Label } from "@/components/Label";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { ProfileLinks } from "@/components/ProfileLinks";
 import { Stats } from "@/components/Stats";
 import { StatsBox } from "@/components/StatsBox";
 import { UpvoteButton } from "@/components/UpvoteButton";
-import { Label } from "@/components/Label";
 
 type Props = {
-  page: string;
   id: string;
-  title: any;
-  sub_title?: any;
-  avatar_url?: string | Blob | MediaSource;
+  avatar_url?: string;
   background_url?: string;
   description?: string;
+  discord_members?: number | null;
+  discord_url?: string;
+  instagram_id?: string;
   links: {
     address?: string;
-    twitter_id?: string;
-    instagram_id?: string;
     discord_url?: string;
-    website_url?: string;
+    instagram_id?: string;
     opensea_username?: string;
+    twitter_id?: string;
+    website_url?: string;
   };
-  tags?: any[];
+  page: string;
   stats?: { field: any; value: any }[];
-  twitter_id?: string;
+  sub_title?: any;
+  tags?: any[];
+  title: any;
   twitter_followers?: number | null;
-  discord_url?: string;
-  discord_members?: number | null;
-  instagram_id?: string;
+  twitter_id?: string;
   upvotes_count?: number;
 };
 export const ProfileHeader = ({
-  page,
   id,
-  title,
-  sub_title,
   avatar_url,
   background_url,
   description,
   links,
-  tags,
+  page,
   stats,
-  twitter_id,
-  twitter_followers,
-  discord_url,
-  discord_members,
+  sub_title,
+  tags,
+  title,
   upvotes_count,
 }: Props) => {
   const router = useRouter();
   const { screen } = router.query;
   const [requestDropdown, setRequestDropdown] = useState<boolean>(false);
-  const [shareDropdown, setShareDropdown] = useState<boolean>(false);
+  // const [shareDropdown, setShareDropdown] = useState<boolean>(false);
 
-  let baseUrl = "" as string;
-  if (process.env.NODE_ENV != "test") {
-    baseUrl = {
-      production: "https://nftotaku.xyz",
-      development: "http://localhost:3000",
-    }[process.env.NODE_ENV];
-  }
+  // let baseUrl = "" as string;
+  // if (process.env.NODE_ENV != "test") {
+  //   baseUrl = {
+  //     development: "http://localhost:3000",
+  //     production: "https://nftotaku.xyz",
+  //   }[process.env.NODE_ENV];
+  // }
   // シェアボタンのリンク先
-  const currentUrl = baseUrl + router.asPath;
-  var twitterShareUrl = "https://twitter.com/intent/tweet";
-  twitterShareUrl += "?text=" + encodeURIComponent("ツイート内容テキスト");
-  twitterShareUrl += "&url=" + encodeURIComponent(currentUrl);
-  const shareMenus = [
-    /*{
-      icon: <FiCopy />,
-      title: "Copy URL",
-      url: twitterShareUrl,
-    },*/
-    {
-      icon: <BsTwitter />,
-      title: "Share on Twitter",
-      url: twitterShareUrl,
-    },
-  ];
+  // const currentUrl = baseUrl + router.asPath;
+  // let twitterShareUrl = "https://twitter.com/intent/tweet";
+  // twitterShareUrl += "?text=" + encodeURIComponent("ツイート内容テキスト");
+  // twitterShareUrl += "&url=" + encodeURIComponent(currentUrl);
+  // const shareMenus = [
+  //   {
+  //     icon: <BsTwitter />,
+  //     title: "Share on Twitter",
+  //     url: twitterShareUrl,
+  //   },
+  // ];
   const requestMenus = [
     {
       icon: <FaRegFlag />,
@@ -93,10 +83,7 @@ export const ProfileHeader = ({
     },
   ];
   // description
-  const slicedDescription =
-    description && description.length > 160
-      ? description.slice(0, 160) + "…"
-      : description;
+  const slicedDescription = description && description.length > 160 ? description.slice(0, 160) + "…" : description;
   const [showDescription, setShowDescription] = useState<boolean>(false);
 
   return (
@@ -106,7 +93,6 @@ export const ProfileHeader = ({
           <div className="relative h-full w-full opacity-40">
             {background_url && (
               <Image
-                //@ts-ignore
                 src={background_url}
                 alt=""
                 loading="lazy"
@@ -123,11 +109,7 @@ export const ProfileHeader = ({
         </div>
       </div>
       <div className="mx-auto flex flex-col gap-3 px-5 lg:px-8">
-        <div
-          className={`relative -mt-[38px] flex items-end justify-between ${
-            screen != "modal" && "lg:-mt-[48px]"
-          }`}
-        >
+        <div className={`relative -mt-[38px] flex items-end justify-between ${screen != "modal" && "lg:-mt-[48px]"}`}>
           <div className="relative flex">
             <div
               className={`relative z-10 flex h-[90px] w-[90px] items-center justify-center overflow-hidden rounded-full border-[5px] border-gray-800 bg-gray-800 ${
@@ -136,27 +118,22 @@ export const ProfileHeader = ({
             >
               {avatar_url && (
                 <Image
-                  //@ts-ignore
                   src={avatar_url}
                   width={100}
                   height={100}
                   alt=""
                   quality={10}
-                  size="200px"
+                  sizes="200px"
                   style={{
-                    maxWidth: "100%",
                     height: "auto",
+                    maxWidth: "100%",
                     objectFit: "cover",
                   }}
                 />
               )}
             </div>
 
-            <div
-              className={`absolute top-1 left-full ml-2 flex items-center gap-4 ${
-                screen != "modal" && "lg:top-3"
-              }`}
-            >
+            <div className={`absolute top-1 left-full ml-2 flex items-center gap-4 ${screen != "modal" && "lg:top-3"}`}>
               {links && (
                 <ProfileLinks
                   address={links.address}
@@ -184,12 +161,7 @@ export const ProfileHeader = ({
                 <>
                   <BookmarkButton id={id} type={page} />
                   {upvotes_count != null && (
-                    <UpvoteButton
-                      id={id}
-                      property="default"
-                      type={page}
-                      count={upvotes_count}
-                    />
+                    <UpvoteButton id={id} property="default" type={page} count={upvotes_count} />
                   )}
                 </>
               )}
@@ -205,11 +177,7 @@ export const ProfileHeader = ({
             >
               {title}
             </h1>
-            <div className="flex items-center gap-1 text-xs text-gray-400">
-              {sub_title}
-              {/* <Image src="/icon-eth.svg" width={16} height={16} alt="" />
-              <CopyText text={address} alertText="ETH address has copied!" /> */}
-            </div>
+            <div className="flex items-center gap-1 text-xs text-gray-400">{sub_title}</div>
             <div className="flex max-w-5xl flex-col gap-1">
               <p className="mt-1 break-all text-justify text-sm text-gray-100 transition-all duration-200 md:text-[15px] ">
                 {showDescription ? description : slicedDescription}
@@ -219,9 +187,7 @@ export const ProfileHeader = ({
                   <button
                     className="inline-flex items-center gap-1 text-sm text-gray-500"
                     onClick={() => {
-                      showDescription
-                        ? setShowDescription(false)
-                        : setShowDescription(true);
+                      showDescription ? setShowDescription(false) : setShowDescription(true);
                     }}
                   >
                     {showDescription ? (
@@ -240,9 +206,9 @@ export const ProfileHeader = ({
               )}
               <div className="-mt-1 flex w-full gap-2">
                 {tags &&
-                  tags.map((tag, index) => (
-                    <Label key={index} name={tag} type="creator" />
-                  ))}
+                  tags.map((tag, index) => {
+                    return <Label key={index} name={tag} type="creator" />;
+                  })}
               </div>
             </div>
           </div>
@@ -250,22 +216,20 @@ export const ProfileHeader = ({
         <div className="mt-1 flex flex-wrap items-start gap-4">
           {stats &&
             stats.length > 0 &&
-            stats.map((data, index) => (
-              <div key={index}>
-                <StatsBox>
-                  {data.field && data.value && (
-                    <Stats
-                      field={data.field}
-                      value={
-                        <div className="flex w-full items-center justify-end gap-2">
-                          {data.value}
-                        </div>
-                      }
-                    />
-                  )}
-                </StatsBox>
-              </div>
-            ))}
+            stats.map((data, index) => {
+              return (
+                <div key={index}>
+                  <StatsBox>
+                    {data.field && data.value && (
+                      <Stats
+                        field={data.field}
+                        value={<div className="flex w-full items-center justify-end gap-2">{data.value}</div>}
+                      />
+                    )}
+                  </StatsBox>
+                </div>
+              );
+            })}
         </div>
       </div>
     </section>

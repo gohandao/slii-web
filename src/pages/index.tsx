@@ -1,43 +1,32 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useEffect, useContext, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import * as Scroll from "react-scroll";
-// utilities
-import { getContentsHeight } from "@/utilities/getContentsHeight";
-// contexts
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-// components
+
 import { BaseLayout } from "@/components/BaseLayout";
 import { CreatorsIndexScreen } from "@/components/CreatorsIndexScreen";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { getContentsHeight } from "@/utilities/getContentsHeight";
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const { order, sort, term, page, type, search, username, screen } =
-    router.query;
+  const { order, page, search, sort, term, type, username } = router.query;
   const currentPage = page ? Number(page) : undefined;
-
   const params = {
-    type: type as string,
+    order: order as string,
     page: currentPage,
     search: search as string,
-    order: order as string,
     sort: sort as string,
     term: term as string,
+    type: type as string,
   };
-
-  const {
-    setHeaderIcon,
-    setHiddenParams,
-    setScrollY,
-    scrollY,
-    prevHeight,
-    setPrevHeight,
-  } = useContext(UtilitiesContext);
+  const { prevHeight, scrollY, setHeaderIcon, setHiddenParams, setPrevHeight, setScrollY } =
+    useContext(UtilitiesContext);
 
   const new_scrollY = useRef(scrollY);
   const new_height = useRef(0);
   useEffect(() => {
-    var scroll = Scroll.animateScroll;
+    const scroll = Scroll.animateScroll;
     if (scrollY) {
       scroll.scrollTo(scrollY, { duration: 0 });
     }
@@ -45,13 +34,10 @@ const Home: NextPage = () => {
   }, []);
 
   let body_height = 0;
-  let list_height = 0;
   let inner_height = 0;
   if (typeof window === "object") {
     const body_element = document.getElementById("container");
-    const list_element = document.getElementById("list");
     body_height = body_element ? body_element.scrollHeight : 0;
-    list_height = list_element ? list_element.scrollHeight : 0;
     inner_height = window.innerHeight;
   }
   const contents_height = getContentsHeight();
@@ -77,10 +63,10 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     setHeaderIcon({
-      title: "",
-      emoji: "",
       avatar: "",
+      emoji: "",
       path: "/",
+      title: "",
       type: "home",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

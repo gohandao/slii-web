@@ -1,28 +1,29 @@
-import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
-import { NextSeo } from "next-seo";
+import type { ParsedUrlQuery } from "node:querystring";
+
+import type { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useState, useEffect, useContext } from "react";
-import { ParsedUrlQuery } from "node:querystring";
+import { NextSeo } from "next-seo";
+import { useContext, useEffect, useState } from "react";
 
-// json
-import collectionsJson from "@/json/collections.json";
-// contexts
 import { BaseLayout } from "@/components/BaseLayout";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-
-// components
 import { CollectionScreen } from "@/components/CollectionScreen";
-import { ScreenModal } from "@/components/ScreenModal";
 import { CollectionsIndexScreen } from "@/components/CollectionsIndexScreen";
+import { ScreenModal } from "@/components/ScreenModal";
+import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import collectionsJson from "@/json/collections.json";
 
-const CollectionIndex: NextPage = (props: any) => {
+type Props = {
+  description: string;
+  ogImageUrl: string;
+  slug: string;
+  title: string;
+};
+const CollectionIndex: NextPage<Props> = (props) => {
+  const { description, ogImageUrl, slug, title } = props;
   const router = useRouter();
-  const { username, order, sort, term, page, type, search, slug, screen } =
-    router.query;
-  const { hiddenParams, scrollY } = useContext(UtilitiesContext);
-  const [collectionModal, setCollectionModal] = useState<boolean>(
-    screen ? true : false
-  );
+  const { screen } = router.query;
+  const { scrollY } = useContext(UtilitiesContext);
+  const [collectionModal, setCollectionModal] = useState<boolean>(screen ? true : false);
 
   useEffect(() => {
     setCollectionModal(screen ? true : false);
@@ -30,32 +31,28 @@ const CollectionIndex: NextPage = (props: any) => {
   return (
     <>
       <NextSeo
-        title={props.title}
-        description={props.description}
+        title={title}
+        description={description}
         openGraph={{
-          type: "article",
-          title: props.title,
-          description: props.description,
-          url: process.env.NEXT_PUBLIC_SITE_URL + `/${props.slug}`,
+          description: description,
           images: [
             {
-              url: props.ogImageUrl,
-              width: 1200,
+              alt: title,
               height: 630,
-              alt: props.title,
               type: "image/jpeg",
+              url: ogImageUrl,
+              width: 1200,
             },
           ],
+          title: title,
+          type: "article",
+          url: process.env.NEXT_PUBLIC_SITE_URL + `/${slug}`,
         }}
       />
       {screen == "modal" ? (
         <>
-          <ScreenModal
-            modalIsOpen={collectionModal}
-            setModalIsOpen={setCollectionModal}
-            path="/collections"
-          >
-            <CollectionScreen property="modal" />
+          <ScreenModal modalIsOpen={collectionModal} setModalIsOpen={setCollectionModal} path="/collections">
+            <CollectionScreen />
           </ScreenModal>
           <div
             className={`fixed left-0 w-full`}
@@ -64,7 +61,7 @@ const CollectionIndex: NextPage = (props: any) => {
             }}
           >
             <BaseLayout>
-              <CollectionsIndexScreen params={hiddenParams} />
+              <CollectionsIndexScreen />
             </BaseLayout>
           </div>
         </>
@@ -76,42 +73,33 @@ const CollectionIndex: NextPage = (props: any) => {
     </>
   );
 };
-
 export default CollectionIndex;
 
 type PathProps = {
-  slug: string;
-  title: string;
   description: string;
   ogImageUrl: string;
+  slug: string;
+  title: string;
 };
 type Params = ParsedUrlQuery & {
   slug: string;
 };
-
 export const getStaticPaths = async () => {
-  // const fs = require("fs");
-  // const collections = JSON.parse(
-  //   fs.readFileSync("@/json/collections.json", "utf8")
-  // );
   const collections = JSON.parse(JSON.stringify(collectionsJson));
   return {
-    paths: collections.map(
-      (colelction: any) => `/collection/${colelction.slug}`
-    ),
-    //fallback: true,
     fallback: "blocking",
+    paths: collections.map((colelction: any) => {
+      return `/collection/${colelction.slug}`;
+    }),
   };
 };
 
-export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
-  params,
-}) => {
+export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params }) => {
   const collections = JSON.parse(JSON.stringify(collectionsJson));
   const slug = params && params.slug;
-  const filtered_collections = collections.filter(
-    (collection: any) => collection.slug === slug
-  );
+  const filtered_collections = collections.filter((collection: any) => {
+    return collection.slug === slug;
+  });
   const collection = filtered_collections[0];
   if (!collection) {
     return {
@@ -121,27 +109,23 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
-      production: "https://nftotaku.xyz",
       development: "http://localhost:3000",
+      production: "https://nftotaku.xyz",
     }[process.env.NODE_ENV];
   }
 
   const avatar = collection.image_url ? collection.image_url : "";
-  const background = collection.banner_image_url
-    ? collection.banner_image_url
-    : "";
-  //@ts-ignore
-  const varified =
-    collection.safelist_request_status == "verified" ? "true" : "";
+  const background = collection.banner_image_url ? collection.banner_image_url : "";
+  const verified = collection.safelist_request_status == "verified" ? "true" : "";
 
   return {
     props: {
-      slug: collection.slug,
-      title: `${collection.name} collection by ${collection.creator_id} | NFT OTAKU`,
       description: `${collection.name} is a NFT collection created by ${collection.creator_id}.`,
       // OGP画像は絶対URLで記述する必要があります
-      ogImageUrl: `${baseUrl}/api/ogp?title=${slug}&page=collections&type=user&avatar=${avatar}&background=${background}&verified=${varified}`,
+      ogImageUrl: `${baseUrl}/api/ogp?title=${slug}&page=collections&type=user&avatar=${avatar}&background=${background}&verified=${verified}`,
       revalidate: 600,
+      slug: collection.slug,
+      title: `${collection.name} collection by ${collection.creator_id} | NFT OTAKU`,
     },
   };
 };

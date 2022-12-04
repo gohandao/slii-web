@@ -1,23 +1,30 @@
-import { Upvote } from "@/types/upvote";
-import { Bookmark } from "@/types/bookmark";
-import React, { createContext, useState } from "react";
+import { createContext } from "react";
+
+import type { Bookmark } from "@/types/bookmark";
+import type { Upvote } from "@/types/upvote";
 
 type Props = {
-  profile: any;
-  user: any;
   avatar?: File;
-  setAvatar: React.Dispatch<React.SetStateAction<File | undefined>>;
   bookmarks: Bookmark[];
+  profile: any;
+  setAvatar: React.Dispatch<React.SetStateAction<File | undefined>>;
   setBookmarks: React.Dispatch<React.SetStateAction<Bookmark[]>>;
-  upvotes: Upvote[];
   setUpvotes: React.Dispatch<React.SetStateAction<Upvote[]>>;
+  upvotes: Upvote[];
+  user: any;
 };
 export const AuthContext = createContext<Props>({
-  profile: {},
-  user: {},
-  setAvatar: () => {},
   bookmarks: [],
-  setBookmarks: () => {},
+  profile: {},
+  setAvatar: () => {
+    return;
+  },
+  setBookmarks: () => {
+    return;
+  },
+  setUpvotes: () => {
+    return;
+  },
   upvotes: [],
-  setUpvotes: () => {},
+  user: {},
 });

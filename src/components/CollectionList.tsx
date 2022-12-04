@@ -1,21 +1,20 @@
-import { useRouter } from "next/router";
+import { JP } from "country-flag-icons/react/3x2";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
-import Moment from "react-moment";
-import { JP } from "country-flag-icons/react/3x2";
-import { FaDiscord } from "react-icons/fa";
-import { MdVerified } from "react-icons/md";
+import { useRouter } from "next/router";
 import { BsTwitter } from "react-icons/bs";
+import { FaDiscord } from "react-icons/fa";
 import { IoMdListBox } from "react-icons/io";
-// utilities
-import { abbreviateNumber } from "@/utilities/abbreviateNumber";
-// components
-import { UpvoteButton } from "@/components/UpvoteButton";
+import { MdVerified } from "react-icons/md";
+import Moment from "react-moment";
+
 import { BookmarkButton } from "@/components/BookmarkButton";
-import { IconEth } from "@/components/IconEth";
 import { Hyphen } from "@/components/Hyphen";
+import { IconEth } from "@/components/IconEth";
 import { ListSocial } from "@/components/ListSocial";
+import { UpvoteButton } from "@/components/UpvoteButton";
+import { abbreviateNumber } from "@/utilities/abbreviateNumber";
+
 import { ListStats } from "./ListStats";
 
 type Props = {
@@ -27,7 +26,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
   const { page } = router.query;
   const currentPath = router.pathname;
   const currentPage = page ? Number(page) : 1;
-  const { order, sort, term } = router.query;
+  const { term } = router.query;
   const modal_param = currentPath == "/collections" ? "?screen=modal" : "";
 
   return (
@@ -39,10 +38,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
               className="relative flex transform transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
               key={index}
             >
-              <Link
-                href={`/collection/${collection.slug}${modal_param}`}
-                legacyBehavior
-              >
+              <Link href={`/collection/${collection.slug}${modal_param}`} legacyBehavior>
                 <a className="relative flex w-full flex-col items-center overflow-hidden rounded-lg border border-gray-800 bg-gray-800 pb-2 shadow-lg">
                   <div className="absolute top-0 right-0 z-20  flex items-center gap-1 text-gray-400 opacity-60">
                     <p className="mt-[2px] text-center text-xs text-gray-400">
@@ -59,17 +55,13 @@ export const CollectionList = ({ collections, limit }: Props) => {
                   </div>
                   <div className="absolute left-[6px] top-1 z-20 flex">
                     <p className="text-xs text-gray-500">
-                      #{" "}
-                      {limit
-                        ? index + 1 + (currentPage - 1) * limit
-                        : index + 1}
+                      # {limit ? index + 1 + (currentPage - 1) * limit : index + 1}
                     </p>
                   </div>
                   <div className="relative flex h-20 w-full overflow-hidden border-4 border-transparent opacity-[30%]">
                     <div className="relative h-full w-full rounded bg-gray-500">
                       {collection.banner_image_url && (
                         <Image
-                          //@ts-ignore
                           src={collection.banner_image_url}
                           alt=""
                           quality={10}
@@ -88,7 +80,6 @@ export const CollectionList = ({ collections, limit }: Props) => {
                         <div className="relative z-10 flex h-[70px] w-[70px] min-w-[70px] items-center justify-center overflow-hidden rounded  border-[5px] border-gray-700 bg-gray-600">
                           {collection.image_url && (
                             <Image
-                              //@ts-ignore
                               src={collection.image_url}
                               alt=""
                               quality={10}
@@ -100,21 +91,14 @@ export const CollectionList = ({ collections, limit }: Props) => {
                             />
                           )}
                         </div>
-                        {(collection.twitter_followers ||
-                          collection.discord_members) && (
+                        {(collection.twitter_followers || collection.discord_members) && (
                           <div className="absolute bottom-[22px] left-full z-10 ml-2 flex w-full flex-col items-start gap-0">
                             <div className="flex gap-2 rounded-full bg-gray-900 px-3 py-[2px] opacity-80">
                               {collection.twitter_followers && (
-                                <ListSocial
-                                  icon={<BsTwitter />}
-                                  text={collection.twitter_followers}
-                                />
+                                <ListSocial icon={<BsTwitter />} text={collection.twitter_followers} />
                               )}
                               {collection.discord_members && (
-                                <ListSocial
-                                  icon={<FaDiscord />}
-                                  text={collection.discord_members}
-                                />
+                                <ListSocial icon={<FaDiscord />} text={collection.discord_members} />
                               )}
                             </div>
                           </div>
@@ -130,11 +114,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
                           )}
                         </h3>
                         <div className="flex gap-2">
-                          <BookmarkButton
-                            id={collection.slug}
-                            type="collection"
-                            property="simple"
-                          />
+                          <BookmarkButton id={collection.slug} type="collection" />
                           <div className="-mr-[2px]">
                             <UpvoteButton
                               property="simple"
@@ -152,11 +132,10 @@ export const CollectionList = ({ collections, limit }: Props) => {
                             label="Floor Price"
                             field={
                               <>
-                                {collection.payment_tokens &&
-                                  collection.payment_tokens[0].symbol ==
-                                    "ETH" && <IconEth />}
-                                {collection.stats &&
-                                collection.stats.floor_price > 0 ? (
+                                {collection.payment_tokens && collection.payment_tokens[0].symbol == "ETH" && (
+                                  <IconEth />
+                                )}
+                                {collection.stats && collection.stats.floor_price > 0 ? (
                                   abbreviateNumber(collection.stats.floor_price)
                                 ) : (
                                   <Hyphen />
@@ -179,47 +158,33 @@ export const CollectionList = ({ collections, limit }: Props) => {
                             }
                             field={
                               <>
-                                {term == "all" ||
-                                (!term &&
-                                  collection.stats &&
-                                  collection.stats.total_volume > 0) ? (
+                                {term == "all" || (!term && collection.stats && collection.stats.total_volume > 0) ? (
                                   <>
-                                    {collection.payment_tokens &&
-                                      collection.payment_tokens[0].symbol ==
-                                        "ETH" && <IconEth />}
-                                    {abbreviateNumber(
-                                      collection.stats.total_volume
+                                    {collection.payment_tokens && collection.payment_tokens[0].symbol == "ETH" && (
+                                      <IconEth />
                                     )}
+                                    {abbreviateNumber(collection.stats.total_volume)}
                                   </>
-                                ) : term == "24h" &&
-                                  collection.stats.one_day_volume > 0 ? (
+                                ) : term == "24h" && collection.stats.one_day_volume > 0 ? (
                                   <>
-                                    {collection.payment_tokens &&
-                                      collection.payment_tokens[0].symbol ==
-                                        "ETH" && <IconEth />}
-                                    {abbreviateNumber(
-                                      collection.stats.one_day_volume
+                                    {collection.payment_tokens && collection.payment_tokens[0].symbol == "ETH" && (
+                                      <IconEth />
                                     )}
+                                    {abbreviateNumber(collection.stats.one_day_volume)}
                                   </>
-                                ) : term == "7d" &&
-                                  collection.stats.seven_day_volume > 0 ? (
+                                ) : term == "7d" && collection.stats.seven_day_volume > 0 ? (
                                   <>
-                                    {collection.payment_tokens &&
-                                      collection.payment_tokens[0].symbol ==
-                                        "ETH" && <IconEth />}
-                                    {abbreviateNumber(
-                                      collection.stats.seven_day_volume
+                                    {collection.payment_tokens && collection.payment_tokens[0].symbol == "ETH" && (
+                                      <IconEth />
                                     )}
+                                    {abbreviateNumber(collection.stats.seven_day_volume)}
                                   </>
-                                ) : term == "30d" &&
-                                  collection.stats.thirty_day_volume > 0 ? (
+                                ) : term == "30d" && collection.stats.thirty_day_volume > 0 ? (
                                   <>
-                                    {collection.payment_tokens &&
-                                      collection.payment_tokens[0].symbol ==
-                                        "ETH" && <IconEth />}
-                                    {abbreviateNumber(
-                                      collection.stats.thirty_day_volume
+                                    {collection.payment_tokens && collection.payment_tokens[0].symbol == "ETH" && (
+                                      <IconEth />
                                     )}
+                                    {abbreviateNumber(collection.stats.thirty_day_volume)}
                                   </>
                                 ) : (
                                   <Hyphen />
@@ -231,11 +196,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
                         {collection.listed_at && (
                           <ListSocial
                             icon={<IoMdListBox />}
-                            text={
-                              <Moment format="DD.MM.YYYY">
-                                {collection.listed_at}
-                              </Moment>
-                            }
+                            text={<Moment format="DD.MM.YYYY">{collection.listed_at}</Moment>}
                           />
                         )}
                       </div>

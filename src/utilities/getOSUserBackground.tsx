@@ -1,16 +1,13 @@
 import collectionsJson from "@/json/collections.json";
-//@ts-ignore
+
 const collections = JSON.parse(JSON.stringify(collectionsJson));
-// const fs = require("fs");
-// const collections = JSON.parse(
-//   fs.readFileSync("@/json/collections.json", "utf8")
-// );
 
 export const getOSUserBackground = async (username: string) => {
-  //api.opensea.io/user/ProjuiceAudio
   const filteredCollections =
     collections &&
-    collections.filter((collection: any) => collection.creator_id == username);
+    collections.filter((collection: any) => {
+      return collection.creator_id == username;
+    });
   const background_image =
     filteredCollections.length > 0 &&
     filteredCollections[0].banner_image_url &&

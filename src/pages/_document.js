@@ -1,5 +1,8 @@
-import Document, { Html, Head, Main, NextScript } from "next/document";
+import Document, { Head, Html, Main, NextScript } from "next/document";
+
 import { GA_TRACKING_ID } from "@/libs/gtag";
+
+// eslint-disable-next-line import/no-default-export
 export default class MyDocument extends Document {
   render() {
     return (
@@ -7,14 +10,6 @@ export default class MyDocument extends Document {
         <Head>
           <link rel="manifest" href="/manifest.json" />
           <link rel="apple-touch-icon" href="/apple-touch-icon.png"></link>
-          <link rel="stylesheet" href="https://use.typekit.net/xbj6ysr.css" />
-
-          {/* <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
-            rel="stylesheet"
-          /> */}
           {/* Global Site Tag (gtag.js) - Google Analytics */}
           <script
             async

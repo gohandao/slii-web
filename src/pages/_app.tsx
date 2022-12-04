@@ -1,6 +1,7 @@
 import "@/styles/style.scss";
 import "@/styles/globals.css";
 
+import type { User } from "@supabase/supabase-js";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -39,7 +40,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const [scrollY, setScrollY] = useState<number>();
   const [prevHeight, setPrevHeight] = useState<number>();
 
-  const [user, setUser] = useState<any>();
+  const [user, setUser] = useState<User>();
   const [profile, setProfile] = useState<any>();
   const [userProfile, setUserProfile] = useState<Profile>();
   const [avatar, setAvatar] = useState<File>();
@@ -143,15 +144,17 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         const new_upvotes = data as Upvote[];
         return new_upvotes;
       }
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
     }
   };
 
   const createProfile = async () => {
     const init_username = shortid.generate();
     const updates = {
-      id: user.id,
+      id: user?.id,
       updated_at: new Date(),
       username: init_username,
     };
@@ -166,7 +169,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const getProfile = async () => {
     try {
       setLoading(true);
-      const user = supabase.auth.user();
+      const user: User | null = supabase.auth.user();
       if (user) {
         const { data, error, status } = await supabase.from("profiles").select("*").eq("id", user.id).single();
 
@@ -212,7 +215,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     const data = supabase.auth.user();
-    setUser(data);
+    if (data) setUser(data);
     data && !profile && getProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

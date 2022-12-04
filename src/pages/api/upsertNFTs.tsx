@@ -38,13 +38,13 @@ export const upsertNFTs = async (req: any, res: any) => {
     for (let index = 0; index < 10000; index++) {
       console.log(index + "times");
       const data: any = await fetchData(next);
-      assets = data && data.assets ? [...assets, data.assets] : assets;
+      assets = data && data.assets ? [...assets, ...data.assets] : assets;
       next = data && data.next;
       if (!data || !data.next || data.next == null) {
         break;
       }
     }
-    return assets[0];
+    return assets;
   };
   for (let index = 0; index < collections.length; index++) {
     // 動作チェック用

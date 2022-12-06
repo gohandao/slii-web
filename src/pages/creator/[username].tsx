@@ -1,3 +1,4 @@
+// kata: creatorコンポーネントクリック後、表示されるモーダル
 import type { ParsedUrlQuery } from "node:querystring";
 
 import type { GetStaticProps, NextPage } from "next";
@@ -101,14 +102,12 @@ export const getStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params }) => {
   const creators = JSON.parse(JSON.stringify(creatorsJson)) as Creator[];
   const username = params && params.username;
-  const filtered_creators = creators.filter((creator: any) => {
+  const filtered_creators = creators.filter((creator) => {
     return creator.username === username;
   });
   const creator = filtered_creators[0];
   if (!creator) {
-    return {
-      notFound: true,
-    };
+    return { notFound: true };
   }
 
   const baseUrl = (() => {
@@ -120,6 +119,9 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params
     }
   })();
 
+  console.log("--------------------");
+  console.log(creator);
+  console.log("--------------------");
   const avatar = creator.avatar ? creator.avatar : "";
   const background = creator.background ? creator.background : "";
   const verified = creator.verified ? creator.verified : "";

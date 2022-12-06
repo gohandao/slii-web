@@ -24,8 +24,7 @@ type Props = {
   description: string;
   title: string;
 };
-const TagPage: NextPage<Props> = (props) => {
-  const { description, title } = props;
+const TagPage: NextPage<Props> = ({ description, title }) => {
   const router = useRouter();
   const { order, page, search, sort, tab, tag, term, type } = router.query;
   const currentPage = page ? Number(page) : 1;
@@ -74,12 +73,8 @@ const TagPage: NextPage<Props> = (props) => {
     // ...searchedCreators02,
   ];
   //重複削除
-  let searchedCreators = [] as Creator[];
-  if (search && search.length > 0) {
-    searchedCreators = Array.from(new Set(origin_searchedCreators));
-  } else {
-    searchedCreators = filteredCreators;
-  }
+  const searchedCreators =
+    search && search.length > 0 ? Array.from(new Set(origin_searchedCreators)) : filteredCreators;
 
   const creators_args = {
     limit: limit,

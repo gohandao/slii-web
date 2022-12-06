@@ -90,9 +90,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     title: "",
   });
 
-  let avatar_blob;
   const getAvatarBlob = async () => {
-    avatar_blob = profile && profile.avatar_url && (await getImageUrl(profile.avatar_url));
+    const avatar_blob = profile && profile.avatar_url && (await getImageUrl(profile.avatar_url));
     setAvatar(avatar_blob);
   };
   profile && !avatar && getAvatarBlob;

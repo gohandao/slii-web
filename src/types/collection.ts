@@ -1,6 +1,7 @@
 export type Collection = {
   category: string;
-  creator_id: string;
+  creator_username?: string;
+  creator_address: string;
   discord_members: number | null;
   listed_at: Date | null;
   name: string;
@@ -9,6 +10,5 @@ export type Collection = {
   tags: string[];
   twitter_followers: number | null;
   type: string;
-  updatedAt: Date | null;
   verified: boolean;
 };

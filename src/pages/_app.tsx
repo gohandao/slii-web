@@ -242,7 +242,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
               alt: title,
               height: 630,
               type: "image/jpeg",
-              url: process.env.NEXT_PUBLIC_SITE_URL + "/ogp-default.jpg",
+              url: process.env.NEXT_PUBLIC_SITE_URL + "/default-ogp.jpg",
               width: 1200,
             },
           ],

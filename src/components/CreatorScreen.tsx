@@ -1,3 +1,4 @@
+// kata:creatorコンポーネントをクリック後動く
 import { JP } from "country-flag-icons/react/3x2";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -19,6 +20,7 @@ import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { sortNFTs } from "@/libs/sortNFTs";
 import type { Creator } from "@/types/creator";
+import type { Type1 } from "@/types/model/tmp1.model";
 import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 import { getNFTs } from "@/utilities/getNFTs";
 import { randomize } from "@/utilities/randomize";
@@ -31,7 +33,7 @@ export const CreatorScreen: FC = () => {
   const { collections, creators } = useContext(BaseContext);
   const { NFTKeyword, setHeaderIcon } = useContext(UtilitiesContext);
 
-  const [checkAssets, setCheckAssets] = useState(false);
+  const [checkAssets, setCheckAssets] = useState<boolean>(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [sortedAssets, setSortedAssets] = useState<any[]>([]);
   const [random, setRandom] = useState<boolean>(false);
@@ -39,7 +41,7 @@ export const CreatorScreen: FC = () => {
   const [creator, setCreator] = useState<Creator>();
   const [creatorCollections, setCreatorCollections] = useState<any[]>([]);
 
-  const [assets, setAssets] = useState<any[]>([]);
+  const [assets, setAssets] = useState<Type1[]>([]);
   const [currentAssets, setCurrentAssets] = useState<any[]>([]);
 
   if (!creator && username && creators && creators.length > 0) {
@@ -173,7 +175,8 @@ export const CreatorScreen: FC = () => {
         })
       : assets;
 
-  const uppperKeyword = typeof NFTKeyword == "string" && NFTKeyword.toUpperCase();
+  // kata: リファクタしていいのかよくわからないので聞く
+  const uppperKeyword = typeof NFTKeyword == "string" ? NFTKeyword.toUpperCase() : "";
   //1.match username
   const searchedAssets01 = filteredAssets.filter((asset) => {
     return (
@@ -190,12 +193,8 @@ export const CreatorScreen: FC = () => {
     // ...searchedCreators02,
   ];
   //重複削除
-  let searchedAssets = [] as any[];
-  if (NFTKeyword && NFTKeyword.length > 0) {
-    searchedAssets = Array.from(new Set(origin_searchedAssets));
-  } else {
-    searchedAssets = filteredAssets;
-  }
+  const searchedAssets =
+    NFTKeyword && NFTKeyword.length > 0 ? Array.from(new Set(origin_searchedAssets)) : filteredAssets;
 
   const args = {
     limit: limit,
@@ -203,12 +202,13 @@ export const CreatorScreen: FC = () => {
     order: order as "desc" | "asc" | undefined,
     page: Number(page),
     property: "nfts" as "nfts" | "creators" | "collections",
-    sort: sort as string | undefined,
+    sort: sort as "last_price" | "last_sale" | "token_id" | undefined,
   };
 
   useEffect(() => {
     if (sort != "random") {
       const data = sortNFTs(args);
+      console.log(data, "wwwwwwwwwwwwwwwwww");
       setSortedAssets(() => {
         return data;
       });

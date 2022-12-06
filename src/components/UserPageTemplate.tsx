@@ -1,3 +1,4 @@
+// kata: アカウントのアイコンをクリック後表示されるページのテンプレート
 import { useRouter } from "next/router";
 import type { FC } from "react";
 import { useContext, useEffect, useState } from "react";
@@ -40,20 +41,18 @@ export const UserPageTemplate: FC<Props> = ({ collectionList, creatorList }) => 
   const [userAvatar, setUserAvatar] = useState<Blob>();
   const [userBackground, setUserBackground] = useState<Blob>();
 
-  let avatar_blob;
   const getAvatarBlob = async () => {
-    avatar_blob = userProfile && userProfile.avatar_url && (await getImageUrl(userProfile.avatar_url));
+    const avatar_blob = userProfile && userProfile.avatar_url && (await getImageUrl(userProfile.avatar_url));
     avatar_blob && setUserAvatar(avatar_blob);
-    console.log("avatar_blob");
-    console.log(avatar_blob);
+    console.log("avatar_blob", avatar_blob);
   };
 
   userProfile && !userAvatar && getAvatarBlob;
   !userAvatar && getAvatarBlob();
 
-  let background_blob;
   const getBackgroundBlob = async () => {
-    background_blob = userProfile && userProfile.background_url && (await getImageUrl(userProfile.background_url));
+    const background_blob =
+      userProfile && userProfile.background_url && (await getImageUrl(userProfile.background_url));
     background_blob && setUserBackground(background_blob);
   };
   userProfile && !userBackground && getBackgroundBlob;
@@ -126,12 +125,8 @@ export const UserPageTemplate: FC<Props> = ({ collectionList, creatorList }) => 
   });
   const origin_searchedCreators = [...searchedCreators01];
   //重複削除
-  let searchedCreators = [] as Creator[];
-  if (search && search.length > 0) {
-    searchedCreators = Array.from(new Set(origin_searchedCreators));
-  } else {
-    searchedCreators = filteredCreators;
-  }
+  const searchedCreators =
+    search && search.length > 0 ? Array.from(new Set(origin_searchedCreators)) : filteredCreators;
 
   const creators_args = {
     limit: limit,
@@ -179,12 +174,8 @@ export const UserPageTemplate: FC<Props> = ({ collectionList, creatorList }) => 
   });
   const origin_searchedCollections = [...searchedCollections01, ...searchedCollections02];
   //重複削除
-  let searchedCollections = [] as Collection[];
-  if (search && search.length > 0) {
-    searchedCollections = Array.from(new Set(origin_searchedCollections));
-  } else {
-    searchedCollections = filteredCollections;
-  }
+  const searchedCollections =
+    search && search.length > 0 ? Array.from(new Set(origin_searchedCollections)) : filteredCollections;
 
   const collections_args = {
     //category: collectionsSort,
@@ -215,8 +206,7 @@ export const UserPageTemplate: FC<Props> = ({ collectionList, creatorList }) => 
 
   const title = userProfile && (
     <>
-      {userProfile.username}{" "}
-      {userProfile.verified == true && <MdVerified className="ml-1 inline text-xl text-gray-500" />}
+      {userProfile.username} {userProfile.verified && <MdVerified className="ml-1 inline text-xl text-gray-500" />}
     </>
   );
   const sub_title = userProfile?.sub_title ? userProfile : "NFT Collector";

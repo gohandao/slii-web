@@ -1,3 +1,4 @@
+// kata: indexページの主な内容
 import type { FC } from "react";
 import { useContext, useEffect, useState } from "react";
 import { IoMdSync } from "react-icons/io";
@@ -61,12 +62,8 @@ export const CreatorsIndexScreen: FC<Props> = ({ params }) => {
     // ...searchedCreators02,
   ];
   //重複削除
-  let searchedCreators = [] as Creator[];
-  if (search && search.length > 0) {
-    searchedCreators = Array.from(new Set(origin_searchedCreators));
-  } else {
-    searchedCreators = filteredCreators;
-  }
+  const searchedCreators =
+    search && search.length > 0 ? Array.from(new Set(origin_searchedCreators)) : filteredCreators;
 
   const args = {
     limit: limit,
@@ -92,9 +89,8 @@ export const CreatorsIndexScreen: FC<Props> = ({ params }) => {
       return data;
     });
   }
-  if (!checkInitial) {
-    setCheckInitial(true);
-  }
+  if (!checkInitial) setCheckInitial(true);
+
   useEffect(() => {
     if (checkInitial && creators.length > 0) {
       const data = sortList(args);
@@ -109,7 +105,7 @@ export const CreatorsIndexScreen: FC<Props> = ({ params }) => {
   return (
     <>
       <section className="mx-auto px-5 lg:px-8">
-        <div className="">
+        <div>
           <TabIndex />
         </div>
         <div className="mb-2 flex gap-3">

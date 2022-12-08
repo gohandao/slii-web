@@ -12,10 +12,6 @@ import { BookmarkButton } from "@/components/BookmarkButton";
 import { ListSocial } from "@/components/ListSocial";
 import { UpvoteButton } from "@/components/UpvoteButton";
 import type { Creator } from "@/types/creator";
-import { abbreviateNumber } from "@/utilities/abbreviateNumber";
-
-import { IconEth } from "./IconEth";
-import { ListStats } from "./ListStats";
 
 type Props = {
   creators: Creator[];
@@ -39,7 +35,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
   }
 
   return (
-    <div className="grid w-full grid-cols-1 justify-center gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
+    <div className="grid w-full grid-cols-2 justify-center gap-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6">
       {currentCreators.length > 0 &&
         currentCreators.map((creator, index) => {
           return (
@@ -59,7 +55,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
                   </div>
                   <div className="relative flex h-20 w-full overflow-hidden border-4 border-transparent opacity-[30%]">
                     <div className="relative h-full w-full rounded bg-gray-500">
-                      {creator.background && (
+                      {creator.background && creator.background != "false" && (
                         <Image
                           src={creator.background}
                           alt=""
@@ -129,31 +125,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
                           </div>
                         </div>
                       </div>
-                      <div className="flex items-end justify-between gap-5">
-                        <div className="flex gap-5">
-                          {creator.total_volume && (
-                            <ListStats
-                              label="Total Volume"
-                              field={
-                                <>
-                                  {creator.token_symbol && creator.token_symbol == "ETH" && <IconEth />}
-                                  {abbreviateNumber(creator.total_volume)}
-                                </>
-                              }
-                            />
-                          )}
-                          {creator.average_floor_price && (
-                            <ListStats
-                              label="Ave. Floor Price"
-                              field={
-                                <>
-                                  {creator.token_symbol && creator.token_symbol == "ETH" && <IconEth />}
-                                  {abbreviateNumber(creator.average_floor_price)}
-                                </>
-                              }
-                            />
-                          )}
-                        </div>
+                      <div className="flex items-end justify-end gap-5">
                         {creator.listed_at && (
                           <ListSocial
                             icon={<IoMdListBox />}

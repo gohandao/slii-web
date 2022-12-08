@@ -10,7 +10,7 @@ import { CollectionScreen } from "@/components/CollectionScreen";
 import { CollectionsIndexScreen } from "@/components/CollectionsIndexScreen";
 import { ScreenModal } from "@/components/ScreenModal";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import collectionsJson from "@/json/collections.json";
+import { getCollections, supabase } from "@/libs/supabase";
 
 type Props = {
   description: string;
@@ -85,22 +85,29 @@ type Params = ParsedUrlQuery & {
   slug: string;
 };
 export const getStaticPaths = async () => {
-  const collections = JSON.parse(JSON.stringify(collectionsJson));
+  const { data } = await getCollections();
+  const collections = data;
   return {
     fallback: "blocking",
-    paths: collections.map((colelction: any) => {
-      return `/collection/${colelction.slug}`;
-    }),
+    paths:
+      collections &&
+      collections.map((colelction: any) => {
+        return `/collection/${colelction.slug}`;
+      }),
   };
 };
 
 export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params }) => {
-  const collections = JSON.parse(JSON.stringify(collectionsJson));
   const slug = params && params.slug;
-  const filtered_collections = collections.filter((collection: any) => {
-    return collection.slug === slug;
-  });
-  const collection = filtered_collections[0];
+  let collection;
+  if (supabase) {
+    const { data, error } = await supabase.from("collections").select().eq("slug", slug).single();
+    if (error) {
+      console.log("error");
+      console.log(error);
+    }
+    collection = data as any;
+  }
   if (!collection) {
     return {
       notFound: true,

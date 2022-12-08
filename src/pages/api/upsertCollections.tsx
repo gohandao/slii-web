@@ -63,8 +63,8 @@ const getCollections = async () => {
 };
 const upsertData = async (collections: Collection[]) => {
   const options = { method: "GET" };
-  // for (let index = 0; index < collections.length; index++) {
-  for (let index = 0; index < 3; index++) {
+  for (let index = 0; index < collections.length; index++) {
+    // for (let index = 0; index < 3; index++) {
     await sleep(300);
     if (index % 10 == 0) {
       console.log((index * 300) / 1000 + "seconds");
@@ -73,16 +73,18 @@ const upsertData = async (collections: Collection[]) => {
     const OSUser = await getOSUser(collections[index].creator_address);
     const username = OSUser.username;
     //2.insert upvotes
-    const { error } = await supabase
-      .from("upvotes")
-      .select("id", {
-        count: "exact",
-        head: false,
-      })
-      .eq("collection_slug", collections[index].slug);
-    if (error) {
-      console.log("error");
-      console.log(error);
+    if (supabase) {
+      const { error } = await supabase
+        .from("upvotes")
+        .select("id", {
+          count: "exact",
+          head: false,
+        })
+        .eq("collection_slug", collections[index].slug);
+      if (error) {
+        console.log("error");
+        console.log(error);
+      }
     }
     //3.fetch OpenSea collections
     await fetch(`https://api.opensea.io/api/v1/collection/${collections[index].slug}`, options)
@@ -93,11 +95,17 @@ const upsertData = async (collections: Collection[]) => {
         response = response.collection;
         const data = {} as any;
         data.creator_username = username;
+        data.creator_address = collections[index].creator_address;
+        data.name = response.name;
         data.slug = response.slug;
         data.tags = collections[index].tags;
         data.type = collections[index].type;
         data.category = collections[index].category;
         data.listed_at = collections[index].listed_at;
+        const upvotes_data =
+          supabase &&
+          (await supabase.from("upvotes").select("*", { count: "exact" }).eq("collection_slug", response.slug));
+        const upvotes_count = upvotes_data && upvotes_data.count;
         // fetched data
         const symbols =
           response.payment_tokens &&
@@ -147,17 +155,19 @@ const upsertData = async (collections: Collection[]) => {
         data.external_url = response.external_url;
         data.featured_image_url = response.featured_image_url;
         data.safelist_request_status = response.safelist_request_status;
-        data.large_image_url = response.large_image_url;
+        data.image_url = response.image_url;
         data.telegram_url = response.telegram_url;
         data.twitter_username = response.twitter_username;
         data.instagram_username = response.instagram_username;
         data.fees = response.fees;
         data.is_rarity_enabled = response.is_rarity_enabled;
-        //return data
-        const { error } = await supabase.from("collections").upsert(data).select();
-        if (error) {
-          console.log("error");
-          console.log(error);
+        data.upvotes_count = upvotes_count;
+        if (supabase) {
+          const { error } = await supabase.from("collections").upsert(data).select();
+          if (error) {
+            console.log("error");
+            console.log(error);
+          }
         }
       })
       .catch((err) => {

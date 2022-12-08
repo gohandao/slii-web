@@ -21,23 +21,23 @@ export const CollectionTr = ({ index, item, limit }: any) => {
   let changeClass;
   switch (term) {
     case "24h":
-      if (item.stats.one_day_change > 0) {
+      if (item.one_day_change > 0) {
         changeClass = "text-green-500";
-      } else if (item.stats.one_day_change < 0) {
+      } else if (item.one_day_change < 0) {
         changeClass = "text-red-500";
       }
       break;
     case "7d":
-      if (item.stats.seven_day_change > 0) {
+      if (item.seven_day_change > 0) {
         changeClass = "text-green-500";
-      } else if (item.stats.seven_day_change < 0) {
+      } else if (item.seven_day_change < 0) {
         changeClass = "text-red-500";
       }
       break;
     case "30d":
-      if (item.stats.thirty_day_change > 0) {
+      if (item.thirty_day_change > 0) {
         changeClass = "text-green-500";
-      } else if (item.stats.thirty_day_change < 0) {
+      } else if (item.thirty_day_change < 0) {
         changeClass = "text-red-500";
       }
       break;
@@ -127,42 +127,42 @@ export const CollectionTr = ({ index, item, limit }: any) => {
           {/*floor_price*/}
           <Td>
             <div className="item-center flex justify-start gap-1">
-              {item.payment_tokens && item.payment_tokens[0].symbol == "ETH" && <IconEth />}
-              {item.stats && item.stats.floor_price > 0 ? abbreviateNumber(item.stats.floor_price) : <Hyphen />}
+              {item.symbols && item.symbols[0] == "ETH" && <IconEth />}
+              {item && item.floor_price > 0 ? abbreviateNumber(item.floor_price) : <Hyphen />}
             </div>
           </Td>
           {/*total_volume*/}
           <Td>
             <div className="item-center flex justify-start gap-1">
-              {term == "all" || (!term && item.stats && item.stats.total_volume > 0) ? (
+              {term == "all" || (!term && item && item.total_volume > 0) ? (
                 <>
-                  {item.payment_tokens && item.payment_tokens[0].symbol == "ETH" && <IconEth />}
-                  {abbreviateNumber(item.stats.total_volume)}
+                  {item.symbols && item.symbols[0] == "ETH" && <IconEth />}
+                  {abbreviateNumber(item.total_volume)}
                 </>
-              ) : term == "1h" && item.stats.one_hour_volume > 0 ? (
+              ) : term == "1h" && item.one_hour_volume > 0 ? (
                 <>
-                  {item.payment_tokens && item.payment_tokens[0].symbol == "ETH" && <IconEth />}
-                  {abbreviateNumber(item.stats.one_hour_volume)}
+                  {item.symbols && item.symbols[0] == "ETH" && <IconEth />}
+                  {abbreviateNumber(item.one_hour_volume)}
                 </>
-              ) : term == "6h" && item.stats.six_hour_volume > 0 ? (
+              ) : term == "6h" && item.six_hour_volume > 0 ? (
                 <>
-                  {item.payment_tokens && item.payment_tokens[0].symbol == "ETH" && <IconEth />}
-                  {abbreviateNumber(item.stats.six_hour_volume)}
+                  {item.symbols && item.symbols[0] == "ETH" && <IconEth />}
+                  {abbreviateNumber(item.six_hour_volume)}
                 </>
-              ) : term == "24h" && item.stats.one_day_volume > 0 ? (
+              ) : term == "24h" && item.one_day_volume > 0 ? (
                 <>
-                  {item.payment_tokens && item.payment_tokens[0].symbol == "ETH" && <IconEth />}
-                  {abbreviateNumber(item.stats.one_day_volume)}
+                  {item.symbols && item.symbols[0] == "ETH" && <IconEth />}
+                  {abbreviateNumber(item.one_day_volume)}
                 </>
-              ) : term == "7d" && item.stats.seven_day_volume > 0 ? (
+              ) : term == "7d" && item.seven_day_volume > 0 ? (
                 <>
-                  {item.payment_tokens && item.payment_tokens[0].symbol == "ETH" && <IconEth />}
-                  {abbreviateNumber(item.stats.seven_day_volume)}
+                  {item.symbols && item.symbols[0] == "ETH" && <IconEth />}
+                  {abbreviateNumber(item.seven_day_volume)}
                 </>
-              ) : term == "30d" && item.stats.thirty_day_volume > 0 ? (
+              ) : term == "30d" && item.thirty_day_volume > 0 ? (
                 <>
-                  {item.payment_tokens && item.payment_tokens[0].symbol == "ETH" && <IconEth />}
-                  {abbreviateNumber(item.stats.thirty_day_volume)}
+                  {item.symbols && item.symbols[0] == "ETH" && <IconEth />}
+                  {abbreviateNumber(item.thirty_day_volume)}
                 </>
               ) : (
                 <Hyphen />
@@ -172,35 +172,35 @@ export const CollectionTr = ({ index, item, limit }: any) => {
           {/*average_price*/}
           <Td>
             <div className="item-center flex justify-start gap-1">
-              {term == "all" || (!term && item.stats && item.stats.average_price > 0) ? (
+              {term == "all" || (!term && item && item.average_price > 0) ? (
                 <>
-                  {item.payment_tokens && item.payment_tokens[0].symbol == "ETH" && <IconEth />}
-                  {abbreviateNumber(item.stats.average_price)}
+                  {item.symbols && item.symbols[0] == "ETH" && <IconEth />}
+                  {abbreviateNumber(item.average_price)}
                 </>
-              ) : term == "1h" && item.stats.one_hour_average_price > 0 ? (
+              ) : term == "1h" && item.one_hour_average_price > 0 ? (
                 <>
-                  {item.payment_tokens && item.payment_tokens[0].symbol == "ETH" && <IconEth />}
-                  {abbreviateNumber(item.stats.one_hour_average_price)}
+                  {item.symbols && item.symbols[0] == "ETH" && <IconEth />}
+                  {abbreviateNumber(item.one_hour_average_price)}
                 </>
-              ) : term == "6h" && item.stats.six_hour_average_price > 0 ? (
+              ) : term == "6h" && item.six_hour_average_price > 0 ? (
                 <>
-                  {item.payment_tokens && item.payment_tokens[0].symbol == "ETH" && <IconEth />}
-                  {abbreviateNumber(item.stats.six_hour_average_price)}
+                  {item.symbols && item.symbols[0] == "ETH" && <IconEth />}
+                  {abbreviateNumber(item.six_hour_average_price)}
                 </>
-              ) : term == "24h" && item.stats.one_day_average_price > 0 ? (
+              ) : term == "24h" && item.one_day_average_price > 0 ? (
                 <>
-                  {item.payment_tokens && item.payment_tokens[0].symbol == "ETH" && <IconEth />}
-                  {abbreviateNumber(item.stats.one_day_average_price)}
+                  {item.symbols && item.symbols[0] == "ETH" && <IconEth />}
+                  {abbreviateNumber(item.one_day_average_price)}
                 </>
-              ) : term == "7d" && item.stats.seven_day_average_price > 0 ? (
+              ) : term == "7d" && item.seven_day_average_price > 0 ? (
                 <>
-                  {item.payment_tokens && item.payment_tokens[0].symbol == "ETH" && <IconEth />}
-                  {abbreviateNumber(item.stats.seven_day_average_price)}
+                  {item.symbols && item.symbols[0] == "ETH" && <IconEth />}
+                  {abbreviateNumber(item.seven_day_average_price)}
                 </>
-              ) : term == "30d" && item.stats.thirty_day_average_price > 0 ? (
+              ) : term == "30d" && item.thirty_day_average_price > 0 ? (
                 <>
-                  {item.payment_tokens && item.payment_tokens[0].symbol == "ETH" && <IconEth />}
-                  {abbreviateNumber(item.stats.thirty_day_average_price)}
+                  {item.symbols && item.symbols[0] == "ETH" && <IconEth />}
+                  {abbreviateNumber(item.thirty_day_average_price)}
                 </>
               ) : (
                 <Hyphen />
@@ -210,28 +210,28 @@ export const CollectionTr = ({ index, item, limit }: any) => {
           {/*change*/}
           <Td>
             <span className={`${changeClass}`}>
-              {term != "all" && term && item.stats && term == "24h" && item.stats.one_day_change ? (
-                (item.stats.one_day_change * 100).toLocaleString(undefined, {
+              {term != "all" && term && item && term == "24h" && item.one_day_change ? (
+                (item.one_day_change * 100).toLocaleString(undefined, {
                   maximumFractionDigits: 2,
                   minimumFractionDigits: 2,
                 }) + "%"
-              ) : term == "1h" && item.stats.one_hour_change ? (
-                (item.stats.one_hour_change * 100).toLocaleString(undefined, {
+              ) : term == "1h" && item.one_hour_change ? (
+                (item.one_hour_change * 100).toLocaleString(undefined, {
                   maximumFractionDigits: 2,
                   minimumFractionDigits: 2,
                 }) + "%"
-              ) : term == "6h" && item.stats.six_hour_change ? (
-                (item.stats.six_hour_change * 100).toLocaleString(undefined, {
+              ) : term == "6h" && item.six_hour_change ? (
+                (item.six_hour_change * 100).toLocaleString(undefined, {
                   maximumFractionDigits: 2,
                   minimumFractionDigits: 2,
                 }) + "%"
-              ) : term == "7d" && item.stats.seven_day_change ? (
-                (item.stats.seven_day_change * 100).toLocaleString(undefined, {
+              ) : term == "7d" && item.seven_day_change ? (
+                (item.seven_day_change * 100).toLocaleString(undefined, {
                   maximumFractionDigits: 2,
                   minimumFractionDigits: 2,
                 }) + "%"
-              ) : term == "30d" && item.stats.thirty_day_change ? (
-                (item.stats.thirty_day_change * 100).toLocaleString(undefined, {
+              ) : term == "30d" && item.thirty_day_change ? (
+                (item.thirty_day_change * 100).toLocaleString(undefined, {
                   maximumFractionDigits: 2,
                   minimumFractionDigits: 2,
                 }) + "%"
@@ -242,22 +242,22 @@ export const CollectionTr = ({ index, item, limit }: any) => {
           </Td>
           {/*sales*/}
           <Td>
-            {term == "all" || (!term && item.stats && item.stats.total_sales > 0) ? (
-              abbreviateNumber(item.stats.total_sales, true)
-            ) : term == "24h" && item.stats.one_day_sales > 0 ? (
-              abbreviateNumber(item.stats.one_day_sales, true)
-            ) : term == "7d" && item.stats.seven_day_sales > 0 ? (
-              abbreviateNumber(item.stats.seven_day_sales, true)
-            ) : term == "30d" && item.stats.thirty_day_sales > 0 ? (
-              abbreviateNumber(item.stats.thirty_day_sales, true)
+            {term == "all" || (!term && item && item.total_sales > 0) ? (
+              abbreviateNumber(item.total_sales, true)
+            ) : term == "24h" && item.one_day_sales > 0 ? (
+              abbreviateNumber(item.one_day_sales, true)
+            ) : term == "7d" && item.seven_day_sales > 0 ? (
+              abbreviateNumber(item.seven_day_sales, true)
+            ) : term == "30d" && item.thirty_day_sales > 0 ? (
+              abbreviateNumber(item.thirty_day_sales, true)
             ) : (
               <Hyphen />
             )}
           </Td>
           {/*owners*/}
-          <Td>{item.stats && item.stats.num_owners}</Td>
+          <Td>{item && item.num_owners}</Td>
           {/*items*/}
-          <Td>{item.stats && item.stats.total_supply}</Td>
+          <Td>{item && item.total_supply}</Td>
         </tr>
       )}
     </>

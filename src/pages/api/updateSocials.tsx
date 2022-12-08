@@ -3,20 +3,24 @@ import { supabase } from "@/libs/supabase";
 import { getTwitterFollowers } from "@/libs/twitter";
 
 const getCreators = async () => {
-  const { data, error } = await supabase.from("creators").select();
-  if (error) {
-    console.log("error");
-    console.log(error);
+  if (supabase) {
+    const { data, error } = await supabase.from("creators").select();
+    if (error) {
+      console.log("error");
+      console.log(error);
+    }
+    return data;
   }
-  return data;
 };
 const getCollections = async () => {
-  const { data, error } = await supabase.from("collections").select();
-  if (error) {
-    console.log("error");
-    console.log(error);
+  if (supabase) {
+    const { data, error } = await supabase.from("collections").select();
+    if (error) {
+      console.log("error");
+      console.log(error);
+    }
+    return data;
   }
-  return data;
 };
 
 const callback = () => {
@@ -69,10 +73,12 @@ export const updateData = async () => {
       data.username = creators[index].username;
       data.twitter_followers = new_twitter_followers;
       data.discord_members = new_discord_members;
-      const { error } = await supabase.from("creators").upsert(data).select();
-      if (error) {
-        console.log("error");
-        console.log(error);
+      if (supabase) {
+        const { error } = await supabase.from("creators").upsert(data).select();
+        if (error) {
+          console.log("error");
+          console.log(error);
+        }
       }
     }
   }
@@ -108,10 +114,12 @@ export const updateData = async () => {
       data.slug = collections[index].slug;
       data.twitter_followers = new_twitter_followers;
       data.discord_members = new_discord_members;
-      const { error } = await supabase.from("collections").upsert(data).select();
-      if (error) {
-        console.log("error");
-        console.log(error);
+      if (supabase) {
+        const { error } = await supabase.from("collections").upsert(data).select();
+        if (error) {
+          console.log("error");
+          console.log(error);
+        }
       }
     }
   }

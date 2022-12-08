@@ -22,9 +22,9 @@ export const BookmarkButton = ({ id, type }: Props) => {
     e.preventDefault();
     if (user) {
       const checkBookmarked = bookmarks.filter((bookmark) => {
-        return bookmark.creator_id == id;
+        return bookmark.creator_username == id;
       });
-      if (checkBookmarked.length == 0) {
+      if (checkBookmarked.length == 0 && supabase) {
         const { data } = await supabase.from("bookmarks").insert([
           {
             collection_slug: collection_slug,
@@ -43,15 +43,15 @@ export const BookmarkButton = ({ id, type }: Props) => {
   const removeBookmarkHandler = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     if (user) {
-      if (type == "creator") {
+      if (type == "creator" && supabase) {
         await supabase.from("bookmarks").delete().match({ creator_id: creator_id, user_id: user.id });
         const removedBookmarks = bookmarks.filter((bookmark) => {
-          return bookmark.creator_id != creator_id;
+          return bookmark.creator_username != creator_id;
         });
         setBookmarks(removedBookmarks);
         setBookmarked(false);
       }
-      if (type == "collection") {
+      if (type == "collection" && supabase) {
         await supabase.from("bookmark").delete().match({ collection_slug: collection_slug, user_id: user.id });
         const removedBookmarks = bookmarks.filter((bookmark) => {
           return bookmark.collection_slug != id;
@@ -65,7 +65,7 @@ export const BookmarkButton = ({ id, type }: Props) => {
     let filterdBookmarkes = [];
     if (type == "creator") {
       filterdBookmarkes = bookmarks.filter((bookmark) => {
-        return bookmark.creator_id === id;
+        return bookmark.creator_username === id;
       });
     }
     if (type == "collection") {

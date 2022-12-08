@@ -1,17 +1,23 @@
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { BiPurchaseTagAlt } from "react-icons/bi";
 
 import { BaseLayout } from "@/components/BaseLayout";
 import { TagList } from "@/components/TagList";
-import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { getTags } from "@/libs/airtable";
+import type { Tag } from "@/types/tag";
 
 const TagsPage: NextPage = () => {
-  const { tags } = useContext(BaseContext);
+  const [tags, setTags] = useState<Tag[]>([]);
   const { setHeaderIcon } = useContext(UtilitiesContext);
   useEffect(() => {
+    const fetchData = async () => {
+      const tags = await getTags("tags");
+      setTags(tags);
+    };
+    fetchData();
     setHeaderIcon({
       avatar: "",
       element: <BiPurchaseTagAlt />,
@@ -39,11 +45,13 @@ const TagsPage: NextPage = () => {
           <div className="mx-auto mt-3 px-5 md:px-8">
             <h1 className="mb-3 text-sm tracking-[0.2em] text-gray-500">Tags for search.</h1>
           </div>
-          <section className="mx-auto mt-5 px-5 md:px-8">
-            <div className="mb-10">
-              <TagList tags={tags} type="creator" />
-            </div>
-          </section>
+          {tags && (
+            <section className="mx-auto mt-5 px-5 md:px-8">
+              <div className="mb-10">
+                <TagList tags={tags} type="creator" />
+              </div>
+            </section>
+          )}
         </div>
       </BaseLayout>
     </div>

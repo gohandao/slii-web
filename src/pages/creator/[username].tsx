@@ -10,7 +10,7 @@ import { CreatorScreen } from "@/components/CreatorScreen";
 import { CreatorsIndexScreen } from "@/components/CreatorsIndexScreen";
 import { ScreenModal } from "@/components/ScreenModal";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import creatorsJson from "@/json/creators.json";
+import { getCreators, supabase } from "@/libs/supabase";
 import type { Creator } from "@/types/creator";
 
 type Props = {
@@ -90,22 +90,29 @@ type Params = ParsedUrlQuery & {
   username: string;
 };
 export const getStaticPaths = async () => {
-  const creators = JSON.parse(JSON.stringify(creatorsJson)) as Creator[];
+  const data = await getCreators();
+  const creators = data.data as Creator[];
   return {
     fallback: "blocking",
-    paths: creators.map((creator: any) => {
-      return `/creator/${creator.username}`;
-    }),
+    paths:
+      creators &&
+      creators.map((creator: any) => {
+        return `/creator/${creator.username}`;
+      }),
   };
 };
 
 export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params }) => {
-  const creators = JSON.parse(JSON.stringify(creatorsJson)) as Creator[];
   const username = params && params.username;
-  const filtered_creators = creators.filter((creator: any) => {
-    return creator.username === username;
-  });
-  const creator = filtered_creators[0];
+  let creator;
+  if (supabase) {
+    const { data, error } = await supabase.from("creators").select().eq("username", username).single();
+    if (error) {
+      console.log("error");
+      console.log(error);
+    }
+    creator = data as any;
+  }
   if (!creator) {
     return {
       notFound: true,

@@ -42,8 +42,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
                 <a className="relative flex w-full flex-col items-center overflow-hidden rounded-lg border border-gray-800 bg-gray-800 pb-2 shadow-lg">
                   <div className="absolute top-0 right-0 z-20  flex items-center gap-1 text-gray-400 opacity-60">
                     <p className="mt-[2px] text-center text-xs text-gray-400">
-                      {collection.stats && collection.stats.num_owners} /
-                      {collection.stats && collection.stats.total_supply}
+                      {collection && collection.num_owners} /{collection && collection.total_supply}
                     </p>
                     <div className="flex items-center justify-center gap-2 rounded-bl-lg bg-gray-900 py-[2px] px-2 text-xs capitalize md:text-xs">
                       {collection.type}
@@ -132,11 +131,9 @@ export const CollectionList = ({ collections, limit }: Props) => {
                             label="Floor Price"
                             field={
                               <>
-                                {collection.payment_tokens && collection.payment_tokens[0].symbol == "ETH" && (
-                                  <IconEth />
-                                )}
-                                {collection.stats && collection.stats.floor_price > 0 ? (
-                                  abbreviateNumber(collection.stats.floor_price)
+                                {collection.symbols && collection.symbols[0] == "ETH" && <IconEth />}
+                                {collection && collection.floor_price > 0 ? (
+                                  abbreviateNumber(collection.floor_price)
                                 ) : (
                                   <Hyphen />
                                 )}
@@ -158,33 +155,25 @@ export const CollectionList = ({ collections, limit }: Props) => {
                             }
                             field={
                               <>
-                                {term == "all" || (!term && collection.stats && collection.stats.total_volume > 0) ? (
+                                {term == "all" || (!term && collection && collection.total_volume > 0) ? (
                                   <>
-                                    {collection.payment_tokens && collection.payment_tokens[0].symbol == "ETH" && (
-                                      <IconEth />
-                                    )}
-                                    {abbreviateNumber(collection.stats.total_volume)}
+                                    {collection.symbols && collection.symbols[0] == "ETH" && <IconEth />}
+                                    {abbreviateNumber(collection.total_volume)}
                                   </>
-                                ) : term == "24h" && collection.stats.one_day_volume > 0 ? (
+                                ) : term == "24h" && collection.one_day_volume > 0 ? (
                                   <>
-                                    {collection.payment_tokens && collection.payment_tokens[0].symbol == "ETH" && (
-                                      <IconEth />
-                                    )}
-                                    {abbreviateNumber(collection.stats.one_day_volume)}
+                                    {collection.symbols && collection.symbols[0] == "ETH" && <IconEth />}
+                                    {abbreviateNumber(collection.one_day_volume)}
                                   </>
-                                ) : term == "7d" && collection.stats.seven_day_volume > 0 ? (
+                                ) : term == "7d" && collection.seven_day_volume > 0 ? (
                                   <>
-                                    {collection.payment_tokens && collection.payment_tokens[0].symbol == "ETH" && (
-                                      <IconEth />
-                                    )}
-                                    {abbreviateNumber(collection.stats.seven_day_volume)}
+                                    {collection.symbols && collection.symbols[0] == "ETH" && <IconEth />}
+                                    {abbreviateNumber(collection.seven_day_volume)}
                                   </>
-                                ) : term == "30d" && collection.stats.thirty_day_volume > 0 ? (
+                                ) : term == "30d" && collection.thirty_day_volume > 0 ? (
                                   <>
-                                    {collection.payment_tokens && collection.payment_tokens[0].symbol == "ETH" && (
-                                      <IconEth />
-                                    )}
-                                    {abbreviateNumber(collection.stats.thirty_day_volume)}
+                                    {collection.symbols && collection.symbols[0] == "ETH" && <IconEth />}
+                                    {abbreviateNumber(collection.thirty_day_volume)}
                                   </>
                                 ) : (
                                   <Hyphen />

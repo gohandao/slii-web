@@ -132,8 +132,10 @@ export const Header = () => {
                   </Link>
                   <button
                     onClick={async () => {
-                      await supabase.auth.signOut();
-                      location.reload();
+                      if (supabase) {
+                        await supabase.auth.signOut();
+                        location.reload();
+                      }
                     }}
                     className="block px-5 py-3 text-sm text-gray-400"
                   >

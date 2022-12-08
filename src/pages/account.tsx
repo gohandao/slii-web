@@ -68,17 +68,19 @@ const AccountPage: NextPage = () => {
 
   const uploadImage = async (image: File, path: string) => {
     const uuid = uuidv4();
-    const { data } = await supabase.storage.from(path).upload(`public/${uuid}.jpg`, image, {
-      cacheControl: "3600",
-      upsert: false,
-    });
-    return data;
+    if (supabase) {
+      const { data } = await supabase.storage.from(path).upload(`public/${uuid}.jpg`, image, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+      return data;
+    }
   };
 
   const updateProfile = async () => {
     try {
       setLoading(true);
-      const user = supabase.auth.user();
+      const user = supabase && supabase.auth.user();
       let new_avatar_url;
       let new_background_url;
       if (user) {
@@ -100,12 +102,14 @@ const AccountPage: NextPage = () => {
           username: username,
         };
 
-        const { error } = await supabase.from("profiles").upsert(updates, {
-          returning: "minimal", // Don't return the value after inserting
-        });
-        alert("upload success");
-        if (error) {
-          throw error;
+        if (supabase) {
+          const { error } = await supabase.from("profiles").upsert(updates, {
+            returning: "minimal", // Don't return the value after inserting
+          });
+          alert("upload success");
+          if (error) {
+            throw error;
+          }
         }
       }
     } catch (error: any) {

@@ -73,18 +73,28 @@ const upsertData = async (creators: Creator[]) => {
     const username = OSUser.username;
     const verified = OSUser.account.config == "verified" ? true : false;
     const data = await getOSData(username);
-    creators[index].username = username as string;
-    creators[index].avatar = avatar as string | undefined;
-    creators[index].token_symbol = data.token_symbol as string;
-    creators[index].total_volume = data.total_volume as number;
-    creators[index].average_volume = data.average_volume as number;
-    creators[index].average_floor_price = data.average_floor_price as number | undefined;
-    creators[index].total_collections = data.total_collections as number;
-    creators[index].total_supply = data.total_supply as number;
-    creators[index].total_sales = data.total_sales as number;
-    creators[index].background = data.background_image as string | undefined;
-    creators[index].verified = verified;
-    await supabase.from("creators").upsert(creators[index]).select();
+    if (supabase) {
+      if (data) {
+        creators[index].token_symbol = data.token_symbol as string;
+        creators[index].total_volume = data.total_volume as number;
+        creators[index].average_volume = data.average_volume as number;
+        creators[index].average_floor_price = data.average_floor_price as number | undefined;
+        creators[index].total_collections = data.total_collections as number;
+        creators[index].total_supply = data.total_supply as number;
+        creators[index].total_sales = data.total_sales as number;
+        creators[index].background = data.background_image as string | undefined;
+      }
+      const upvotes_data = await supabase
+        .from("upvotes")
+        .select("*", { count: "exact" })
+        .eq("creator_username", username);
+      const upvotes_count = upvotes_data && upvotes_data.count;
+      creators[index].username = username as string;
+      creators[index].avatar = avatar as string | undefined;
+      creators[index].verified = verified;
+      creators[index].upvotes_count = upvotes_count;
+      await supabase.from("creators").upsert(creators[index]).select();
+    }
   }
   return creators;
 };

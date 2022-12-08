@@ -1,7 +1,7 @@
 export type Collection = {
   category: string;
-  creator_username?: string;
   creator_address: string;
+  creator_username?: string;
   discord_members: number | null;
   listed_at: Date | null;
   name: string;

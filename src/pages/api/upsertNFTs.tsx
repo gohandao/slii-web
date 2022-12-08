@@ -1,12 +1,14 @@
 import { supabase } from "@/libs/supabase";
 
 const getCollections = async () => {
-  const { data, error } = await supabase.from("collections").select();
-  if (error) {
-    console.log("error");
-    console.log(error);
+  if (supabase) {
+    const { data, error } = await supabase.from("collections").select();
+    if (error) {
+      console.log("error");
+      console.log(error);
+    }
+    return data;
   }
-  return data;
 };
 
 export const upsertNFTs = async (req: any, res: any) => {
@@ -82,12 +84,14 @@ export const upsertNFTs = async (req: any, res: any) => {
               new_assets = [...new_assets, new_data];
             }
           });
-        await supabase
-          .from("nfts")
-          .upsert(new_assets, {
-            returning: "minimal", // Don't return the value after inserting
-          })
-          .select();
+        if (supabase) {
+          await supabase
+            .from("nfts")
+            .upsert(new_assets, {
+              returning: "minimal", // Don't return the value after inserting
+            })
+            .select();
+        }
         return;
       };
       assets && (await upsertData(assets));

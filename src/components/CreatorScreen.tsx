@@ -6,117 +6,49 @@ import { MdVerified } from "react-icons/md";
 
 import { CollectionCard } from "@/components/CollectionCard";
 import { CopyText } from "@/components/CopyText";
-import { Dropdown } from "@/components/Dropdown";
 import { IconEth } from "@/components/IconEth";
 import { NFTList } from "@/components/NFTList";
-import { OrderButton } from "@/components/OrderButton";
-import { Pagination } from "@/components/Pagination";
 import { ProfileHeader } from "@/components/ProfileHeader";
 import { RandomButton } from "@/components/RandomButton";
-import { Searchbox } from "@/components/Searchbox";
-import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import { sortNFTs } from "@/libs/sortNFTs";
+import { getCollections, getCreators, getNFTs } from "@/libs/supabase";
 import type { Creator } from "@/types/creator";
 import { abbreviateNumber } from "@/utilities/abbreviateNumber";
-import { getNFTs } from "@/utilities/getNFTs";
-import { randomize } from "@/utilities/randomize";
 
 export const CreatorScreen = () => {
   const router = useRouter();
-  const { order, page, screen, search, slug, sort, term, type, username } = router.query;
-  const currentPage = page ? Number(page) : 1;
-  const limit = 50;
-  const { collections, creators } = useContext(BaseContext);
-  const { NFTKeyword, setHeaderIcon } = useContext(UtilitiesContext);
-
-  const [checkAssets, setCheckAssets] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [sortedAssets, setSortedAssets] = useState<any[]>([]);
+  const { screen, username } = router.query;
+  const { setHeaderIcon } = useContext(UtilitiesContext);
   const [random, setRandom] = useState<boolean>(false);
-
   const [creator, setCreator] = useState<Creator>();
-  const [creatorCollections, setCreatorCollections] = useState<any[]>([]);
-
+  const [collections, setCollections] = useState<any[]>();
   const [assets, setAssets] = useState<any[]>([]);
-  const [currentAssets, setCurrentAssets] = useState<any[]>([]);
 
-  if (!creator && username && creators && creators.length > 0) {
-    //set creator
-    const creator_filter = creators.filter((creator) => {
-      return creator.username === username;
-    });
-    if (creator_filter[0]) {
-      setCreator(creator_filter[0]);
-    }
-  }
-  if (!creatorCollections && username && collections && collections.length > 0) {
-    //set collection
-    const collection_filter = collections.filter((collection) => {
-      return collection.creator_id === username;
-    });
-    collection_filter.length > 0 && setCreatorCollections(collection_filter);
-  }
   useEffect(() => {
-    if (username && creators && creators.length > 0) {
-      //set creator
-      const creator_filter = creators.filter((creator) => {
-        return creator.username === username;
-      });
-      if (creator_filter[0]) {
-        setCreator(creator_filter[0]);
-      }
-    }
-    if (username && collections && collections.length > 0) {
-      //set collection
-      const collection_filter = collections.filter((collection) => {
-        return collection.creator_id === username;
-      });
-      setCreatorCollections(collection_filter);
-    }
-  }, [creators, username, collections]);
-
-  if (!checkAssets && assets.length < 1 && creatorCollections.length > 0) {
     const fetchData = async () => {
-      let new_assets: any[] = [];
-      await Promise.all(
-        creatorCollections.map(async (collection) => {
-          const data = await getNFTs(collection.slug);
-          console.log("assets data");
-          console.log(data);
-
-          if (data) {
-            new_assets = [...new_assets, ...data];
-          }
-        })
-      );
-      setAssets(new_assets);
-      setCheckAssets(true);
+      const props = {
+        username: username as string,
+      };
+      const { data } = await getCreators(props);
+      data && setCreator(data as Creator);
     };
     fetchData();
-  }
+  }, [username]);
 
   useEffect(() => {
-    if (!checkAssets && assets.length < 1 && creatorCollections.length > 0) {
-      const fetchData = async () => {
-        let new_assets: any[] = [];
-        await Promise.all(
-          creatorCollections.map(async (collection) => {
-            const data = await getNFTs(collection.slug);
-            console.log("assets data");
-            console.log(data);
-            if (data) {
-              new_assets = [...new_assets, ...data];
-            }
-          })
-        );
-        setAssets(new_assets);
-        setCheckAssets(true);
+    const fetchData = async () => {
+      const slugs = creator?.collections;
+      const props = {
+        slugs: slugs,
       };
-      fetchData();
-    }
+      const { data } = await getCollections(props);
+      data && setCollections(data);
+      const assets_data = slugs && (await getNFTs(props));
+      assets_data && setAssets(assets_data.data);
+    };
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [creatorCollections]);
+  }, [username]);
 
   useEffect(() => {
     {
@@ -164,63 +96,6 @@ export const CreatorScreen = () => {
       <CopyText text={creator.address} alertText="ETH address has copied!" />
     </>
   );
-
-  const filteredAssets =
-    slug && slug != "all"
-      ? assets.filter((asset) => {
-          return asset.collection_slug === slug;
-        })
-      : assets;
-
-  const uppperKeyword = typeof NFTKeyword == "string" && NFTKeyword.toUpperCase();
-  //1.match username
-  const searchedAssets01 = filteredAssets.filter((asset) => {
-    return (
-      asset.name &&
-      asset.name.length > 0 &&
-      typeof NFTKeyword == "string" &&
-      //すべて大文字にして大文字小文字の区別をなくす
-      asset.name.toUpperCase().includes(uppperKeyword) == true
-    );
-  });
-  // //2.match description
-  const origin_searchedAssets = [
-    ...searchedAssets01,
-    // ...searchedCreators02,
-  ];
-  //重複削除
-  let searchedAssets = [] as any[];
-  if (NFTKeyword && NFTKeyword.length > 0) {
-    searchedAssets = Array.from(new Set(origin_searchedAssets));
-  } else {
-    searchedAssets = filteredAssets;
-  }
-
-  const args = {
-    limit: limit,
-    list: searchedAssets,
-    order: order as "desc" | "asc" | undefined,
-    page: Number(page),
-    property: "nfts" as "nfts" | "creators" | "collections",
-    sort: sort as string | undefined,
-  };
-
-  useEffect(() => {
-    if (sort != "random") {
-      const data = sortNFTs(args);
-      setSortedAssets(() => {
-        return data;
-      });
-      setCurrentAssets(() => {
-        return data;
-      });
-    } else if (sort == "random") {
-      setCurrentAssets(() => {
-        return randomize(searchedAssets);
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assets, creators, order, sort, term, page, type, search, random]);
 
   const links = {
     address: creator?.address,
@@ -297,9 +172,9 @@ export const CreatorScreen = () => {
             upvotes_count={creator.upvotes_count}
           />
         )}
-        {creatorCollections.length != 0 && (
+        {collections && collections.length != 0 && (
           <div className="hide-scrollbar mx-auto -mt-7 flex w-full gap-6 overflow-x-auto rounded px-5 pt-5 lg:px-8">
-            {creatorCollections.map((collection, index) => {
+            {collections.map((collection: any, index: number) => {
               return <CollectionCard username={username} collection={collection} key={index} />;
             })}
           </div>
@@ -307,25 +182,11 @@ export const CreatorScreen = () => {
         {assets && assets.length > 0 && (
           <div className="px-5 lg:px-8">
             <div className="relative z-20 mb-5 flex justify-between gap-3 sm:gap-5">
-              {/* {custom_menu.length > 0 && (
-                <Dropdown
-                  position="left"
-                  property="nftType"
-                  custom_menu={custom_menu}
-                />
-              )} */}
-              <Searchbox property="nft" id="nft" />
               <div className="flex items-center gap-3">
-                <Dropdown position="right" property="nftSort" />
-                {sort != "random" ? <OrderButton /> : <RandomButton random={random} setRandom={setRandom} />}
+                <RandomButton random={random} setRandom={setRandom} />
               </div>
             </div>
-            <NFTList assets={currentAssets} />
-            {sort != "random" && searchedAssets.length > limit && (
-              <div className="flex justify-center">
-                <Pagination currentPage={currentPage} length={searchedAssets.length} limit={limit} />
-              </div>
-            )}
+            <NFTList assets={assets} />
           </div>
         )}
       </div>

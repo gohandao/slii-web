@@ -6,7 +6,7 @@ import { NextSeo } from "next-seo";
 import { useEffect, useState } from "react";
 
 import { UserPageTemplate } from "@/components/UserPageTemplate";
-import { supabase } from "@/libs/supabase";
+import { getUserUpvotes, supabase } from "@/libs/supabase";
 import type { Upvote } from "@/types/upvote";
 import { getUserId } from "@/utilities/getUserId";
 
@@ -21,31 +21,10 @@ const UserPage: NextPage<Props> = (props) => {
   const { username } = router.query;
   const [userUpvotes, setUserUpvotes] = useState<Upvote[] | undefined>([]);
 
-  const getUserUpvotes = async (username: string) => {
-    const userId = username && ((await getUserId(username as string)) as string);
-    let new_upvotes;
-    try {
-      const { data, error, status } = await supabase
-        .from("upvotes")
-        .select("*, profiles(*)", {
-          count: "exact",
-          head: false,
-        })
-        .eq("user_id", `${userId}`);
-      if (error && status !== 406) {
-        throw error;
-      }
-      new_upvotes = data as Upvote[];
-      setUserUpvotes(new_upvotes);
-    } catch (error: any) {
-      alert(error.message);
-    }
-    return new_upvotes;
-  };
-
   useEffect(() => {
     const fetchData = async () => {
-      const new_userUpvotes = await getUserUpvotes(username as string);
+      const userId = username && ((await getUserId(username as string)) as string);
+      const new_userUpvotes = await getUserUpvotes(userId as string);
       if (new_userUpvotes) {
         setUserUpvotes(new_userUpvotes);
       }
@@ -54,19 +33,13 @@ const UserPage: NextPage<Props> = (props) => {
       fetchData();
     }
   }, [username]);
-  username && !userUpvotes && getUserUpvotes(username as string);
 
-  const creator_upvotes =
-    userUpvotes &&
-    userUpvotes.filter((upvote) => {
-      return upvote.creator_id && upvote.creator_id.length > 0;
-    });
-
-  const collection_upvotes =
-    userUpvotes &&
-    userUpvotes.filter((upvote) => {
-      return upvote.collection_slug && upvote.collection_slug.length > 0;
-    });
+  const upvotes_creators = userUpvotes?.filter((upvote) => {
+    upvote.creator_username;
+  });
+  const upvotes_collections = userUpvotes?.filter((upvote) => {
+    upvote.collection_slug;
+  });
 
   return (
     <>
@@ -89,7 +62,7 @@ const UserPage: NextPage<Props> = (props) => {
           url: process.env.NEXT_PUBLIC_SITE_URL + `/${username}`,
         }}
       />
-      <UserPageTemplate property="upvoted" creatorList={creator_upvotes} collectionList={collection_upvotes} />
+      <UserPageTemplate property="upvoted" creatorList={upvotes_creators} collectionList={upvotes_collections} />
     </>
   );
 };
@@ -105,37 +78,43 @@ type Params = ParsedUrlQuery & {
 };
 
 export const getStaticPaths = async () => {
-  const { data } = await supabase.from("profiles").select("*", {
-    count: "exact",
-    head: false,
-  });
-  return {
-    fallback: "blocking",
-    paths:
-      data &&
-      data.map((user: any) => {
-        return `/${user.username}`;
-      }),
-  };
+  if (supabase) {
+    const { data } = await supabase.from("profiles").select("*", {
+      count: "exact",
+      head: false,
+    });
+    return {
+      fallback: "blocking",
+      paths:
+        data &&
+        data.map((user: any) => {
+          return `/${user.username}`;
+        }),
+    };
+  }
 };
 
 export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params }) => {
   const username = params && params.username;
-  const { data } = await supabase
-    .from("profiles")
-    .select("*", {
-      count: "exact",
-      head: false,
-    })
-    .eq("username", username)
-    .single();
-  if (!data) {
+  let user;
+  if (supabase) {
+    const { data } = await supabase
+      .from("profiles")
+      .select("*", {
+        count: "exact",
+        head: false,
+      })
+      .eq("username", username)
+      .single();
+    user = data;
+  }
+  if (!user) {
     return {
       notFound: true,
     };
   }
-  const description = data && data.description ? data.description.slice(0, 200) : `This is ${username}'s profile page.`;
-  const label = data && data.label ? data.label.slice(0, 20) : `NFT Holder`;
+  const description = user && user.description ? user.description.slice(0, 200) : `This is ${username}'s profile page.`;
+  const label = user && user.label ? user.label.slice(0, 20) : `NFT Holder`;
 
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
@@ -146,8 +125,8 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params
   }
 
   const storage_url = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_URL;
-  const avatar = data.avatar ? storage_url + "/" + data.avatar : "";
-  const background = data.background ? storage_url + "/" + data.background : "";
+  const avatar = user.avatar ? storage_url + "/" + user.avatar : "";
+  const background = user.background ? storage_url + "/" + user.background : "";
 
   return {
     props: {

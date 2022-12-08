@@ -36,7 +36,7 @@ type Props = {
   title: any;
   twitter_followers?: number | null;
   twitter_id?: string;
-  upvotes_count?: number;
+  upvotes_count?: number | null;
 };
 export const ProfileHeader = ({
   id,

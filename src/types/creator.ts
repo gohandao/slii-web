@@ -23,7 +23,7 @@ export type Creator = {
   type?: string;
   updated_at?: Date | null | string;
   updatedAt?: Date | null | string;
-  upvotes_count?: number;
+  upvotes_count?: number | null;
   username: string;
   verified?: boolean;
   website_url?: string;

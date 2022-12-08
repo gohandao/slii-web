@@ -4,7 +4,6 @@ import ReactLoading from "react-loading";
 
 import { Th } from "@/components/CollectionTh";
 import { CollectionTr } from "@/components/CollectionTr";
-import { sortList } from "@/libs/sortList";
 import type { Collection } from "@/types/collection";
 
 type Props = {
@@ -13,30 +12,18 @@ type Props = {
 };
 export const CollectionTable = ({ collections, limit }: Props) => {
   const router = useRouter();
-
-  const { order, page, search, sort, term, type } = router.query;
-  const currentPage = page ? Number(page) : 1;
+  const { sort } = router.query;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState<boolean>(false);
-  const [sortedCollections, setSortedCollections] = useState<Collection[]>([]);
+  const [currentCollections, setCurrentCollections] = useState<Collection[]>(collections);
 
   useEffect(() => {
-    const args = {
-      limit: limit,
-      list: collections,
-      order: order as "desc" | "asc" | undefined,
-      page: currentPage,
-      property: "collections" as "creators" | "collections",
-      sort: sort as string | undefined,
-      term: term as "24h" | "7d" | "30d" | "all" | undefined,
-    };
-    const data = sortList(args);
-    setSortedCollections(() => {
-      return data;
+    setCurrentCollections(() => {
+      return collections;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collections, order, sort, term, page, type, search]);
+  }, [collections]);
 
   return (
     <div className="flex flex-col">
@@ -63,10 +50,10 @@ export const CollectionTable = ({ collections, limit }: Props) => {
                   <Th title="Items" sort={sort as string} />
                 </tr>
               </thead>
-              {sortedCollections.length > 0 && (
+              {currentCollections.length > 0 && (
                 <tbody className="divide-y divide-gray-200 rounded border border-gray-200">
-                  {sortedCollections &&
-                    sortedCollections.map((item, index) => {
+                  {currentCollections &&
+                    currentCollections.map((item, index) => {
                       return (
                         <CollectionTr
                           item={item}

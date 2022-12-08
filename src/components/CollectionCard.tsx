@@ -76,23 +76,15 @@ export const CollectionCard = ({ collection, index }: any) => {
             <div className="">
               <p className="text-sm font-bold text-gray-500">Floor Proce</p>
               <div className="-ml-1 flex items-center gap-1 font-bold text-gray-400">
-                {collection.payment_tokens && collection.payment_tokens[0].symbol == "ETH" && <IconEth />}
-                {collection.stats && collection.stats.floor_price > 0 ? (
-                  abbreviateNumber(collection.stats.floor_price)
-                ) : (
-                  <Hyphen />
-                )}
+                {collection.symbols && collection.symbols[0] == "ETH" && <IconEth />}
+                {collection && collection.floor_price > 0 ? abbreviateNumber(collection.floor_price) : <Hyphen />}
               </div>
             </div>
             <div className="">
               <p className="text-sm font-bold text-gray-500">Total Volume</p>
               <div className="-ml-1 flex items-center gap-1 font-bold text-gray-400">
-                {collection.payment_tokens && collection.payment_tokens[0].symbol == "ETH" && <IconEth />}
-                {collection.stats && collection.stats.total_volume > 0 ? (
-                  abbreviateNumber(collection.stats.total_volume)
-                ) : (
-                  <Hyphen />
-                )}
+                {collection.symbols && collection.symbols[0] == "ETH" && <IconEth />}
+                {collection && collection.total_volume > 0 ? abbreviateNumber(collection.total_volume) : <Hyphen />}
               </div>
             </div>
           </div>

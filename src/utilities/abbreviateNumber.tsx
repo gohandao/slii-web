@@ -1,27 +1,23 @@
-import React from "react";
-
 export const abbreviateNumber = (value: number, integar = false) => {
-  //var newValue = value.toFixed(1);
-  var getDecimalPointLength = function (number: number) {
-    var numbers = String(number).split(".");
+  const getDecimalPointLength = function (number: number) {
+    const numbers = String(number).split(".");
     return numbers[1] ? numbers[1].length : 0;
   };
-  var numbers = getDecimalPointLength(value);
+  const numbers = getDecimalPointLength(value);
 
-  var newValue = numbers > 0 && value.toFixed(1);
+  let newValue = numbers > 0 && value.toFixed(1);
   if (value >= 1000) {
-    var suffixes = ["", "k", "m", "b", "t"];
+    const suffixes = ["", "k", "m", "b", "t"];
     const shortenValue = value.toFixed(0);
-    var suffixNum = Math.floor(("" + shortenValue).length / 3);
-    var shortValue;
-    for (var precision = 2; precision >= 1; precision--) {
+    const suffixNum = Math.floor(("" + shortenValue).length / 3);
+    let shortValue;
+    for (let precision = 2; precision >= 1; precision--) {
       shortValue = parseFloat(
-        (suffixNum != 0
-          ? Number(shortenValue) / Math.pow(1000, suffixNum)
-          : Number(shortenValue)
-        ).toPrecision(precision)
+        (suffixNum != 0 ? Number(shortenValue) / Math.pow(1000, suffixNum) : Number(shortenValue)).toPrecision(
+          precision
+        )
       );
-      var dotLessShortValue = (shortValue + "").replace(/[^a-zA-Z 0-9]+/g, "");
+      const dotLessShortValue = (shortValue + "").replace(/[^a-zA-Z 0-9]+/g, "");
       if (dotLessShortValue.length <= 2) {
         break;
       }

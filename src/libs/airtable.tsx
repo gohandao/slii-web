@@ -1,106 +1,50 @@
-import { Creator } from "@/types/creator";
-import { Collection } from "@/types/collection";
+import type { Tag } from "@/types/tag";
 
 const Airtable = require("airtable");
+
 Airtable.configure({
-  endpointUrl: "https://api.airtable.com",
   apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY,
+  endpointUrl: "https://api.airtable.com",
 });
 export const base = Airtable.base("appFYknMhbtkUTFgt");
 
-//for SSG
-export const getCreators = () => {
-  let new_records: Creator[] = [];
-  base("creators")
+export const getTags = async (baseName: "tags" | "creators" | "collections") => {
+  let new_records = [] as Tag[];
+  await base(baseName)
     .select({
-      // Selecting the first 3 records in All:
       maxRecords: 100,
       view: "All",
     })
-    .eachPage(
-      //@ts-ignore
-      function page(records: any[], fetchNextPage: () => void) {
-        records.forEach(function (record) {
-          const fields = record.fields;
-          new_records = [
-            ...new_records,
-            {
-              username: fields.username,
-              description: fields.description,
-              avatar: fields.avatar,
-              background: fields.background,
-              address: fields.address,
-              website_url: fields.website_url,
-              twitter_id: fields.twitter_id,
-              instagram_id: fields.instagram_id,
-              type: fields.type,
-              listed_at: fields.createdAt,
-              updatedAt: fields.updatedAt,
-              tags: fields.tags,
-            } as Creator,
-          ];
-          //console.log("creators", new_records);
-          //console.log("Retrieved", record.fields);
-        });
-        try {
-          fetchNextPage();
-        } catch (error) {
-          console.log(error);
-          return;
-        }
-      },
-      function done(err: any) {
-        if (err) {
-          console.error(err);
-          return;
-        }
-      }
-    );
-  return new_records as Creator[];
-};
+    .eachPage((records: any[], fetchNextPage: () => void) => {
+      records.forEach((record) => {
+        const fields = record.fields;
+        new_records = [
+          ...new_records,
+          {
+            collections: fields.collections_slug,
+            collections_count: fields.collections_count,
+            count: fields.count,
+            createdAt: fields.createdAt,
+            creators: fields.creators,
+            creators_count: fields.creators_count,
+            name: fields.name,
+          } as Tag,
+        ];
+      });
+      //sort
+      new_records = new_records.sort((a, b) => {
+        if (a.count < b.count) return 1;
+        if (a.count > b.count) return -1;
+        return 0;
+      });
+      new_records = Array.from(new Set(new_records));
 
-export const getCollections = () => {
-  let new_records: Collection[] = [];
-  base("collections")
-    .select({
-      maxRecords: 100,
-      view: "All",
-    })
-    .eachPage(
-      //@ts-ignore
-      function page(records: any[], fetchNextPage: () => void) {
-        records.forEach(function (record) {
-          try {
-            const fields = record.fields;
-            new_records = [
-              ...new_records,
-              {
-                slug: fields.slug,
-                creator_id: fields.creator_id[0],
-                type: fields.type,
-                listed_at: fields.createdAt,
-                updatedAt: fields.updatedAt,
-                tags: fields.tags,
-              } as Collection,
-            ];
-          } catch (error) {
-            console.log(error);
-            return;
-          }
-        });
-        try {
-          fetchNextPage();
-        } catch (error) {
-          console.log(error);
-          return;
-        }
-      },
-      function done(err: any) {
-        if (err) {
-          console.error(err);
-          return;
-        }
+      try {
+        fetchNextPage();
+      } catch (error) {
+        console.log(error);
+        return;
       }
-    );
-  return new_records as Collection[];
+    });
+  return new_records;
 };

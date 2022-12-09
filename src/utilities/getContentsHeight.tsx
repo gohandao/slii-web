@@ -10,7 +10,6 @@ export const getContentsHeight = () => {
     inner_height = window.innerHeight;
   }
   const contents_height = body_height + footer_height;
-  const new_height =
-    inner_height < contents_height ? contents_height : inner_height;
+  const new_height = inner_height < contents_height ? contents_height : inner_height;
   return new_height;
 };

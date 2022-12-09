@@ -1,27 +1,25 @@
 import { base } from "@/libs/airtable";
-import { Social } from "@/types/social";
+import type { Social } from "@/types/social";
 
 export const getSocials = async () => {
   let new_records = [] as Social[];
   await base("social")
     .select({
-      // Selecting the first 3 records in All:
       maxRecords: 1000,
       view: "All",
     })
     .eachPage(
-      //@ts-ignore
-      function page(records: any[], fetchNextPage: () => void) {
-        records.forEach(function (record) {
+      (records: any[], fetchNextPage: () => void) => {
+        records.forEach((record) => {
           const fields = record.fields;
           new_records = [
             ...new_records,
             {
-              creator_username: fields.creator_username,
               collection_slug: fields.collection_slug,
-              twitter_followers: fields.twitter_followers,
+              creator_username: fields.creator_username,
               discord_members: fields.discord_members,
               record_id: fields.record_id,
+              twitter_followers: fields.twitter_followers,
             } as Social,
           ];
         });
@@ -33,7 +31,7 @@ export const getSocials = async () => {
           return;
         }
       },
-      function done(err: any) {
+      (err: any) => {
         if (err) {
           console.error(err);
           return;

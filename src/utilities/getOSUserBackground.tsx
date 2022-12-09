@@ -1,19 +1,14 @@
-import collectionsJson from "@/json/collections.json";
-//@ts-ignore
-const collections = JSON.parse(JSON.stringify(collectionsJson));
-// const fs = require("fs");
-// const collections = JSON.parse(
-//   fs.readFileSync("@/json/collections.json", "utf8")
-// );
+import { supabase } from "@/libs/supabase";
 
 export const getOSUserBackground = async (username: string) => {
-  //api.opensea.io/user/ProjuiceAudio
-  const filteredCollections =
-    collections &&
-    collections.filter((collection: any) => collection.creator_id == username);
-  const background_image =
-    filteredCollections.length > 0 &&
-    filteredCollections[0].banner_image_url &&
-    filteredCollections[0].banner_image_url;
-  return background_image;
+  if (supabase) {
+    const { data, error } = await supabase.from("collections").select().eq("creator_username", username).single();
+    if (error) {
+      console.log("error");
+      console.log(error);
+    }
+    const collection = data;
+    const background_image = collection && collection.banner_image_url && collection.banner_image_url;
+    return background_image;
+  }
 };

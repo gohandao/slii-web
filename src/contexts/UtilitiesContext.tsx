@@ -1,29 +1,21 @@
-import React, { createContext, useState } from "react";
-import { Utilities } from "@/types/utilities";
+import { createContext } from "react";
+
+import type { Utilities } from "@/types/utilities";
 
 export const UtilitiesContext = createContext<Utilities>({
-  loginModal: false,
-  setLoginModal: () => {},
   keyword: "",
-  setKeyword: () => {},
+  loginModal: false,
   NFTKeyword: "",
-  setNFTKeyword: () => {},
-  hiddenParams: {},
-  setHiddenParams: () => {},
-  headerIcon: {
-    title: "",
-    emoji: "",
-    avatar: "",
-    path: "",
+  setKeyword: () => {
+    return;
   },
-  setHeaderIcon: () => {},
-  setUserProfile: () => {},
-  scrollY: undefined,
-  setScrollY: () => {},
-  prevHeight: undefined,
-  setPrevHeight: () => {},
-  tempCreators: [],
-  setTempCreators: () => {},
-  tempCollections: [],
-  setTempCollections: () => {},
+  setLoginModal: () => {
+    return;
+  },
+  setNFTKeyword: () => {
+    return;
+  },
+  setUserProfile: () => {
+    return;
+  },
 });

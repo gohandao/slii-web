@@ -3,7 +3,6 @@ import Link from "next/link";
 import router from "next/router";
 import { NextSeo } from "next-seo";
 import { useContext, useEffect, useState } from "react";
-import { CgUserlane } from "react-icons/cg";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { v4 as uuidv4 } from "uuid";
 
@@ -13,22 +12,9 @@ import { Textarea } from "@/components/Textarea";
 import { UploadBackground } from "@/components/UploadBackground";
 import { UploadImage } from "@/components/UploadImage";
 import { AuthContext } from "@/contexts/AuthContext";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { getImageUrl, supabase } from "@/libs/supabase";
 
 const AccountPage: NextPage = () => {
-  const { setHeaderIcon } = useContext(UtilitiesContext);
-  useEffect(() => {
-    setHeaderIcon({
-      avatar: "",
-      element: <CgUserlane />,
-      emoji: "",
-      path: `/account`,
-      title: "Account",
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const { avatar, profile, user } = useContext(AuthContext);
   const [newAvatar, setNewAvatar] = useState<File>();
   const [label, setLabel] = useState<string>();
@@ -68,17 +54,19 @@ const AccountPage: NextPage = () => {
 
   const uploadImage = async (image: File, path: string) => {
     const uuid = uuidv4();
-    const { data } = await supabase.storage.from(path).upload(`public/${uuid}.jpg`, image, {
-      cacheControl: "3600",
-      upsert: false,
-    });
-    return data;
+    if (supabase) {
+      const { data } = await supabase.storage.from(path).upload(`public/${uuid}.jpg`, image, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+      return data;
+    }
   };
 
   const updateProfile = async () => {
     try {
       setLoading(true);
-      const user = supabase.auth.user();
+      const user = supabase && supabase.auth.user();
       let new_avatar_url;
       let new_background_url;
       if (user) {
@@ -100,12 +88,14 @@ const AccountPage: NextPage = () => {
           username: username,
         };
 
-        const { error } = await supabase.from("profiles").upsert(updates, {
-          returning: "minimal", // Don't return the value after inserting
-        });
-        alert("upload success");
-        if (error) {
-          throw error;
+        if (supabase) {
+          const { error } = await supabase.from("profiles").upsert(updates, {
+            returning: "minimal", // Don't return the value after inserting
+          });
+          alert("upload success");
+          if (error) {
+            throw error;
+          }
         }
       }
     } catch (error: any) {
@@ -144,7 +134,7 @@ const AccountPage: NextPage = () => {
                       <IoChevronBackOutline className="text-gray-400" />
                     </button>
                     <button
-                      className="w-[90px] overflow-hidden rounded-full bg-green-600 py-2 px-5 text-green-100"
+                      className="overflow-hidden whitespace-nowrap rounded-full bg-green-600 py-2 px-5 text-center text-green-100"
                       onClick={() => {
                         return updateProfile();
                       }}

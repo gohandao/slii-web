@@ -6,7 +6,7 @@ import { NextSeo } from "next-seo";
 import { useEffect, useState } from "react";
 
 import { UserPageTemplate } from "@/components/UserPageTemplate";
-import { supabase } from "@/libs/supabase";
+import { getUserBookmarks, supabase } from "@/libs/supabase";
 import type { Bookmark } from "@/types/bookmark";
 import { getUserId } from "@/utilities/getUserId";
 
@@ -19,33 +19,13 @@ const BookmarksPage: NextPage<Props> = (props) => {
   const { description, ogImageUrl, title } = props;
   const router = useRouter();
   const { username } = router.query;
-  const [userBookmarks, setUserBookmarks] = useState<Bookmark[] | undefined>([]);
 
-  const getUserBookmarks = async (username: string) => {
-    const userId = username && ((await getUserId(username as string)) as string);
-    let new_bookmarks;
-    try {
-      const { data, error, status } = await supabase
-        .from("bookmarks")
-        .select("*, profiles(*)", {
-          count: "exact",
-          head: false,
-        })
-        .eq("user_id", `${userId}`);
-      if (error && status !== 406) {
-        throw error;
-      }
-      new_bookmarks = data as Bookmark[];
-      setUserBookmarks(new_bookmarks);
-    } catch (error: any) {
-      alert(error.message);
-    }
-    return new_bookmarks;
-  };
+  const [userBookmarks, setUserBookmarks] = useState<Bookmark[] | undefined>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const new_userBookmarks = await getUserBookmarks(username as string);
+      const userId = username && ((await getUserId(username as string)) as string);
+      const new_userBookmarks = await getUserBookmarks(userId as string);
       if (new_userBookmarks) {
         setUserBookmarks(new_userBookmarks);
       }
@@ -54,19 +34,13 @@ const BookmarksPage: NextPage<Props> = (props) => {
       fetchData();
     }
   }, [username]);
-  username && !userBookmarks && getUserBookmarks(username as string);
 
-  const creator_bookmarks =
-    userBookmarks &&
-    userBookmarks.filter((bookmark) => {
-      return bookmark.creator_id && bookmark.creator_id.length > 0;
-    });
-
-  const collection_bookmarks =
-    userBookmarks &&
-    userBookmarks.filter((bookmark) => {
-      return bookmark.collection_slug && bookmark.collection_slug.length > 0;
-    });
+  const bookmarked_creators = userBookmarks?.filter((bookmark) => {
+    bookmark.creator_username;
+  });
+  const bookmarked_collections = userBookmarks?.filter((bookmark) => {
+    bookmark.collection_slug;
+  });
 
   return (
     <>
@@ -89,7 +63,11 @@ const BookmarksPage: NextPage<Props> = (props) => {
           url: process.env.NEXT_PUBLIC_SITE_URL + `/${username}`,
         }}
       />
-      <UserPageTemplate property="bookmarks" creatorList={creator_bookmarks} collectionList={collection_bookmarks} />
+      <UserPageTemplate
+        property="bookmarks"
+        creatorList={bookmarked_creators}
+        collectionList={bookmarked_collections}
+      />
     </>
   );
 };
@@ -105,38 +83,44 @@ type Params = ParsedUrlQuery & {
 };
 
 export const getStaticPaths = async () => {
-  const { data } = await supabase.from("profiles").select("*", {
-    count: "exact",
-    head: false,
-  });
-  return {
-    fallback: "blocking",
-    paths:
-      data &&
-      data.map((user: any) => {
-        return `/${user.username}/bookmarks`;
-      }),
-  };
+  if (supabase) {
+    const { data } = await supabase.from("profiles").select("*", {
+      count: "exact",
+      head: false,
+    });
+    return {
+      fallback: "blocking",
+      paths:
+        data &&
+        data.map((user: any) => {
+          return `/${user.username}/bookmarks`;
+        }),
+    };
+  }
 };
 
 export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params }) => {
   const username = params && params.username;
-  const { data } = await supabase
-    .from("profiles")
-    .select("*", {
-      count: "exact",
-      head: false,
-    })
-    .eq("username", username)
-    .single();
-  if (!data) {
+  let user;
+  if (supabase) {
+    const { data } = await supabase
+      .from("profiles")
+      .select("*", {
+        count: "exact",
+        head: false,
+      })
+      .eq("username", username)
+      .single();
+    user = data;
+  }
+  if (!user) {
     return {
       notFound: true,
     };
   }
   const description =
-    data && data.description ? data.description.slice(0, 200) : `This is ${username}'s bookmarks page.`;
-  const label = data && data.label ? data.label.slice(0, 20) : `NFT Holder`;
+    user && user.description ? user.description.slice(0, 200) : `This is ${username}'s bookmarks page.`;
+  const label = user && user.label ? user.label.slice(0, 20) : `NFT Holder`;
 
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
@@ -147,8 +131,8 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params
   }
 
   const storage_url = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_URL;
-  const avatar = data.avatar ? storage_url + "/" + data.avatar : "";
-  const background = data.background ? storage_url + "/" + data.background : "";
+  const avatar = user.avatar ? storage_url + "/" + user.avatar : "";
+  const background = user.background ? storage_url + "/" + user.background : "";
 
   return {
     props: {

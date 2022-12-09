@@ -1,11 +1,7 @@
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
-import { useContext } from "react";
 import { IoIosClose } from "react-icons/io";
 import Modal from "react-modal";
-
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
 
 type Props = {
   children: ReactNode;
@@ -16,20 +12,18 @@ type Props = {
 export const ScreenModal = ({ children, modalIsOpen, path, setModalIsOpen }: Props) => {
   const router = useRouter();
   const { screen } = router.query;
-  const { hiddenParams } = useContext(UtilitiesContext);
 
   Modal.setAppElement("#__next");
   const afterOpenModal = () => {
     // モーダルが開いた後の処理
   };
   // モーダルを閉じる処理
-  const new_query = hiddenParams && removeUndefinedObject(hiddenParams);
   const closeModal = () => {
     setModalIsOpen(false);
+    router.back();
     if (path) {
       router.push({
         pathname: path,
-        query: new_query,
       });
     } else {
       router.push("/");

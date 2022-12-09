@@ -15,12 +15,8 @@ export const CollectionCard = ({ collection, index }: any) => {
 
   return (
     <Link href={`/collection/${collection.slug}`} key={index} legacyBehavior>
-      <a className="relative block min-w-[320px] transform overflow-hidden rounded-lg border border-gray-700 bg-gray-800 px-1 pt-[3px] pb-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg md:min-w-[360px]">
-        <div
-          className={`relative h-20 w-full overflow-hidden rounded bg-gray-900 opacity-40 ${
-            screen != "modal" && "lg:h-24 "
-          }`}
-        >
+      <a className="relative block min-w-[320px] transform overflow-hidden rounded-lg border border-gray-700 bg-gray-800 px-1 pt-[3px] pb-3 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg md:min-w-[360px]">
+        <div className={`relative h-16 w-full overflow-hidden rounded bg-gray-900 opacity-40`}>
           {collection.banner_image_url && (
             <Image
               src={collection.banner_image_url}
@@ -76,23 +72,15 @@ export const CollectionCard = ({ collection, index }: any) => {
             <div className="">
               <p className="text-sm font-bold text-gray-500">Floor Proce</p>
               <div className="-ml-1 flex items-center gap-1 font-bold text-gray-400">
-                {collection.payment_tokens && collection.payment_tokens[0].symbol == "ETH" && <IconEth />}
-                {collection.stats && collection.stats.floor_price > 0 ? (
-                  abbreviateNumber(collection.stats.floor_price)
-                ) : (
-                  <Hyphen />
-                )}
+                {collection.symbols && collection.symbols[0] == "ETH" && <IconEth />}
+                {collection && collection.floor_price > 0 ? abbreviateNumber(collection.floor_price) : <Hyphen />}
               </div>
             </div>
             <div className="">
               <p className="text-sm font-bold text-gray-500">Total Volume</p>
               <div className="-ml-1 flex items-center gap-1 font-bold text-gray-400">
-                {collection.payment_tokens && collection.payment_tokens[0].symbol == "ETH" && <IconEth />}
-                {collection.stats && collection.stats.total_volume > 0 ? (
-                  abbreviateNumber(collection.stats.total_volume)
-                ) : (
-                  <Hyphen />
-                )}
+                {collection.symbols && collection.symbols[0] == "ETH" && <IconEth />}
+                {collection && collection.total_volume > 0 ? abbreviateNumber(collection.total_volume) : <Hyphen />}
               </div>
             </div>
           </div>

@@ -2,10 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { BsTriangleFill } from "react-icons/bs";
 
 import { AuthContext } from "@/contexts/AuthContext";
-import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { supabase } from "@/libs/supabase";
-import { updateUpvotes } from "@/utilities/updateUpvotes";
 
 type Props = {
   id: string;
@@ -14,53 +12,49 @@ type Props = {
   type: string;
 };
 export const UpvoteButton = ({ id, count, property = "default", type }: Props) => {
-  const { setUpvotes, upvotes, user } = useContext(AuthContext);
+  const { upvotes, user } = useContext(AuthContext);
   const { setLoginModal } = useContext(UtilitiesContext);
-  const { setCollections, setCreators } = useContext(BaseContext);
   const [upvoted, setUpvoted] = useState<boolean>(false);
+  const [added, setAdded] = useState<boolean>(false);
+  const [removed, setRemoved] = useState<boolean>(false);
   const [currentCount, setCurrentCount] = useState<number | undefined>(count);
 
   useEffect(() => {
     let initial_count = count;
-    if (upvoted == true && count == 0) {
-      initial_count = 1;
+    if (added == true) {
+      initial_count = count ? count + 1 : 1;
     }
-    // if (upvoted == false && count && count > 0) {
-    //   initial_count = count - 1;
-    // }
+    if (removed == true) {
+      initial_count = count ? count - 1 : 0;
+    }
     setCurrentCount(initial_count);
-  }, [count, upvoted]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [count, added, removed]);
 
-  const creator_id = type == "creator" ? id : "";
+  const creator_username = type == "creator" ? id : "";
   const collection_slug = type == "collection" ? id : "";
 
   const addLikeHandler = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-
     if (user) {
       const checkLiked = upvotes.filter((upvote) => {
-        return upvote.creator_id == id;
+        return upvote.creator_username == id;
       });
-      if (checkLiked.length == 0) {
-        const { data } = await supabase.from("upvotes").insert([
+      if (checkLiked.length == 0 && supabase) {
+        const { error } = await supabase.from("upvotes").insert([
           {
             collection_slug: collection_slug,
             created_at: new Date(),
-            creator_id: creator_id,
+            creator_username: creator_username,
             user_id: user.id,
           },
         ]);
-        data && setUpvotes([...upvotes, ...data]);
-        setUpvoted(true);
-        const base_count = currentCount ? currentCount : 0;
-        const new_count = base_count + 1;
-        const new_data = updateUpvotes({
-          collection_slug: collection_slug,
-          creator_username: creator_id,
-          upvotes_count: new_count,
-        });
-        new_data && creator_id && setCreators(new_data);
-        new_data && collection_slug && setCollections(new_data);
+        setRemoved(false);
+        setAdded(true);
+        if (error) {
+          console.log("error");
+          console.log(error);
+        }
       }
     } else {
       setLoginModal(true);
@@ -69,31 +63,18 @@ export const UpvoteButton = ({ id, count, property = "default", type }: Props) =
   const removeLikeHandler = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     if (user) {
-      if (type == "creator") {
-        await supabase.from("upvotes").delete().match({ creator_id: creator_id, user_id: user.id });
-        const removedUpvotes = upvotes.filter((upvote) => {
-          return upvote.creator_id != creator_id;
-        });
-        setUpvotes(removedUpvotes);
+      if (type == "creator" && supabase) {
+        await supabase.from("upvotes").delete().match({ creator_username: creator_username, user_id: user.id });
         setUpvoted(false);
+        setRemoved(true);
+        setAdded(false);
       }
-      if (type == "collection") {
+      if (type == "collection" && supabase) {
         await supabase.from("upvotes").delete().match({ collection_slug: collection_slug, user_id: user.id });
-        const removedUpvotes = upvotes.filter((upvote) => {
-          return upvote.collection_slug != id;
-        });
-        setUpvotes(removedUpvotes);
         setUpvoted(false);
+        setRemoved(true);
+        setAdded(false);
       }
-      const base_count = currentCount ? currentCount : 0;
-      const new_count = base_count > 0 ? base_count - 1 : 0;
-      const new_data = updateUpvotes({
-        collection_slug: collection_slug,
-        creator_username: creator_id,
-        upvotes_count: new_count,
-      });
-      new_data && creator_id && setCreators(new_data);
-      new_data && collection_slug && setCollections(new_data);
     }
   };
 
@@ -101,7 +82,7 @@ export const UpvoteButton = ({ id, count, property = "default", type }: Props) =
     let filterdUpvotes = [];
     if (type == "creator") {
       filterdUpvotes = upvotes.filter((upvote) => {
-        return upvote.creator_id === id;
+        return upvote.creator_username === id;
       });
     }
     if (type == "collection") {

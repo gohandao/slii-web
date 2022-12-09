@@ -8,59 +8,28 @@ import { DefaultSeo } from "next-seo";
 import { useEffect, useState } from "react";
 
 import { AuthContext } from "@/contexts/AuthContext";
-import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import collectionsJson from "@/json/collections.json";
-import creatorsJson from "@/json/creators.json";
-import tagsJson from "@/json/tags.json";
 import * as gtag from "@/libs/gtag";
 import { getImageUrl, supabase } from "@/libs/supabase";
 import type { Bookmark } from "@/types/bookmark";
-import type { Creator } from "@/types/creator";
-import type { Params } from "@/types/params";
 import type { Profile } from "@/types/profile";
-import type { Tag } from "@/types/tag";
 import type { Upvote } from "@/types/upvote";
-
-const creators_data = JSON.parse(JSON.stringify(creatorsJson)) as Creator[];
-const collections_data = JSON.parse(JSON.stringify(collectionsJson)) as any[];
-const tags = JSON.parse(JSON.stringify(tagsJson)) as Tag[];
 
 const shortid = require("shortid");
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const { screen } = router.query;
-  const currentPath = router.pathname;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string | undefined>();
-  const [hiddenParams, setHiddenParams] = useState<Params>({});
-  const [scrollY, setScrollY] = useState<number>();
-  const [prevHeight, setPrevHeight] = useState<number>();
-
   const [user, setUser] = useState<any>();
   const [profile, setProfile] = useState<any>();
   const [userProfile, setUserProfile] = useState<Profile>();
   const [avatar, setAvatar] = useState<File>();
   const [loginModal, setLoginModal] = useState(false);
-
-  const [creators, setCreators] = useState<Creator[]>(creators_data);
-  const [collections, setCollections] = useState<any[]>(collections_data);
-  const [tempCreators, setTempCreators] = useState<Creator[]>([]);
-  const [tempCollections, setTempCollections] = useState<any[]>([]);
-
   const [upvotes, setUpvotes] = useState<Upvote[]>([]);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
-
-  let baseUrl = "" as string;
-  if (process.env.NODE_ENV != "test") {
-    baseUrl = {
-      development: "http://localhost:3000",
-      production: "https://nftotaku.xyz",
-    }[process.env.NODE_ENV];
-  }
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -71,23 +40,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
   }, [router.events]);
-
-  const [headerIcon, setHeaderIcon] = useState<{
-    avatar: any;
-    element?: any;
-    emoji: string;
-    path: string;
-    subTitle?: any;
-    title: string;
-    type?: string;
-  }>({
-    avatar: "",
-    element: "",
-    emoji: "",
-    path: "",
-    subTitle: "",
-    title: "",
-  });
 
   let avatar_blob;
   const getAvatarBlob = async () => {
@@ -109,7 +61,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   const getBookmarks = async () => {
     try {
-      if (user) {
+      if (user && supabase) {
         const { data, error, status } = await supabase
           .from("bookmarks")
           .select("*, profiles(*)", {
@@ -129,7 +81,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   };
   const getUpvotes = async () => {
     try {
-      if (user) {
+      if (user && supabase) {
         const { data, error, status } = await supabase
           .from("upvotes")
           .select("*, profiles(*)", {
@@ -155,29 +107,33 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       updated_at: new Date(),
       username: init_username,
     };
-    const { error } = await supabase.from("profiles").upsert(updates, {
-      returning: "minimal", // Don't return the value after inserting
-    });
-    if (error) {
-      throw error;
+    if (supabase) {
+      const { error } = await supabase.from("profiles").upsert(updates, {
+        returning: "minimal", // Don't return the value after inserting
+      });
+      if (error) {
+        throw error;
+      }
     }
   };
 
   const getProfile = async () => {
     try {
       setLoading(true);
-      const user = supabase.auth.user();
-      if (user) {
-        const { data, error, status } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+      if (supabase) {
+        const user = supabase.auth.user();
+        if (user) {
+          const { data, error, status } = await supabase.from("profiles").select("*").eq("id", user.id).single();
 
-        if (error && status !== 406) {
-          throw error;
-        }
-        if (data) {
-          setProfile(data);
-        }
-        if (!profile && !data) {
-          createProfile();
+          if (error && status !== 406) {
+            throw error;
+          }
+          if (data) {
+            setProfile(data);
+          }
+          if (!profile && !data) {
+            createProfile();
+          }
         }
       }
     } catch (error: any) {
@@ -188,32 +144,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   };
 
   useEffect(() => {
-    //ページ用に一時保存しているデータリセット
-    if (currentPath && currentPath != "collections" && currentPath != "/collection/[slug]") {
-      setTempCollections([]);
+    if (supabase) {
+      const data = supabase.auth.user();
+      setUser(data);
+      data && !profile && getProfile();
     }
-    if (currentPath && currentPath != "/" && currentPath != "/creator/[username]") {
-      setTempCreators([]);
-    }
-    if (
-      currentPath &&
-      currentPath != "/" &&
-      currentPath != "/creator/[username]" &&
-      screen == "modal" &&
-      currentPath != "/collections" &&
-      currentPath != "/collection/[slug]" &&
-      currentPath != "/collections" &&
-      currentPath != "/collection/[slug]"
-    ) {
-      setPrevHeight(0);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPath]);
-
-  useEffect(() => {
-    const data = supabase.auth.user();
-    setUser(data);
-    data && !profile && getProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -267,42 +202,19 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       >
         <UtilitiesContext.Provider
           value={{
-            baseUrl: baseUrl,
-            headerIcon: headerIcon,
-            hiddenParams: hiddenParams,
             keyword: keyword,
             loginModal: loginModal,
             NFTKeyword: keyword,
-            prevHeight: prevHeight,
-            scrollY: scrollY,
-            setHeaderIcon: setHeaderIcon,
-            setHiddenParams: setHiddenParams,
             setKeyword: setKeyword,
             setLoginModal: setLoginModal,
             setNFTKeyword: setKeyword,
-            setPrevHeight: setPrevHeight,
-            setScrollY: setScrollY,
-            setTempCollections,
-            setTempCreators,
             setUserProfile: setUserProfile,
-            tempCollections,
-            tempCreators,
             userProfile: userProfile,
           }}
         >
-          <BaseContext.Provider
-            value={{
-              collections,
-              creators,
-              setCollections,
-              setCreators,
-              tags,
-            }}
-          >
-            <div className={`bg-stripe flex min-h-screen flex-col overflow-hidden`}>
-              <Component {...pageProps} />
-            </div>
-          </BaseContext.Provider>
+          <div className={`bg-stripe flex min-h-screen flex-col overflow-hidden`}>
+            <Component {...pageProps} />
+          </div>
         </UtilitiesContext.Provider>
       </AuthContext.Provider>
     </>

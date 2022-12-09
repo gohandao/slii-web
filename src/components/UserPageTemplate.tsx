@@ -12,12 +12,9 @@ import { ProfileHeader } from "@/components/ProfileHeader";
 import { Searchbox } from "@/components/Searchbox";
 import { SmallTab } from "@/components/SmallTab";
 import { TabIndex } from "@/components/TabIndex";
-import { BaseContext } from "@/contexts/BaseContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import { sortList } from "@/libs/sortList";
-import { getImageUrl, supabase } from "@/libs/supabase";
+import { getCollections, getCreators, getImageUrl, supabase } from "@/libs/supabase";
 import type { Bookmark } from "@/types/bookmark";
-import type { Collection } from "@/types/collection";
 import type { Creator } from "@/types/creator";
 import type { Upvote } from "@/types/upvote";
 
@@ -31,7 +28,10 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
   const { order, page, search, sort, tab, term, type, username } = router.query;
   const currentPage = page ? Number(page) : 1;
   const limit = 100;
-  const { collections, creators } = useContext(BaseContext);
+  const [creators, setCreators] = useState<Creator[]>([]);
+  const [collections, setCollections] = useState<any[]>([]);
+  const [creatorsCount, setCreatorsCount] = useState(0);
+  const [collectionsCount, setCollectionsCount] = useState(0);
   const { setUserProfile, userProfile } = useContext(UtilitiesContext);
   if (userProfile && username != userProfile.username) {
     setUserProfile(undefined);
@@ -41,7 +41,7 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
 
   let avatar_blob;
   const getAvatarBlob = async () => {
-    avatar_blob = userProfile && userProfile.avatar_url && (await getImageUrl(userProfile.avatar_url));
+    avatar_blob = userProfile && userProfile.avatar_url && (await getImageUrl(userProfile.avatar_url as string));
     avatar_blob && setUserAvatar(avatar_blob);
     console.log("avatar_blob");
     console.log(avatar_blob);
@@ -58,159 +58,78 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
   userProfile && !userBackground && getBackgroundBlob;
   !userBackground && getBackgroundBlob();
 
-  const [sortedCreators, setSortedCreators] = useState<Creator[]>([]);
-  const [sortedCollections, setSortedCollections] = useState<Collection[]>([]);
-
-  const { setHeaderIcon } = useContext(UtilitiesContext);
   useEffect(() => {
     {
-      userProfile &&
-        setHeaderIcon({
-          avatar: "",
-          emoji: "",
-          path: `/${userProfile.username}`,
-          subTitle: "User",
-          title: userProfile.username,
-        });
+      username && !userProfile && getUserProfile(username as string);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userProfile]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      if (creatorList) {
+        const usernames = creatorList?.map((item) => {
+          return item.creator_username as string;
+        });
+        const props = {
+          order: order as string,
+          page: currentPage as number,
+          search: search as string,
+          sort: sort as string,
+          type: type as string,
+          usernames: usernames,
+        };
+        const { count, data } = await getCreators(props);
+        data && setCreators(data);
+        count && setCreatorsCount(count);
+      }
+      if (collectionList) {
+        const slugs = collectionList?.map((item) => {
+          return item.collection_slug as string;
+        });
+        const props = {
+          order: order as string,
+          page: currentPage as number,
+          search: search as string,
+          slugs: slugs,
+          sort: sort as string,
+          term: term as string,
+          type: type as string,
+        };
+        const { count, data } = await getCollections(props);
+        data && setCollections(data);
+        count && setCollectionsCount(count);
+      }
+    };
+    fetchData();
+  }, [creatorList, collectionList, order, sort, term, page, type, search, currentPage]);
+
   const getUserProfile = async (username: string) => {
     let new_userProfile;
     try {
-      const { data, error, status } = await supabase
-        .from("profiles")
-        .select("*", {
-          count: "exact",
-          head: false,
-        })
-        .eq("username", `${username}`)
-        .single()
-        .then((response) => {
-          return response;
-        });
-      if (error && status !== 406) {
-        throw error;
+      if (supabase) {
+        const { data, error, status } = await supabase
+          .from("profiles")
+          .select("*", {
+            count: "exact",
+            head: false,
+          })
+          .eq("username", `${username}`)
+          .single()
+          .then((response) => {
+            return response;
+          });
+        if (error && status !== 406) {
+          throw error;
+        }
+        new_userProfile = data;
+        setUserProfile(new_userProfile);
       }
-      new_userProfile = data;
-      setUserProfile(new_userProfile);
     } catch (error: any) {
       alert(error.message);
     }
     return new_userProfile;
   };
-  username && !userProfile && getUserProfile(username as string);
-
-  // 1.filtered creators
-  const uppperKeyword = typeof search == "string" && search.toUpperCase();
-
-  const filteredCreators = creators.filter((creator) => {
-    return (
-      creatorList &&
-      creatorList.some((item) => {
-        return item.creator_id == creator.username;
-      }) &&
-      creator
-    );
-  });
-
-  //1.match username
-  const searchedCreators01 = filteredCreators.filter((creator) => {
-    return (
-      typeof search == "string" &&
-      //すべて大文字にして大文字小文字の区別をなくす
-      creator.username.toUpperCase().includes(uppperKeyword as string) == true
-    );
-  });
-  const origin_searchedCreators = [...searchedCreators01];
-  //重複削除
-  let searchedCreators = [] as Creator[];
-  if (search && search.length > 0) {
-    searchedCreators = Array.from(new Set(origin_searchedCreators));
-  } else {
-    searchedCreators = filteredCreators;
-  }
-
-  const creators_args = {
-    limit: limit,
-    list: searchedCreators,
-    order: order as "desc" | "asc" | undefined,
-    page: currentPage,
-    property: "creators" as "creators" | "collections",
-    sort: sort as string | undefined,
-  };
-
-  // 2.filtered collections
-  const filteredCollections01 = collections.filter((collection) => {
-    return (
-      collectionList &&
-      collectionList.some((item) => {
-        return item.collection_slug == collection.slug;
-      }) &&
-      collection
-    );
-  });
-
-  const filteredCollections02 =
-    type && type != "all"
-      ? filteredCollections01.filter((collection) => {
-          return collection.type === type;
-        })
-      : filteredCollections01;
-  const filteredCollections = filteredCollections02;
-
-  //1.match name
-  const searchedCollections01 = filteredCollections.filter((collection) => {
-    return (
-      typeof search == "string" &&
-      //すべて大文字にして大文字小文字の区別をなくす
-      collection.name.toUpperCase().includes(uppperKeyword) == true
-    );
-  });
-  //1.match creator username
-  const searchedCollections02 = filteredCollections.filter((collection) => {
-    return (
-      typeof search == "string" &&
-      //すべて大文字にして大文字小文字の区別をなくす
-      collection.creator_id.toUpperCase().includes(uppperKeyword) == true
-    );
-  });
-  const origin_searchedCollections = [...searchedCollections01, ...searchedCollections02];
-  //重複削除
-  let searchedCollections = [] as Collection[];
-  if (search && search.length > 0) {
-    searchedCollections = Array.from(new Set(origin_searchedCollections));
-  } else {
-    searchedCollections = filteredCollections;
-  }
-
-  const collections_args = {
-    //category: collectionsSort,
-    limit: limit,
-    list: searchedCollections,
-    order: order as "desc" | "asc" | undefined,
-    page: currentPage,
-    property: "collections" as "creators" | "collections",
-    sort: sort as string | undefined,
-    term: term as "24h" | "7d" | "30d" | "all" | undefined,
-  };
-
-  const default_creators = sortedCreators.length == 0 ? sortList(creators_args) : sortedCreators;
-
-  const default_collections = sortedCollections.length == 0 ? sortList(collections_args) : sortedCollections;
-
-  useEffect(() => {
-    const data_creators = sortList(creators_args);
-    setSortedCreators(() => {
-      return data_creators;
-    });
-    const data_collections = sortList(collections_args);
-    setSortedCollections(() => {
-      return data_collections;
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [order, sort, term, page, type, search]);
 
   const title = userProfile && (
     <>
@@ -228,8 +147,7 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
   return (
     <>
       <BaseLayout>
-        <div className="flex flex-col gap-10 pb-20">
-          {/* {userProfile && <UserProfile profile={userProfile} />} */}
+        <div className="flex flex-col gap-8 pb-10">
           {userProfile && (
             <ProfileHeader
               page="user"
@@ -266,15 +184,17 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
                   </div>
                 </div>
                 <div className="mb-10">
-                  {default_creators && default_creators.length > 0 ? (
-                    <CreatorList creators={default_creators} />
+                  {creators && creators.length > 0 ? (
+                    <CreatorList creators={creators} />
                   ) : (
                     <p className="text-gray-100">Not found.</p>
                   )}
                 </div>
-                <div className="flex justify-center">
-                  <Pagination currentPage={currentPage} length={default_creators.length} limit={limit} />
-                </div>
+                {creatorsCount / limit > 1 && (
+                  <div className="flex justify-center">
+                    <Pagination currentPage={currentPage} length={creatorsCount} limit={limit} />
+                  </div>
+                )}
               </div>
             )}
             {tab == "collection" && (
@@ -288,15 +208,17 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
                   </div>
                 </div>
                 <div className="mb-10">
-                  {default_collections && default_collections.length > 0 ? (
-                    <CollectionList collections={default_collections} />
+                  {collections && collections.length > 0 ? (
+                    <CollectionList collections={collections} />
                   ) : (
                     <p className="text-gray-100">Not found.</p>
                   )}
                 </div>
-                <div className="flex justify-center">
-                  <Pagination currentPage={currentPage} length={default_collections.length} limit={limit} />
-                </div>
+                {collectionsCount / limit > 1 && (
+                  <div className="flex justify-center">
+                    <Pagination currentPage={currentPage} length={collectionsCount} limit={limit} />
+                  </div>
+                )}
               </div>
             )}
           </section>

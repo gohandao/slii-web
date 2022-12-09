@@ -16,10 +16,12 @@ export const LoginModal = () => {
   const handleLogin = async (email: string) => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signIn({ email });
-      if (error) throw error;
-      setSentCode(true);
-      alert("We sent verification code!");
+      if (supabase) {
+        const { error } = await supabase.auth.signIn({ email });
+        if (error) throw error;
+        setSentCode(true);
+        alert("We sent verification code!");
+      }
     } catch (error) {
       //alert(error.error_description || error.message)
     } finally {
@@ -30,13 +32,15 @@ export const LoginModal = () => {
   const handleVerify = async () => {
     try {
       setChecking(true);
-      const { error } = await supabase.auth.verifyOTP({
-        email: email,
-        token: otpToken,
-        type: "magiclink",
-      });
-      if (error) throw error;
-      alert("Login success!");
+      if (supabase) {
+        const { error } = await supabase.auth.verifyOTP({
+          email: email,
+          token: otpToken,
+          type: "magiclink",
+        });
+        if (error) throw error;
+        alert("Login success!");
+      }
     } catch (error: any) {
       alert(error.error_description || error.message);
     } finally {

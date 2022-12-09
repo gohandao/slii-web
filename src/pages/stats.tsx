@@ -1,9 +1,8 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { useContext, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { IoMdSync } from "react-icons/io";
-import { TbDiamond } from "react-icons/tb";
 
 import { BaseLayout } from "@/components/BaseLayout";
 import { CollectionTable } from "@/components/CollectionTable";
@@ -11,53 +10,35 @@ import { Dropdown } from "@/components/Dropdown";
 import { Pagination } from "@/components/Pagination";
 import { Searchbox } from "@/components/Searchbox";
 import { TermSort } from "@/components/TermSort";
-import { BaseContext } from "@/contexts/BaseContext";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import type { Collection } from "@/types/collection";
+import { getCollections } from "@/libs/supabase";
 
 const StatsPage: NextPage = () => {
   const router = useRouter();
-  const { page, search, term, type } = router.query;
+  const { page, search, sort, term, type } = router.query;
   const currentPage = page ? Number(page) : 1;
   const limit = 100;
+  const [collections, setCollections] = useState([]);
+  const [count, setCount] = useState<number>(0);
 
-  const { setHeaderIcon } = useContext(UtilitiesContext);
   useEffect(() => {
-    setHeaderIcon({
-      avatar: "",
-      element: <TbDiamond />,
-      emoji: "",
-      path: "/stats",
-      title: "Collection stats",
-    });
+    const fetchData = async () => {
+      const props = {
+        page: currentPage as number,
+        search: search as string,
+        sort: sort as string,
+        term: term as string,
+        type: type as string,
+      };
+      const { count, data } = await getCollections(props);
+      data &&
+        setCollections(() => {
+          return data;
+        });
+      count && setCount(count);
+    };
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  const { collections } = useContext(BaseContext);
-
-  const filteredCollections =
-    type && type != "all"
-      ? collections.filter((collection) => {
-          return collection.type === type;
-        })
-      : collections;
-
-  const uppperKeyword = typeof search == "string" && search.toUpperCase();
-  //1.match username
-  const searchedCollections01 = filteredCollections.filter((collection) => {
-    return (
-      typeof search == "string" &&
-      //すべて大文字にして大文字小文字の区別をなくす
-      collection.name.toUpperCase().includes(uppperKeyword) == true
-    );
-  });
-  const origin_searchedCollections = [...searchedCollections01];
-  //重複削除
-  let searchedCollections = [] as Collection[];
-  if (search && search.length > 0) {
-    searchedCollections = Array.from(new Set(origin_searchedCollections));
-  } else {
-    searchedCollections = filteredCollections;
-  }
+  }, [type, search, page, term, sort]);
 
   return (
     <div>
@@ -76,7 +57,7 @@ const StatsPage: NextPage = () => {
           <h1 className="mb-3 text-sm tracking-[0.2em] text-gray-500">Japanese awesome NFT collections stats.</h1>
           {collections && (
             <div className="mb-2 flex w-full items-baseline justify-between gap-3">
-              <p className="text-sm text-gray-500">{collections.length} collections</p>
+              <p className="text-sm text-gray-500">{count} collections</p>
               <p className="flex items-center gap-2 text-sm text-gray-500">
                 <IoMdSync />
                 every 24h
@@ -93,11 +74,9 @@ const StatsPage: NextPage = () => {
               <Dropdown position="right" property="term" />
             </div>
           </div>
-          <div className="mb-10">
-            {searchedCollections && <CollectionTable collections={searchedCollections} limit={limit} />}
-          </div>
+          <div className="mb-10">{collections && <CollectionTable collections={collections} limit={limit} />}</div>
           <div className="flex justify-center">
-            <Pagination currentPage={currentPage} length={searchedCollections.length} limit={limit} />
+            <Pagination currentPage={currentPage} length={count} limit={limit} />
           </div>
         </section>
       </BaseLayout>

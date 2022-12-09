@@ -3,7 +3,7 @@ import type { ParsedUrlQuery } from "node:querystring";
 import type { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { BaseLayout } from "@/components/BaseLayout";
 import { CollectionList } from "@/components/CollectionList";
@@ -12,13 +12,10 @@ import { Dropdown } from "@/components/Dropdown";
 import { OrderButton } from "@/components/OrderButton";
 import { Searchbox } from "@/components/Searchbox";
 import { TabIndex } from "@/components/TabIndex";
-import { BaseContext } from "@/contexts/BaseContext";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import tagsJson from "@/json/tags.json";
-import { sortList } from "@/libs/sortList";
+import { getTags } from "@/libs/airtable";
+import { supabase } from "@/libs/supabase";
 import type { Collection } from "@/types/collection";
 import type { Creator } from "@/types/creator";
-import type { Tag } from "@/types/tag";
 
 type Props = {
   description: string;
@@ -28,131 +25,44 @@ const TagPage: NextPage<Props> = (props) => {
   const { description, title } = props;
   const router = useRouter();
   const { order, page, search, sort, tab, tag, term, type } = router.query;
-  const currentPage = page ? Number(page) : 1;
-  const limit = 100;
 
-  const { collections, creators } = useContext(BaseContext);
-  const [sortedCreators, setSortedCreators] = useState<Creator[]>([]);
-  const [sortedCollections, setSortedCollections] = useState<Collection[]>([]);
-
-  const { setHeaderIcon } = useContext(UtilitiesContext);
-  useEffect(() => {
-    setHeaderIcon({
-      avatar: "",
-      emoji: "",
-      path: `/tags`,
-      title: "Tags",
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // 1.filtered creators
-  const uppperKeyword = typeof search == "string" && search.toUpperCase();
-
-  const filteredCreators01 = creators.filter((item) => {
-    return item.tags && item.tags.includes(tag as string) == true;
-  });
-  const filteredCreators02 =
-    type && type != "all"
-      ? filteredCreators01.filter((creator) => {
-          return creator.type === type;
-        })
-      : filteredCreators01;
-
-  const filteredCreators = filteredCreators02;
-
-  //1.match username
-  const searchedCreators01 = filteredCreators.filter((creator) => {
-    return (
-      typeof search == "string" &&
-      //すべて大文字にして大文字小文字の区別をなくす
-      creator.username.toUpperCase().includes(uppperKeyword as string) == true
-    );
-  });
-  const origin_searchedCreators = [
-    ...searchedCreators01,
-    // ...searchedCreators02,
-  ];
-  //重複削除
-  let searchedCreators = [] as Creator[];
-  if (search && search.length > 0) {
-    searchedCreators = Array.from(new Set(origin_searchedCreators));
-  } else {
-    searchedCreators = filteredCreators;
-  }
-
-  const creators_args = {
-    limit: limit,
-    list: searchedCreators,
-    order: order as "desc" | "asc" | undefined,
-    page: currentPage,
-    property: "creators" as "creators" | "collections",
-    sort: sort as string | undefined,
-    term: term as "24h" | "7d" | "30d" | "all" | undefined,
-  };
-
-  // 2.filtered collections
-  const filteredCollections01 = collections.filter((item) => {
-    return item.tags && item.tags.includes(tag) == true;
-  });
-  const filteredCollections02 =
-    type && type != "all"
-      ? filteredCollections01.filter((collection) => {
-          return collection.type === type;
-        })
-      : filteredCollections01;
-  const filteredCollections = filteredCollections02;
-
-  //1.match name
-  const searchedCollections01 = filteredCollections.filter((collection) => {
-    return (
-      typeof search == "string" &&
-      //すべて大文字にして大文字小文字の区別をなくす
-      collection.name.toUpperCase().includes(uppperKeyword) == true
-    );
-  });
-  //1.match creator username
-  const searchedCollections02 = filteredCollections.filter((collection) => {
-    return (
-      typeof search == "string" &&
-      //すべて大文字にして大文字小文字の区別をなくす
-      collection.creator_id.toUpperCase().includes(uppperKeyword) == true
-    );
-  });
-  const origin_searchedCollections = [...searchedCollections01, ...searchedCollections02];
-  //重複削除
-  let searchedCollections = [] as Collection[];
-  if (search && search.length > 0) {
-    searchedCollections = Array.from(new Set(origin_searchedCollections));
-  } else {
-    searchedCollections = filteredCollections;
-  }
-
-  const collections_args = {
-    //category: collectionsSort,
-    limit: limit,
-    list: searchedCollections,
-    order: order as "desc" | "asc" | undefined,
-    page: currentPage,
-    property: "collections" as "creators" | "collections",
-    sort: sort as string | undefined,
-    term: term as "24h" | "7d" | "30d" | "all" | undefined,
-  };
+  const [creators, setCreators] = useState<Creator[]>([]);
+  const [collections, setCollections] = useState<Collection[]>([]);
 
   useEffect(() => {
-    if (tab != "collection") {
-      const data = sortList(creators_args);
-      setSortedCreators(() => {
-        return data;
-      });
-    } else {
-      const data = sortList(collections_args);
-      setSortedCollections(() => {
-        return data;
-      });
-    }
+    const fetchData = async () => {
+      if (supabase) {
+        if (tab != "collection") {
+          const { data, error } = await supabase.from("creators").select().contains("tags", [tag]);
+          if (error) {
+            console.log("error");
+            console.log(error);
+          }
+          const new_data = data ? data : [];
+          console.log("creators data");
+          console.log(data);
+
+          setCreators(() => {
+            return new_data;
+          });
+        } else {
+          const { data, error } = await supabase.from("collections").select().contains("tags", [tag]);
+          if (error) {
+            console.log("error");
+            console.log(error);
+          }
+          const new_data = data ? data : [];
+          console.log("collections data");
+          console.log(data);
+          setCollections(() => {
+            return new_data;
+          });
+        }
+      }
+    };
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collections, creators, order, sort, term, page, type, search, tab]);
+  }, [order, sort, term, page, type, search, tab, tag]);
 
   return (
     <div>
@@ -174,7 +84,7 @@ const TagPage: NextPage<Props> = (props) => {
           <div className="mb- flex gap-3">
             <div className="flex items-baseline gap-3">
               <p className="text-sm text-gray-400">
-                {searchedCreators.length} Creators, {searchedCollections.length} Collections
+                {creators.length} Creators, {collections.length} Collections
               </p>
             </div>
           </div>
@@ -192,8 +102,8 @@ const TagPage: NextPage<Props> = (props) => {
                 </div>
               </div>
               <div className="mb-10">
-                {sortedCreators && sortedCreators.length > 0 ? (
-                  <CreatorList creators={sortedCreators} />
+                {creators && creators.length > 0 ? (
+                  <CreatorList creators={creators} />
                 ) : (
                   <p className="text-gray-100">Not found.</p>
                 )}
@@ -202,8 +112,8 @@ const TagPage: NextPage<Props> = (props) => {
           )}
           {tab == "collection" && (
             <div>
-              {sortedCollections && sortedCollections.length > 0 ? (
-                <CollectionList collections={sortedCollections} />
+              {collections && collections.length > 0 ? (
+                <CollectionList collections={collections} />
               ) : (
                 <p className="text-gray-100">Not found.</p>
               )}
@@ -218,8 +128,7 @@ const TagPage: NextPage<Props> = (props) => {
 export default TagPage;
 
 export const getStaticPaths = async () => {
-  const tags = JSON.parse(JSON.stringify(tagsJson)) as Tag[];
-
+  const tags = await getTags("tags");
   return {
     fallback: "blocking",
     paths: tags.map((tag: any) => {
@@ -236,7 +145,7 @@ type Params = ParsedUrlQuery & {
 };
 
 export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params }) => {
-  const tags = JSON.parse(JSON.stringify(tagsJson)) as Tag[];
+  const tags = await getTags("tags");
   const tag_name = params && params.tag;
   const filtered_tags = tags.filter((tag: any) => {
     return tag.name === tag_name;

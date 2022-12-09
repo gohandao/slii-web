@@ -3,14 +3,10 @@ import type { ParsedUrlQuery } from "node:querystring";
 import type { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { useContext, useEffect, useState } from "react";
 
 import { BaseLayout } from "@/components/BaseLayout";
 import { CreatorScreen } from "@/components/CreatorScreen";
-import { CreatorsIndexScreen } from "@/components/CreatorsIndexScreen";
-import { ScreenModal } from "@/components/ScreenModal";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import creatorsJson from "@/json/creators.json";
+import { getCreators, supabase } from "@/libs/supabase";
 import type { Creator } from "@/types/creator";
 
 type Props = {
@@ -21,19 +17,7 @@ type Props = {
 const CreatorIndex: NextPage<Props> = (props) => {
   const { description, ogImageUrl, title } = props;
   const router = useRouter();
-  const { screen, username } = router.query;
-  const { hiddenParams, scrollY } = useContext(UtilitiesContext);
-  const [creatorModal, setCreatorModal] = useState<boolean>(screen ? true : false);
-
-  useEffect(() => {
-    if (hiddenParams) {
-      setCreatorModal(screen ? true : false);
-    } else {
-      setCreatorModal(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [screen]);
-
+  const { username } = router.query;
   return (
     <>
       <NextSeo
@@ -55,27 +39,9 @@ const CreatorIndex: NextPage<Props> = (props) => {
           url: process.env.NEXT_PUBLIC_SITE_URL + `/creator/${username}`,
         }}
       />
-      {screen == "modal" ? (
-        <>
-          <ScreenModal modalIsOpen={creatorModal} setModalIsOpen={setCreatorModal} path="/">
-            <CreatorScreen />
-          </ScreenModal>
-          <div
-            className={`fixed left-0 w-full`}
-            style={{
-              top: `-${scrollY}px`,
-            }}
-          >
-            <BaseLayout>
-              <CreatorsIndexScreen params={hiddenParams} />
-            </BaseLayout>
-          </div>
-        </>
-      ) : (
-        <BaseLayout>
-          <CreatorScreen />
-        </BaseLayout>
-      )}
+      <BaseLayout>
+        <CreatorScreen />
+      </BaseLayout>
     </>
   );
 };
@@ -90,22 +56,29 @@ type Params = ParsedUrlQuery & {
   username: string;
 };
 export const getStaticPaths = async () => {
-  const creators = JSON.parse(JSON.stringify(creatorsJson)) as Creator[];
+  const { data } = await getCreators();
+  const creators = data as Creator[];
   return {
     fallback: "blocking",
-    paths: creators.map((creator: any) => {
-      return `/creator/${creator.username}`;
-    }),
+    paths:
+      creators &&
+      creators.map((creator: any) => {
+        return `/creator/${creator.username}`;
+      }),
   };
 };
 
 export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params }) => {
-  const creators = JSON.parse(JSON.stringify(creatorsJson)) as Creator[];
   const username = params && params.username;
-  const filtered_creators = creators.filter((creator: any) => {
-    return creator.username === username;
-  });
-  const creator = filtered_creators[0];
+  let creator;
+  if (supabase) {
+    const { data, error } = await supabase.from("creators").select().eq("username", username).single();
+    if (error) {
+      console.log("error");
+      console.log(error);
+    }
+    creator = data as any;
+  }
   if (!creator) {
     return {
       notFound: true,

@@ -15,21 +15,21 @@ export const BookmarkButton = ({ id, type }: Props) => {
   const { setLoginModal } = useContext(UtilitiesContext);
   const [bookmarked, setBookmarked] = useState<boolean>(false);
 
-  const creator_id = type == "creator" && id;
+  const creator_username = type == "creator" && id;
   const collection_slug = type == "collection" && id;
 
   const addBookmarkHandler = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     if (user) {
       const checkBookmarked = bookmarks.filter((bookmark) => {
-        return bookmark.creator_id == id;
+        return bookmark.creator_username == id;
       });
-      if (checkBookmarked.length == 0) {
+      if (checkBookmarked.length == 0 && supabase) {
         const { data } = await supabase.from("bookmarks").insert([
           {
             collection_slug: collection_slug,
             created_at: new Date(),
-            creator_id: creator_id,
+            creator_username: creator_username,
             user_id: user.id,
           },
         ]);
@@ -43,15 +43,15 @@ export const BookmarkButton = ({ id, type }: Props) => {
   const removeBookmarkHandler = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     if (user) {
-      if (type == "creator") {
-        await supabase.from("bookmarks").delete().match({ creator_id: creator_id, user_id: user.id });
+      if (type == "creator" && supabase) {
+        await supabase.from("bookmarks").delete().match({ creator_username: creator_username, user_id: user.id });
         const removedBookmarks = bookmarks.filter((bookmark) => {
-          return bookmark.creator_id != creator_id;
+          return bookmark.creator_username != creator_username;
         });
         setBookmarks(removedBookmarks);
         setBookmarked(false);
       }
-      if (type == "collection") {
+      if (type == "collection" && supabase) {
         await supabase.from("bookmark").delete().match({ collection_slug: collection_slug, user_id: user.id });
         const removedBookmarks = bookmarks.filter((bookmark) => {
           return bookmark.collection_slug != id;
@@ -65,7 +65,7 @@ export const BookmarkButton = ({ id, type }: Props) => {
     let filterdBookmarkes = [];
     if (type == "creator") {
       filterdBookmarkes = bookmarks.filter((bookmark) => {
-        return bookmark.creator_id === id;
+        return bookmark.creator_username === id;
       });
     }
     if (type == "collection") {

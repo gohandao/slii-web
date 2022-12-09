@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { FaRegFlag } from "react-icons/fa";
@@ -36,7 +35,7 @@ type Props = {
   title: any;
   twitter_followers?: number | null;
   twitter_id?: string;
-  upvotes_count?: number;
+  upvotes_count?: number | null;
 };
 export const ProfileHeader = ({
   id,
@@ -51,8 +50,6 @@ export const ProfileHeader = ({
   title,
   upvotes_count,
 }: Props) => {
-  const router = useRouter();
-  const { screen } = router.query;
   const [requestDropdown, setRequestDropdown] = useState<boolean>(false);
   // const [shareDropdown, setShareDropdown] = useState<boolean>(false);
 
@@ -91,7 +88,7 @@ export const ProfileHeader = ({
       <div className="relative -mt-[68px] flex h-40 w-full overflow-hidden border-x-[10px] border-t-[10px] border-transparent md:h-60 ">
         <div className="h-full w-full overflow-hidden rounded-lg bg-gray-800 opacity-50">
           <div className="relative h-full w-full opacity-40">
-            {background_url && (
+            {background_url && background_url != "false" && (
               <Image
                 src={background_url}
                 alt=""
@@ -108,13 +105,11 @@ export const ProfileHeader = ({
           </div>
         </div>
       </div>
-      <div className="mx-auto flex flex-col gap-3 px-5 lg:px-8">
-        <div className={`relative -mt-[38px] flex items-end justify-between ${screen != "modal" && "lg:-mt-[48px]"}`}>
+      <div className="mx-auto flex flex-col gap-2 px-5 lg:px-8">
+        <div className={`relative -mt-[38px] flex items-end justify-between lg:-mt-[43px]`}>
           <div className="relative flex">
             <div
-              className={`relative z-10 flex h-[90px] w-[90px] items-center justify-center overflow-hidden rounded-full border-[5px] border-gray-800 bg-gray-800 ${
-                screen != "modal" && "lg:h-[100px] lg:w-[100px]"
-              }`}
+              className={`relative z-10 flex h-[90px] w-[90px] items-center justify-center overflow-hidden rounded-full border-[5px] border-gray-800 bg-gray-800 lg:h-[100px] lg:w-[100px]`}
             >
               {avatar_url && (
                 <Image
@@ -132,8 +127,7 @@ export const ProfileHeader = ({
                 />
               )}
             </div>
-
-            <div className={`absolute top-1 left-full ml-2 flex items-center gap-4 ${screen != "modal" && "lg:top-3"}`}>
+            <div className={`absolute top-1 left-full ml-2 flex items-center gap-4`}>
               {links && (
                 <ProfileLinks
                   address={links.address}
@@ -170,57 +164,56 @@ export const ProfileHeader = ({
         </div>
         <div className="flex flex-1 justify-between gap-16">
           <div className="flex flex-col gap-2">
-            <h1
-              className={`inline items-center justify-center text-2xl font-bold text-gray-100 ${
-                !screen && "sm:text-3xl "
-              }`}
-            >
-              {title}
-            </h1>
+            <h1 className={`inline items-center justify-center text-2xl font-bold text-gray-100`}>{title}</h1>
             <div className="flex items-center gap-1 text-xs text-gray-400">{sub_title}</div>
-            <div className="flex max-w-5xl flex-col gap-1">
-              <p className="mt-1 break-all text-justify text-sm text-gray-100 transition-all duration-200 md:text-[15px] ">
-                {showDescription ? description : slicedDescription}
-              </p>
-              {description && description.length > 80 && (
-                <>
-                  <button
-                    className="inline-flex items-center gap-1 text-sm text-gray-500"
-                    onClick={() => {
-                      showDescription ? setShowDescription(false) : setShowDescription(true);
-                    }}
-                  >
-                    {showDescription ? (
+            {description && tags && (
+              <div className="flex max-w-5xl flex-col gap-1">
+                {description && (
+                  <>
+                    <p className="mt-1 break-all text-justify text-sm text-gray-100 transition-all duration-200 md:text-[15px] ">
+                      {showDescription ? description : slicedDescription}
+                    </p>
+                    {description.length > 80 && (
                       <>
-                        <MdKeyboardArrowUp />
-                        Show less
-                      </>
-                    ) : (
-                      <>
-                        <MdKeyboardArrowDown />
-                        Show more
+                        <button
+                          className="inline-flex items-center gap-1 text-sm text-gray-500"
+                          onClick={() => {
+                            showDescription ? setShowDescription(false) : setShowDescription(true);
+                          }}
+                        >
+                          {showDescription ? (
+                            <>
+                              <MdKeyboardArrowUp />
+                              Show less
+                            </>
+                          ) : (
+                            <>
+                              <MdKeyboardArrowDown />
+                              Show more
+                            </>
+                          )}
+                        </button>
                       </>
                     )}
-                  </button>
-                </>
-              )}
-              <div className="-mt-1 flex w-full gap-2">
-                {tags &&
-                  tags.map((tag, index) => {
-                    return <Label key={index} name={tag} type="creator" />;
-                  })}
+                  </>
+                )}
+                <div className="-mt-1 flex w-full gap-2">
+                  {tags &&
+                    tags.map((tag, index) => {
+                      return <Label key={index} name={tag} type="creator" />;
+                    })}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
-        <div className="mt-1 flex flex-wrap items-start gap-4">
-          {stats &&
-            stats.length > 0 &&
-            stats.map((data, index) => {
+        {stats && stats.length > 0 && (
+          <div className="mt-2 flex flex-wrap items-start gap-4">
+            {stats.map((data, index) => {
               return (
                 <div key={index}>
                   <StatsBox>
-                    {data.field && data.value && (
+                    {data.field && data.value && data.value != 0 && (
                       <Stats
                         field={data.field}
                         value={<div className="flex w-full items-center justify-end gap-2">{data.value}</div>}
@@ -230,7 +223,8 @@ export const ProfileHeader = ({
                 </div>
               );
             })}
-        </div>
+          </div>
+        )}
       </div>
     </section>
   );

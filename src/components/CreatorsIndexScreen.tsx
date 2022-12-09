@@ -1,4 +1,5 @@
-import { useContext, useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { IoMdSync } from "react-icons/io";
 
 import { CreatorList } from "@/components/CreatorList";
@@ -7,101 +8,34 @@ import { OrderButton } from "@/components/OrderButton";
 import { Pagination } from "@/components/Pagination";
 import { Searchbox } from "@/components/Searchbox";
 import { TabIndex } from "@/components/TabIndex";
-import { BaseContext } from "@/contexts/BaseContext";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import { sortList } from "@/libs/sortList";
+import { getCreators } from "@/libs/supabase";
 import type { Creator } from "@/types/creator";
-import type { Params } from "@/types/params";
+// import type { Params } from "@/types/params";
 
-type Props = {
-  params: Params;
-};
-export const CreatorsIndexScreen = ({ params }: Props) => {
-  const { order, page, search, sort, term, type } = params;
+export const CreatorsIndexScreen = () => {
+  const router = useRouter();
+  const { order, page, search, sort, term, type } = router.query;
   const currentPage = page ? Number(page) : 1;
   const limit = 100;
-  const { creators } = useContext(BaseContext);
-  const { hiddenParams, setTempCreators, tempCreators } = useContext(UtilitiesContext);
+  // const { hiddenParams } = useContext(UtilitiesContext);
+  const [creators, setCreators] = useState<Creator[]>();
+  const [count, setCount] = useState<number>(0);
 
-  const [sortedCreators, setSortedCreators] = useState<Creator[]>([]);
-  const [checkInitial, setCheckInitial] = useState<boolean>(false);
-
-  const currentCreators = tempCreators.length > 0 && !checkInitial ? tempCreators : sortedCreators;
-  const filteredCreators =
-    type && type != "all"
-      ? creators.filter((creator) => {
-          return creator.type === type;
-        })
-      : creators;
-
-  const uppperKeyword = typeof search == "string" && search.toUpperCase();
-  //1.match username
-  const searchedCreators01 = uppperKeyword
-    ? filteredCreators.filter((creator) => {
-        return (
-          typeof search == "string" &&
-          //すべて大文字にして大文字小文字の区別をなくす
-          creator.username != null &&
-          creator.username.toUpperCase().includes(uppperKeyword) == true
-        );
-      })
-    : filteredCreators;
-  // //2.match description
-  // const searchedCreators02 = filteredCreators.filter(
-  //   (creator) =>
-  //     typeof search == "string" &&
-  //     //@ts-ignore
-  //     creator.description &&
-  //     //@ts-ignore
-  //     creator.description.toUpperCase().includes(uppperKeyword) == true
-  // );
-  const origin_searchedCreators = [
-    ...searchedCreators01,
-    // ...searchedCreators02,
-  ];
-  //重複削除
-  let searchedCreators = [] as Creator[];
-  if (search && search.length > 0) {
-    searchedCreators = Array.from(new Set(origin_searchedCreators));
-  } else {
-    searchedCreators = filteredCreators;
-  }
-
-  const args = {
-    limit: limit,
-    list: searchedCreators,
-    order: order as "desc" | "asc" | undefined,
-    page: currentPage,
-    property: "creators" as "creators" | "collections",
-    sort: sort as string | undefined,
-    term: term as "24h" | "7d" | "30d" | "all" | undefined,
-  };
-  //モーダルを閉じた際の処理
-  if (
-    tempCreators.length == 0 &&
-    hiddenParams.page != page &&
-    hiddenParams.order != order &&
-    hiddenParams.sort != sort &&
-    hiddenParams.term != term &&
-    creators.length > 0 &&
-    !checkInitial
-  ) {
-    const data = sortList(args);
-    setSortedCreators(() => {
-      return data;
-    });
-  }
-  if (!checkInitial) {
-    setCheckInitial(true);
-  }
   useEffect(() => {
-    if (checkInitial && creators.length > 0) {
-      const data = sortList(args);
-      setSortedCreators(() => {
-        return data;
-      });
-      setTempCreators(data);
-    }
+    const props = {
+      order: order as "desc" | "asc" | undefined,
+      page: currentPage,
+      sort: sort as string | undefined,
+      type: type as string | undefined,
+    };
+    const fetchData = async () => {
+      const { count, data } = await getCreators(props);
+      if (data != creators) {
+        data && setCreators(data);
+        count && setCount(count);
+      }
+    };
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type, page, search, order, sort, term]);
 
@@ -113,7 +47,7 @@ export const CreatorsIndexScreen = ({ params }: Props) => {
         </div>
         <div className="mb-2 flex gap-3">
           <div className="flex w-full items-baseline justify-between gap-3">
-            <p className="text-sm text-gray-500">{searchedCreators.length} Creators</p>
+            <p className="text-sm text-gray-500">{count} Creators</p>
             <p className="flex items-center gap-2 text-sm text-gray-500">
               <IoMdSync />
               every 24h
@@ -128,11 +62,9 @@ export const CreatorsIndexScreen = ({ params }: Props) => {
             <OrderButton />
           </div>
         </div>
-        <div className="mb-10">
-          {searchedCreators.length > 0 && <CreatorList creators={currentCreators} limit={limit} />}
-        </div>
+        {creators && <div className="mb-10">{count > 0 && <CreatorList creators={creators} limit={limit} />}</div>}
         <div className="flex justify-center">
-          <Pagination currentPage={currentPage} length={searchedCreators.length} limit={limit} />
+          <Pagination currentPage={currentPage} length={count} limit={limit} />
         </div>
       </section>
     </>

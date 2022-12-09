@@ -1,8 +1,5 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext } from "react";
-
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 type Props = {
   param?: string;
@@ -12,7 +9,6 @@ type Props = {
 export const Tab = ({ param, path, title }: Props) => {
   const router = useRouter();
   const { search, tab } = router.query;
-  const { setPrevHeight } = useContext(UtilitiesContext);
 
   const removeParams = (asPath: string) => {
     return asPath.split("?")[0];
@@ -39,12 +35,7 @@ export const Tab = ({ param, path, title }: Props) => {
   return (
     <>
       {path && (
-        <Link
-          href={path}
-          onClick={() => {
-            setPrevHeight(0);
-          }}
-        >
+        <Link href={path}>
           <div
             className={`relative flex items-center justify-center rounded-lg py-2 text-2xl font-bold transition-all duration-300 ${passiveClass}`}
           >

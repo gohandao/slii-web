@@ -27,7 +27,7 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
   const router = useRouter();
   const { order, page, search, sort, tab, term, type, username } = router.query;
   const currentPage = page ? Number(page) : 1;
-  const limit = 100;
+  const limit = 20;
   const [creators, setCreators] = useState<Creator[]>([]);
   const [collections, setCollections] = useState<any[]>([]);
   const [creatorsCount, setCreatorsCount] = useState(0);

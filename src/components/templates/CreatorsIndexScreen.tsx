@@ -14,9 +14,9 @@ import type { Creator } from "@/types/creator";
 
 export const CreatorsIndexScreen = () => {
   const router = useRouter();
-  const { order, page, search, sort, term, type } = router.query;
+  const { order, page, search, sort, type } = router.query;
   const currentPage = page ? Number(page) : 1;
-  const limit = 100;
+  const limit = 20;
   // const { hiddenParams } = useContext(UtilitiesContext);
   const [creators, setCreators] = useState<Creator[]>();
   const [count, setCount] = useState<number>(0);
@@ -25,19 +25,26 @@ export const CreatorsIndexScreen = () => {
     const props = {
       order: order as "desc" | "asc" | undefined,
       page: currentPage,
+      search: search as string | undefined,
       sort: sort as string | undefined,
       type: type as string | undefined,
     };
     const fetchData = async () => {
       const { count, data } = await getCreators(props);
+      console.log("kkkk");
+      console.log(data);
+
       if (data != creators) {
-        data && setCreators(data);
+        data &&
+          setCreators(() => {
+            return data;
+          });
         count && setCount(count);
       }
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type, page, search, order, sort, term]);
+  }, [type, page, search, order, sort]);
 
   return (
     <>
@@ -63,9 +70,11 @@ export const CreatorsIndexScreen = () => {
           </div>
         </div>
         {creators && <div className="mb-10">{count > 0 && <CreatorList creators={creators} limit={limit} />}</div>}
-        <div className="flex justify-center">
-          <Pagination currentPage={currentPage} length={count} limit={limit} />
-        </div>
+        {count / limit > 1 && (
+          <div className="flex justify-center">
+            <Pagination currentPage={currentPage} length={count} limit={limit} />
+          </div>
+        )}
       </section>
     </>
   );

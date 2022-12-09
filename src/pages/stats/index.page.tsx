@@ -16,7 +16,7 @@ const StatsPage: NextPage = () => {
   const router = useRouter();
   const { page, search, sort, term, type } = router.query;
   const currentPage = page ? Number(page) : 1;
-  const limit = 100;
+  const limit = 20;
   const [collections, setCollections] = useState([]);
   const [count, setCount] = useState<number>(0);
 

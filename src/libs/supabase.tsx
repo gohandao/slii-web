@@ -29,7 +29,7 @@ type CreatorsFilterProps = {
 };
 export const getCreators = async (props: CreatorsFilterProps = {}) => {
   const { order, page, search, sort, type, username, usernames } = props;
-  const limit = 100;
+  const limit = 20;
   const start = page ? (Number(page) - 1) * limit : 0;
   const end = page ? Number(page) * limit - 1 : 99;
   const rangeFilter = `.range(${start}, ${end})`;
@@ -39,7 +39,7 @@ export const getCreators = async (props: CreatorsFilterProps = {}) => {
   }
   let searchFilter = "";
   if (search) {
-    searchFilter = `.textSearch("name", "${search}");`;
+    searchFilter = `.ilike("username", "%${search}%")`;
   }
   let sortFilter = "";
   const orderFilter = order == "asc" ? true : false;
@@ -57,6 +57,7 @@ export const getCreators = async (props: CreatorsFilterProps = {}) => {
       sort_param = "listed_at";
       break;
     case "name":
+    case "username":
       sort_param = "name";
       break;
     case "twitter":
@@ -83,6 +84,9 @@ export const getCreators = async (props: CreatorsFilterProps = {}) => {
     ? `supabase.from("creators").select('*')${usernameFilter}`
     : `supabase.from("creators").select('*', { count: 'exact' })${usernamesFilter}${typeFilter}${searchFilter}${sortFilter}${usernameFilter}${rangeFilter}`;
 
+  console.log("filter");
+  console.log(filter);
+
   const { count, data, error } = await eval(filter);
   if (error) {
     console.log("error at getCreators");
@@ -103,7 +107,7 @@ type CollectionsFilterProps = {
 };
 export const getCollections = async (props: CollectionsFilterProps = {}) => {
   const { foreign_table, order, page, search, slug, slugs, sort, term, type } = props;
-  const limit = 100;
+  const limit = 20;
   const start = page ? (page - 1) * limit : 0;
   const end = page ? Number(page) * limit - 1 : 99;
   let typeFilter = "";
@@ -114,7 +118,7 @@ export const getCollections = async (props: CollectionsFilterProps = {}) => {
   }
   let searchFilter = "";
   if (search) {
-    searchFilter = `.textSearch("name", "${search}");`;
+    searchFilter = `.ilike("name", "%${search}%")`;
   }
   let sortFilter = "";
   const orderFilter = order == "asc" ? true : false;

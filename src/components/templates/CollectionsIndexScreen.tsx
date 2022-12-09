@@ -14,7 +14,7 @@ export const CollectionsIndexScreen = () => {
   const router = useRouter();
   const { order, page, search, sort, term, type } = router.query;
   const currentPage = page ? Number(page) : 1;
-  const limit = 100;
+  const limit = 20;
   const [collections, setCollections] = useState([]);
   const [count, setCount] = useState<number>(0);
 
@@ -61,9 +61,11 @@ export const CollectionsIndexScreen = () => {
       <div className="mb-10">
         {collections.length > 0 && <CollectionList collections={collections} limit={limit} />}
       </div>
-      <div className="flex justify-center">
-        <Pagination currentPage={currentPage} length={count} limit={limit} />
-      </div>
+      {count / limit > 1 && (
+        <div className="flex justify-center">
+          <Pagination currentPage={currentPage} length={count} limit={limit} />
+        </div>
+      )}
     </section>
   );
 };

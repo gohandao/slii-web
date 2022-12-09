@@ -23,22 +23,35 @@ type Props = {
 };
 export const CollectionList = ({ collections, limit }: Props) => {
   const router = useRouter();
-  const { page } = router.query;
-  const currentPath = router.pathname;
+  const { order, page, search, sort, term, type } = router.query;
   const currentPage = page ? Number(page) : 1;
-  const { term } = router.query;
-  const modal_param = currentPath == "/collections" ? "?screen=modal" : "";
 
   return (
     <div className="grid w-full grid-cols-1 justify-center gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
       {collections.length > 0 &&
         collections.map((collection, index) => {
+          const new_query = {
+            order: order,
+            page: page,
+            search: search,
+            slug: collection.slug,
+            sort: sort,
+            term: term,
+            type: type,
+          };
           return (
             <div
               className="relative flex transform transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
               key={index}
             >
-              <Link href={`/collection/${collection.slug}${modal_param}`} legacyBehavior>
+              <Link
+                href={{
+                  pathname: `/collections`,
+                  query: new_query,
+                }}
+                as={`/collection/${collection.slug}`}
+                legacyBehavior
+              >
                 <a className="relative flex w-full flex-col items-center overflow-hidden rounded-lg border border-gray-800 bg-gray-800 pb-2 shadow-lg">
                   <div className="absolute top-0 right-0 z-20  flex items-center gap-1 text-gray-400 opacity-60">
                     <p className="mt-[2px] text-center text-xs text-gray-400">

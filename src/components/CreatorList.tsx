@@ -19,31 +19,42 @@ type Props = {
 };
 export const CreatorList = ({ creators, limit }: Props) => {
   const router = useRouter();
-  const { page } = router.query;
   const currentPath = router.pathname;
+  const { order, page, search, sort, term, type } = router.query;
   const currentPage = page ? Number(page) : 1;
   const [currentCreators, setCurrentCreators] = useState<Creator[]>(creators);
-
   useEffect(() => {
     setCurrentCreators(creators);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creators]);
 
-  let modal_param = "";
-  if (currentPath == "/") {
-    modal_param = "?screen=modal";
-  }
-
   return (
     <div className="grid w-full grid-cols-2 justify-center gap-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6">
       {currentCreators.length > 0 &&
         currentCreators.map((creator, index) => {
+          const new_query = {
+            order: order,
+            page: page,
+            search: search,
+            sort: sort,
+            term: term,
+            type: type,
+            username: creator.username,
+          };
+          const new_pathname = currentPath == "/" ? `/` : `/creator/${creator.username}`;
           return (
             <div
               className="relative flex transform transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
               key={index}
             >
-              <Link href={`/creator/${creator.username}${modal_param}`} legacyBehavior>
+              <Link
+                href={{
+                  pathname: new_pathname,
+                  query: new_query,
+                }}
+                as={`/creator/${creator.username}`}
+                legacyBehavior
+              >
                 <a className="relative flex w-full flex-col items-center overflow-hidden rounded-lg border border-gray-800 bg-gray-800 pb-2 shadow-lg">
                   <div className="absolute -left-[1px] -top-[1px] z-10 opacity-60">
                     <div className="lt-triangle"></div>

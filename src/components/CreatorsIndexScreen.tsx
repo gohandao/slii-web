@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { IoMdSync } from "react-icons/io";
 
@@ -9,17 +10,15 @@ import { Searchbox } from "@/components/Searchbox";
 import { TabIndex } from "@/components/TabIndex";
 import { getCreators } from "@/libs/supabase";
 import type { Creator } from "@/types/creator";
-import type { Params } from "@/types/params";
+// import type { Params } from "@/types/params";
 
-type Props = {
-  params: Params;
-};
-export const CreatorsIndexScreen = ({ params }: Props) => {
-  const { order, page, search, sort, term, type } = params;
+export const CreatorsIndexScreen = () => {
+  const router = useRouter();
+  const { order, page, search, sort, term, type } = router.query;
   const currentPage = page ? Number(page) : 1;
   const limit = 100;
   // const { hiddenParams } = useContext(UtilitiesContext);
-  const [creators, setCreators] = useState<Creator[]>([]);
+  const [creators, setCreators] = useState<Creator[]>();
   const [count, setCount] = useState<number>(0);
 
   useEffect(() => {
@@ -31,8 +30,10 @@ export const CreatorsIndexScreen = ({ params }: Props) => {
     };
     const fetchData = async () => {
       const { count, data } = await getCreators(props);
-      data && setCreators(data);
-      count && setCount(count);
+      if (data != creators) {
+        data && setCreators(data);
+        count && setCount(count);
+      }
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -61,7 +62,7 @@ export const CreatorsIndexScreen = ({ params }: Props) => {
             <OrderButton />
           </div>
         </div>
-        <div className="mb-10">{count > 0 && <CreatorList creators={creators} limit={limit} />}</div>
+        {creators && <div className="mb-10">{count > 0 && <CreatorList creators={creators} limit={limit} />}</div>}
         <div className="flex justify-center">
           <Pagination currentPage={currentPage} length={count} limit={limit} />
         </div>

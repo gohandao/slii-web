@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import { IconEth } from "@/components/IconEth";
@@ -9,8 +8,6 @@ type Props = {
   assets: any[];
 };
 export const NFTList = ({ assets }: Props) => {
-  const router = useRouter();
-  const { screen } = router.query;
   const [currentAssets, setCurrentAssets] = useState<any[]>([]);
 
   useEffect(() => {
@@ -21,19 +18,12 @@ export const NFTList = ({ assets }: Props) => {
 
   return (
     <div
-      className={`mb-10 grid w-full grid-cols-3 justify-center  overflow-hidden rounded-lg sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 ${
-        screen != "modal" && "lg:gap-3 xl:grid-cols-8 2xl:grid-cols-10"
-      }`}
+      className={`grid w-full grid-cols-3 justify-center  overflow-hidden rounded-lg sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10`}
     >
       {currentAssets.map((asset: any) => {
         return (
           <div className="" key={asset.id}>
-            <a
-              href={asset.permalink}
-              target="_blank"
-              rel="noreferrer"
-              className={`relative flex bg-gray-700 ${screen != "modal" && "overflow-hidden lg:rounded "}`}
-            >
+            <a href={asset.permalink} target="_blank" rel="noreferrer" className={`relative flex bg-gray-700`}>
               <div className="os-triangle absolute right-0 top-0 z-10"></div>
               <Image
                 src="/icon-opensea.svg"

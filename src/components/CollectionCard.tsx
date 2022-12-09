@@ -15,12 +15,8 @@ export const CollectionCard = ({ collection, index }: any) => {
 
   return (
     <Link href={`/collection/${collection.slug}`} key={index} legacyBehavior>
-      <a className="relative block min-w-[320px] transform overflow-hidden rounded-lg border border-gray-700 bg-gray-800 px-1 pt-[3px] pb-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg md:min-w-[360px]">
-        <div
-          className={`relative h-20 w-full overflow-hidden rounded bg-gray-900 opacity-40 ${
-            screen != "modal" && "lg:h-24 "
-          }`}
-        >
+      <a className="relative block min-w-[320px] transform overflow-hidden rounded-lg border border-gray-700 bg-gray-800 px-1 pt-[3px] pb-3 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg md:min-w-[360px]">
+        <div className={`relative h-16 w-full overflow-hidden rounded bg-gray-900 opacity-40`}>
           {collection.banner_image_url && (
             <Image
               src={collection.banner_image_url}

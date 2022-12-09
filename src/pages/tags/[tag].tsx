@@ -3,7 +3,7 @@ import type { ParsedUrlQuery } from "node:querystring";
 import type { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { BaseLayout } from "@/components/BaseLayout";
 import { CollectionList } from "@/components/CollectionList";
@@ -12,7 +12,6 @@ import { Dropdown } from "@/components/Dropdown";
 import { OrderButton } from "@/components/OrderButton";
 import { Searchbox } from "@/components/Searchbox";
 import { TabIndex } from "@/components/TabIndex";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { getTags } from "@/libs/airtable";
 import { supabase } from "@/libs/supabase";
 import type { Collection } from "@/types/collection";
@@ -29,17 +28,6 @@ const TagPage: NextPage<Props> = (props) => {
 
   const [creators, setCreators] = useState<Creator[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
-
-  const { setHeaderIcon } = useContext(UtilitiesContext);
-  useEffect(() => {
-    setHeaderIcon({
-      avatar: "",
-      emoji: "",
-      path: `/tags`,
-      title: "Tags",
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {

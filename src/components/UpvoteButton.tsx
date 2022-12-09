@@ -31,7 +31,7 @@ export const UpvoteButton = ({ id, count, property = "default", type }: Props) =
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count, added, removed]);
 
-  const creator_id = type == "creator" ? id : "";
+  const creator_username = type == "creator" ? id : "";
   const collection_slug = type == "collection" ? id : "";
 
   const addLikeHandler = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -45,7 +45,7 @@ export const UpvoteButton = ({ id, count, property = "default", type }: Props) =
           {
             collection_slug: collection_slug,
             created_at: new Date(),
-            creator_id: creator_id,
+            creator_username: creator_username,
             user_id: user.id,
           },
         ]);
@@ -64,7 +64,7 @@ export const UpvoteButton = ({ id, count, property = "default", type }: Props) =
     e.preventDefault();
     if (user) {
       if (type == "creator" && supabase) {
-        await supabase.from("upvotes").delete().match({ creator_id: creator_id, user_id: user.id });
+        await supabase.from("upvotes").delete().match({ creator_username: creator_username, user_id: user.id });
         setUpvoted(false);
         setRemoved(true);
         setAdded(false);

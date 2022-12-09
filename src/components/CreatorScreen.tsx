@@ -1,28 +1,24 @@
-import { JP } from "country-flag-icons/react/3x2";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MdVerified } from "react-icons/md";
 
 import { CollectionCard } from "@/components/CollectionCard";
 import { CopyText } from "@/components/CopyText";
-import { IconEth } from "@/components/IconEth";
 import { NFTList } from "@/components/NFTList";
 import { ProfileHeader } from "@/components/ProfileHeader";
 import { RandomButton } from "@/components/RandomButton";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { getCollections, getCreators, getNFTs } from "@/libs/supabase";
 import type { Creator } from "@/types/creator";
-import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 
 export const CreatorScreen = () => {
   const router = useRouter();
-  const { screen, username } = router.query;
-  const { setHeaderIcon } = useContext(UtilitiesContext);
+  const { username } = router.query;
   const [random, setRandom] = useState<boolean>(false);
   const [creator, setCreator] = useState<Creator>();
   const [collections, setCollections] = useState<any[]>();
   const [assets, setAssets] = useState<any[]>([]);
+  const [count, setCount] = useState<number>(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,43 +34,27 @@ export const CreatorScreen = () => {
   useEffect(() => {
     const fetchData = async () => {
       const slugs = creator?.collections;
-      const props = {
-        slugs: slugs,
-      };
-      const { data } = await getCollections(props);
-      data && setCollections(data);
-      const assets_data = slugs && (await getNFTs(props));
-      assets_data && setAssets(assets_data.data);
+      if (slugs && !collections) {
+        const props = {
+          slugs: slugs,
+          sort: "total_volume",
+        };
+        const { data } = await getCollections(props);
+        data && setCollections(data);
+      }
+      if (slugs) {
+        const props = {
+          slugs: slugs,
+        };
+        const { count, data } = slugs && (await getNFTs(props));
+        data && setAssets(data);
+        count && setCount(count);
+      }
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [username]);
+  }, [creator, random]);
 
-  useEffect(() => {
-    {
-      creator && !screen
-        ? setHeaderIcon({
-            avatar: "",
-            emoji: "",
-            path: `/creator/${creator.username}`,
-            subTitle: (
-              <div className="flex items-center gap-1 text-[10px] leading-none text-gray-400">
-                <JP title="Japan" className="h-[10px] rounded-sm" />
-                Creator
-              </div>
-            ),
-            title: creator.username,
-          })
-        : setHeaderIcon({
-            avatar: "",
-            emoji: "",
-            path: "/",
-            title: "",
-            type: "home",
-          });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [creator, screen]);
   //props
   const title = creator && (
     <>
@@ -106,43 +86,43 @@ export const CreatorScreen = () => {
     website_url: creator?.website_url,
   };
 
-  const stats = [
-    {
-      field: "Total Volume",
-      value: creator && creator.total_volume && (
-        <>
-          {creator.token_symbol && creator.token_symbol == "ETH" && <IconEth />}
-          {abbreviateNumber(creator.total_volume)}
-        </>
-      ),
-    },
-    {
-      field: "Ave. Volume",
-      value: creator && creator.average_volume && (
-        <>
-          {creator.token_symbol && creator.token_symbol == "ETH" && <IconEth />}
-          {abbreviateNumber(creator.average_volume)}
-        </>
-      ),
-    },
-    {
-      field: "Ave. Floor Price",
-      value: creator && creator.average_floor_price && (
-        <>
-          {creator.token_symbol && creator.token_symbol == "ETH" && <IconEth />}
-          {abbreviateNumber(creator.average_floor_price)}
-        </>
-      ),
-    },
-    {
-      field: "Total Supply",
-      value: creator?.total_supply,
-    },
-    {
-      field: "Total Sales",
-      value: creator?.total_sales,
-    },
-  ];
+  // const stats = [
+  //   {
+  //     field: "Total Volume",
+  //     value: creator && creator.total_volume && (
+  //       <>
+  //         {creator.token_symbol && creator.token_symbol == "ETH" && <IconEth />}
+  //         {abbreviateNumber(creator.total_volume)}
+  //       </>
+  //     ),
+  //   },
+  //   {
+  //     field: "Ave. Volume",
+  //     value: creator && creator.average_volume && (
+  //       <>
+  //         {creator.token_symbol && creator.token_symbol == "ETH" && <IconEth />}
+  //         {abbreviateNumber(creator.average_volume)}
+  //       </>
+  //     ),
+  //   },
+  //   {
+  //     field: "Ave. Floor Price",
+  //     value: creator && creator.average_floor_price && (
+  //       <>
+  //         {creator.token_symbol && creator.token_symbol == "ETH" && <IconEth />}
+  //         {abbreviateNumber(creator.average_floor_price)}
+  //       </>
+  //     ),
+  //   },
+  //   {
+  //     field: "Total Supply",
+  //     value: creator?.total_supply,
+  //   },
+  //   {
+  //     field: "Total Sales",
+  //     value: creator?.total_sales,
+  //   },
+  // ];
 
   // const custom_menu = creatorCollections.map((collection) => {
   //   return {
@@ -153,7 +133,7 @@ export const CreatorScreen = () => {
 
   return (
     <>
-      <div className={`flex flex-col gap-10 pb-10 `}>
+      <div className={`flex flex-col gap-10 pb-8`}>
         {creator && (
           <ProfileHeader
             page="creator"
@@ -162,10 +142,10 @@ export const CreatorScreen = () => {
             sub_title={sub_title}
             avatar_url={creator.avatar}
             background_url={creator.background}
-            description={creator.description}
+            // description={creator.description}
             links={links}
             tags={creator.tags}
-            stats={stats}
+            // stats={stats}
             twitter_id={creator.twitter_id}
             twitter_followers={creator.twitter_followers}
             discord_url={creator.discord_url}
@@ -181,10 +161,8 @@ export const CreatorScreen = () => {
         )}
         {assets && assets.length > 0 && (
           <div className="px-5 lg:px-8">
-            <div className="relative z-20 mb-5 flex justify-between gap-3 sm:gap-5">
-              <div className="flex items-center gap-3">
-                <RandomButton random={random} setRandom={setRandom} />
-              </div>
+            <div className="relative z-20 mb-5 flex w-full">
+              <RandomButton random={random} setRandom={setRandom} count={count} />
             </div>
             <NFTList assets={assets} />
           </div>

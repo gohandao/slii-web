@@ -15,7 +15,7 @@ export const BookmarkButton = ({ id, type }: Props) => {
   const { setLoginModal } = useContext(UtilitiesContext);
   const [bookmarked, setBookmarked] = useState<boolean>(false);
 
-  const creator_id = type == "creator" && id;
+  const creator_username = type == "creator" && id;
   const collection_slug = type == "collection" && id;
 
   const addBookmarkHandler = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -29,7 +29,7 @@ export const BookmarkButton = ({ id, type }: Props) => {
           {
             collection_slug: collection_slug,
             created_at: new Date(),
-            creator_id: creator_id,
+            creator_username: creator_username,
             user_id: user.id,
           },
         ]);
@@ -44,9 +44,9 @@ export const BookmarkButton = ({ id, type }: Props) => {
     e.preventDefault();
     if (user) {
       if (type == "creator" && supabase) {
-        await supabase.from("bookmarks").delete().match({ creator_id: creator_id, user_id: user.id });
+        await supabase.from("bookmarks").delete().match({ creator_username: creator_username, user_id: user.id });
         const removedBookmarks = bookmarks.filter((bookmark) => {
-          return bookmark.creator_username != creator_id;
+          return bookmark.creator_username != creator_username;
         });
         setBookmarks(removedBookmarks);
         setBookmarked(false);

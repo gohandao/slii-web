@@ -30,17 +30,24 @@ export const Header = () => {
   useEffect(() => {
     if (currentPath != "/" && currentPath != "/collections" && currentPath != "/login") {
       setHomeClass("");
+    } else {
+      setHomeClass("hidden");
     }
     if (currentPath != "/stats") {
       setStatsClass("");
+    } else {
+      setStatsClass("hidden");
     }
     if (currentPath != "/tags") {
       setTagsClass("");
+    } else {
+      setTagsClass("hidden");
     }
   }, [currentPath]);
 
   return (
     <header className="relative z-50 py-3" x-data="{expanded: false}">
+      <div className="header-triangle"></div>
       <div className="mx-auto flex justify-between px-5 md:px-8">
         <div className="flex flex-1 items-center justify-between gap-20">
           <div className="flex flex-shrink-0 items-center gap-8">

@@ -1,15 +1,10 @@
 import type { ParsedUrlQuery } from "node:querystring";
 
 import type { GetStaticProps, NextPage } from "next";
-import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { useContext, useEffect, useState } from "react";
 
 import { BaseLayout } from "@/components/BaseLayout";
 import { CollectionScreen } from "@/components/CollectionScreen";
-import { CollectionsIndexScreen } from "@/components/CollectionsIndexScreen";
-import { ScreenModal } from "@/components/ScreenModal";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { getCollections, supabase } from "@/libs/supabase";
 
 type Props = {
@@ -20,14 +15,7 @@ type Props = {
 };
 const CollectionIndex: NextPage<Props> = (props) => {
   const { description, ogImageUrl, slug, title } = props;
-  const router = useRouter();
-  const { screen } = router.query;
-  const { scrollY } = useContext(UtilitiesContext);
-  const [collectionModal, setCollectionModal] = useState<boolean>(screen ? true : false);
 
-  useEffect(() => {
-    setCollectionModal(screen ? true : false);
-  }, [screen]);
   return (
     <>
       <NextSeo
@@ -49,27 +37,9 @@ const CollectionIndex: NextPage<Props> = (props) => {
           url: process.env.NEXT_PUBLIC_SITE_URL + `/${slug}`,
         }}
       />
-      {screen == "modal" ? (
-        <>
-          <ScreenModal modalIsOpen={collectionModal} setModalIsOpen={setCollectionModal} path="/collections">
-            <CollectionScreen />
-          </ScreenModal>
-          <div
-            className={`fixed left-0 w-full`}
-            style={{
-              top: `-${scrollY}px`,
-            }}
-          >
-            <BaseLayout>
-              <CollectionsIndexScreen />
-            </BaseLayout>
-          </div>
-        </>
-      ) : (
-        <BaseLayout>
-          <CollectionScreen />
-        </BaseLayout>
-      )}
+      <BaseLayout>
+        <CollectionScreen />
+      </BaseLayout>
     </>
   );
 };
@@ -127,12 +97,12 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params
 
   return {
     props: {
-      description: `${collection.name} is a NFT collection created by ${collection.creator_id}.`,
+      description: `${collection.name} is a NFT collection created by ${collection.creator_username}.`,
       // OGP画像は絶対URLで記述する必要があります
       ogImageUrl: `${baseUrl}/api/ogp?title=${slug}&page=collections&type=user&avatar=${avatar}&background=${background}&verified=${verified}`,
       revalidate: 600,
       slug: collection.slug,
-      title: `${collection.name} collection by ${collection.creator_id} | NFT OTAKU`,
+      title: `${collection.name} collection by ${collection.creator_username} | NFT OTAKU`,
     },
   };
 };

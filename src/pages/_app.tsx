@@ -12,8 +12,6 @@ import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import * as gtag from "@/libs/gtag";
 import { getImageUrl, supabase } from "@/libs/supabase";
 import type { Bookmark } from "@/types/bookmark";
-import type { Creator } from "@/types/creator";
-import type { Params } from "@/types/params";
 import type { Profile } from "@/types/profile";
 import type { Upvote } from "@/types/upvote";
 
@@ -21,35 +19,17 @@ const shortid = require("shortid");
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const { screen } = router.query;
-  const currentPath = router.pathname;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string | undefined>();
-  const [hiddenParams, setHiddenParams] = useState<Params>({});
-  const [scrollY, setScrollY] = useState<number>();
-  const [prevHeight, setPrevHeight] = useState<number>();
-
   const [user, setUser] = useState<any>();
   const [profile, setProfile] = useState<any>();
   const [userProfile, setUserProfile] = useState<Profile>();
   const [avatar, setAvatar] = useState<File>();
   const [loginModal, setLoginModal] = useState(false);
-
-  const [tempCreators, setTempCreators] = useState<Creator[]>([]);
-  const [tempCollections, setTempCollections] = useState<any[]>([]);
-
   const [upvotes, setUpvotes] = useState<Upvote[]>([]);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
-
-  let baseUrl = "" as string;
-  if (process.env.NODE_ENV != "test") {
-    baseUrl = {
-      development: "http://localhost:3000",
-      production: "https://nftotaku.xyz",
-    }[process.env.NODE_ENV];
-  }
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -60,23 +40,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
   }, [router.events]);
-
-  const [headerIcon, setHeaderIcon] = useState<{
-    avatar: any;
-    element?: any;
-    emoji: string;
-    path: string;
-    subTitle?: any;
-    title: string;
-    type?: string;
-  }>({
-    avatar: "",
-    element: "",
-    emoji: "",
-    path: "",
-    subTitle: "",
-    title: "",
-  });
 
   let avatar_blob;
   const getAvatarBlob = async () => {
@@ -181,29 +144,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   };
 
   useEffect(() => {
-    //ページ用に一時保存しているデータリセット
-    if (currentPath && currentPath != "collections" && currentPath != "/collection/[slug]") {
-      setTempCollections([]);
-    }
-    if (currentPath && currentPath != "/" && currentPath != "/creator/[username]") {
-      setTempCreators([]);
-    }
-    if (
-      currentPath &&
-      currentPath != "/" &&
-      currentPath != "/creator/[username]" &&
-      screen == "modal" &&
-      currentPath != "/collections" &&
-      currentPath != "/collection/[slug]" &&
-      currentPath != "/collections" &&
-      currentPath != "/collection/[slug]"
-    ) {
-      setPrevHeight(0);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPath]);
-
-  useEffect(() => {
     if (supabase) {
       const data = supabase.auth.user();
       setUser(data);
@@ -262,26 +202,13 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       >
         <UtilitiesContext.Provider
           value={{
-            baseUrl: baseUrl,
-            headerIcon: headerIcon,
-            hiddenParams: hiddenParams,
             keyword: keyword,
             loginModal: loginModal,
             NFTKeyword: keyword,
-            prevHeight: prevHeight,
-            scrollY: scrollY,
-            setHeaderIcon: setHeaderIcon,
-            setHiddenParams: setHiddenParams,
             setKeyword: setKeyword,
             setLoginModal: setLoginModal,
             setNFTKeyword: setKeyword,
-            setPrevHeight: setPrevHeight,
-            setScrollY: setScrollY,
-            setTempCollections,
-            setTempCreators,
             setUserProfile: setUserProfile,
-            tempCollections,
-            tempCreators,
             userProfile: userProfile,
           }}
         >

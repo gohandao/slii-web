@@ -35,10 +35,10 @@ const UserPage: NextPage<Props> = (props) => {
   }, [username]);
 
   const upvotes_creators = userUpvotes?.filter((upvote) => {
-    upvote.creator_username;
+    return upvote.creator_username;
   });
   const upvotes_collections = userUpvotes?.filter((upvote) => {
-    upvote.collection_slug;
+    return upvote.collection_slug;
   });
 
   return (

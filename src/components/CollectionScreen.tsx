@@ -1,50 +1,22 @@
-import { JP } from "country-flag-icons/react/3x2";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MdVerified } from "react-icons/md";
 
 import { IconEth } from "@/components/IconEth";
 import { NFTList } from "@/components/NFTList";
 import { ProfileHeader } from "@/components/ProfileHeader";
 import { RandomButton } from "@/components/RandomButton";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { getCollections, getNFTs } from "@/libs/supabase";
 import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 
 export const CollectionScreen = () => {
   const router = useRouter();
-  const { screen, slug } = router.query;
-  const { setHeaderIcon } = useContext(UtilitiesContext);
+  const { slug } = router.query;
   const [random, setRandom] = useState<boolean>(false);
   const [collection, setCollection] = useState<any>();
   const [assets, setAssets] = useState<any[]>([]);
-
-  useEffect(() => {
-    {
-      collection.creator && !screen
-        ? setHeaderIcon({
-            avatar: "",
-            emoji: "",
-            path: `/creator/${collection.creator_username}`,
-            subTitle: (
-              <div className="flex items-center gap-1 text-[10px] leading-none text-gray-400">
-                <JP title="Japan" className="h-[10px] rounded-sm" />
-                {collection.creator.type}
-              </div>
-            ),
-            title: collection.creator_username,
-          })
-        : setHeaderIcon({
-            avatar: "",
-            emoji: "",
-            path: "/",
-            title: "",
-            type: "home",
-          });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collection]);
+  const [count, setCount] = useState<number>(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,14 +32,17 @@ export const CollectionScreen = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const props = {
-        slugs: [collection.slug],
-      };
-      const { data } = await getNFTs(props);
-      data &&
-        setAssets(() => {
-          return data;
-        });
+      if (collection && collection.slug) {
+        const props = {
+          slugs: [collection.slug],
+        };
+        const { count, data } = await getNFTs(props);
+        data &&
+          setAssets(() => {
+            return data;
+          });
+        count && setCount(count);
+      }
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -80,7 +55,7 @@ export const CollectionScreen = () => {
       {collection.safelist_request_status == "verified" && <MdVerified className="ml-2 inline text-xl text-gray-500" />}
     </>
   );
-  const sub_title = collection.creator && (
+  const sub_title = collection && collection.creator && (
     <>
       <p className="text-xs text-gray-500">
         By{" "}
@@ -180,7 +155,7 @@ export const CollectionScreen = () => {
         {assets && assets.length > 0 && (
           <div className="px-5 lg:px-8">
             <div className="relative z-20 mb-5 flex justify-between gap-3 sm:gap-5">
-              <RandomButton random={random} setRandom={setRandom} />
+              <RandomButton random={random} setRandom={setRandom} count={count} />
             </div>
             <NFTList assets={assets} />
           </div>

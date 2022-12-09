@@ -1,16 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext } from "react";
-import { BiHomeAlt } from "react-icons/bi";
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from "react-icons/bs";
-
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 export const HeaderIcon = () => {
   const router = useRouter();
   const currentPath = router.pathname;
-  const { headerIcon } = useContext(UtilitiesContext);
 
   type Props = {
     property: "back" | "next";
@@ -62,59 +57,16 @@ export const HeaderIcon = () => {
   };
   return (
     <>
-      <div className="flex items-center gap-3 lg:min-w-[160px]">
+      <div className="flex items-center gap-3">
         <div className={`flex gap-3 md:hidden ${showClassName}`}>
           <BackButton property="back" />
         </div>
         {/* <NextButton /> */}
-        {headerIcon.element ? (
-          <Link href={headerIcon.path} legacyBehavior>
-            <a className="relative mt-[2px] flex h-7 items-center text-base font-bold tracking-wider text-white">
-              {headerIcon.element && <span className="mr-2 -mt-[2px] text-3xl">{headerIcon.element}</span>}
-              {headerIcon.title}
-            </a>
-          </Link>
-        ) : headerIcon.avatar.length > 0 ? (
-          <Link href={headerIcon.path} legacyBehavior>
-            <a className="relative flex h-7 items-center gap-2 text-2xl font-bold tracking-wider text-white">
-              {headerIcon.avatar && (
-                <div className="relative h-[44px] w-[44px] overflow-hidden rounded-full border-[3px] border-gray-700">
-                  <Image
-                    src={headerIcon.avatar}
-                    alt=""
-                    quality={20}
-                    fill
-                    sizes="100px"
-                    style={{
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
-              )}
-              <p className="ellipsis max-w-[180px] text-sm">{headerIcon.title}</p>
-            </a>
-          </Link>
-        ) : headerIcon.type != "home" ? (
-          <Link href={headerIcon.path} legacyBehavior>
-            <a className="relative flex items-center gap-2 py-[2px] tracking-wider">
-              <div className="flex flex-col gap-[2px]">
-                <p className="ellipsis max-w-[180px] text-lg font-bold leading-none text-gray-100">
-                  {headerIcon.title}
-                </p>
-                <div className="text-sm  text-gray-300 opacity-70">{headerIcon.subTitle && headerIcon.subTitle}</div>
-              </div>
-            </a>
-          </Link>
-        ) : (
-          <Link href="/" legacyBehavior>
-            <a className="relative mt-[2px] flex h-7 items-center text-base font-bold tracking-wider text-gray-100">
-              <span className="mr-2 -mt-[2px] text-3xl">
-                <BiHomeAlt />
-              </span>
-              Home
-            </a>
-          </Link>
-        )}
+        <Link href="/" legacyBehavior>
+          <a className="relative mt-[2px] flex h-7 items-center text-base font-bold tracking-wider text-gray-100">
+            <Image src="/logo-icon.svg" width={18} height={18} alt="" />
+          </a>
+        </Link>
       </div>
     </>
   );

@@ -1,30 +1,20 @@
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
-import { useContext, useEffect, useState } from "react";
-import { BiPurchaseTagAlt } from "react-icons/bi";
+import { useEffect, useState } from "react";
 
 import { BaseLayout } from "@/components/BaseLayout";
 import { TagList } from "@/components/TagList";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { getTags } from "@/libs/airtable";
 import type { Tag } from "@/types/tag";
 
 const TagsPage: NextPage = () => {
   const [tags, setTags] = useState<Tag[]>([]);
-  const { setHeaderIcon } = useContext(UtilitiesContext);
   useEffect(() => {
     const fetchData = async () => {
       const tags = await getTags("tags");
       setTags(tags);
     };
     fetchData();
-    setHeaderIcon({
-      avatar: "",
-      element: <BiPurchaseTagAlt />,
-      emoji: "",
-      path: `/tags`,
-      title: "Tags",
-    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

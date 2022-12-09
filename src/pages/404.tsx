@@ -1,24 +1,10 @@
 import type { NextPage } from "next";
 import Link from "next/link";
 import { NextSeo } from "next-seo";
-import { useContext, useEffect } from "react";
-import { BiErrorAlt } from "react-icons/bi";
 
 import { BaseLayout } from "@/components/BaseLayout";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 
 export const Custom404: NextPage = () => {
-  const { setHeaderIcon } = useContext(UtilitiesContext);
-  useEffect(() => {
-    setHeaderIcon({
-      avatar: "",
-      element: <BiErrorAlt />,
-      emoji: "",
-      path: "/",
-      title: "404 Error",
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   return (
     <div>
       <NextSeo

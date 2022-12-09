@@ -58,18 +58,9 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
   userProfile && !userBackground && getBackgroundBlob;
   !userBackground && getBackgroundBlob();
 
-  const { setHeaderIcon } = useContext(UtilitiesContext);
   useEffect(() => {
     {
       username && !userProfile && getUserProfile(username as string);
-      userProfile &&
-        setHeaderIcon({
-          avatar: "",
-          emoji: "",
-          path: `/${userProfile.username}`,
-          subTitle: "User",
-          title: userProfile.username,
-        });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userProfile]);
@@ -156,8 +147,7 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
   return (
     <>
       <BaseLayout>
-        <div className="flex flex-col gap-10 pb-20">
-          {/* {userProfile && <UserProfile profile={userProfile} />} */}
+        <div className="flex flex-col gap-8 pb-10">
           {userProfile && (
             <ProfileHeader
               page="user"
@@ -200,9 +190,11 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
                     <p className="text-gray-100">Not found.</p>
                   )}
                 </div>
-                <div className="flex justify-center">
-                  <Pagination currentPage={currentPage} length={creatorsCount} limit={limit} />
-                </div>
+                {creatorsCount / limit > 1 && (
+                  <div className="flex justify-center">
+                    <Pagination currentPage={currentPage} length={creatorsCount} limit={limit} />
+                  </div>
+                )}
               </div>
             )}
             {tab == "collection" && (
@@ -222,9 +214,11 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
                     <p className="text-gray-100">Not found.</p>
                   )}
                 </div>
-                <div className="flex justify-center">
-                  <Pagination currentPage={currentPage} length={collectionsCount} limit={limit} />
-                </div>
+                {collectionsCount / limit > 1 && (
+                  <div className="flex justify-center">
+                    <Pagination currentPage={currentPage} length={collectionsCount} limit={limit} />
+                  </div>
+                )}
               </div>
             )}
           </section>

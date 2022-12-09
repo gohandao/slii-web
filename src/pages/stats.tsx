@@ -1,9 +1,8 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IoMdSync } from "react-icons/io";
-import { TbDiamond } from "react-icons/tb";
 
 import { BaseLayout } from "@/components/BaseLayout";
 import { CollectionTable } from "@/components/CollectionTable";
@@ -11,7 +10,6 @@ import { Dropdown } from "@/components/Dropdown";
 import { Pagination } from "@/components/Pagination";
 import { Searchbox } from "@/components/Searchbox";
 import { TermSort } from "@/components/TermSort";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { getCollections } from "@/libs/supabase";
 
 const StatsPage: NextPage = () => {
@@ -20,18 +18,7 @@ const StatsPage: NextPage = () => {
   const currentPage = page ? Number(page) : 1;
   const limit = 100;
   const [collections, setCollections] = useState([]);
-
-  const { setHeaderIcon } = useContext(UtilitiesContext);
-  useEffect(() => {
-    setHeaderIcon({
-      avatar: "",
-      element: <TbDiamond />,
-      emoji: "",
-      path: "/stats",
-      title: "Collection stats",
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const [count, setCount] = useState<number>(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,10 +29,12 @@ const StatsPage: NextPage = () => {
         term: term as string,
         type: type as string,
       };
-      const { data } = await getCollections(props);
-      setCollections(() => {
-        return data;
-      });
+      const { count, data } = await getCollections(props);
+      data &&
+        setCollections(() => {
+          return data;
+        });
+      count && setCount(count);
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -68,7 +57,7 @@ const StatsPage: NextPage = () => {
           <h1 className="mb-3 text-sm tracking-[0.2em] text-gray-500">Japanese awesome NFT collections stats.</h1>
           {collections && (
             <div className="mb-2 flex w-full items-baseline justify-between gap-3">
-              <p className="text-sm text-gray-500">{collections.length} collections</p>
+              <p className="text-sm text-gray-500">{count} collections</p>
               <p className="flex items-center gap-2 text-sm text-gray-500">
                 <IoMdSync />
                 every 24h
@@ -87,7 +76,7 @@ const StatsPage: NextPage = () => {
           </div>
           <div className="mb-10">{collections && <CollectionTable collections={collections} limit={limit} />}</div>
           <div className="flex justify-center">
-            <Pagination currentPage={currentPage} length={collections.length} limit={limit} />
+            <Pagination currentPage={currentPage} length={count} limit={limit} />
           </div>
         </section>
       </BaseLayout>

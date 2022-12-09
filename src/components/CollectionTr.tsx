@@ -53,7 +53,7 @@ export const CollectionTr = ({ index, item, limit }: any) => {
 
   return (
     <>
-      {item && item.creator_id && (
+      {item && item.creator_username && (
         <tr key={item.slug} className="even:bg-gray-900">
           <td scope="col" className="">
             <div className="item-center -ml-[2px] flex w-7 rotate-90 justify-center whitespace-nowrap text-sm text-gray-500">
@@ -104,7 +104,7 @@ export const CollectionTr = ({ index, item, limit }: any) => {
                         <BookmarkButton id={item.slug} type="collection" />
                       </div>
                     </div>
-                    <p className="ellipsis pr-3 text-sm text-gray-500">{item.creator_id}</p>
+                    <p className="ellipsis pr-3 text-sm text-gray-500">{item.creator_username}</p>
                   </div>
                 </div>
               </a>

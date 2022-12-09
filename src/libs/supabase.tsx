@@ -1,5 +1,4 @@
 import { createClient } from "@supabase/supabase-js";
-import error from "next/error";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABSE_ANON_KEY;
@@ -44,44 +43,49 @@ export const getCreators = async (props: CreatorsFilterProps = {}) => {
   }
   let sortFilter = "";
   const orderFilter = order == "asc" ? true : false;
-  let sotr_param = "";
+  let sort_param = "";
   switch (sort) {
     case "popular":
-      sotr_param = "upvotes_count";
+      sort_param = "upvotes_count";
       break;
     case "newest":
     case "created_at":
-      sotr_param = "created_date";
+      sort_param = "created_date";
       break;
     case "new_listed":
     case "listed_at":
-      sotr_param = "listed_at";
+      sort_param = "listed_at";
       break;
     case "name":
-      sotr_param = "name";
+      sort_param = "name";
       break;
     case "twitter":
-      sotr_param = "twitter_followers";
+      sort_param = "twitter_followers";
       break;
     case "discord":
-      sotr_param = "discord_members";
+      sort_param = "discord_members";
       break;
     default:
-      sotr_param = "upvotes_count";
+      sort_param = "upvotes_count";
       break;
   }
-  if (sort) {
-    sortFilter = `.order("upvotes_count", { ascending: ${orderFilter} });`;
+  if (!sort) {
+    sortFilter = `.order("upvotes_count", { ascending: ${orderFilter} })`;
   } else {
-    sortFilter = `.order("${sotr_param}", { ascending: ${orderFilter} })`;
+    sortFilter = `.order("${sort_param}", { ascending: ${orderFilter} })`;
   }
-  const usernameFilter = username ? `.eq("usename", ${username}).single()` : "";
-  const usernamesFilter = usernames ? `.in("username", ${usernames})` : "";
-  const filter = `supabase.from("creators").select('*', { count: 'exact' })${usernamesFilter}${typeFilter}${searchFilter}${sortFilter}${usernameFilter}${rangeFilter}`;
+  const usernamesArray = usernames?.map((username) => {
+    return `"` + username + `"`;
+  });
+  const usernameFilter = username ? `.eq("username", "${username}").single()` : "";
+  const usernamesFilter = usernames ? `.in("username", [${usernamesArray}])` : "";
+  const filter = username
+    ? `supabase.from("creators").select('*')${usernameFilter}`
+    : `supabase.from("creators").select('*', { count: 'exact' })${usernamesFilter}${typeFilter}${searchFilter}${sortFilter}${usernameFilter}${rangeFilter}`;
 
-  const { count, data } = await eval(filter);
+  const { count, data, error } = await eval(filter);
   if (error) {
-    console.log("error");
+    console.log("error at getCreators");
     console.log(error);
   }
   return { count, data };
@@ -114,139 +118,145 @@ export const getCollections = async (props: CollectionsFilterProps = {}) => {
   }
   let sortFilter = "";
   const orderFilter = order == "asc" ? true : false;
-  let sotr_param = "";
+  let sort_param = "";
   switch (sort) {
     case "popular":
-      sotr_param = "upvotes_count";
+      sort_param = "upvotes_count";
       break;
     case "newest":
     case "created_at":
-      sotr_param = "created_date";
+      sort_param = "created_date";
       break;
     case "new_listed":
     case "listed_at":
-      sotr_param = "listed_at";
+      sort_param = "listed_at";
       break;
     case "name":
-      sotr_param = "name";
+      sort_param = "name";
       break;
     case "floor_price":
-      sotr_param = "floor_price";
+      sort_param = "floor_price";
       break;
     case "volume":
-      sotr_param = "total_volume";
+    case "total_volume":
+      sort_param = "total_volume";
       break;
     case "owners":
-      sotr_param = "num_owners";
+      sort_param = "num_owners";
       break;
     case "items":
-      sotr_param = "total_supply";
+      sort_param = "total_supply";
       break;
     case "twitter":
-      sotr_param = "twitter_followers";
+      sort_param = "twitter_followers";
       break;
     case "discord":
-      sotr_param = "discord_members";
+      sort_param = "discord_members";
       break;
     default:
-      sotr_param = "upvotes_count";
+      sort_param = "upvotes_count";
       break;
   }
   switch (term) {
     case "30d":
-      if (sotr_param == "volume") {
-        sotr_param = "thirty_day_volume";
+      if (sort_param == "volume") {
+        sort_param = "thirty_day_volume";
       }
-      if (sotr_param == "average_price") {
-        sotr_param = "thirty_day_average_price";
+      if (sort_param == "average_price") {
+        sort_param = "thirty_day_average_price";
       }
-      if (sotr_param == "sales") {
-        sotr_param = "thirty_day_sales";
+      if (sort_param == "sales") {
+        sort_param = "thirty_day_sales";
       }
-      if (sotr_param == "change") {
-        sotr_param = "thirty_day_change";
+      if (sort_param == "change") {
+        sort_param = "thirty_day_change";
       }
       break;
     case "7d":
-      if (sotr_param == "volume") {
-        sotr_param = "seven_day_volume";
+      if (sort_param == "volume") {
+        sort_param = "seven_day_volume";
       }
-      if (sotr_param == "average_price") {
-        sotr_param = "seven_day_average_price";
+      if (sort_param == "average_price") {
+        sort_param = "seven_day_average_price";
       }
-      if (sotr_param == "sales") {
-        sotr_param = "seven_day_sales";
+      if (sort_param == "sales") {
+        sort_param = "seven_day_sales";
       }
-      if (sotr_param == "change") {
-        sotr_param = "seven_day_change";
+      if (sort_param == "change") {
+        sort_param = "seven_day_change";
       }
       break;
     case "24h":
-      if (sotr_param == "volume") {
-        sotr_param = "one_day_volume";
+      if (sort_param == "volume") {
+        sort_param = "one_day_volume";
       }
-      if (sotr_param == "average_price") {
-        sotr_param = "one_day_average_price";
+      if (sort_param == "average_price") {
+        sort_param = "one_day_average_price";
       }
-      if (sotr_param == "sales") {
-        sotr_param = "one_day_sales";
+      if (sort_param == "sales") {
+        sort_param = "one_day_sales";
       }
-      if (sotr_param == "change") {
-        sotr_param = "one_day_change";
+      if (sort_param == "change") {
+        sort_param = "one_day_change";
       }
       break;
     case "6h":
-      if (sotr_param == "volume") {
-        sotr_param = "six_hour_volume";
+      if (sort_param == "volume") {
+        sort_param = "six_hour_volume";
       }
-      if (sotr_param == "average_price") {
-        sotr_param = "six_hour_average_price";
+      if (sort_param == "average_price") {
+        sort_param = "six_hour_average_price";
       }
-      if (sotr_param == "sales") {
-        sotr_param = "six_hour_sales";
+      if (sort_param == "sales") {
+        sort_param = "six_hour_sales";
       }
-      if (sotr_param == "change") {
-        sotr_param = "six_hour_change";
+      if (sort_param == "change") {
+        sort_param = "six_hour_change";
       }
       break;
     case "1h":
-      if (sotr_param == "volume") {
-        sotr_param = "one_hour_volume";
+      if (sort_param == "volume") {
+        sort_param = "one_hour_volume";
       }
-      if (sotr_param == "average_price") {
-        sotr_param = "one_hour_average_price";
+      if (sort_param == "average_price") {
+        sort_param = "one_hour_average_price";
       }
-      if (sotr_param == "sales") {
-        sotr_param = "one_hour_sales";
+      if (sort_param == "sales") {
+        sort_param = "one_hour_sales";
       }
-      if (sotr_param == "change") {
-        sotr_param = "one_hour_change";
+      if (sort_param == "change") {
+        sort_param = "one_hour_change";
       }
       break;
     default:
-      if (sotr_param == "volume") {
-        sotr_param = "total_volume";
+      if (sort_param == "volume") {
+        sort_param = "total_volume";
       }
-      if (sotr_param == "average_price") {
-        sotr_param = "average_price";
+      if (sort_param == "average_price") {
+        sort_param = "average_price";
       }
-      if (sotr_param == "sales") {
-        sotr_param = "total_sales";
+      if (sort_param == "sales") {
+        sort_param = "total_sales";
       }
       break;
   }
-  if (sort) {
-    sortFilter = `.order("upvotes_count", { ascending: ${orderFilter} });`;
+  if (!sort) {
+    sortFilter = `.order("upvotes_count", { ascending: ${orderFilter} })`;
   } else {
-    sortFilter = `.order("${sotr_param}", { ascending: ${orderFilter} })`;
+    sortFilter = `.order("${sort_param}", { ascending: ${orderFilter} })`;
   }
-  const slugFilter = slug ? `.eq("slug", ${slug}).single()` : "";
-  const slugsFilter = slugs ? `.in("slug", ${slugs})` : "";
+  const slugsArray = slugs?.map((slug) => {
+    return `"` + slug + `"`;
+  });
+  const slugFilter = slug ? `.eq("slug", "${slug}").single()` : "";
+  const slugsFilter = slugs ? `.in("slug", [${slugsArray}])` : "";
   const ForeignTableFilter = foreign_table ? `, ${foreign_table}` : "";
-  const filter = `supabase.from("collections").select("*" ${ForeignTableFilter}, { count: 'exact' })${slugsFilter}${typeFilter}${searchFilter}${sortFilter}${rangeFilter}${slugFilter}`;
-  const { count, data } = await eval(filter);
+  const filter = slug
+    ? `supabase.from("collections").select('*')${slugFilter}`
+    : `supabase.from("collections").select("*" ${ForeignTableFilter}, { count: 'exact' })${slugsFilter}${typeFilter}${searchFilter}${sortFilter}${rangeFilter}${slugFilter}`;
+  const { count, data, error } = await eval(filter);
   if (error) {
-    console.log("error");
+    console.log("error at getCollections");
     console.log(error);
   }
   return { count, data };
@@ -257,13 +267,18 @@ type NFTsFilterProps = {
 };
 export const getNFTs = async (props: NFTsFilterProps) => {
   const { slugs } = props;
-  const limit = 25;
+  const limit = 24;
   const limitFilter = `.limit(${limit})`;
-  const slugsFilter = slugs ? `.in("slug", ${slugs})` : "";
+  const slugsArray = slugs?.map((slug) => {
+    return `"` + slug + `"`;
+  });
+  const slugsFilter = slugs ? `.in("collection_slug", [${slugsArray}])` : "";
   const filter = `supabase.from("random_nfts").select("*", { count: "exact" })${slugsFilter}${limitFilter}`;
-  const { count, data } = await eval(filter);
+  console.log("filter");
+  console.log(filter);
+  const { count, data, error } = await eval(filter);
   if (error) {
-    console.log("error");
+    console.log("error at getNFTs");
     console.log(error);
   }
   return { count, data };
@@ -272,7 +287,7 @@ export const getUserUpvotes = async (user_id: string) => {
   if (supabase) {
     const { data, error } = await supabase.from("upvotes").select().eq("user_id", `${user_id}`);
     if (error) {
-      console.log("error");
+      console.log("error at getUserUpvotes");
       console.log(error);
     }
     return data;
@@ -282,7 +297,7 @@ export const getUserBookmarks = async (user_id: string) => {
   if (supabase) {
     const { data, error } = await supabase.from("bookmarks").select().eq("user_id", `${user_id}`);
     if (error) {
-      console.log("error");
+      console.log("error at getUserBookmarks");
       console.log(error);
     }
     return data;

@@ -5,9 +5,12 @@ const withPWA = require("next-pwa")({
   register: true,
   skipWaiting: true,
 });
+
 const nextConfig = withPWA({
-  reactStrictMode: false,
-  swcMinify: true,
+  experimental: {
+    optimizeFonts: true,
+    scrollRestoration: true,
+  },
   images: {
     domains: [
       "dl.airtable.com",
@@ -21,10 +24,9 @@ const nextConfig = withPWA({
       "weev.media",
     ],
   },
-  experimental: {
-    optimizeFonts: true,
-    scrollRestoration: true,
-  },
+  pageExtensions: ["page.tsx", "page.ts", "page.js"],
+  reactStrictMode: false,
+  swcMinify: true,
 });
 
 module.exports = nextConfig

@@ -54,8 +54,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   }, [profile]);
 
   useEffect(() => {
-    getBookmarks();
-    getUpvotes();
+    if (user) {
+      getBookmarks();
+      getUpvotes();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 

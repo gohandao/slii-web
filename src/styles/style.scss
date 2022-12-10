@@ -229,3 +229,18 @@ $stripe02: #1a1a1a;
     inset: 0;
     object-fit: cover;
 }
+// react-input-code
+// 数字入力時のスピンボタン削除
+.no-spin {
+    gap: 10px;
+
+    input {
+        border-radius: 4px;
+        &::-webkit-inner-spin-button, &::-webkit-outer-spin-button {
+            margin: 0 !important;
+
+            -webkit-appearance: none !important;
+               -moz-appearance: textfield !important;
+        }
+    }
+}

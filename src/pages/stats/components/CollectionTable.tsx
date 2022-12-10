@@ -2,8 +2,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import ReactLoading from "react-loading";
 
-import { Th } from "@/pages/stats/CollectionTh";
-import { CollectionTr } from "@/pages/stats/CollectionTr";
+import { Th } from "@/pages/stats/components/CollectionTh";
+import { CollectionTr } from "@/pages/stats/components/CollectionTr";
 import type { Collection } from "@/types/collection";
 
 type Props = {

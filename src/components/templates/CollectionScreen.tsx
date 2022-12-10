@@ -143,7 +143,7 @@ export const CollectionScreen = () => {
             sub_title={sub_title}
             avatar_url={avatar_url}
             background_url={background_url}
-            description={collection.description}
+            // description={collection.description}
             links={links}
             tags={collection.tags}
             stats={stats}

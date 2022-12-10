@@ -1,4 +1,5 @@
-import { useContext, useState } from "react";
+import type { SetStateAction } from "react";
+import { useContext, useEffect, useState } from "react";
 import ReactCodeInput from "react-code-input";
 
 import { BaseModal } from "@/components/modules/BaseModal";
@@ -48,6 +49,14 @@ export const LoginModal = () => {
       location.reload();
     }
   };
+
+  useEffect(() => {
+    if (otpToken.length == 6) {
+      handleVerify();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [otpToken]);
+
   return (
     <BaseModal modalIsOpen={loginModal} setModalIsOpen={setLoginModal}>
       <div className="flex-center mx-auto flex w-full max-w-xl rounded bg-gray-800 px-8 pt-8 pb-10 ">
@@ -83,16 +92,16 @@ export const LoginModal = () => {
             <div>
               <p className="mt-3 mb-1 text-center text-lg text-gray-100">Verify code</p>
               <ReactCodeInput
-                type="text"
+                type="number"
                 fields={6}
                 name={""}
-                inputMode={"email"}
+                inputMode={"numeric"}
                 value={otpToken}
-                placeholder="000000"
                 autoFocus={false}
-                onChange={(e) => {
+                onChange={(e: SetStateAction<string>) => {
                   return setOtpToken(e);
                 }}
+                className="no-spin"
               />
               <div className="mt-4 flex justify-center">
                 <button

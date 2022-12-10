@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { BiHomeAlt, BiPurchaseTagAlt } from "react-icons/bi";
-import { RiLoginBoxLine } from "react-icons/ri";
+import { FaRegUser } from "react-icons/fa";
 import { TbDiamond } from "react-icons/tb";
 
 import { HeaderIcon } from "@/components/modules/HeaderIcon";
@@ -88,7 +88,7 @@ export const Header = () => {
               }}
               className="flex h-10 w-10 items-center justify-center gap-3 rounded-full border border-gray-700 bg-gray-800 font-bold text-gray-400"
             >
-              <RiLoginBoxLine />
+              <FaRegUser />
             </button>
           ) : (
             <button

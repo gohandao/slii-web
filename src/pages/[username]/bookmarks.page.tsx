@@ -36,10 +36,10 @@ const BookmarksPage: NextPage<Props> = (props) => {
   }, [username]);
 
   const bookmarked_creators = userBookmarks?.filter((bookmark) => {
-    bookmark.creator_username;
+    return bookmark.creator_username;
   });
   const bookmarked_collections = userBookmarks?.filter((bookmark) => {
-    bookmark.collection_slug;
+    return bookmark.collection_slug;
   });
 
   return (

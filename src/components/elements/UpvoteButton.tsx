@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { BsTriangleFill } from "react-icons/bs";
+import { AiFillHeart } from "react-icons/ai";
 
 import { AuthContext } from "@/contexts/AuthContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
@@ -12,7 +12,7 @@ type Props = {
   type: string;
 };
 export const UpvoteButton = ({ id, count, property = "default", type }: Props) => {
-  const { upvotes, user } = useContext(AuthContext);
+  const { setUpvotes, upvotes, user } = useContext(AuthContext);
   const { setLoginModal } = useContext(UtilitiesContext);
   const [upvoted, setUpvoted] = useState<boolean>(false);
   const [added, setAdded] = useState<boolean>(false);
@@ -20,14 +20,14 @@ export const UpvoteButton = ({ id, count, property = "default", type }: Props) =
   const [currentCount, setCurrentCount] = useState<number | undefined>(count);
 
   useEffect(() => {
-    let initial_count = count;
+    let new_count = count;
     if (added == true) {
-      initial_count = count ? count + 1 : 1;
+      new_count = count ? count + 1 : 1;
     }
     if (removed == true) {
-      initial_count = count ? count - 1 : 0;
+      new_count = count ? count - 1 : 0;
     }
-    setCurrentCount(initial_count);
+    setCurrentCount(new_count);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count, added, removed]);
 
@@ -41,7 +41,7 @@ export const UpvoteButton = ({ id, count, property = "default", type }: Props) =
         return upvote.creator_username == id;
       });
       if (checkLiked.length == 0 && supabase) {
-        const { error } = await supabase.from("upvotes").insert([
+        const { data, error } = await supabase.from("upvotes").insert([
           {
             collection_slug: collection_slug,
             created_at: new Date(),
@@ -49,6 +49,9 @@ export const UpvoteButton = ({ id, count, property = "default", type }: Props) =
             user_id: user.id,
           },
         ]);
+        setUpvotes;
+        data && setUpvotes([...upvotes, ...data]);
+        setUpvoted(true);
         setRemoved(false);
         setAdded(true);
         if (error) {
@@ -64,16 +67,34 @@ export const UpvoteButton = ({ id, count, property = "default", type }: Props) =
     e.preventDefault();
     if (user) {
       if (type == "creator" && supabase) {
-        await supabase.from("upvotes").delete().match({ creator_username: creator_username, user_id: user.id });
-        setUpvoted(false);
-        setRemoved(true);
-        setAdded(false);
+        const data = await supabase
+          .from("upvotes")
+          .delete()
+          .match({ creator_username: creator_username, user_id: user.id });
+        if (data) {
+          const removedUpvotes = upvotes.filter((upvote) => {
+            return upvote.creator_username != creator_username;
+          });
+          setUpvotes(removedUpvotes);
+          setUpvoted(false);
+          setRemoved(true);
+          setAdded(false);
+        }
       }
       if (type == "collection" && supabase) {
-        await supabase.from("upvotes").delete().match({ collection_slug: collection_slug, user_id: user.id });
-        setUpvoted(false);
-        setRemoved(true);
-        setAdded(false);
+        const data = await supabase
+          .from("upvotes")
+          .delete()
+          .match({ collection_slug: collection_slug, user_id: user.id });
+        if (data) {
+          const removedUpvotes = upvotes.filter((upvote) => {
+            return upvote.creator_username != creator_username;
+          });
+          setUpvotes(removedUpvotes);
+          setUpvoted(false);
+          setRemoved(true);
+          setAdded(false);
+        }
       }
     }
   };
@@ -126,12 +147,12 @@ export const UpvoteButton = ({ id, count, property = "default", type }: Props) =
             <>
               {upvoted ? (
                 <div className={`bg-gray-700 ${propertyClass} `}>
-                  <BsTriangleFill className="text-sm text-orange-500 opacity-90" />
+                  <AiFillHeart className="text-sm text-pink-500 opacity-90" />
                   <p className="text-sm text-gray-100">{currentCount}</p>
                 </div>
               ) : (
                 <div className={`bg-gray-700 ${propertyClass}  `}>
-                  <BsTriangleFill className="text-sm text-white opacity-30" />
+                  <AiFillHeart className="text-sm text-white opacity-30" />
                   <p className="text-sm text-gray-100">{currentCount}</p>
                 </div>
               )}
@@ -139,17 +160,17 @@ export const UpvoteButton = ({ id, count, property = "default", type }: Props) =
           ) : (
             <div className="bg-upvote h-[44px] rounded">
               {upvoted ? (
-                <div className={`h-full bg-white ${propertyClass} rounded border-2 border-orange-600`}>
-                  <BsTriangleFill className="text-sm text-orange-600 opacity-80" />
-                  <p className="px-1 text-sm text-orange-600">
-                    <span className="hidden text-sm text-orange-600 sm:inline">Upvoted</span> {currentCount}
+                <div className={`h-full bg-white ${propertyClass} rounded border-2 border-pink-600`}>
+                  <AiFillHeart className="text-sm text-pink-600 opacity-80" />
+                  <p className="px-1 text-sm text-pink-600">
+                    <span className="hidden text-sm text-pink-600 sm:inline">Liked</span> {currentCount}
                   </p>
                 </div>
               ) : (
                 <div className={`h-full  ${propertyClass} `}>
-                  <BsTriangleFill className="text-sm text-white" />
+                  <AiFillHeart className="text-sm text-white" />
                   <p className="px-1 text-sm text-white">
-                    <span className="hidden text-xs text-orange-100 sm:inline">Upvote</span> {currentCount}
+                    <span className="hidden text-xs text-pink-100 sm:inline">Like</span> {currentCount}
                   </p>
                 </div>
               )}

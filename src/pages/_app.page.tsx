@@ -95,7 +95,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           throw error;
         }
         const new_upvotes = data as Upvote[];
-        return new_upvotes;
+        setUpvotes(new_upvotes);
       }
     } catch (error: any) {
       alert(error.message);
@@ -146,7 +146,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   };
 
   useEffect(() => {
-    if (supabase) {
+    if (supabase && !user) {
       const data = supabase.auth.user();
       setUser(data);
       data && !profile && getProfile();
@@ -164,7 +164,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-        <link rel="stylesheet" href="https://use.typekit.net/xbj6ysr.css" />
       </Head>
       <DefaultSeo
         defaultTitle={title}

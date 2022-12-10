@@ -65,6 +65,10 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userProfile]);
 
+  console.log("creatorList");
+  console.log(creatorList);
+  console.log(collectionList);
+
   useEffect(() => {
     const fetchData = async () => {
       if (creatorList) {
@@ -167,7 +171,7 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
           )}
           <section className="mx-auto w-full px-5 lg:px-8">
             <div className="flex gap-2">
-              <SmallTab title="Upvoted" path="upvotes" />
+              <SmallTab title="Liked" path="upvotes" />
               <SmallTab title="Bookmarks" path="bookmarks" />
             </div>
             <div className="mb-2">

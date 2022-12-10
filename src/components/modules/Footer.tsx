@@ -10,19 +10,33 @@ import { TbDiamond, TbMailbox } from "react-icons/tb";
 import { AuthContext } from "@/contexts/AuthContext";
 
 type FixedMenuProps = {
+  blank?: boolean;
   children: ReactNode;
   href: string;
 };
 export const Footer = () => {
   const { user } = useContext(AuthContext);
-  const FixedMenu = ({ children, href }: FixedMenuProps) => {
-    return (
-      <Link href={href} legacyBehavior>
-        <a className="flex w-full items-center justify-center border-r border-gray-700 px-3 py-[14px] text-2xl text-gray-400 last:border-none">
+  const FixedMenu = ({ blank = false, children, href }: FixedMenuProps) => {
+    if (!blank) {
+      return (
+        <Link href={href} legacyBehavior>
+          <a className="flex w-full items-center justify-center border-r border-gray-700 px-3 py-[14px] text-2xl text-gray-400 last:border-none">
+            {children}
+          </a>
+        </Link>
+      );
+    } else {
+      return (
+        <a
+          href={href}
+          target="_blank"
+          className="flex w-full items-center justify-center border-r border-gray-700 px-3 py-[14px] text-2xl text-gray-400 last:border-none"
+          rel="noreferrer"
+        >
           {children}
         </a>
-      </Link>
-    );
+      );
+    }
   };
   const buttonClass =
     "relative flex justify-center gap-4 items-center w-[240px] max-w-[90%] mx-auto py-2 border-2 text-sm text-center rounded transition-all duration-200 transform";
@@ -73,7 +87,10 @@ export const Footer = () => {
         <FixedMenu href="/tags">
           <BiPurchaseTagAlt />
         </FixedMenu>
-        <FixedMenu href="/">
+        <FixedMenu
+          blank={true}
+          href="https://docs.google.com/forms/d/e/1FAIpQLSfd0_agN6SLqM0PlYxjL4E9HiLdq6_9KN3i65Z2byNWCBj11w/viewform"
+        >
           <BsMailbox />
         </FixedMenu>
         {user ? (

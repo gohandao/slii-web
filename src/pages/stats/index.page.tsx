@@ -9,8 +9,8 @@ import { BaseLayout } from "@/components/layouts/BaseLayout";
 import { Dropdown } from "@/components/modules/Dropdown";
 import { Pagination } from "@/components/modules/Pagination";
 import { getCollections } from "@/libs/supabase";
-import { CollectionTable } from "@/pages/stats/CollectionTable";
-import { TermSort } from "@/pages/stats/TermSort";
+import { CollectionTable } from "@/pages/stats/components/CollectionTable";
+import { TermSort } from "@/pages/stats/components/TermSort";
 
 const StatsPage: NextPage = () => {
   const router = useRouter();

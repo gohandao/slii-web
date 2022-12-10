@@ -34,7 +34,7 @@ export const CollectionsIndexScreen = () => {
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collections, order, sort, term, page, type]);
+  }, [order, sort, term, page, type]);
 
   return (
     <section className="mx-auto px-5 lg:px-8">

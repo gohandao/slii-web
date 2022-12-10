@@ -14,7 +14,6 @@ export const BookmarkButton = ({ id, type }: Props) => {
   const { bookmarks, setBookmarks, user } = useContext(AuthContext);
   const { setLoginModal } = useContext(UtilitiesContext);
   const [bookmarked, setBookmarked] = useState<boolean>(false);
-
   const creator_username = type == "creator" && id;
   const collection_slug = type == "collection" && id;
 

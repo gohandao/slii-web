@@ -11,8 +11,8 @@ import { Textarea } from "@/components/elements/Textarea";
 import { BaseLayout } from "@/components/layouts/BaseLayout";
 import { AuthContext } from "@/contexts/AuthContext";
 import { getImageUrl, supabase } from "@/libs/supabase";
-import { UploadBackground } from "@/pages/account/UploadBackground";
-import { UploadImage } from "@/pages/account/UploadImage";
+import { UploadBackground } from "@/pages/account/components/UploadBackground";
+import { UploadImage } from "@/pages/account/components/UploadImage";
 
 const AccountPage: NextPage = () => {
   const { avatar, profile, user } = useContext(AuthContext);

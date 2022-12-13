@@ -91,6 +91,18 @@
         background-position: 0 50%;
     }
 }
+.header-triangle {
+    opacity: .5;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 0;
+    height: 0;
+    border-width: 60px 120px 0 0;
+    border-style: solid;
+    border-color: #0c4a6e transparent transparent transparent;
+}
 .lt-triangle {
     opacity: .8;
     width: 0;
@@ -216,4 +228,19 @@ $stripe02: #1a1a1a;
 
     inset: 0;
     object-fit: cover;
+}
+// react-input-code
+// 数字入力時のスピンボタン削除
+.no-spin {
+    gap: 10px;
+
+    input {
+        border-radius: 4px;
+        &::-webkit-inner-spin-button, &::-webkit-outer-spin-button {
+            margin: 0 !important;
+
+            -webkit-appearance: none !important;
+               -moz-appearance: textfield !important;
+        }
+    }
 }

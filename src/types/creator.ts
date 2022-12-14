@@ -1,9 +1,9 @@
 export type Creator = {
   address: string;
-  avatar: string;
+  avatar?: string;
   average_floor_price?: number | null;
   average_volume?: number | null;
-  background: string;
+  background?: string;
   background_image?: string;
   category?: string;
   collections?: string[];

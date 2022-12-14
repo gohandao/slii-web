@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { FC, ReactNode } from "react";
 import { useContext } from "react";
 import { BiHomeAlt, BiPurchaseTagAlt } from "react-icons/bi";
 import { BsMailbox } from "react-icons/bs";
@@ -14,7 +14,7 @@ type FixedMenuProps = {
   children: ReactNode;
   href: string;
 };
-export const Footer = () => {
+export const Footer: FC = () => {
   const { user } = useContext(AuthContext);
   const FixedMenu = ({ blank = false, children, href }: FixedMenuProps) => {
     if (!blank) {

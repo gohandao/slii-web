@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { ReactNode } from "react";
+import type { FC, ReactNode } from "react";
 import { BsGlobe2, BsInstagram, BsTwitter } from "react-icons/bs";
 import { FaDiscord, FaRegChartBar } from "react-icons/fa";
 
@@ -16,7 +16,7 @@ type ButtonProps = {
   children: ReactNode;
   url: string;
 };
-export const ProfileLinks = ({
+export const ProfileLinks: FC<Props> = ({
   address,
   discord_url,
   instagram_id,
@@ -24,7 +24,7 @@ export const ProfileLinks = ({
   opensea_username,
   twitter_id,
   website_url,
-}: Props) => {
+}) => {
   const Button = ({ children, url }: ButtonProps) => {
     return (
       <button

@@ -1,3 +1,4 @@
+import type { FC } from "react";
 import { useContext, useEffect, useState } from "react";
 import { AiFillHeart } from "react-icons/ai";
 
@@ -11,7 +12,7 @@ type Props = {
   property?: string;
   type: string;
 };
-export const UpvoteButton = ({ id, count, property = "default", type }: Props) => {
+export const UpvoteButton: FC<Props> = ({ id, count, property = "default", type }) => {
   const { setUpvotes, upvotes, user } = useContext(AuthContext);
   const { setLoginModal } = useContext(UtilitiesContext);
   const [upvoted, setUpvoted] = useState<boolean>(false);

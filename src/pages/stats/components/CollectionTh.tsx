@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import { BsTriangleFill, BsTwitter } from "react-icons/bs";
 import { FaDiscord, FaSort } from "react-icons/fa";
 import { TiArrowSortedDown } from "react-icons/ti";
@@ -10,7 +11,7 @@ type Props = {
   title: string;
 };
 
-export const Th = ({ title }: Props) => {
+export const Th: FC<Props> = ({ title }) => {
   const router = useRouter();
   const { order, search, sort, term } = router.query;
 

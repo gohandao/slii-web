@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import { useContext, useEffect, useState } from "react";
 import { BiHomeAlt, BiPurchaseTagAlt } from "react-icons/bi";
 import { FaRegUser } from "react-icons/fa";
@@ -11,7 +12,7 @@ import { AuthContext } from "@/contexts/AuthContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { supabase } from "@/libs/supabase";
 
-export const Header = () => {
+export const Header: FC = () => {
   const router = useRouter();
   const { avatar, profile, user } = useContext(AuthContext);
   const { setLoginModal } = useContext(UtilitiesContext);

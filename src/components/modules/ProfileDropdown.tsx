@@ -1,3 +1,5 @@
+import type { FC } from "react";
+
 type Props = {
   dropdown: boolean;
   icon: any;
@@ -9,7 +11,7 @@ type Props = {
   position: "left" | "right";
   setDropdown: React.Dispatch<React.SetStateAction<boolean>>;
 };
-export const ProfileDropdown = ({ dropdown, icon, menus, position, setDropdown }: Props) => {
+export const ProfileDropdown: FC<Props> = ({ dropdown, icon, menus, position, setDropdown }) => {
   let possitionClass = "";
   switch (position) {
     case "left":

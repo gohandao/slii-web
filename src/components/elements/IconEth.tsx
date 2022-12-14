@@ -1,6 +1,7 @@
 import Image from "next/image";
+import type { FC } from "react";
 
-export const IconEth = () => {
+export const IconEth: FC = () => {
   return (
     <div className="flex w-4 items-center">
       <Image

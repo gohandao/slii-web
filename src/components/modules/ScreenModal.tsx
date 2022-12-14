@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import type { ReactNode } from "react";
+import type { FC, ReactNode } from "react";
 import { IoIosClose } from "react-icons/io";
 import Modal from "react-modal";
 
@@ -11,7 +11,7 @@ type Props = {
   path?: string;
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
-export const ScreenModal = ({ children, modalIsOpen, path, setModalIsOpen }: Props) => {
+export const ScreenModal: FC<Props> = ({ children, modalIsOpen, path, setModalIsOpen }) => {
   const router = useRouter();
   const { order, page, search, sort, term, type } = router.query;
 

@@ -41,9 +41,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     };
   }, [router.events]);
 
-  let avatar_blob;
   const getAvatarBlob = async () => {
-    avatar_blob = profile && profile.avatar_url && (await getImageUrl(profile.avatar_url));
+    const avatar_blob = profile && profile.avatar_url && (await getImageUrl(profile.avatar_url));
     setAvatar(avatar_blob);
   };
   profile && !avatar && getAvatarBlob;
@@ -97,15 +96,17 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         const new_upvotes = data as Upvote[];
         setUpvotes(new_upvotes);
       }
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
     }
   };
 
   const createProfile = async () => {
     const init_username = shortid.generate();
     const updates = {
-      id: user.id,
+      id: user?.id,
       updated_at: new Date(),
       username: init_username,
     };

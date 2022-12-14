@@ -1,5 +1,5 @@
 export const getDiscordMembers = async (discord_id) => {
-  var options = {
+  const options = {
     method: "GET",
   };
   const response = await fetch(

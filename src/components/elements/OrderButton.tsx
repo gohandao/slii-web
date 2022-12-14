@@ -1,9 +1,10 @@
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import { TbArrowBigDownLine, TbArrowBigUpLine } from "react-icons/tb";
 
 import { setParams } from "@/utilities/setParams";
 
-export const OrderButton = () => {
+export const OrderButton: FC = () => {
   const router = useRouter();
   const { order, page, screen, search, sort, term, type } = router.query;
   const currentPage = page ? Number(page) : 1;

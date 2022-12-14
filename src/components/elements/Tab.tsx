@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import type { FC } from "react";
 
 type Props = {
   param?: string;
   path?: string;
   title: string;
 };
-export const Tab = ({ param, path, title }: Props) => {
+export const Tab: FC<Props> = ({ param, path, title }) => {
   const router = useRouter();
   const { search, tab } = router.query;
 

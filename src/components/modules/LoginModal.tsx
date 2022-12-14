@@ -1,4 +1,4 @@
-import type { SetStateAction } from "react";
+import type { FC, SetStateAction } from "react";
 import { useContext, useEffect, useState } from "react";
 import ReactCodeInput from "react-code-input";
 
@@ -6,7 +6,7 @@ import { BaseModal } from "@/components/modules/BaseModal";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { supabase } from "@/libs/supabase";
 
-export const LoginModal = () => {
+export const LoginModal: FC = () => {
   const { loginModal, setLoginModal } = useContext(UtilitiesContext);
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(false);

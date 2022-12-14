@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { FC, ReactNode } from "react";
 import { IoIosClose } from "react-icons/io";
 import Modal from "react-modal";
 
@@ -7,7 +7,7 @@ type Props = {
   modalIsOpen: boolean;
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
-export const BaseModal = ({ children, modalIsOpen, setModalIsOpen }: Props) => {
+export const BaseModal: FC<Props> = ({ children, modalIsOpen, setModalIsOpen }) => {
   Modal.setAppElement("#__next");
   // モーダルを開く処理
   // const openModal = () => {

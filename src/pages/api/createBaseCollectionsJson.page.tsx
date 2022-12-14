@@ -25,7 +25,7 @@ const sleep = (delay = 1000) => {
   });
 };
 
-const getData01 = async (slugs: any[]) => {
+const getData01 = async (slugs: any) => {
   let collections = [] as any[];
   for (let index = 0; index < slugs.length; index++) {
     await sleep(300);

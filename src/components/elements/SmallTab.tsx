@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import type { FC } from "react";
 
 import type { Params } from "@/types/params";
 import { removeUndefinedObject } from "@/utilities/removeUndefinedObject";
@@ -8,7 +9,7 @@ type Props = {
   path: string;
   title: string;
 };
-export const SmallTab = ({ path, title }: Props) => {
+export const SmallTab: FC<Props> = ({ path, title }) => {
   const router = useRouter();
   const currentPath = router.pathname;
   const { order, search, sort, tab, term, type, username } = router.query;

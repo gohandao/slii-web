@@ -1,10 +1,12 @@
+import type { FC } from "react";
+
 type Props = {
   count: number;
   maxLength: number;
-  property?: string;
+  property?: "input" | "textarea";
 };
-export const Count = ({ count, maxLength, property }: Props) => {
-  let propertyClass = "";
+export const Count: FC<Props> = ({ count, maxLength, property }) => {
+  let propertyClass: "" | "mb-2" = "";
   switch (property) {
     case "input": {
       propertyClass = "";

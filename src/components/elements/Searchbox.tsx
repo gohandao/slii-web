@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import { useContext, useEffect, useState } from "react";
 import { BiSearchAlt2 } from "react-icons/bi";
 
@@ -8,7 +9,7 @@ import { setParams } from "@/utilities/setParams";
 type Props = {
   id: string;
 };
-export const Searchbox = ({ id }: Props) => {
+export const Searchbox: FC<Props> = ({ id }) => {
   const router = useRouter();
   const { order, screen, search, sort, tab, term, type } = router.query;
   const [value, setValue] = useState<string>("");

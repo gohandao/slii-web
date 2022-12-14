@@ -1,5 +1,6 @@
 import imageCompression from "browser-image-compression";
 import Image from "next/image";
+import type { FC } from "react";
 import { useContext } from "react";
 import { RiImageAddLine } from "react-icons/ri";
 
@@ -13,7 +14,7 @@ export type Props = {
   setNewImage: (value: React.SetStateAction<File | undefined>) => void;
 };
 
-export const UploadImage = ({ image, newImage, setNewImage }: Props) => {
+export const UploadImage: FC<Props> = ({ image, newImage, setNewImage }) => {
   const { avatar } = useContext(AuthContext);
   // const [images, setImages] = useState<File[]>([]);
   // const [image, setImage] = useState<File>();

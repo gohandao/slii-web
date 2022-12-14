@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import type { ReactNode } from "react";
+import type { FC, ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { BiCategory, BiFilterAlt } from "react-icons/bi";
@@ -24,7 +24,7 @@ type Props = {
     | "assetsDropdown"
     | "term";
 };
-export const Dropdown = ({ custom_menu, position, property }: Props) => {
+export const Dropdown: FC<Props> = ({ custom_menu, position, property }) => {
   const router = useRouter();
   const { order, screen, search, slug, sort, term, type } = router.query;
 
@@ -37,7 +37,7 @@ export const Dropdown = ({ custom_menu, position, property }: Props) => {
   type TitleProps = {
     children: ReactNode;
   };
-  const Title = ({ children }: TitleProps) => {
+  const Title: FC<TitleProps> = ({ children }) => {
     return <span className="hidden capitalize sm:inline-block">{children}</span>;
   };
   //メニュー表示

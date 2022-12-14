@@ -1,3 +1,4 @@
+// kata: creatorコンポーネントクリック後、表示されるモーダル
 import type { ParsedUrlQuery } from "node:querystring";
 
 import type { GetStaticProps, NextPage } from "next";
@@ -79,9 +80,7 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params
     creator = data as any;
   }
   if (!creator) {
-    return {
-      notFound: true,
-    };
+    return { notFound: true };
   }
 
   const baseUrl = (() => {

@@ -1,3 +1,4 @@
+// kata: creatorのコンポーネントのひとつ
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -122,9 +123,7 @@ export const CreatorList: FC<Props> = ({ creators, limit }) => {
                       <div className="relative flex max-w-full items-center justify-between pt-1">
                         <h3 className="ellipsis min-w-[0]  max-w-full items-center pr-3 text-sm font-bold text-gray-100">
                           {creator.username}
-                          {creator.verified == true && (
-                            <MdVerified className="-mt-[2px] ml-2 inline-block text-gray-500" />
-                          )}
+                          {creator.verified && <MdVerified className="-mt-[2px] ml-2 inline-block text-gray-500" />}
                         </h3>
                         <div className="flex gap-2">
                           <BookmarkButton id={creator.username} type="creator" />

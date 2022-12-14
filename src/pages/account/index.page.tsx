@@ -20,7 +20,7 @@ const AccountPage: NextPage = () => {
   const [label, setLabel] = useState<string>();
   const [description, setDescription] = useState<string>();
   const [background, setBackground] = useState<File>();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -97,8 +97,8 @@ const AccountPage: NextPage = () => {
           }
         }
       }
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error) {
+      if (error instanceof Error) alert(error.message);
     } finally {
       setLoading(false);
     }
@@ -132,6 +132,7 @@ const AccountPage: NextPage = () => {
                     >
                       <IoChevronBackOutline className="text-gray-400" />
                     </button>
+                    {/* FIX: Loading時レイアウト崩れる */}
                     <button
                       className="overflow-hidden whitespace-nowrap rounded-full bg-green-600 py-2 px-5 text-center text-green-100"
                       onClick={() => {

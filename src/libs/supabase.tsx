@@ -1,5 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
+import { getNFTListings } from "@/libs/opensea";
+
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABSE_ANON_KEY;
 if (!supabaseUrl) throw new Error("Missing env.NEXT_PUBLIC_SUPABASE_URL");
@@ -83,10 +85,6 @@ export const getCreators = async (props: CreatorsFilterProps = {}) => {
   const filter = username
     ? `supabase.from("creators").select('*')${usernameFilter}`
     : `supabase.from("creators").select('*', { count: 'exact' })${usernamesFilter}${typeFilter}${searchFilter}${sortFilter}${usernameFilter}${rangeFilter}`;
-
-  console.log("filter");
-  console.log(filter);
-
   const { count, data, error } = await eval(filter);
   if (error) {
     console.log("error at getCreators");
@@ -306,4 +304,56 @@ export const getUserBookmarks = async (user_id: string) => {
     }
     return data;
   }
+};
+export const upsertNFTPrices = async (collection_slug: string) => {
+  const checkUpdatedAt = async (collection_slug: string) => {
+    if (supabase) {
+      const { data, error } = await supabase
+        .from("nfts")
+        .select("updated_at")
+        .eq("collection_slug", collection_slug)
+        .order("updated_at", { ascending: false })
+        .single();
+      if (error) {
+        console.log("error at getUserBookmarks");
+        console.log(error);
+      }
+      return data.updated_at as Date;
+    }
+  };
+  // 更新が10分以内の場合は再更新を無視する
+  const last_updated_at = await checkUpdatedAt(collection_slug);
+  const now = Date.now();
+  const past = last_updated_at && last_updated_at.getTime();
+  const diff = past && now - past;
+  const diffMinutes = diff && diff / 1000 / 60;
+  //timestampは現在時刻より10分以上前です
+  if (!diffMinutes || diffMinutes > 10) {
+    const listings = await getNFTListings({ collection_slug: collection_slug });
+    if (listings) {
+      const new_listings = listings.map((listing) => {
+        const currentTimestamp = new Date().toISOString();
+        const data = {
+          id: collection_slug + "_" + listing.token_id,
+          current_price: listing.current_price,
+          current_sale_symbol: listing.symbol,
+          updated_at: currentTimestamp,
+        };
+        return data;
+      });
+      if (supabase) {
+        const { error } = await supabase
+          .from("nfts")
+          .upsert(new_listings, {
+            returning: "minimal", // Don't return the value after inserting
+          })
+          .select();
+        if (error) {
+          console.log("error");
+          console.log(error);
+        }
+      }
+    }
+  }
+  return;
 };

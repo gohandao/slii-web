@@ -56,43 +56,58 @@ export const upsertNFTs = async (req: any, res: any) => {
     return assets;
   };
   if (collections) {
-    for (let index = 0; index < collections.length; index++) {
+    // for (let index = 0; index < collections.length; index++) {
+    for (let index = 0; index < 30; index++) {
       // 動作チェック用
-      // if (index % 10 == 0) {
-      //   console.log(index + " collections");
-      // }
+      if (index % 10 == 0) {
+        console.log(index + " collections");
+      }
       const assets = await getData(collections[index].slug);
       const upsertData = async (assets: any) => {
         let new_assets = [] as any[];
-        assets.length > 0 &&
-          assets.map(async (asset: any) => {
-            if (asset && asset.collection && asset.collection.slug) {
-              const new_data = {
-                id: asset.id,
-                collection_slug: asset.collection.slug,
-                description: asset.name,
-                image_original_url: asset.image_original_url,
-                image_thumbnail_url: asset.image_thumbnail_url,
-                image_url: asset.image_url,
-                last_sale_price: asset.last_sale && Number(asset.last_sale.total_price),
-                last_sale_symbol: asset.last_sale && asset.last_sale.payment_token.symbol,
-                name: asset.name,
-                num_sales: asset.num_sales,
-                permalink: asset.permalink,
-                token_id: asset.token_id,
-              };
-              new_assets = [...new_assets, new_data];
+        // const addresses = assets.length > 0 && assets.map(async (asset: any) => {
+        //   return
+        // };
+        const contract_address = assets[0] && assets[0].asset_contract && (assets[0].asset_contract.address as string);
+        if (contract_address) {
+          assets.length > 0 &&
+            assets.map(async (asset: any) => {
+              if (asset && asset.collection && asset.collection.slug) {
+                const currentTimestamp = new Date().toISOString();
+                const new_data = {
+                  id: `${asset.collection.slug}_${asset.token_id}`,
+                  collection_slug: asset.collection.slug,
+                  contract_address: asset.asset_contract.address,
+                  description: asset.name,
+                  image_original_url: asset.image_original_url,
+                  image_thumbnail_url: asset.image_thumbnail_url,
+                  image_url: asset.image_url,
+                  last_sale_price: asset.last_sale && Number(asset.last_sale.total_price),
+                  last_sale_symbol: asset.last_sale && asset.last_sale.payment_token.symbol,
+                  name: asset.name,
+                  num_sales: asset.num_sales,
+                  permalink: asset.permalink,
+                  token_id: asset.token_id,
+                  updated_at: currentTimestamp,
+                };
+                new_assets = [...new_assets, new_data];
+              }
+            });
+
+          if (supabase) {
+            const { error } = await supabase
+              .from("nfts")
+              .upsert(new_assets, {
+                returning: "minimal", // Don't return the value after inserting
+              })
+              .select();
+            if (error) {
+              console.log("error");
+              console.log(error);
             }
-          });
-        if (supabase) {
-          await supabase
-            .from("nfts")
-            .upsert(new_assets, {
-              returning: "minimal", // Don't return the value after inserting
-            })
-            .select();
+          }
+          return;
         }
-        return;
       };
       assets && (await upsertData(assets));
     }

@@ -21,8 +21,8 @@ export type Creator = {
   twitter_followers?: number | null;
   twitter_id?: string;
   type?: string;
-  updated_at?: Date | null | string;
-  updatedAt?: Date | null | string;
+  updated_at?: Date | null | string | number;
+  updatedAt?: Date | null | string | number;
   upvotes_count?: number | null;
   username: string;
   verified?: boolean;

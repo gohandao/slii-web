@@ -13,10 +13,11 @@ import { Dropdown } from "@/components/modules/Dropdown";
 import { Pagination } from "@/components/modules/Pagination";
 import { ProfileHeader } from "@/components/modules/ProfileHeader";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import { getCollections, getCreators, getImageUrl, supabase } from "@/libs/supabase";
+import { getCollections, getImageUrl, supabase } from "@/libs/supabase";
 import type { Bookmark } from "@/types/bookmark";
 import type { Creator } from "@/types/creator";
 import type { Upvote } from "@/types/upvote";
+import { useGetCreators } from "@/utilities/hooks/useGetCreators";
 
 type Props = {
   collectionList: Upvote[] | Bookmark[] | undefined;
@@ -24,6 +25,7 @@ type Props = {
   property: "upvoted" | "bookmarks";
 };
 export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
+  const { getCreators } = useGetCreators();
   const router = useRouter();
   const { order, page, search, sort, tab, term, type, username } = router.query;
   const currentPage = page ? Number(page) : 1;

@@ -8,8 +8,8 @@ import { TabIndex } from "@/components/elements/TabIndex";
 import { CreatorList } from "@/components/modules/CreatorList";
 import { Dropdown } from "@/components/modules/Dropdown";
 import { Pagination } from "@/components/modules/Pagination";
-import { getCreators } from "@/libs/supabase";
 import type { Creator } from "@/types/creator";
+import { useGetCreators } from "@/utilities/hooks/useGetCreators";
 // import type { Params } from "@/types/params";
 
 export const CreatorsIndexScreen = () => {
@@ -20,6 +20,7 @@ export const CreatorsIndexScreen = () => {
   // const { hiddenParams } = useContext(UtilitiesContext);
   const [creators, setCreators] = useState<Creator[]>();
   const [count, setCount] = useState<number>(0);
+  const { getCreators } = useGetCreators();
 
   useEffect(() => {
     const props = {

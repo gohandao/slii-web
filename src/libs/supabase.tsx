@@ -287,13 +287,3 @@ export const getNFTs = async (props: NFTsFilterProps) => {
   }
   return { count, data };
 };
-export const getUserUpvotes = async (user_id: string) => {
-  if (supabase) {
-    const { data, error } = await supabase.from("upvotes").select().eq("user_id", `${user_id}`);
-    if (error) {
-      console.log("error at getUserUpvotes");
-      console.log(error);
-    }
-    return data;
-  }
-};

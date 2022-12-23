@@ -3,12 +3,10 @@ import type { ParsedUrlQuery } from "node:querystring";
 import type { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { useEffect, useState } from "react";
 
 import { UserPageTemplate } from "@/components/templates/UserPageTemplate";
-import { getUserUpvotes, supabase } from "@/libs/supabase";
-import type { Upvote } from "@/types/upvote";
-import { useGetUserId } from "@/utilities/hooks/useGetUserId";
+import { supabase } from "@/libs/supabase";
+import { useGetUserUpvotes } from "@/utilities/hooks/useGetUserUpvotes";
 
 type Props = {
   description: string;
@@ -18,20 +16,7 @@ type Props = {
 const UserPage: NextPage<Props> = ({ description, ogImageUrl, title }) => {
   const router = useRouter();
   const { username } = router.query;
-  const [userUpvotes, setUserUpvotes] = useState<Upvote[] | undefined>([]);
-  const { userId } = useGetUserId();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const new_userUpvotes = await getUserUpvotes(userId);
-      if (new_userUpvotes) {
-        setUserUpvotes(new_userUpvotes);
-      }
-    };
-    if (username) {
-      fetchData();
-    }
-  }, [userId, username]);
+  const { userUpvotes } = useGetUserUpvotes();
 
   const upvotes_creators = userUpvotes?.filter((upvote) => {
     return upvote.creator_username;

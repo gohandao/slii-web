@@ -31,8 +31,6 @@ export const CreatorsIndexScreen = () => {
     };
     const fetchData = async () => {
       const { count, data } = await getCreators(props);
-      console.log("kkkk");
-      console.log(data);
 
       if (data != creators) {
         data &&

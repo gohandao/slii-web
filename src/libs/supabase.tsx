@@ -297,13 +297,3 @@ export const getUserUpvotes = async (user_id: string) => {
     return data;
   }
 };
-export const getUserBookmarks = async (user_id: string) => {
-  if (supabase) {
-    const { data, error } = await supabase.from("bookmarks").select().eq("user_id", `${user_id}`);
-    if (error) {
-      console.log("error at getUserBookmarks");
-      console.log(error);
-    }
-    return data;
-  }
-};

@@ -3,12 +3,10 @@ import type { ParsedUrlQuery } from "node:querystring";
 import type { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { useEffect, useState } from "react";
 
 import { UserPageTemplate } from "@/components/templates/UserPageTemplate";
-import { getUserBookmarks, supabase } from "@/libs/supabase";
-import type { Bookmark } from "@/types/bookmark";
-import { useGetUserId } from "@/utilities/hooks/useGetUserId";
+import { supabase } from "@/libs/supabase";
+import { useGetUserBookmarks } from "@/utilities/hooks/useGetUserBookmarks";
 
 type Props = {
   description: string;
@@ -16,23 +14,9 @@ type Props = {
   title: string;
 };
 const BookmarksPage: NextPage<Props> = ({ description, ogImageUrl, title }) => {
-  const { userId } = useGetUserId();
   const router = useRouter();
   const { username } = router.query;
-
-  const [userBookmarks, setUserBookmarks] = useState<Bookmark[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const new_userBookmarks = await getUserBookmarks(userId);
-      if (new_userBookmarks) {
-        setUserBookmarks(new_userBookmarks);
-      }
-    };
-    if (username) {
-      fetchData();
-    }
-  }, [userId, username]);
+  const { userBookmarks } = useGetUserBookmarks();
 
   const bookmarked_creators = userBookmarks?.filter((bookmark) => {
     return bookmark.creator_username;

@@ -8,24 +8,23 @@ import { useEffect, useState } from "react";
 import { UserPageTemplate } from "@/components/templates/UserPageTemplate";
 import { getUserBookmarks, supabase } from "@/libs/supabase";
 import type { Bookmark } from "@/types/bookmark";
-import { getUserId } from "@/utilities/getUserId";
+import { useGetUserId } from "@/utilities/hooks/useGetUserId";
 
 type Props = {
   description: string;
   ogImageUrl: string;
   title: string;
 };
-const BookmarksPage: NextPage<Props> = (props) => {
-  const { description, ogImageUrl, title } = props;
+const BookmarksPage: NextPage<Props> = ({ description, ogImageUrl, title }) => {
+  const { userId } = useGetUserId();
   const router = useRouter();
   const { username } = router.query;
 
-  const [userBookmarks, setUserBookmarks] = useState<Bookmark[] | undefined>([]);
+  const [userBookmarks, setUserBookmarks] = useState<Bookmark[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const userId = username && ((await getUserId(username as string)) as string);
-      const new_userBookmarks = await getUserBookmarks(userId as string);
+      const new_userBookmarks = await getUserBookmarks(userId);
       if (new_userBookmarks) {
         setUserBookmarks(new_userBookmarks);
       }
@@ -33,7 +32,7 @@ const BookmarksPage: NextPage<Props> = (props) => {
     if (username) {
       fetchData();
     }
-  }, [username]);
+  }, [userId, username]);
 
   const bookmarked_creators = userBookmarks?.filter((bookmark) => {
     return bookmark.creator_username;

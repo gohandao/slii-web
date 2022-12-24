@@ -18,10 +18,10 @@ const UserPage: NextPage<Props> = ({ description, ogImageUrl, title }) => {
   const { username } = router.query;
   const { userUpvotes } = useGetUserUpvotes();
 
-  const upvotes_creators = userUpvotes?.filter((upvote) => {
+  const upvotes_creators = userUpvotes.filter((upvote) => {
     return upvote.creator_username;
   });
-  const upvotes_collections = userUpvotes?.filter((upvote) => {
+  const upvotes_collections = userUpvotes.filter((upvote) => {
     return upvote.collection_slug;
   });
 

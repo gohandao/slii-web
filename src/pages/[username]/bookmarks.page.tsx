@@ -18,10 +18,10 @@ const BookmarksPage: NextPage<Props> = ({ description, ogImageUrl, title }) => {
   const { username } = router.query;
   const { userBookmarks } = useGetUserBookmarks();
 
-  const bookmarked_creators = userBookmarks?.filter((bookmark) => {
+  const bookmarked_creators = userBookmarks.filter((bookmark) => {
     return bookmark.creator_username;
   });
-  const bookmarked_collections = userBookmarks?.filter((bookmark) => {
+  const bookmarked_collections = userBookmarks.filter((bookmark) => {
     return bookmark.collection_slug;
   });
 

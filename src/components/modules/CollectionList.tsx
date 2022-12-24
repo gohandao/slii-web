@@ -103,6 +103,11 @@ export const CollectionList: FC<Props> = ({ collections, limit }) => {
                               style={{
                                 objectFit: "cover",
                               }}
+                              onError={(e) => {
+                                e.currentTarget.src = `https://placehold.jp/42/333/ffffff/150x150.png?text=${collection.name.charAt(
+                                  0
+                                )}`;
+                              }}
                             />
                           )}
                         </div>

@@ -19,6 +19,8 @@ import type { Creator } from "@/types/creator";
 import type { Upvote } from "@/types/upvote";
 import { useGetCreators } from "@/utilities/hooks/useGetCreators";
 
+import type { Collection } from "../../types/collection";
+
 type Props = {
   collectionList: Upvote[] | Bookmark[] | undefined;
   creatorList: Upvote[] | Bookmark[] | undefined;
@@ -31,9 +33,9 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
   const currentPage = page ? Number(page) : 1;
   const limit = 20;
   const [creators, setCreators] = useState<Creator[]>([]);
-  const [collections, setCollections] = useState<any[]>([]);
-  const [creatorsCount, setCreatorsCount] = useState(0);
-  const [collectionsCount, setCollectionsCount] = useState(0);
+  const [collections, setCollections] = useState<Collection[]>([]);
+  const [creatorsCount, setCreatorsCount] = useState<number>(0);
+  const [collectionsCount, setCollectionsCount] = useState<number>(0);
   const { setUserProfile, userProfile } = useContext(UtilitiesContext);
   if (userProfile && username != userProfile.username) {
     setUserProfile(undefined);
@@ -61,9 +63,7 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
   !userBackground && getBackgroundBlob();
 
   useEffect(() => {
-    {
-      username && !userProfile && getUserProfile(username as string);
-    }
+    username && !userProfile && getUserProfile(username as string);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userProfile]);
 
@@ -113,26 +113,24 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
   const getUserProfile = async (username: string) => {
     let new_userProfile;
     try {
-      if (supabase) {
-        const { data, error, status } = await supabase
-          .from("profiles")
-          .select("*", {
-            count: "exact",
-            head: false,
-          })
-          .eq("username", `${username}`)
-          .single()
-          .then((response) => {
-            return response;
-          });
-        if (error && status !== 406) {
-          throw error;
-        }
-        new_userProfile = data;
-        setUserProfile(new_userProfile);
+      const { data, error, status } = await supabase
+        .from("profiles")
+        .select("*", {
+          count: "exact",
+          head: false,
+        })
+        .eq("username", `${username}`)
+        .single()
+        .then((response) => {
+          return response;
+        });
+      if (error && status !== 406) {
+        throw error;
       }
-    } catch (error: any) {
-      alert(error.message);
+      new_userProfile = data;
+      setUserProfile(new_userProfile);
+    } catch (error) {
+      if (error instanceof Error) alert(error.message);
     }
     return new_userProfile;
   };

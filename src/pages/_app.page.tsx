@@ -1,11 +1,13 @@
 import "@/styles/style.scss";
-import "@/styles/globals.css";
+import "@/styles/globals.scss";
+import "react-toastify/dist/ReactToastify.css";
 
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { DefaultSeo } from "next-seo";
 import { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
 
 import { AuthContext } from "@/contexts/AuthContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
@@ -19,7 +21,6 @@ const shortid = require("shortid");
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string | undefined>();
@@ -217,6 +218,18 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           <div className={`bg-stripe flex min-h-screen flex-col overflow-hidden`}>
             <Component {...pageProps} />
           </div>
+          <ToastContainer
+            position="top-right"
+            autoClose={false}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+          />
         </UtilitiesContext.Provider>
       </AuthContext.Provider>
     </>

@@ -29,7 +29,7 @@
     "src/utilities/removeUndefinedObject.ts",
     "src/libs/discord.jsx",
     "src/libs/twitter.jsx",
-    "src/utilities/useRedirections.jsx",
+    "src/hooks/useRedirections.tsx",
     "src/components/_Categories"
   ],
   "exclude": ["node_modules"]

@@ -17,7 +17,6 @@ export const setParams = ({ order, page, screen, search, slug, sort, tab, term, 
     search: search,
     screen: screen,
   };
-  /* eslint-disable */
 
   const new_query: Params = removeUndefinedObject(query);
   const currentUrl = location.pathname;

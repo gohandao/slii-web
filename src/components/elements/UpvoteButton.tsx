@@ -27,7 +27,7 @@ export const UpvoteButton: FC<Props> = ({ id, count, property = "default", type 
             upvoted ? removeLike() : addLike();
           }}
         >
-          {property == "simple" ? (
+          {property === "simple" ? (
             <div className={`bg-gray-700 ${propertyClass} `}>
               <AiFillHeart className={`text-sm ${heartIconClass}`} />
               <p className="text-sm text-gray-100">{currentCount}</p>

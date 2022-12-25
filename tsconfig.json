@@ -26,7 +26,7 @@
     "src/pages/api/twitter.page.tsx",
     "src/libs/supabase.tsx",
     "src/pages/api/twitter.tsx",
-    "src/utilities/removeUndefinedObject.jsx",
+    "src/utilities/removeUndefinedObject.ts",
     "src/libs/discord.jsx",
     "src/libs/twitter.jsx",
     "src/utilities/useRedirections.jsx",

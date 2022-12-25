@@ -17,8 +17,10 @@ export const Searchbox: FC<Props> = ({ id }) => {
   const { setKeyword } = useContext(UtilitiesContext);
 
   useEffect(() => {
-    setKeyword(search && typeof search == "string" ? search : "");
-    setValue(search && typeof search == "string" ? search : "");
+    if (search) {
+      setKeyword(typeof search == "string" ? search : "");
+      setValue(typeof search == "string" ? search : "");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

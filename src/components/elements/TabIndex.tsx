@@ -8,12 +8,12 @@ type Props = {
 export const TabIndex: FC<Props> = ({ property }) => {
   return (
     <div className="flex gap-5">
-      {property == "tag" ? (
+      {property === "tag" ? (
         <>
           <Tab title="Creators" param="creator" />
           <Tab title="Collections" param="collection" />
         </>
-      ) : property == "user" ? (
+      ) : property === "user" ? (
         <>
           <Tab title="Creators" param="creator" />
           <Tab title="Collections" param="collection" />

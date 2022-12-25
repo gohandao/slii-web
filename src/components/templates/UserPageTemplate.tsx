@@ -13,12 +13,12 @@ import { Dropdown } from "@/components/modules/Dropdown";
 import { Pagination } from "@/components/modules/Pagination";
 import { ProfileHeader } from "@/components/modules/ProfileHeader";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { useGetCreators } from "@/hooks/useGetCreators";
+import { useGetUserProfile } from "@/hooks/useGetUserProfile";
 import { getCollections, getImageUrl } from "@/libs/supabase";
 import type { Bookmark } from "@/types/bookmark";
 import type { Creator } from "@/types/creator";
 import type { Upvote } from "@/types/upvote";
-import { useGetCreators } from "@/utilities/hooks/useGetCreators";
-import { useGetUserProfile } from "@/utilities/hooks/useGetUserProfile";
 
 import type { Collection } from "../../types/collection";
 

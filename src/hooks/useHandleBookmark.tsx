@@ -4,7 +4,7 @@ import { AuthContext } from "@/contexts/AuthContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { supabase } from "@/libs/supabase";
 
-import type { Bookmark } from "../../types/bookmark";
+import type { Bookmark } from "../types/bookmark";
 
 export const useHandleBookmark = (id: string, type: string) => {
   const { bookmarks, setBookmarks, user } = useContext(AuthContext);

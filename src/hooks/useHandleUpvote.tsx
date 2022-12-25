@@ -4,7 +4,7 @@ import { AuthContext } from "@/contexts/AuthContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { supabase } from "@/libs/supabase";
 
-import type { Upvote } from "../../types/upvote";
+import type { Upvote } from "../types/upvote";
 
 export const useHandleUpvote = (count: number, type: string, id: string) => {
   const { setUpvotes, upvotes, user } = useContext(AuthContext);

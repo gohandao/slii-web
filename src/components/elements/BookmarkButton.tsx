@@ -2,7 +2,7 @@ import type { FC } from "react";
 import { useEffect } from "react";
 import { FaBookmark } from "react-icons/fa";
 
-import { useHandleBookmark } from "@/utilities/hooks/useHandleBookmark";
+import { useHandleBookmark } from "@/hooks/useHandleBookmark";
 
 type Props = {
   id: string;

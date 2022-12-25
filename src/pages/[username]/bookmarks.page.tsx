@@ -5,8 +5,8 @@ import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 
 import { UserPageTemplate } from "@/components/templates/UserPageTemplate";
+import { useGetUserBookmarks } from "@/hooks/useGetUserBookmarks";
 import { supabase } from "@/libs/supabase";
-import { useGetUserBookmarks } from "@/utilities/hooks/useGetUserBookmarks";
 
 type Props = {
   description: string;

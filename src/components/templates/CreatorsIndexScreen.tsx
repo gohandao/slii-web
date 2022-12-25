@@ -8,8 +8,8 @@ import { TabIndex } from "@/components/elements/TabIndex";
 import { CreatorList } from "@/components/modules/CreatorList";
 import { Dropdown } from "@/components/modules/Dropdown";
 import { Pagination } from "@/components/modules/Pagination";
+import { useGetCreators } from "@/hooks/useGetCreators";
 import type { Creator } from "@/types/creator";
-import { useGetCreators } from "@/utilities/hooks/useGetCreators";
 // import type { Params } from "@/types/params";
 
 export const CreatorsIndexScreen = () => {

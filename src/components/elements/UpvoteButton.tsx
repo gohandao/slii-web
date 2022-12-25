@@ -1,7 +1,7 @@
 import type { FC } from "react";
 import { AiFillHeart } from "react-icons/ai";
 
-import { useHandleUpvote } from "@/utilities/hooks/useHandleUpvote";
+import { useHandleUpvote } from "@/hooks/useHandleUpvote";
 
 type Props = {
   id: string;

@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { useGetUserId } from "@/hooks/useGetUserId";
 import { supabase } from "@/libs/supabase";
 import type { Bookmark } from "@/types/bookmark";
-import { useGetUserId } from "@/utilities/hooks/useGetUserId";
 
 export const useGetUserBookmarks = () => {
   const { userId } = useGetUserId();

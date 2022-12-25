@@ -8,9 +8,9 @@ import { RandomButton } from "@/components/elements/RandomButton";
 import { CollectionCard } from "@/components/modules/CollectionCard";
 import { NFTList } from "@/components/modules/NFTList";
 import { ProfileHeader } from "@/components/modules/ProfileHeader";
+import { useGetCreators } from "@/hooks/useGetCreators";
 import { getCollections, getNFTs } from "@/libs/supabase";
 import type { Creator } from "@/types/creator";
-import { useGetCreators } from "@/utilities/hooks/useGetCreators";
 
 export const CreatorScreen = () => {
   const router = useRouter();

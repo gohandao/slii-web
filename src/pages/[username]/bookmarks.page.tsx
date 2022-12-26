@@ -3,42 +3,25 @@ import type { ParsedUrlQuery } from "node:querystring";
 import type { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { useEffect, useState } from "react";
 
 import { UserPageTemplate } from "@/components/templates/UserPageTemplate";
-import { getUserBookmarks, supabase } from "@/libs/supabase";
-import type { Bookmark } from "@/types/bookmark";
-import { getUserId } from "@/utilities/getUserId";
+import { useGetUserBookmarks } from "@/hooks/useGetUserBookmarks";
+import { supabase } from "@/libs/supabase";
 
 type Props = {
   description: string;
   ogImageUrl: string;
   title: string;
 };
-const BookmarksPage: NextPage<Props> = (props) => {
-  const { description, ogImageUrl, title } = props;
+const BookmarksPage: NextPage<Props> = ({ description, ogImageUrl, title }) => {
   const router = useRouter();
   const { username } = router.query;
+  const { userBookmarks } = useGetUserBookmarks();
 
-  const [userBookmarks, setUserBookmarks] = useState<Bookmark[] | undefined>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const userId = username && ((await getUserId(username as string)) as string);
-      const new_userBookmarks = await getUserBookmarks(userId as string);
-      if (new_userBookmarks) {
-        setUserBookmarks(new_userBookmarks);
-      }
-    };
-    if (username) {
-      fetchData();
-    }
-  }, [username]);
-
-  const bookmarked_creators = userBookmarks?.filter((bookmark) => {
+  const bookmarked_creators = userBookmarks.filter((bookmark) => {
     return bookmark.creator_username;
   });
-  const bookmarked_collections = userBookmarks?.filter((bookmark) => {
+  const bookmarked_collections = userBookmarks.filter((bookmark) => {
     return bookmark.collection_slug;
   });
 

@@ -17,34 +17,31 @@ export const Header: FC = () => {
   const { avatar, profile, user } = useContext(AuthContext);
   const { setLoginModal } = useContext(UtilitiesContext);
   const [dropdown, setDropdown] = useState<boolean>(false);
+  const [avatorSrc, setAvatorSrc] = useState<string>();
 
   const delQuery = (url: string) => {
     return url.split("?")[0];
   };
-  let currentPath = router.asPath;
-  currentPath = delQuery(currentPath);
+  const { asPath } = router;
+  const currentPath = delQuery(asPath);
 
-  const [homeClass, setHomeClass] = useState<string>("hidden");
-  const [statsClass, setStatsClass] = useState<string>("hidden");
-  const [tagsClass, setTagsClass] = useState<string>("hidden");
+  const [homeClass, setHomeClass] = useState<"hidden" | "">("hidden");
+  const [statsClass, setStatsClass] = useState<"hidden" | "">("hidden");
+  const [tagsClass, setTagsClass] = useState<"hidden" | "">("hidden");
 
   useEffect(() => {
-    if (currentPath != "/" && currentPath != "/collections" && currentPath != "/login") {
-      setHomeClass("");
-    } else {
-      setHomeClass("hidden");
-    }
-    if (currentPath != "/stats") {
-      setStatsClass("");
-    } else {
-      setStatsClass("hidden");
-    }
-    if (currentPath != "/tags") {
-      setTagsClass("");
-    } else {
-      setTagsClass("hidden");
-    }
+    const isHiddenPath = (path: string) => {
+      return path === "/" || path === "/collections" || path === "/login";
+    };
+    setHomeClass(isHiddenPath(currentPath) ? "hidden" : "");
+    setStatsClass(currentPath === "/stats" ? "hidden" : "");
+    setTagsClass(currentPath === "/tags" ? "hidden" : "");
   }, [currentPath]);
+
+  useEffect(() => {
+    const src = avatar ? URL.createObjectURL(avatar) : "/default-avatar.jpg";
+    setAvatorSrc(src);
+  }, [avatar]);
 
   return (
     <header className="relative z-50 py-3" x-data="{expanded: false}">
@@ -98,34 +95,18 @@ export const Header: FC = () => {
               }}
               className="relative flex h-[44px] w-[44px] items-center justify-center gap-3 overflow-hidden rounded-full border-[3px] border-gray-700 bg-gray-800 text-xl font-bold text-gray-400"
             >
-              {avatar ? (
-                <Image
-                  src={URL.createObjectURL(avatar)}
-                  alt=""
-                  loading="lazy"
-                  className=""
-                  quality={10}
-                  fill
-                  sizes="100px"
-                  style={{
-                    objectFit: "cover",
-                  }}
-                />
-              ) : (
-                <Image
-                  src="/default-avatar.jpg"
-                  alt=""
-                  loading="lazy"
-                  className=""
-                  fill
-                  quality={10}
-                  sizes="100px"
-                  style={{
-                    objectFit: "cover",
-                  }}
-                />
-              )}
-              {/*<FaRegUser />*/}
+              <Image
+                src={avatorSrc as string}
+                alt=""
+                loading="lazy"
+                className=""
+                quality={10}
+                fill
+                sizes="100px"
+                style={{
+                  objectFit: "cover",
+                }}
+              />
             </button>
           )}
           {dropdown && (
@@ -140,10 +121,8 @@ export const Header: FC = () => {
                   </Link>
                   <button
                     onClick={async () => {
-                      if (supabase) {
-                        await supabase.auth.signOut();
-                        location.reload();
-                      }
+                      await supabase.auth.signOut();
+                      location.reload();
                     }}
                     className="block px-5 py-3 text-sm text-gray-400"
                   >

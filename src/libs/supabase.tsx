@@ -285,26 +285,6 @@ export const getNFTs = async (props: NFTsFilterProps) => {
   }
   return { count, data };
 };
-export const getUserUpvotes = async (user_id: string) => {
-  if (supabase) {
-    const { data, error } = await supabase.from("upvotes").select().eq("user_id", `${user_id}`);
-    if (error) {
-      console.log("error at getUserUpvotes");
-      console.log(error);
-    }
-    return data;
-  }
-};
-export const getUserBookmarks = async (user_id: string) => {
-  if (supabase) {
-    const { data, error } = await supabase.from("bookmarks").select().eq("user_id", `${user_id}`);
-    if (error) {
-      console.log("error at getUserBookmarks");
-      console.log(error);
-    }
-    return data;
-  }
-};
 export const upsertNFTPrices = async (collection_slug: string) => {
   const checkUpdatedAt = async (collection_slug: string) => {
     if (supabase) {

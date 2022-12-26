@@ -3,41 +3,25 @@ import type { ParsedUrlQuery } from "node:querystring";
 import type { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { useEffect, useState } from "react";
 
 import { UserPageTemplate } from "@/components/templates/UserPageTemplate";
-import { getUserUpvotes, supabase } from "@/libs/supabase";
-import type { Upvote } from "@/types/upvote";
-import { getUserId } from "@/utilities/getUserId";
+import { useGetUserUpvotes } from "@/hooks/useGetUserUpvotes";
+import { supabase } from "@/libs/supabase";
 
 type Props = {
   description: string;
   ogImageUrl: string;
   title: string;
 };
-const UserPage: NextPage<Props> = (props) => {
-  const { description, ogImageUrl, title } = props;
+const UserPage: NextPage<Props> = ({ description, ogImageUrl, title }) => {
   const router = useRouter();
   const { username } = router.query;
-  const [userUpvotes, setUserUpvotes] = useState<Upvote[] | undefined>([]);
+  const { userUpvotes } = useGetUserUpvotes();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const userId = username && ((await getUserId(username as string)) as string);
-      const new_userUpvotes = await getUserUpvotes(userId as string);
-      if (new_userUpvotes) {
-        setUserUpvotes(new_userUpvotes);
-      }
-    };
-    if (username) {
-      fetchData();
-    }
-  }, [username]);
-
-  const upvotes_creators = userUpvotes?.filter((upvote) => {
+  const upvotes_creators = userUpvotes.filter((upvote) => {
     return upvote.creator_username;
   });
-  const upvotes_collections = userUpvotes?.filter((upvote) => {
+  const upvotes_collections = userUpvotes.filter((upvote) => {
     return upvote.collection_slug;
   });
 

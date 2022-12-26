@@ -18,6 +18,7 @@ type Props = {
 const CreatorIndex: NextPage<Props> = ({ description, ogImageUrl, title }) => {
   const router = useRouter();
   const { username } = router.query;
+
   return (
     <>
       <NextSeo
@@ -52,9 +53,11 @@ type PathProps = {
   ogImageUrl: string;
   title: string;
 };
+
 type Params = ParsedUrlQuery & {
   username: string;
 };
+
 export const getStaticPaths = async () => {
   const { data } = await getCreators();
   const creators = data as Creator[];

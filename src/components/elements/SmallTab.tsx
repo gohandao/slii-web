@@ -14,22 +14,20 @@ export const SmallTab: FC<Props> = ({ path, title }) => {
   const currentPath = router.pathname;
   const { order, search, sort, tab, term, type, username } = router.query;
 
-  let new_query = {
-    order: order,
-    search: search,
-    sort: sort,
-    tab: tab,
-    term: term,
-    type: type,
-  } as Params;
-  new_query = removeUndefinedObject(new_query);
+  const new_query = removeUndefinedObject({
+    order,
+    search,
+    sort,
+    tab,
+    term,
+    type,
+  } as Params);
 
-  let passiveClass = "";
-  if (currentPath == "/[username]" && path == "upvotes") {
-    passiveClass = "bg-gray-800";
-  } else if (currentPath == "/[username]/bookmarks" && path == "bookmarks") {
-    passiveClass = "bg-gray-800";
-  }
+  const pathMap: Record<string, string> = {
+    "/[username]": "upvotes",
+    "/[username]/bookmarks": "bookmarks",
+  };
+  const passiveClass = pathMap[currentPath] === path ? "bg-gray-800" : "";
   let pathName = "/" + username;
   if (path == "bookmarks") {
     pathName = "/" + username + "/bookmarks";

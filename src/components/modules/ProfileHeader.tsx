@@ -50,7 +50,7 @@ export const ProfileHeader: FC<Props> = ({
   tags,
   title,
   upvotes_count,
-}: Props) => {
+}) => {
   const [requestDropdown, setRequestDropdown] = useState<boolean>(false);
   // const [shareDropdown, setShareDropdown] = useState<boolean>(false);
 

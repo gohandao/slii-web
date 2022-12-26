@@ -59,7 +59,17 @@ export const UploadBackground: FC<Props> = ({ image, newImage, setNewImage }) =>
           ) : (
             image && (
               <>
-                <Image src={URL.createObjectURL(image)} alt="" quality={40} fill sizes="100vw" />
+                <Image
+                  src={URL.createObjectURL(image)}
+                  alt=""
+                  quality={40}
+                  fill
+                  className="opacity-50"
+                  sizes="100vw"
+                  style={{
+                    objectFit: "cover",
+                  }}
+                />
               </>
             )
           )}

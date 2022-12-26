@@ -20,6 +20,7 @@ const AccountPage: NextPage = () => {
   const [label, setLabel] = useState<string>();
   const [description, setDescription] = useState<string>();
   const [background, setBackground] = useState<File>();
+  const [newBackground, setNewBackground] = useState<File>();
   const [loading, setLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
@@ -31,7 +32,9 @@ const AccountPage: NextPage = () => {
   //   maxWidthOrHeight: 80, // 最大画像幅もしくは高さ
   // };
   useEffect(() => {
-    if (!user) {
+    // reload時に!userとなるためauthチェック
+    const data = supabase.auth.user();
+    if (!user && !data) {
       router.push("/");
     }
   }, [user]);
@@ -48,18 +51,22 @@ const AccountPage: NextPage = () => {
         setBackground(background_blob);
       };
       getBackgroundBlob();
+      setLabel(profile.label);
+      setDescription(profile.description);
     }
   }, [user, profile]);
 
-  const uploadImage = async (image: File, path: string) => {
+  const uploadImage = async (image: File, storage: string, path: string) => {
     const uuid = uuidv4();
-    if (supabase) {
-      const { data } = await supabase.storage.from(path).upload(`public/${uuid}.jpg`, image, {
-        cacheControl: "3600",
-        upsert: false,
-      });
-      return data;
+    const { data, error } = await supabase.storage.from(storage).upload(`${path}/${uuid}.jpg`, image, {
+      cacheControl: "3600",
+      upsert: false,
+    });
+    if (error) {
+      console.log("error at uploadImage");
+      console.log(error);
     }
+    return data;
   };
 
   const updateProfile = async () => {
@@ -69,12 +76,12 @@ const AccountPage: NextPage = () => {
       let new_avatar_url;
       let new_background_url;
       if (user) {
-        if (avatar) {
-          new_avatar_url = await uploadImage(avatar, "avatars");
+        if (newAvatar) {
+          new_avatar_url = await uploadImage(newAvatar, "avatars", "public");
           new_avatar_url = new_avatar_url?.Key;
         }
-        if (background) {
-          new_background_url = await uploadImage(background, "public");
+        if (newBackground) {
+          new_background_url = await uploadImage(newBackground, "public", "images");
           new_background_url = new_background_url?.Key;
         }
         const updates = {
@@ -91,8 +98,9 @@ const AccountPage: NextPage = () => {
           const { error } = await supabase.from("profiles").upsert(updates, {
             returning: "minimal", // Don't return the value after inserting
           });
-          alert("upload success");
-          if (error) {
+          if (!error) {
+            alert("upload success");
+          } else {
             throw error;
           }
         }
@@ -145,7 +153,7 @@ const AccountPage: NextPage = () => {
                   </div>
                   <div className="relative px-5 md:px-16 ">
                     <div className="absolute left-0 top-0 flex h-[120px] w-full items-center justify-center">
-                      <UploadBackground image={background} newImage={background} setNewImage={setBackground} />
+                      <UploadBackground image={background} newImage={newBackground} setNewImage={setNewBackground} />
                     </div>
                     <div className=" pt-16 ">
                       <div className="mb-3 flex">

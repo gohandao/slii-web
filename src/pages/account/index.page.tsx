@@ -140,7 +140,6 @@ const AccountPage: NextPage = () => {
                     >
                       <IoChevronBackOutline className="text-gray-400" />
                     </button>
-                    {/* FIX: Loading時レイアウト崩れる */}
                     <button
                       className="overflow-hidden whitespace-nowrap rounded-full bg-green-600 py-2 px-7 text-center text-green-100"
                       onClick={() => {

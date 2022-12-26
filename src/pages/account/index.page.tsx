@@ -142,13 +142,13 @@ const AccountPage: NextPage = () => {
                     </button>
                     {/* FIX: Loading時レイアウト崩れる */}
                     <button
-                      className="overflow-hidden whitespace-nowrap rounded-full bg-green-600 py-2 px-5 text-center text-green-100"
+                      className="overflow-hidden whitespace-nowrap rounded-full bg-green-600 py-2 px-7 text-center text-green-100"
                       onClick={() => {
                         return updateProfile();
                       }}
                       disabled={loading}
                     >
-                      {loading ? "Loading ..." : "Save"}
+                      Save
                     </button>
                   </div>
                   <div className="relative px-5 md:px-16 ">

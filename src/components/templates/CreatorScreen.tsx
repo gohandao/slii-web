@@ -9,7 +9,7 @@ import { CollectionCard } from "@/components/modules/CollectionCard";
 import { NFTList } from "@/components/modules/NFTList";
 import { ProfileHeader } from "@/components/modules/ProfileHeader";
 import { useGetCreators } from "@/hooks/useGetCreators";
-import { getCollections, getNFTs } from "@/libs/supabase";
+import { getCollections, getNFTs, upsertNFTPrices } from "@/libs/supabase";
 import type { Creator } from "@/types/creator";
 
 export const CreatorScreen = () => {

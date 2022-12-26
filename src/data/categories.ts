@@ -1,4 +1,4 @@
-export const categories = [
+export const collection_categories = [
   "All",
   "PFP",
   "Art",
@@ -9,4 +9,15 @@ export const categories = [
   "Photography",
   "Earning",
   "Utilities",
+] as const;
+
+export const creators_categories = [
+  "Illustrator",
+  "Artist",
+  "Engineer",
+  "Manga",
+  "Animator",
+  "Influencer",
+  "Company",
+  "Others",
 ] as const;

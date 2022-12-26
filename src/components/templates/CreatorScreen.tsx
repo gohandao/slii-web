@@ -23,6 +23,16 @@ export const CreatorScreen = () => {
   const { getCreators } = useGetCreators();
 
   useEffect(() => {
+    // アクセス時にNFTの価格を更新する
+    creator &&
+      creator.collections &&
+      creator.collections.length > 0 &&
+      creator.collections.map(async (collection_slug: string) => {
+        await upsertNFTPrices(collection_slug);
+      });
+  }, [creator]);
+
+  useEffect(() => {
     const fetchData = async () => {
       const props = {
         username: username as string,

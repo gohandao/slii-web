@@ -147,7 +147,7 @@ const AccountPage: NextPage = () => {
                       }}
                       disabled={loading}
                     >
-                      Save
+                      test discord connection
                     </button>
                   </div>
                   <div className="relative px-5 md:px-16 ">

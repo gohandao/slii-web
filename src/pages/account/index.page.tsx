@@ -65,17 +65,19 @@ const AccountPage: NextPage = () => {
   const updateProfile = async () => {
     try {
       setLoading(true);
-      const user = supabase && supabase.auth.user();
+      const {
+        data: { user },
+      } = supabase && (await supabase.auth.getUser());
       let new_avatar_url;
       let new_background_url;
       if (user) {
         if (avatar) {
           new_avatar_url = await uploadImage(avatar, "avatars");
-          new_avatar_url = new_avatar_url?.Key;
+          new_avatar_url = new_avatar_url?.path;
         }
         if (background) {
           new_background_url = await uploadImage(background, "public");
-          new_background_url = new_background_url?.Key;
+          new_background_url = new_background_url?.path;
         }
         const updates = {
           id: user.id,
@@ -88,9 +90,7 @@ const AccountPage: NextPage = () => {
         };
 
         if (supabase) {
-          const { error } = await supabase.from("profiles").upsert(updates, {
-            returning: "minimal", // Don't return the value after inserting
-          });
+          const { error } = await supabase.from("profiles").upsert(updates);
           alert("upload success");
           if (error) {
             throw error;

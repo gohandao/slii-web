@@ -18,7 +18,7 @@ export const LoginModal: FC = () => {
     try {
       setLoading(true);
       if (supabase) {
-        const { error } = await supabase.auth.signIn({ email });
+        const { error } = await supabase.auth.signInWithOtp({ email: email });
         if (error) throw error;
         setSentCode(true);
         alert("We sent verification code!");
@@ -34,7 +34,7 @@ export const LoginModal: FC = () => {
     try {
       setChecking(true);
       if (supabase) {
-        const { error } = await supabase.auth.verifyOTP({
+        const { error } = await supabase.auth.verifyOtp({
           email: email,
           token: otpToken,
           type: "magiclink",

@@ -298,7 +298,7 @@ export const upsertNFTPrices = async (collection_slug: string) => {
         console.log("error at getUserBookmarks");
         console.log(error);
       }
-      return data.updated_at as Date;
+      return data && (data.updated_at as Date);
     }
   };
   // 更新が10分以内の場合は再更新を無視する
@@ -322,12 +322,7 @@ export const upsertNFTPrices = async (collection_slug: string) => {
         return data;
       });
       if (supabase) {
-        const { error } = await supabase
-          .from("nfts")
-          .upsert(new_listings, {
-            returning: "minimal", // Don't return the value after inserting
-          })
-          .select();
+        const { error } = await supabase.from("nfts").upsert(new_listings).select();
         if (error) {
           console.log("error");
           console.log(error);

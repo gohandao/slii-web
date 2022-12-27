@@ -19,7 +19,15 @@ export const useHandleBookmark = (id: string, type: string) => {
 
   useEffect(() => {
     const fetchBookmarks = async () => {
-      const { data } = await supabase.from<Bookmark>("bookmarks").select("*");
+      const fetchData = async () => {
+        const { data, error } = await supabase.from("bookmarks").select("*");
+        if (error) {
+          console.log("error at useHandleBookmark");
+          console.log(error);
+        }
+        return data as Bookmark[];
+      };
+      const data = await fetchData();
       if (data) setBookmarks(data);
     };
     fetchBookmarks();
@@ -31,14 +39,26 @@ export const useHandleBookmark = (id: string, type: string) => {
         return bookmark.creator_username === id;
       });
       if (checkBookmarked.length == 0) {
-        const { data } = await supabase.from<Bookmark>("bookmarks").insert([
-          {
-            collection_slug: collection_slug,
-            created_at: new Date(),
-            creator_username: creator_username,
-            user_id: user.id,
-          },
-        ]);
+        const fetchData = async () => {
+          const { data, error } = await supabase
+            .from("bookmarks")
+            .insert([
+              {
+                collection_slug: collection_slug,
+                created_at: new Date(),
+                creator_username: creator_username,
+                user_id: user.id,
+              },
+            ])
+            .select();
+          if (error) {
+            console.log("error at useHandleBookmark");
+            console.log(error);
+          }
+          return data as Bookmark[];
+        };
+        const data = await fetchData();
+
         data && setBookmarks([...bookmarks, ...data]);
         setIsBookmarked(true);
       }

@@ -135,13 +135,14 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if (!user) {
       const data = supabase.auth.user();
+      setUseratom(data);
       data && setUser(data);
       !profile && getProfile();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [user1] = useAtom(userAtom);
+  const [useratom, setUseratom] = useAtom(userAtom);
 
   return (
     <>
@@ -197,7 +198,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           }}
         >
           <div className={`bg-stripe flex min-h-screen flex-col overflow-hidden`}>
-            <h1>{user1.name}</h1>
+            <h1>{useratom?.email}</h1>
             <Component {...pageProps} />
           </div>
         </UtilitiesContext.Provider>

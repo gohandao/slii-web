@@ -8,7 +8,7 @@ type Props = {
   maxLength?: number;
   placeholder?: string;
   required: boolean;
-  setText: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setText: React.Dispatch<React.SetStateAction<string>>;
   text?: string;
   value?: string;
 };

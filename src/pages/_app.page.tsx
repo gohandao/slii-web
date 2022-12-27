@@ -1,6 +1,7 @@
 import "@/styles/style.scss";
 import "@/styles/globals.css";
 
+import type { User } from "@supabase/supabase-js";
 import { useAtom } from "jotai";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -25,7 +26,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   const [, setLoading] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string | undefined>();
-  const [user, setUser] = useState<any>();
+  const [user, setUser] = useState<User>();
   const [profile, setProfile] = useState<any>();
   const [userProfile, setUserProfile] = useState<Profile>();
   const [avatar, setAvatar] = useState<File>();
@@ -64,9 +65,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   const getBookmarks = async () => {
     try {
-      if (user && supabase) {
+      if (user) {
         const { data, error, status } = await supabase
-          .from("bookmarks")
+          .from<Bookmark>("bookmarks")
           .select("*, profiles(*)", {
             count: "exact",
             head: false,
@@ -75,18 +76,17 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         if (error && status !== 406) {
           throw error;
         }
-        const new_bookmarks = data as Bookmark[];
-        setBookmarks(new_bookmarks);
+        data && setBookmarks(data);
       }
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error) {
+      if (error instanceof Error) alert(error.message);
     }
   };
   const getUpvotes = async () => {
     try {
-      if (user && supabase) {
+      if (user) {
         const { data, error, status } = await supabase
-          .from("upvotes")
+          .from<Upvote>("upvotes")
           .select("*, profiles(*)", {
             count: "exact",
             head: false,
@@ -95,13 +95,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         if (error && status !== 406) {
           throw error;
         }
-        const new_upvotes = data as Upvote[];
-        setUpvotes(new_upvotes);
+        data && setUpvotes(data);
       }
     } catch (error) {
-      if (error instanceof Error) {
-        alert(error.message);
-      }
+      if (error instanceof Error) alert(error.message);
     }
   };
 
@@ -112,47 +109,34 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       updated_at: new Date(),
       username: init_username,
     };
-    if (supabase) {
-      const { error } = await supabase.from("profiles").upsert(updates, {
-        returning: "minimal", // Don't return the value after inserting
-      });
-      if (error) {
-        throw error;
-      }
-    }
+    const { error } = await supabase.from("profiles").upsert(updates, {
+      returning: "minimal", // Don't return the value after inserting
+    });
+    if (error) throw error;
   };
 
   const getProfile = async () => {
     try {
       setLoading(true);
-      if (supabase) {
-        const user = supabase.auth.user();
-        if (user) {
-          const { data, error, status } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-
-          if (error && status !== 406) {
-            throw error;
-          }
-          if (data) {
-            setProfile(data);
-          }
-          if (!profile && !data) {
-            createProfile();
-          }
-        }
+      const user = supabase.auth.user();
+      if (user) {
+        const { data, error, status } = await supabase.from<Profile>("profiles").select("*").eq("id", user.id).single();
+        if (error && status !== 406) throw error;
+        if (data) setProfile(data);
+        if (!profile && !data) createProfile();
       }
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error) {
+      if (error instanceof Error) alert(error.message);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (supabase && !user) {
+    if (!user) {
       const data = supabase.auth.user();
-      setUser(data);
-      data && !profile && getProfile();
+      data && setUser(data);
+      !profile && getProfile();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

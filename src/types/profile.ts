@@ -1,4 +1,5 @@
 export type Profile = {
+  id: string /* primary key */;
   address: string | undefined;
   avatar_url?: string | Blob | MediaSource;
   background_url?: string;

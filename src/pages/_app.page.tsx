@@ -15,7 +15,7 @@ import { AuthContext } from "@/contexts/AuthContext";
 import { userAtom } from "@/contexts/state/auth.state";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import * as gtag from "@/libs/gtag";
-import { getImageUrl, supabase } from "@/libs/supabase";
+import { supabase } from "@/libs/supabase";
 import type { Bookmark } from "@/types/bookmark";
 import type { Profile } from "@/types/profile";
 import type { Upvote } from "@/types/upvote";
@@ -28,7 +28,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<User>();
   const [profile, setProfile] = useState<any>();
   const [userProfile, setUserProfile] = useState<Profile>();
-  const [avatar, setAvatar] = useState<File>();
   const [loginModal, setLoginModal] = useState<boolean>(false);
   const [upvotes, setUpvotes] = useState<Upvote[]>([]);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
@@ -42,17 +41,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
   }, [router.events]);
-
-  const getAvatarBlob = async () => {
-    const avatar_blob = profile && profile.avatar_url && (await getImageUrl(profile.avatar_url));
-    setAvatar(avatar_blob);
-  };
-  profile && !avatar && getAvatarBlob;
-
-  useEffect(() => {
-    !avatar && getAvatarBlob();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile]);
 
   useEffect(() => {
     if (user) {
@@ -174,10 +162,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       />
       <AuthContext.Provider
         value={{
-          avatar,
           bookmarks,
           profile,
-          setAvatar,
           setBookmarks,
           setUpvotes,
           upvotes,

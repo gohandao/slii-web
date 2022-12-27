@@ -22,6 +22,7 @@ const nextConfig = withPWA({
       "i.seadn.io",
       "storage.googleapis.com",
       "weev.media",
+      "placehold.jp",
     ],
   },
   pageExtensions: ["page.tsx", "page.ts", "page.js"],

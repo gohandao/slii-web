@@ -1,7 +1,7 @@
 export type Profile = {
   id: string /* primary key */;
   address: string | undefined;
-  avatar_url?: string | Blob | MediaSource;
+  avatar_url?: string;
   background_url?: string;
   description: string;
   discord_url?: string;

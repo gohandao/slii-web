@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 
 import type { User } from "@supabase/supabase-js";
 import { useAtom } from "jotai";
+import { nanoid } from "nanoid";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -18,8 +19,6 @@ import { getImageUrl, supabase } from "@/libs/supabase";
 import type { Bookmark } from "@/types/bookmark";
 import type { Profile } from "@/types/profile";
 import type { Upvote } from "@/types/upvote";
-
-const shortid = require("shortid");
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -103,7 +102,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   };
 
   const createProfile = async () => {
-    const init_username = shortid.generate();
+    const init_username = nanoid();
     const updates = {
       id: user?.id,
       updated_at: new Date(),

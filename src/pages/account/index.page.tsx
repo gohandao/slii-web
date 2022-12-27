@@ -10,22 +10,21 @@ import { Input } from "@/components/elements/Input";
 import { Textarea } from "@/components/elements/Textarea";
 import { BaseLayout } from "@/components/layouts/BaseLayout";
 import { AuthContext } from "@/contexts/AuthContext";
-import { getImageUrl, supabase } from "@/libs/supabase";
+import { supabase } from "@/libs/supabase";
+import { UploadAvatar } from "@/pages/account/components/UploadAvatar";
 import { UploadBackground } from "@/pages/account/components/UploadBackground";
-import { UploadImage } from "@/pages/account/components/UploadImage";
 
 const AccountPage: NextPage = () => {
-  const { avatar, profile, user } = useContext(AuthContext);
+  const { profile, user } = useContext(AuthContext);
+  const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [newAvatar, setNewAvatar] = useState<File>();
-  const [label, setLabel] = useState<string>();
-  const [description, setDescription] = useState<string>();
-  const [background, setBackground] = useState<File>();
+  const [backgroundUrl, setBackgroundUrl] = useState<string>("");
   const [newBackground, setNewBackground] = useState<File>();
+  const [label, setLabel] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [avatarUrl, setAvatarUrl] = useState<string>("");
 
   // const options = {
   //   maxSizeMB: 1, // 最大ファイルサイズ
@@ -46,17 +45,14 @@ const AccountPage: NextPage = () => {
     if (profile) {
       setUsername(profile.username);
       setAvatarUrl(profile.avatar_url);
-      const getBackgroundBlob = async () => {
-        const background_blob = profile && profile.background_url && (await getImageUrl(profile.background_url));
-        setBackground(background_blob);
-      };
-      getBackgroundBlob();
+      setBackgroundUrl(profile.background_url);
       setLabel(profile.label);
       setDescription(profile.description);
     }
   }, [user, profile]);
 
   const uploadImage = async (image: File, storage: string, path: string) => {
+    const STORAGE_URL = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_URL;
     const uuid = uuidv4();
     const { data, error } = await supabase.storage.from(storage).upload(`${path}/${uuid}.jpg`, image, {
       cacheControl: "3600",
@@ -65,8 +61,10 @@ const AccountPage: NextPage = () => {
     if (error) {
       console.log("error at uploadImage");
       console.log(error);
+      return;
     }
-    return data;
+    const image_url = STORAGE_URL && STORAGE_URL + data?.Key;
+    return image_url;
   };
 
   const updateProfile = async () => {
@@ -78,12 +76,12 @@ const AccountPage: NextPage = () => {
       if (user) {
         if (newAvatar) {
           new_avatar_url = await uploadImage(newAvatar, "avatars", "public");
-          new_avatar_url = new_avatar_url?.Key;
         }
+        new_avatar_url = new_avatar_url ? new_avatar_url : profile.avatar_url;
         if (newBackground) {
           new_background_url = await uploadImage(newBackground, "public", "images");
-          new_background_url = new_background_url?.Key;
         }
+        new_background_url = new_background_url ? new_background_url : profile.background_url;
         const updates = {
           id: user.id,
           avatar_url: new_avatar_url,
@@ -152,11 +150,11 @@ const AccountPage: NextPage = () => {
                   </div>
                   <div className="relative px-5 md:px-16 ">
                     <div className="absolute left-0 top-0 flex h-[120px] w-full items-center justify-center">
-                      <UploadBackground image={background} newImage={newBackground} setNewImage={setNewBackground} />
+                      <UploadBackground image={backgroundUrl} newImage={newBackground} setNewImage={setNewBackground} />
                     </div>
                     <div className=" pt-16 ">
                       <div className="mb-3 flex">
-                        <UploadImage image={avatar} newImage={newAvatar} setNewImage={setNewAvatar} />
+                        <UploadAvatar image={avatarUrl} newImage={newAvatar} setNewImage={setNewAvatar} />
                       </div>
                       <div className="mb-5">
                         <Input

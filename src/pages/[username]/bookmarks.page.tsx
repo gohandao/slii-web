@@ -84,7 +84,7 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params }) => {
   const username = params && params.username;
-  let user;
+  let profile;
   if (supabase) {
     const { data } = await supabase
       .from("profiles")
@@ -94,16 +94,16 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params
       })
       .eq("username", username)
       .single();
-    user = data;
+    profile = data;
   }
-  if (!user) {
+  if (!profile) {
     return {
       notFound: true,
     };
   }
   const description =
-    user && user.description ? user.description.slice(0, 200) : `This is ${username}'s bookmarks page.`;
-  const label = user && user.label ? user.label.slice(0, 20) : `NFT Holder`;
+    profile && profile.description ? profile.description.slice(0, 200) : `This is ${username}'s bookmarks page.`;
+  const label = profile && profile.label ? profile.label.slice(0, 20) : `NFT Holder`;
 
   let baseUrl;
   if (process.env.NODE_ENV != "test") {
@@ -113,9 +113,8 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params
     }[process.env.NODE_ENV];
   }
 
-  const storage_url = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_URL;
-  const avatar = user.avatar ? storage_url + "/" + user.avatar : "";
-  const background = user.background ? storage_url + "/" + user.background : "";
+  const avatar = profile.avatar_url ? profile.avatar_url : "";
+  const background = profile.background_url ? profile.background_url : "";
 
   return {
     props: {

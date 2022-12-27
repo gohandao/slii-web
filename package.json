@@ -68,6 +68,7 @@
     "eslint-plugin-tailwindcss": "^3.7.1",
     "eslint-plugin-unused-imports": "^2.0.0",
     "moment": "^2.29.4",
+    "nanoid": "^4.0.0",
     "postcss": "^8.4.19",
     "prettier": "^2.8.0",
     "prettier-plugin-tailwindcss": "^0.2.0",

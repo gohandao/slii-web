@@ -39,7 +39,7 @@ export const useGetCreators = () => {
     let sort_param = "";
     switch (sort) {
       case "popular":
-        sort_param = "upvotes_count";
+        sort_param = "upvotes_count_function";
         break;
       case "newest":
       case "created_at":
@@ -60,11 +60,11 @@ export const useGetCreators = () => {
         sort_param = "discord_members";
         break;
       default:
-        sort_param = "upvotes_count";
+        sort_param = "upvotes_count_function";
         break;
     }
     if (!sort) {
-      sortFilter = `.order("upvotes_count", { ascending: ${orderFilter} })`;
+      sortFilter = `.order("upvotes_count_function", { ascending: ${orderFilter} })`;
     } else {
       sortFilter = `.order("${sort_param}", { ascending: ${orderFilter} })`;
     }
@@ -74,8 +74,8 @@ export const useGetCreators = () => {
     const usernameFilter = username ? `.eq("username", "${username}").single()` : "";
     const usernamesFilter = usernames ? `.in("username", [${usernamesArray}])` : "";
     const filter = username
-      ? `supabase.from("creators").select('*')${usernameFilter}`
-      : `supabase.from("creators").select('*', { count: 'exact' })${usernamesFilter}${typeFilter}${searchFilter}${sortFilter}${usernameFilter}${rangeFilter}`;
+      ? `supabase.from("creators").select('"*", upvotes_count_function ${usernameFilter}'`
+      : `supabase.from("creators").select('"*", upvotes_count_function', { count: 'exact' })${usernamesFilter}${typeFilter}${searchFilter}${sortFilter}${usernameFilter}${rangeFilter}`;
 
     console.log("filter");
     console.log(filter);

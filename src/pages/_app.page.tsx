@@ -62,14 +62,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   const getBookmarks = async () => {
     try {
-      if (user && supabase) {
-        const { data, error, status } = await supabase
-          .from("bookmarks")
-          .select("*, profiles(*)", {
-            count: "exact",
-            head: false,
-          })
-          .eq("user_id", `${user.id}`);
+      if (user) {
+        const { data, error, status } = await supabase.from("bookmarks").select("*").eq("user_id", `${user.id}`);
         if (error && status !== 406) {
           throw error;
         }
@@ -127,6 +121,16 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         } = await supabase.auth.getUser();
         if (user) {
           const { data, error, status } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+          supabase
+            .channel(`public:profile:id=eq.${user.id}`)
+            .on(
+              "postgres_changes",
+              { event: "*", filter: `id=eq.${user.id}`, schema: "public", table: "profiles" },
+              (payload) => {
+                setProfile(payload.new);
+              }
+            )
+            .subscribe();
           if (error && status !== 406) {
             throw error;
           }

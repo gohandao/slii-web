@@ -32,10 +32,15 @@ const AccountPage: NextPage = () => {
   // };
   useEffect(() => {
     // reload時に!userとなるためauthチェック
-    const data = supabase.auth.user();
-    if (!user && !data) {
-      router.push("/");
-    }
+    const fetchData = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        router.push("/");
+      }
+    };
+    fetchData();
   }, [user]);
 
   useEffect(() => {

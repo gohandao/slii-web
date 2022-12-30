@@ -16,9 +16,10 @@ export const useHandleUpvote = (count: number, type: string, id: string) => {
 
   useEffect(() => {
     let new_count = count;
-    if (added) new_count = count ? count + 1 : 1;
-    if (removed) new_count = count ? count - 1 : 0;
+    if (added) new_count = currentCount + 1;
+    if (removed) new_count = currentCount - 1;
     setCurrentCount(new_count);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count, added, removed]);
 
   const creator_username = type === "creator" ? id : "";

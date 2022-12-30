@@ -48,7 +48,7 @@ export const getCreators = async (props: CreatorsFilterProps = {}) => {
   let sort_param = "";
   switch (sort) {
     case "popular":
-      sort_param = "upvotes_count";
+      sort_param = "upvotes_count_function";
       break;
     case "newest":
     case "created_at":
@@ -69,11 +69,11 @@ export const getCreators = async (props: CreatorsFilterProps = {}) => {
       sort_param = "discord_members";
       break;
     default:
-      sort_param = "upvotes_count";
+      sort_param = "upvotes_count_function";
       break;
   }
   if (!sort) {
-    sortFilter = `.order("upvotes_count", { ascending: ${orderFilter} })`;
+    sortFilter = `.order("upvotes_count_function", { ascending: ${orderFilter} })`;
   } else {
     sortFilter = `.order("${sort_param}", { ascending: ${orderFilter} })`;
   }
@@ -83,8 +83,8 @@ export const getCreators = async (props: CreatorsFilterProps = {}) => {
   const usernameFilter = username ? `.eq("username", "${username}").single()` : "";
   const usernamesFilter = usernames ? `.in("username", [${usernamesArray}])` : "";
   const filter = username
-    ? `supabase.from("creators").select('*')${usernameFilter}`
-    : `supabase.from("creators").select('*', { count: 'exact' })${usernamesFilter}${typeFilter}${searchFilter}${sortFilter}${usernameFilter}${rangeFilter}`;
+    ? `supabase.from("creators").select('"*", upvotes_count_function')${usernameFilter}`
+    : `supabase.from("creators").select('"*", upvotes_count_function', { count: 'exact' })${usernamesFilter}${typeFilter}${searchFilter}${sortFilter}${usernameFilter}${rangeFilter}`;
   const { count, data, error } = await eval(filter);
   if (error) {
     console.log("error at getCreators");
@@ -123,7 +123,7 @@ export const getCollections = async (props: CollectionsFilterProps = {}) => {
   let sort_param = "";
   switch (sort) {
     case "popular":
-      sort_param = "upvotes_count";
+      sort_param = "upvotes_count_function";
       break;
     case "newest":
     case "created_at":
@@ -156,7 +156,7 @@ export const getCollections = async (props: CollectionsFilterProps = {}) => {
       sort_param = "discord_members";
       break;
     default:
-      sort_param = "upvotes_count";
+      sort_param = "upvotes_count_function";
       break;
   }
   switch (term) {
@@ -243,7 +243,7 @@ export const getCollections = async (props: CollectionsFilterProps = {}) => {
       break;
   }
   if (!sort) {
-    sortFilter = `.order("upvotes_count", { ascending: ${orderFilter} })`;
+    sortFilter = `.order("upvotes_count_function", { ascending: ${orderFilter} })`;
   } else {
     sortFilter = `.order("${sort_param}", { ascending: ${orderFilter} })`;
   }
@@ -254,8 +254,8 @@ export const getCollections = async (props: CollectionsFilterProps = {}) => {
   const slugsFilter = slugs ? `.in("slug", [${slugsArray}])` : "";
   const ForeignTableFilter = foreign_table ? `, ${foreign_table}` : "";
   const filter = slug
-    ? `supabase.from("collections").select('*')${slugFilter}`
-    : `supabase.from("collections").select("*" ${ForeignTableFilter}, { count: 'exact' })${slugsFilter}${typeFilter}${searchFilter}${sortFilter}${rangeFilter}${slugFilter}`;
+    ? `supabase.from("collections").select('"*", upvotes_count_function')${slugFilter}`
+    : `supabase.from("collections").select('"*", upvotes_count_function ${ForeignTableFilter}', { count: 'exact' })${slugsFilter}${typeFilter}${searchFilter}${sortFilter}${rangeFilter}${slugFilter}`;
   const { count, data, error } = await eval(filter);
   if (error) {
     console.log("error at getCollections");

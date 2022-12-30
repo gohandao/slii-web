@@ -74,7 +74,7 @@ export const useGetCreators = () => {
     const usernameFilter = username ? `.eq("username", "${username}").single()` : "";
     const usernamesFilter = usernames ? `.in("username", [${usernamesArray}])` : "";
     const filter = username
-      ? `supabase.from("creators").select('"*", upvotes_count_function ${usernameFilter}'`
+      ? `supabase.from("creators").select('"*", upvotes_count_function')${usernameFilter}`
       : `supabase.from("creators").select('"*", upvotes_count_function', { count: 'exact' })${usernamesFilter}${typeFilter}${searchFilter}${sortFilter}${usernameFilter}${rangeFilter}`;
 
     console.log("filter");

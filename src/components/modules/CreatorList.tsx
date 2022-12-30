@@ -132,7 +132,7 @@ export const CreatorList: FC<Props> = ({ creators, limit }) => {
                               property="simple"
                               type="creator"
                               id={creator.username}
-                              count={creator.upvotes_count ? creator.upvotes_count : 0}
+                              count={creator.upvotes_count_function ? creator.upvotes_count_function : 0}
                             />
                           </div>
                         </div>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import { useContext, useEffect, useState } from "react";
 import { BiHomeAlt, BiPurchaseTagAlt } from "react-icons/bi";
 import { FaRegUser } from "react-icons/fa";
@@ -11,39 +12,36 @@ import { AuthContext } from "@/contexts/AuthContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { supabase } from "@/libs/supabase";
 
-export const Header = () => {
+export const Header: FC = () => {
   const router = useRouter();
-  const { avatar, profile, user } = useContext(AuthContext);
+  const { profile, user } = useContext(AuthContext);
   const { setLoginModal } = useContext(UtilitiesContext);
   const [dropdown, setDropdown] = useState<boolean>(false);
+  const [avatorSrc, setAvatorSrc] = useState<string>();
 
   const delQuery = (url: string) => {
     return url.split("?")[0];
   };
-  let currentPath = router.asPath;
-  currentPath = delQuery(currentPath);
+  const { asPath } = router;
+  const currentPath = delQuery(asPath);
 
-  const [homeClass, setHomeClass] = useState<string>("hidden");
-  const [statsClass, setStatsClass] = useState<string>("hidden");
-  const [tagsClass, setTagsClass] = useState<string>("hidden");
+  const [homeClass, setHomeClass] = useState<"hidden" | "">("hidden");
+  const [statsClass, setStatsClass] = useState<"hidden" | "">("hidden");
+  const [tagsClass, setTagsClass] = useState<"hidden" | "">("hidden");
 
   useEffect(() => {
-    if (currentPath != "/" && currentPath != "/collections" && currentPath != "/login") {
-      setHomeClass("");
-    } else {
-      setHomeClass("hidden");
-    }
-    if (currentPath != "/stats") {
-      setStatsClass("");
-    } else {
-      setStatsClass("hidden");
-    }
-    if (currentPath != "/tags") {
-      setTagsClass("");
-    } else {
-      setTagsClass("hidden");
-    }
+    const isHiddenPath = (path: string) => {
+      return path === "/" || path === "/collections" || path === "/login";
+    };
+    setHomeClass(isHiddenPath(currentPath) ? "hidden" : "");
+    setStatsClass(currentPath === "/stats" ? "hidden" : "");
+    setTagsClass(currentPath === "/tags" ? "hidden" : "");
   }, [currentPath]);
+
+  useEffect(() => {
+    const src = profile && profile.avatar_url ? profile.avatar_url : "/default-avatar.jpg";
+    setAvatorSrc(src);
+  }, [profile]);
 
   return (
     <header className="relative z-50 py-3" x-data="{expanded: false}">
@@ -97,34 +95,18 @@ export const Header = () => {
               }}
               className="relative flex h-[44px] w-[44px] items-center justify-center gap-3 overflow-hidden rounded-full border-[3px] border-gray-700 bg-gray-800 text-xl font-bold text-gray-400"
             >
-              {avatar ? (
-                <Image
-                  src={URL.createObjectURL(avatar)}
-                  alt=""
-                  loading="lazy"
-                  className=""
-                  quality={10}
-                  fill
-                  sizes="100px"
-                  style={{
-                    objectFit: "cover",
-                  }}
-                />
-              ) : (
-                <Image
-                  src="/default-avatar.jpg"
-                  alt=""
-                  loading="lazy"
-                  className=""
-                  fill
-                  quality={10}
-                  sizes="100px"
-                  style={{
-                    objectFit: "cover",
-                  }}
-                />
-              )}
-              {/*<FaRegUser />*/}
+              <Image
+                src={avatorSrc as string}
+                alt=""
+                loading="lazy"
+                className=""
+                quality={10}
+                fill
+                sizes="100px"
+                style={{
+                  objectFit: "cover",
+                }}
+              />
             </button>
           )}
           {dropdown && (
@@ -139,8 +121,8 @@ export const Header = () => {
                   </Link>
                   <button
                     onClick={async () => {
-                      if (supabase) {
-                        await supabase.auth.signOut();
+                      const { error } = await supabase.auth.signOut();
+                      if (error) {
                         location.reload();
                       }
                     }}

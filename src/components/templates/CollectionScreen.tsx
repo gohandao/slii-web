@@ -7,7 +7,7 @@ import { IconEth } from "@/components/elements/IconEth";
 import { RandomButton } from "@/components/elements/RandomButton";
 import { NFTList } from "@/components/modules/NFTList";
 import { ProfileHeader } from "@/components/modules/ProfileHeader";
-import { getCollections, getNFTs } from "@/libs/supabase";
+import { getCollections, getNFTs, upsertNFTPrices } from "@/libs/supabase";
 import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 
 export const CollectionScreen = () => {
@@ -17,6 +17,11 @@ export const CollectionScreen = () => {
   const [collection, setCollection] = useState<any>();
   const [assets, setAssets] = useState<any[]>([]);
   const [count, setCount] = useState<number>(0);
+
+  useEffect(() => {
+    // アクセス時にNFTの価格を更新する
+    collection && upsertNFTPrices(collection.slug);
+  }, [collection]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -149,7 +154,7 @@ export const CollectionScreen = () => {
             stats={stats}
             twitter_id={collection.twitter_id}
             discord_url={collection.discord_url}
-            upvotes_count={collection.upvotes_count}
+            upvotes_count={collection.upvotes_count_function}
           />
         )}
         {assets && assets.length > 0 && (

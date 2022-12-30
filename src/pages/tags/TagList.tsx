@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { FC } from "react";
 
 import type { Tag } from "@/types/tag";
 
@@ -6,7 +7,7 @@ type Props = {
   tags: Tag[];
   type: "creator" | "collection";
 };
-export const TagList = ({ tags, type }: Props) => {
+export const TagList: FC<Props> = ({ tags, type }) => {
   let typeClass = "bg-gray-500 text-gray-100";
   if (type == "creator") {
     typeClass = "bg-indigo-900 text-indigo-100";

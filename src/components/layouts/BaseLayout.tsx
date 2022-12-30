@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { Footer } from "@/components/modules/Footer";
 import { Header } from "@/components/modules/Header";
 import { LoginModal } from "@/components/modules/LoginModal";
-import { useRedirections } from "@/utilities/useRedirections";
+import { useRedirections } from "@/hooks/useRedirections";
 
 type Props = {
   children: ReactNode;

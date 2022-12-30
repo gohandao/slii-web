@@ -1,18 +1,20 @@
 import { createClient } from "@supabase/supabase-js";
 
+import { getNFTListings } from "@/libs/opensea";
+
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABSE_ANON_KEY;
-export const supabase = supabaseUrl && supabaseAnonKey && createClient(supabaseUrl, supabaseAnonKey);
+if (!supabaseUrl) throw new Error("Missing env.NEXT_PUBLIC_SUPABASE_URL");
+if (!supabaseAnonKey) throw new Error("Missing env.NEXT_PUBLIC_SUPABASE_KEY");
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export const getImageUrl = async (path: string) => {
-  let url;
+  let url: Blob | null;
   if (path) {
     const storage_name = path.substr(0, path.indexOf("/"));
     const file_path = path.substr(path.indexOf("/") + 1);
-    if (supabase) {
-      const res = await supabase.storage.from(storage_name).download(file_path);
-      url = res.data && res.data;
-    }
+    const res = await supabase.storage.from(storage_name).download(file_path);
+    url = res.data && res.data;
   } else {
     return;
   }
@@ -46,7 +48,7 @@ export const getCreators = async (props: CreatorsFilterProps = {}) => {
   let sort_param = "";
   switch (sort) {
     case "popular":
-      sort_param = "upvotes_count";
+      sort_param = "upvotes_count_function";
       break;
     case "newest":
     case "created_at":
@@ -67,11 +69,11 @@ export const getCreators = async (props: CreatorsFilterProps = {}) => {
       sort_param = "discord_members";
       break;
     default:
-      sort_param = "upvotes_count";
+      sort_param = "upvotes_count_function";
       break;
   }
   if (!sort) {
-    sortFilter = `.order("upvotes_count", { ascending: ${orderFilter} })`;
+    sortFilter = `.order("upvotes_count_function", { ascending: ${orderFilter} })`;
   } else {
     sortFilter = `.order("${sort_param}", { ascending: ${orderFilter} })`;
   }
@@ -81,12 +83,8 @@ export const getCreators = async (props: CreatorsFilterProps = {}) => {
   const usernameFilter = username ? `.eq("username", "${username}").single()` : "";
   const usernamesFilter = usernames ? `.in("username", [${usernamesArray}])` : "";
   const filter = username
-    ? `supabase.from("creators").select('*')${usernameFilter}`
-    : `supabase.from("creators").select('*', { count: 'exact' })${usernamesFilter}${typeFilter}${searchFilter}${sortFilter}${usernameFilter}${rangeFilter}`;
-
-  console.log("filter");
-  console.log(filter);
-
+    ? `supabase.from("creators").select('"*", upvotes_count_function')${usernameFilter}`
+    : `supabase.from("creators").select('"*", upvotes_count_function', { count: 'exact' })${usernamesFilter}${typeFilter}${searchFilter}${sortFilter}${usernameFilter}${rangeFilter}`;
   const { count, data, error } = await eval(filter);
   if (error) {
     console.log("error at getCreators");
@@ -125,7 +123,7 @@ export const getCollections = async (props: CollectionsFilterProps = {}) => {
   let sort_param = "";
   switch (sort) {
     case "popular":
-      sort_param = "upvotes_count";
+      sort_param = "upvotes_count_function";
       break;
     case "newest":
     case "created_at":
@@ -158,7 +156,7 @@ export const getCollections = async (props: CollectionsFilterProps = {}) => {
       sort_param = "discord_members";
       break;
     default:
-      sort_param = "upvotes_count";
+      sort_param = "upvotes_count_function";
       break;
   }
   switch (term) {
@@ -245,7 +243,7 @@ export const getCollections = async (props: CollectionsFilterProps = {}) => {
       break;
   }
   if (!sort) {
-    sortFilter = `.order("upvotes_count", { ascending: ${orderFilter} })`;
+    sortFilter = `.order("upvotes_count_function", { ascending: ${orderFilter} })`;
   } else {
     sortFilter = `.order("${sort_param}", { ascending: ${orderFilter} })`;
   }
@@ -256,8 +254,8 @@ export const getCollections = async (props: CollectionsFilterProps = {}) => {
   const slugsFilter = slugs ? `.in("slug", [${slugsArray}])` : "";
   const ForeignTableFilter = foreign_table ? `, ${foreign_table}` : "";
   const filter = slug
-    ? `supabase.from("collections").select('*')${slugFilter}`
-    : `supabase.from("collections").select("*" ${ForeignTableFilter}, { count: 'exact' })${slugsFilter}${typeFilter}${searchFilter}${sortFilter}${rangeFilter}${slugFilter}`;
+    ? `supabase.from("collections").select('"*", upvotes_count_function')${slugFilter}`
+    : `supabase.from("collections").select('"*", upvotes_count_function ${ForeignTableFilter}', { count: 'exact' })${slugsFilter}${typeFilter}${searchFilter}${sortFilter}${rangeFilter}${slugFilter}`;
   const { count, data, error } = await eval(filter);
   if (error) {
     console.log("error at getCollections");
@@ -287,23 +285,50 @@ export const getNFTs = async (props: NFTsFilterProps) => {
   }
   return { count, data };
 };
-export const getUserUpvotes = async (user_id: string) => {
-  if (supabase) {
-    const { data, error } = await supabase.from("upvotes").select().eq("user_id", `${user_id}`);
-    if (error) {
-      console.log("error at getUserUpvotes");
-      console.log(error);
+export const upsertNFTPrices = async (collection_slug: string) => {
+  const checkUpdatedAt = async (collection_slug: string) => {
+    if (supabase) {
+      const { data, error } = await supabase
+        .from("nfts")
+        .select("updated_at")
+        .eq("collection_slug", collection_slug)
+        .order("updated_at", { ascending: false })
+        .single();
+      if (error) {
+        console.log("error at getUserBookmarks");
+        console.log(error);
+      }
+      return data && (data.updated_at as Date);
     }
-    return data;
-  }
-};
-export const getUserBookmarks = async (user_id: string) => {
-  if (supabase) {
-    const { data, error } = await supabase.from("bookmarks").select().eq("user_id", `${user_id}`);
-    if (error) {
-      console.log("error at getUserBookmarks");
-      console.log(error);
+  };
+  // 更新が10分以内の場合は再更新を無視する
+  const last_updated_at = await checkUpdatedAt(collection_slug);
+  const now = Date.now();
+  const past = last_updated_at && last_updated_at.getTime();
+  const diff = past && now - past;
+  const diffMinutes = diff && diff / 1000 / 60;
+  //timestampは現在時刻より10分以上前です
+  if (!diffMinutes || diffMinutes > 10) {
+    const listings = await getNFTListings({ collection_slug: collection_slug });
+    if (listings) {
+      const new_listings = listings.map((listing) => {
+        const currentTimestamp = new Date().toISOString();
+        const data = {
+          id: collection_slug + "_" + listing.token_id,
+          current_price: listing.current_price,
+          current_sale_symbol: listing.symbol,
+          updated_at: currentTimestamp,
+        };
+        return data;
+      });
+      if (supabase) {
+        const { error } = await supabase.from("nfts").upsert(new_listings).select();
+        if (error) {
+          console.log("error");
+          console.log(error);
+        }
+      }
     }
-    return data;
   }
+  return;
 };

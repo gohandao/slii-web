@@ -1,20 +1,17 @@
 import imageCompression from "browser-image-compression";
 import Image from "next/image";
-import { useContext } from "react";
+import type { FC } from "react";
 import { RiImageAddLine } from "react-icons/ri";
-
-import { AuthContext } from "@/contexts/AuthContext";
 
 export type Props = {
   // uploadImages: File[];
   // setUploadImages: (value: React.SetStateAction<File[]>) => void;
-  image: File | undefined;
-  newImage: File | undefined;
+  image?: string;
+  newImage?: File;
   setNewImage: (value: React.SetStateAction<File | undefined>) => void;
 };
 
-export const UploadImage = ({ image, newImage, setNewImage }: Props) => {
-  const { avatar } = useContext(AuthContext);
+export const UploadAvatar: FC<Props> = ({ image, newImage, setNewImage }) => {
   // const [images, setImages] = useState<File[]>([]);
   // const [image, setImage] = useState<File>();
   const options = {
@@ -59,7 +56,7 @@ export const UploadImage = ({ image, newImage, setNewImage }: Props) => {
         <div className="relative flex h-[100px] w-[100px] items-center justify-center overflow-hidden rounded-full border-4 border-gray-700 bg-gray-800">
           {image && !newImage ? (
             <Image
-              src={URL.createObjectURL(image)}
+              src={image}
               alt=""
               loading="lazy"
               className=""
@@ -82,7 +79,17 @@ export const UploadImage = ({ image, newImage, setNewImage }: Props) => {
                   loading="lazy"
                   className="image-fill"
                 /> */}
-                <Image src={URL.createObjectURL(newImage)} alt="" loading="lazy" quality={40} fill sizes="100vw" />
+                <Image
+                  src={URL.createObjectURL(newImage)}
+                  alt=""
+                  loading="lazy"
+                  quality={40}
+                  fill
+                  sizes="100vw"
+                  style={{
+                    objectFit: "cover",
+                  }}
+                />
                 {/*<button
                   onClick={() => handleOnRemoveImage(0)}
                   className="left-0 top-0"
@@ -92,7 +99,7 @@ export const UploadImage = ({ image, newImage, setNewImage }: Props) => {
               </>
             )
           )}
-          {!avatar && !image && (
+          {!image && !newImage && (
             <Image
               src="/default-avatar.jpg"
               alt=""

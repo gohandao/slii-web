@@ -1,3 +1,4 @@
+import type { FC } from "react";
 import { useState } from "react";
 
 import { Count } from "@/components/elements/Count";
@@ -7,7 +8,7 @@ type Props = {
   maxLength?: number;
   placeholder?: string;
   required: boolean;
-  setText: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setText: React.Dispatch<React.SetStateAction<string>>;
   text?: string;
   value?: string;
 };
@@ -22,7 +23,7 @@ type Props = {
   addClass = ""
 />
 */
-export const Textarea = ({ id, maxLength, required = false, setText, text, ...props }: Props) => {
+export const Textarea: FC<Props> = ({ id, maxLength, required = false, setText, text, ...props }) => {
   const [count, setCount] = useState<number>(0);
   const countHandler = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     setCount(e.currentTarget.value.length);

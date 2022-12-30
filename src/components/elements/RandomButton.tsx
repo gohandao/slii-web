@@ -15,7 +15,6 @@ export const RandomButton = ({ count, random, setRandom }: Props) => {
     >
       <FaRandom className="flex h-full items-center justify-center text-gray-500 " />
       Shuffle {count} NFTs
-      <span></span>
     </button>
   );
 };

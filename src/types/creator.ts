@@ -1,9 +1,9 @@
 export type Creator = {
   address: string;
-  avatar: any;
+  avatar?: string;
   average_floor_price?: number | null;
   average_volume?: number | null;
-  background: any;
+  background?: string;
   background_image?: string;
   category?: string;
   collections?: string[];
@@ -21,9 +21,10 @@ export type Creator = {
   twitter_followers?: number | null;
   twitter_id?: string;
   type?: string;
-  updated_at?: Date | null | string;
-  updatedAt?: Date | null | string;
+  updated_at?: Date | null | string | number;
+  updatedAt?: Date | null | string | number;
   upvotes_count?: number | null;
+  upvotes_count_function?: number | null;
   username: string;
   verified?: boolean;
   website_url?: string;

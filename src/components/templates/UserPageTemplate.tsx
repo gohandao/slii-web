@@ -13,10 +13,14 @@ import { Dropdown } from "@/components/modules/Dropdown";
 import { Pagination } from "@/components/modules/Pagination";
 import { ProfileHeader } from "@/components/modules/ProfileHeader";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import { getCollections, getCreators, getImageUrl, supabase } from "@/libs/supabase";
+import { useGetCreators } from "@/hooks/useGetCreators";
+import { useGetUserProfile } from "@/hooks/useGetUserProfile";
+import { getCollections } from "@/libs/supabase";
 import type { Bookmark } from "@/types/bookmark";
 import type { Creator } from "@/types/creator";
 import type { Upvote } from "@/types/upvote";
+
+import type { Collection } from "../../types/collection";
 
 type Props = {
   collectionList: Upvote[] | Bookmark[] | undefined;
@@ -24,50 +28,20 @@ type Props = {
   property: "upvoted" | "bookmarks";
 };
 export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
+  const { getCreators } = useGetCreators();
   const router = useRouter();
   const { order, page, search, sort, tab, term, type, username } = router.query;
   const currentPage = page ? Number(page) : 1;
   const limit = 20;
   const [creators, setCreators] = useState<Creator[]>([]);
-  const [collections, setCollections] = useState<any[]>([]);
-  const [creatorsCount, setCreatorsCount] = useState(0);
-  const [collectionsCount, setCollectionsCount] = useState(0);
-  const { setUserProfile, userProfile } = useContext(UtilitiesContext);
-  if (userProfile && username != userProfile.username) {
+  const [collections, setCollections] = useState<Collection[]>([]);
+  const [creatorsCount, setCreatorsCount] = useState<number>(0);
+  const [collectionsCount, setCollectionsCount] = useState<number>(0);
+  const { setUserProfile } = useContext(UtilitiesContext);
+  const { userProfile } = useGetUserProfile();
+  if (userProfile && username !== userProfile.username) {
     setUserProfile(undefined);
   }
-  const [userAvatar, setUserAvatar] = useState<Blob>();
-  const [userBackground, setUserBackground] = useState<Blob>();
-
-  let avatar_blob;
-  const getAvatarBlob = async () => {
-    avatar_blob = userProfile && userProfile.avatar_url && (await getImageUrl(userProfile.avatar_url as string));
-    avatar_blob && setUserAvatar(avatar_blob);
-    console.log("avatar_blob");
-    console.log(avatar_blob);
-  };
-
-  userProfile && !userAvatar && getAvatarBlob;
-  !userAvatar && getAvatarBlob();
-
-  let background_blob;
-  const getBackgroundBlob = async () => {
-    background_blob = userProfile && userProfile.background_url && (await getImageUrl(userProfile.background_url));
-    background_blob && setUserBackground(background_blob);
-  };
-  userProfile && !userBackground && getBackgroundBlob;
-  !userBackground && getBackgroundBlob();
-
-  useEffect(() => {
-    {
-      username && !userProfile && getUserProfile(username as string);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userProfile]);
-
-  console.log("creatorList");
-  console.log(creatorList);
-  console.log(collectionList);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -106,34 +80,8 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
       }
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creatorList, collectionList, order, sort, term, page, type, search, currentPage]);
-
-  const getUserProfile = async (username: string) => {
-    let new_userProfile;
-    try {
-      if (supabase) {
-        const { data, error, status } = await supabase
-          .from("profiles")
-          .select("*", {
-            count: "exact",
-            head: false,
-          })
-          .eq("username", `${username}`)
-          .single()
-          .then((response) => {
-            return response;
-          });
-        if (error && status !== 406) {
-          throw error;
-        }
-        new_userProfile = data;
-        setUserProfile(new_userProfile);
-      }
-    } catch (error: any) {
-      alert(error.message);
-    }
-    return new_userProfile;
-  };
 
   const title = userProfile && (
     <>
@@ -158,8 +106,8 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
               id={userProfile.username}
               title={title}
               sub_title={sub_title}
-              avatar_url={userAvatar && URL.createObjectURL(userAvatar)}
-              background_url={userBackground && URL.createObjectURL(userBackground)}
+              avatar_url={userProfile.avatar_url}
+              background_url={userProfile.background_url}
               description={userProfile.description}
               links={links}
               // tags={userProfile.tags}

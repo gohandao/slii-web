@@ -46,6 +46,11 @@ export const CollectionCard = ({ collection, index }: any) => {
                 style={{
                   objectFit: "cover",
                 }}
+                onError={(e) => {
+                  e.currentTarget.src = `https://placehold.jp/42/333/ffffff/150x150.png?text=${collection.name.charAt(
+                    0
+                  )}`;
+                }}
               />
             )}
           </div>
@@ -63,7 +68,7 @@ export const CollectionCard = ({ collection, index }: any) => {
                   property="simple"
                   type="collection"
                   id={collection.slug}
-                  count={collection.upvotes_count}
+                  count={collection.upvotes_count_function}
                 />
               </div>
             </div>

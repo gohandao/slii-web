@@ -1,9 +1,10 @@
+import type { FC } from "react";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 
 const ls = require("local-storage");
 
-export const NoticeBar = () => {
+export const NoticeBar: FC = () => {
   const [show, setShow] = useState<boolean>(true);
   ls("noticeBar", "true");
   ls.get("noticeBar");

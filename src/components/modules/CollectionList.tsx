@@ -2,6 +2,7 @@ import { JP } from "country-flag-icons/react/3x2";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import { BsTwitter } from "react-icons/bs";
 import { FaDiscord } from "react-icons/fa";
 import { IoMdListBox } from "react-icons/io";
@@ -21,7 +22,7 @@ type Props = {
   collections: any[];
   limit?: number;
 };
-export const CollectionList = ({ collections, limit }: Props) => {
+export const CollectionList: FC<Props> = ({ collections, limit }) => {
   const router = useRouter();
   const currentPath = router.pathname;
   const { order, page, search, sort, term, type } = router.query;
@@ -102,6 +103,11 @@ export const CollectionList = ({ collections, limit }: Props) => {
                               style={{
                                 objectFit: "cover",
                               }}
+                              onError={(e) => {
+                                e.currentTarget.src = `https://placehold.jp/42/333/ffffff/150x150.png?text=${collection.name.charAt(
+                                  0
+                                )}`;
+                              }}
                             />
                           )}
                         </div>
@@ -134,7 +140,7 @@ export const CollectionList = ({ collections, limit }: Props) => {
                               property="simple"
                               type="collection"
                               id={collection.slug}
-                              count={collection.upvotes_count}
+                              count={collection.upvotes_count_function}
                             />
                             {/*<AiOutlineHeart className=" text-gray-400 opacity-50" />*/}
                           </div>

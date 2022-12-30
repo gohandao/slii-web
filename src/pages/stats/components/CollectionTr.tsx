@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import type { ReactNode } from "react";
+import type { FC, ReactNode } from "react";
 import { MdVerified } from "react-icons/md";
 
 import { BookmarkButton } from "@/components/elements/BookmarkButton";
@@ -13,7 +13,7 @@ import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 type Props = {
   children: ReactNode;
 };
-export const CollectionTr = ({ index, item, limit }: any) => {
+export const CollectionTr: FC<any> = ({ index, item, limit }) => {
   const router = useRouter();
   const { page, term } = router.query;
   const currentPage = page ? Number(page) : 1;
@@ -89,6 +89,11 @@ export const CollectionTr = ({ index, item, limit }: any) => {
                         style={{
                           objectFit: "cover",
                         }}
+                        onError={(e) => {
+                          e.currentTarget.src = `https://placehold.jp/42/333/ffffff/150x150.png?text=${item.name.charAt(
+                            0
+                          )}`;
+                        }}
                       />
                     )}
                   </div>
@@ -113,7 +118,7 @@ export const CollectionTr = ({ index, item, limit }: any) => {
           {/*upvote*/}
           <Td>
             {item.slug ? (
-              <UpvoteButton id={item.slug} type="collection" property="simple" count={item.upvotes_count} />
+              <UpvoteButton id={item.slug} type="collection" property="simple" count={item.upvotes_count_function} />
             ) : (
               <Hyphen />
             )}

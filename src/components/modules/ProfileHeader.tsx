@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { FC } from "react";
 import { useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { FaRegFlag } from "react-icons/fa";
@@ -37,7 +38,7 @@ type Props = {
   twitter_id?: string;
   upvotes_count?: number | null;
 };
-export const ProfileHeader = ({
+export const ProfileHeader: FC<Props> = ({
   id,
   avatar_url,
   background_url,
@@ -49,7 +50,7 @@ export const ProfileHeader = ({
   tags,
   title,
   upvotes_count,
-}: Props) => {
+}) => {
   const [requestDropdown, setRequestDropdown] = useState<boolean>(false);
   // const [shareDropdown, setShareDropdown] = useState<boolean>(false);
 
@@ -123,6 +124,9 @@ export const ProfileHeader = ({
                     height: "auto",
                     maxWidth: "100%",
                     objectFit: "cover",
+                  }}
+                  onError={(e) => {
+                    e.currentTarget.src = `https://placehold.jp/42/333/ffffff/150x150.png?text=N&css=%7B%22color%22%3A%22%20%23333%22%7D`;
                   }}
                 />
               )}

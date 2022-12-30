@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import * as gtag from "@/libs/gtag";
-import { getImageUrl, supabase } from "@/libs/supabase";
+import { supabase } from "@/libs/supabase";
 import type { Bookmark } from "@/types/bookmark";
 import type { Profile } from "@/types/profile";
 import type { Upvote } from "@/types/upvote";
@@ -26,7 +26,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<any>();
   const [profile, setProfile] = useState<any>();
   const [userProfile, setUserProfile] = useState<Profile>();
-  const [avatar, setAvatar] = useState<File>();
   const [loginModal, setLoginModal] = useState(false);
   const [upvotes, setUpvotes] = useState<Upvote[]>([]);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
@@ -41,18 +40,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     };
   }, [router.events]);
 
-  let avatar_blob;
-  const getAvatarBlob = async () => {
-    avatar_blob = profile && profile.avatar_url && (await getImageUrl(profile.avatar_url));
-    setAvatar(avatar_blob);
-  };
-  profile && !avatar && getAvatarBlob;
-
-  useEffect(() => {
-    !avatar && getAvatarBlob();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile]);
-
   useEffect(() => {
     if (user) {
       getBookmarks();
@@ -63,14 +50,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   const getBookmarks = async () => {
     try {
-      if (user && supabase) {
-        const { data, error, status } = await supabase
-          .from("bookmarks")
-          .select("*, profiles(*)", {
-            count: "exact",
-            head: false,
-          })
-          .eq("user_id", `${user.id}`);
+      if (user) {
+        const { data, error, status } = await supabase.from("bookmarks").select("*").eq("user_id", `${user.id}`);
         if (error && status !== 406) {
           throw error;
         }
@@ -97,22 +78,22 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         const new_upvotes = data as Upvote[];
         setUpvotes(new_upvotes);
       }
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
     }
   };
 
   const createProfile = async () => {
     const init_username = shortid.generate();
     const updates = {
-      id: user.id,
+      id: user?.id,
       updated_at: new Date(),
       username: init_username,
     };
     if (supabase) {
-      const { error } = await supabase.from("profiles").upsert(updates, {
-        returning: "minimal", // Don't return the value after inserting
-      });
+      const { error } = await supabase.from("profiles").upsert(updates);
       if (error) {
         throw error;
       }
@@ -123,10 +104,21 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     try {
       setLoading(true);
       if (supabase) {
-        const user = supabase.auth.user();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         if (user) {
           const { data, error, status } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-
+          supabase
+            .channel(`public:profile:id=eq.${user.id}`)
+            .on(
+              "postgres_changes",
+              { event: "*", filter: `id=eq.${user.id}`, schema: "public", table: "profiles" },
+              (payload) => {
+                setProfile(payload.new);
+              }
+            )
+            .subscribe();
           if (error && status !== 406) {
             throw error;
           }
@@ -146,10 +138,15 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   };
 
   useEffect(() => {
-    if (supabase && !user) {
-      const data = supabase.auth.user();
-      setUser(data);
-      data && !profile && getProfile();
+    const fetchData = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setUser(user);
+      user && !profile && getProfile();
+    };
+    if (!user) {
+      fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -191,10 +188,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       />
       <AuthContext.Provider
         value={{
-          avatar,
           bookmarks,
           profile,
-          setAvatar,
           setBookmarks,
           setUpvotes,
           upvotes,

@@ -9,4 +9,4 @@ export const categories = [
   "Photography",
   "Earning",
   "Utilities",
-];
+] as const;

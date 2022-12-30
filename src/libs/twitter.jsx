@@ -1,5 +1,5 @@
 export const getTwitterFollowers = async (twitter_id) => {
-  var options = {
+  const options = {
     headers: {
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_TWITTER_BEARER_TOKEN}`,
       "Content-Type": "application/json",

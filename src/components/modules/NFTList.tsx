@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { FC } from "react";
 import { useEffect, useState } from "react";
 
 import { IconEth } from "@/components/elements/IconEth";
@@ -7,7 +8,7 @@ import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 type Props = {
   assets: any[];
 };
-export const NFTList = ({ assets }: Props) => {
+export const NFTList: FC<Props> = ({ assets }) => {
   const [currentAssets, setCurrentAssets] = useState<any[]>([]);
 
   useEffect(() => {

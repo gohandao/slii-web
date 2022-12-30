@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import { useContext, useEffect, useState } from "react";
 import { BiSearchAlt2 } from "react-icons/bi";
 
@@ -8,7 +9,7 @@ import { setParams } from "@/utilities/setParams";
 type Props = {
   id: string;
 };
-export const Searchbox = ({ id }: Props) => {
+export const Searchbox: FC<Props> = ({ id }) => {
   const router = useRouter();
   const { order, screen, search, sort, tab, term, type } = router.query;
   const [value, setValue] = useState<string>("");
@@ -16,8 +17,10 @@ export const Searchbox = ({ id }: Props) => {
   const { setKeyword } = useContext(UtilitiesContext);
 
   useEffect(() => {
-    setKeyword(search && typeof search == "string" ? search : "");
-    setValue(search && typeof search == "string" ? search : "");
+    if (search) {
+      setKeyword(typeof search == "string" ? search : "");
+      setValue(typeof search == "string" ? search : "");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -1,6 +1,8 @@
+// kata: creatorのコンポーネントのひとつ
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import { useEffect, useState } from "react";
 import { BsTwitter } from "react-icons/bs";
 import { FaDiscord } from "react-icons/fa";
@@ -18,7 +20,7 @@ type Props = {
   creators: Creator[];
   limit?: number;
 };
-export const CreatorList = ({ creators, limit }: Props) => {
+export const CreatorList: FC<Props> = ({ creators, limit }) => {
   const router = useRouter();
   const currentPath = router.pathname;
   const { order, page, search, sort, term, type } = router.query;
@@ -100,6 +102,11 @@ export const CreatorList = ({ creators, limit }: Props) => {
                                 maxWidth: "100%",
                                 objectFit: "cover",
                               }}
+                              onError={(e) => {
+                                e.currentTarget.src = `https://placehold.jp/42/333/ffffff/150x150.png?text=${creator.username.charAt(
+                                  0
+                                )}`;
+                              }}
                             />
                           )}
                         </div>
@@ -121,9 +128,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
                       <div className="relative flex max-w-full items-center justify-between pt-1">
                         <h3 className="ellipsis min-w-[0]  max-w-full items-center pr-3 text-sm font-bold text-gray-100">
                           {creator.username}
-                          {creator.verified == true && (
-                            <MdVerified className="-mt-[2px] ml-2 inline-block text-gray-500" />
-                          )}
+                          {creator.verified && <MdVerified className="-mt-[2px] ml-2 inline-block text-gray-500" />}
                         </h3>
                         <div className="flex gap-2">
                           <BookmarkButton id={creator.username} type="creator" />
@@ -132,7 +137,7 @@ export const CreatorList = ({ creators, limit }: Props) => {
                               property="simple"
                               type="creator"
                               id={creator.username}
-                              count={creator.upvotes_count ? creator.upvotes_count : 0}
+                              count={creator.upvotes_count_function ? creator.upvotes_count_function : 0}
                             />
                           </div>
                         </div>

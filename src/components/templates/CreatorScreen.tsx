@@ -8,7 +8,8 @@ import { RandomButton } from "@/components/elements/RandomButton";
 import { CollectionCard } from "@/components/modules/CollectionCard";
 import { NFTList } from "@/components/modules/NFTList";
 import { ProfileHeader } from "@/components/modules/ProfileHeader";
-import { getCollections, getCreators, getNFTs } from "@/libs/supabase";
+import { useGetCreators } from "@/hooks/useGetCreators";
+import { getCollections, getNFTs, upsertNFTPrices } from "@/libs/supabase";
 import type { Creator } from "@/types/creator";
 
 export const CreatorScreen = () => {
@@ -19,6 +20,17 @@ export const CreatorScreen = () => {
   const [collections, setCollections] = useState<any[]>();
   const [assets, setAssets] = useState<any[]>([]);
   const [count, setCount] = useState<number>(0);
+  const { getCreators } = useGetCreators();
+
+  useEffect(() => {
+    // アクセス時にNFTの価格を更新する
+    creator &&
+      creator.collections &&
+      creator.collections.length > 0 &&
+      creator.collections.map(async (collection_slug: string) => {
+        await upsertNFTPrices(collection_slug);
+      });
+  }, [creator]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,6 +41,7 @@ export const CreatorScreen = () => {
       data && setCreator(data as Creator);
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
   useEffect(() => {
@@ -149,7 +162,7 @@ export const CreatorScreen = () => {
             twitter_id={creator.twitter_id}
             twitter_followers={creator.twitter_followers}
             discord_url={creator.discord_url}
-            upvotes_count={creator.upvotes_count}
+            upvotes_count={creator.upvotes_count_function}
           />
         )}
         {collections && collections.length != 0 && (

@@ -1,3 +1,4 @@
+// kata: creatorコンポーネントクリック後、表示されるモーダル
 import type { ParsedUrlQuery } from "node:querystring";
 
 import type { GetStaticProps, NextPage } from "next";
@@ -14,10 +15,10 @@ type Props = {
   ogImageUrl: string;
   title: string;
 };
-const CreatorIndex: NextPage<Props> = (props) => {
-  const { description, ogImageUrl, title } = props;
+const CreatorIndex: NextPage<Props> = ({ description, ogImageUrl, title }) => {
   const router = useRouter();
   const { username } = router.query;
+
   return (
     <>
       <NextSeo
@@ -52,9 +53,11 @@ type PathProps = {
   ogImageUrl: string;
   title: string;
 };
+
 type Params = ParsedUrlQuery & {
   username: string;
 };
+
 export const getStaticPaths = async () => {
   const { data } = await getCreators();
   const creators = data as Creator[];
@@ -80,17 +83,18 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params
     creator = data as any;
   }
   if (!creator) {
-    return {
-      notFound: true,
-    };
+    return { notFound: true };
   }
-  let baseUrl;
-  if (process.env.NODE_ENV != "test") {
-    baseUrl = {
-      development: "http://localhost:3000",
-      production: "https://nftotaku.xyz",
-    }[process.env.NODE_ENV];
-  }
+
+  const baseUrl = (() => {
+    if (process.env.NODE_ENV != "test") {
+      return {
+        development: "http://localhost:3000",
+        production: "https://nftotaku.xyz",
+      }[process.env.NODE_ENV];
+    }
+  })();
+
   const avatar = creator.avatar ? creator.avatar : "";
   const background = creator.background ? creator.background : "";
   const verified = creator.verified ? creator.verified : "";

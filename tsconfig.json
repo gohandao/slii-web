@@ -24,10 +24,12 @@
     "**/*.ts",
     "**/*.tsx",
     "src/pages/api/twitter.page.tsx",
-    "src/utilities/removeUndefinedObject.jsx",
+    "src/libs/supabase.tsx",
+    "src/pages/api/twitter.tsx",
+    "src/utilities/removeUndefinedObject.ts",
     "src/libs/discord.jsx",
     "src/libs/twitter.jsx",
-    "src/utilities/useRedirections.jsx",
+    "src/hooks/useRedirections.tsx",
     "src/components/_Categories"
   ],
   "exclude": ["node_modules"]

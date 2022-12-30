@@ -14,7 +14,7 @@ import { supabase } from "@/libs/supabase";
 
 export const Header: FC = () => {
   const router = useRouter();
-  const { avatar, profile, user } = useContext(AuthContext);
+  const { profile, user } = useContext(AuthContext);
   const { setLoginModal } = useContext(UtilitiesContext);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [avatorSrc, setAvatorSrc] = useState<string>();
@@ -39,9 +39,9 @@ export const Header: FC = () => {
   }, [currentPath]);
 
   useEffect(() => {
-    const src = avatar ? URL.createObjectURL(avatar) : "/default-avatar.jpg";
+    const src = profile && profile.avatar_url ? profile.avatar_url : "/default-avatar.jpg";
     setAvatorSrc(src);
-  }, [avatar]);
+  }, [profile]);
 
   return (
     <header className="relative z-50 py-3" x-data="{expanded: false}">

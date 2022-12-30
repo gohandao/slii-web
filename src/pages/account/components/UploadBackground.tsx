@@ -5,7 +5,7 @@ import { IoClose } from "react-icons/io5";
 import { RiImageAddLine } from "react-icons/ri";
 
 export type Props = {
-  image: File | undefined;
+  image: string | undefined;
   newImage: File | undefined;
   setNewImage: (value: React.SetStateAction<File | undefined>) => void;
 };
@@ -59,7 +59,17 @@ export const UploadBackground: FC<Props> = ({ image, newImage, setNewImage }) =>
           ) : (
             image && (
               <>
-                <Image src={URL.createObjectURL(image)} alt="" quality={40} fill sizes="100vw" />
+                <Image
+                  src={image}
+                  alt=""
+                  quality={40}
+                  fill
+                  className="opacity-50"
+                  sizes="100vw"
+                  style={{
+                    objectFit: "cover",
+                  }}
+                />
               </>
             )
           )}

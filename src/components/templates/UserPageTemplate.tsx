@@ -15,7 +15,7 @@ import { ProfileHeader } from "@/components/modules/ProfileHeader";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { useGetCreators } from "@/hooks/useGetCreators";
 import { useGetUserProfile } from "@/hooks/useGetUserProfile";
-import { getCollections, getImageUrl } from "@/libs/supabase";
+import { getCollections } from "@/libs/supabase";
 import type { Bookmark } from "@/types/bookmark";
 import type { Creator } from "@/types/creator";
 import type { Upvote } from "@/types/upvote";
@@ -38,32 +38,10 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
   const [creatorsCount, setCreatorsCount] = useState<number>(0);
   const [collectionsCount, setCollectionsCount] = useState<number>(0);
   const { setUserProfile } = useContext(UtilitiesContext);
-
-  const [userAvatar, setUserAvatar] = useState<Blob>();
-  const [userBackground, setUserBackground] = useState<Blob>();
   const { userProfile } = useGetUserProfile();
   if (userProfile && username !== userProfile.username) {
     setUserProfile(undefined);
   }
-
-  let avatar_blob;
-  const getAvatarBlob = async () => {
-    avatar_blob = userProfile && userProfile.avatar_url && (await getImageUrl(userProfile.avatar_url as string));
-    avatar_blob && setUserAvatar(avatar_blob);
-    console.log("avatar_blob");
-    console.log(avatar_blob);
-  };
-
-  userProfile && !userAvatar && getAvatarBlob;
-  !userAvatar && getAvatarBlob();
-
-  let background_blob;
-  const getBackgroundBlob = async () => {
-    background_blob = userProfile && userProfile.background_url && (await getImageUrl(userProfile.background_url));
-    background_blob && setUserBackground(background_blob);
-  };
-  userProfile && !userBackground && getBackgroundBlob;
-  !userBackground && getBackgroundBlob();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -128,8 +106,8 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
               id={userProfile.username}
               title={title}
               sub_title={sub_title}
-              avatar_url={userAvatar && URL.createObjectURL(userAvatar)}
-              background_url={userBackground && URL.createObjectURL(userBackground)}
+              avatar_url={userProfile.avatar_url}
+              background_url={userProfile.background_url}
               description={userProfile.description}
               links={links}
               // tags={userProfile.tags}

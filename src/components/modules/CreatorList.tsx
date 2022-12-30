@@ -102,6 +102,11 @@ export const CreatorList: FC<Props> = ({ creators, limit }) => {
                                 maxWidth: "100%",
                                 objectFit: "cover",
                               }}
+                              onError={(e) => {
+                                e.currentTarget.src = `https://placehold.jp/42/333/ffffff/150x150.png?text=${creator.username.charAt(
+                                  0
+                                )}`;
+                              }}
                             />
                           )}
                         </div>

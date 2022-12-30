@@ -65,10 +65,6 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
   userProfile && !userBackground && getBackgroundBlob;
   !userBackground && getBackgroundBlob();
 
-  console.log("creatorList");
-  console.log(creatorList);
-  console.log(collectionList);
-
   useEffect(() => {
     const fetchData = async () => {
       if (creatorList) {
@@ -106,6 +102,7 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
       }
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creatorList, collectionList, order, sort, term, page, type, search, currentPage]);
 
   const title = userProfile && (

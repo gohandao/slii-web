@@ -41,6 +41,7 @@ export const CreatorScreen = () => {
       data && setCreator(data as Creator);
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
   useEffect(() => {
@@ -161,7 +162,7 @@ export const CreatorScreen = () => {
             twitter_id={creator.twitter_id}
             twitter_followers={creator.twitter_followers}
             discord_url={creator.discord_url}
-            upvotes_count={creator.upvotes_count}
+            upvotes_count={creator.upvotes_count_function}
           />
         )}
         {collections && collections.length != 0 && (

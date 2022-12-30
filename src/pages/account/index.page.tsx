@@ -56,7 +56,12 @@ const AccountPage: NextPage = () => {
     }
   }, [user, profile]);
 
-  const uploadImage = async (image: File, storage: string, path: string) => {
+  type UploadImageProps = {
+    image: File;
+    path: string;
+    storage: string;
+  };
+  const uploadImage = async ({ image, path, storage }: UploadImageProps) => {
     const STORAGE_URL = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_URL;
     const uuid = uuidv4();
     const { data, error } = await supabase.storage.from(storage).upload(`${path}/${uuid}.jpg`, image, {
@@ -68,7 +73,7 @@ const AccountPage: NextPage = () => {
       console.log(error);
       return;
     }
-    const image_url = STORAGE_URL && STORAGE_URL + data?.path;
+    const image_url = STORAGE_URL && STORAGE_URL + "/" + storage + "/" + data?.path;
     return image_url;
   };
 
@@ -82,11 +87,11 @@ const AccountPage: NextPage = () => {
       let new_background_url;
       if (user) {
         if (newAvatar) {
-          new_avatar_url = await uploadImage(newAvatar, "avatars", "public");
+          new_avatar_url = await uploadImage({ image: newAvatar, path: "public", storage: "avatars" });
         }
         new_avatar_url = new_avatar_url ? new_avatar_url : profile.avatar_url;
         if (newBackground) {
-          new_background_url = await uploadImage(newBackground, "public", "images");
+          new_background_url = await uploadImage({ image: newBackground, path: "images", storage: "publichhhhh" });
         }
         new_background_url = new_background_url ? new_background_url : profile.background_url;
         const updates = {

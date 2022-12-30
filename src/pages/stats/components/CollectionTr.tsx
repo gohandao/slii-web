@@ -118,7 +118,7 @@ export const CollectionTr: FC<any> = ({ index, item, limit }) => {
           {/*upvote*/}
           <Td>
             {item.slug ? (
-              <UpvoteButton id={item.slug} type="collection" property="simple" count={item.upvotes_count} />
+              <UpvoteButton id={item.slug} type="collection" property="simple" count={item.upvotes_count_function} />
             ) : (
               <Hyphen />
             )}

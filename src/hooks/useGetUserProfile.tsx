@@ -13,20 +13,24 @@ export const useGetUserProfile = () => {
   const getUserProfile = useCallback(async () => {
     console.log(username);
     try {
-      const { data, error, status } = await supabase
-        .from<Profile>("profiles")
-        .select("*", {
-          count: "exact",
-          head: false,
-        })
-        .eq("username", `${username}`)
-        .single()
-        .then((response) => {
-          return response;
-        });
-      if (error && status !== 406) {
-        throw error;
-      }
+      const fetchData = async () => {
+        const { data, error, status } = await supabase
+          .from("profiles")
+          .select("*", {
+            count: "exact",
+            head: false,
+          })
+          .eq("username", `${username}`)
+          .single()
+          .then((response) => {
+            return response;
+          });
+        if (error && status !== 406) {
+          throw error;
+        }
+        return data as Profile;
+      };
+      const data = await fetchData();
       if (data) setUserProfile(data);
     } catch (error) {
       if (error instanceof Error) alert(error.message);

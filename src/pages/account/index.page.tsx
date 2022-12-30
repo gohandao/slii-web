@@ -32,10 +32,15 @@ const AccountPage: NextPage = () => {
   // };
   useEffect(() => {
     // reload時に!userとなるためauthチェック
-    const data = supabase.auth.user();
-    if (!user && !data) {
-      router.push("/");
-    }
+    const fetchData = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        router.push("/");
+      }
+    };
+    fetchData();
   }, [user]);
 
   useEffect(() => {
@@ -63,14 +68,16 @@ const AccountPage: NextPage = () => {
       console.log(error);
       return;
     }
-    const image_url = STORAGE_URL && STORAGE_URL + data?.Key;
+    const image_url = STORAGE_URL && STORAGE_URL + data?.path;
     return image_url;
   };
 
   const updateProfile = async () => {
     try {
       setLoading(true);
-      const user = supabase && supabase.auth.user();
+      const {
+        data: { user },
+      } = supabase && (await supabase.auth.getUser());
       let new_avatar_url;
       let new_background_url;
       if (user) {
@@ -93,12 +100,9 @@ const AccountPage: NextPage = () => {
         };
 
         if (supabase) {
-          const { error } = await supabase.from("profiles").upsert(updates, {
-            returning: "minimal", // Don't return the value after inserting
-          });
-          if (!error) {
-            alert("upload success");
-          } else {
+          const { error } = await supabase.from("profiles").upsert(updates);
+          alert("upload success");
+          if (error) {
             throw error;
           }
         }

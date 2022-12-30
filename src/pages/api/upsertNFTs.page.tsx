@@ -95,12 +95,7 @@ export const upsertNFTs = async (req: any, res: any) => {
             });
 
           if (supabase) {
-            const { error } = await supabase
-              .from("nfts")
-              .upsert(new_assets, {
-                returning: "minimal", // Don't return the value after inserting
-              })
-              .select();
+            const { error } = await supabase.from("nfts").upsert(new_assets).select();
             if (error) {
               console.log("error");
               console.log(error);

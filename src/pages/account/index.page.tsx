@@ -68,7 +68,7 @@ const AccountPage: NextPage = () => {
       console.log(error);
       return;
     }
-    const image_url = STORAGE_URL && STORAGE_URL + data?.Key;
+    const image_url = STORAGE_URL && STORAGE_URL + data?.path;
     return image_url;
   };
 

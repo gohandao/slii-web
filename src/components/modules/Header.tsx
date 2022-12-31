@@ -14,10 +14,11 @@ import { supabase } from "@/libs/supabase";
 
 export const Header: FC = () => {
   const router = useRouter();
-  const { profile, user } = useContext(AuthContext);
+  const { profile } = useContext(AuthContext);
   const { setLoginModal } = useContext(UtilitiesContext);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [avatorSrc, setAvatorSrc] = useState<string>();
+  const user = supabase.auth.user();
 
   const delQuery = (url: string) => {
     return url.split("?")[0];

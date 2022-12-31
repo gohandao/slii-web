@@ -15,7 +15,7 @@ import { UploadAvatar } from "@/pages/account/components/UploadAvatar";
 import { UploadBackground } from "@/pages/account/components/UploadBackground";
 
 const AccountPage: NextPage = () => {
-  const { profile, user } = useContext(AuthContext);
+  const { profile } = useContext(AuthContext);
   const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [newAvatar, setNewAvatar] = useState<File>();
   const [backgroundUrl, setBackgroundUrl] = useState<string>("");
@@ -25,6 +25,7 @@ const AccountPage: NextPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
+  const user = supabase.auth.user();
 
   // const options = {
   //   maxSizeMB: 1, // 最大ファイルサイズ
@@ -39,7 +40,7 @@ const AccountPage: NextPage = () => {
   }, [user]);
 
   useEffect(() => {
-    if (user) {
+    if (user && typeof user.email === "string") {
       setEmail(user.email);
     }
     if (profile) {

@@ -40,7 +40,7 @@ const FixedMenu: FC<FixedMenuProps> = ({ blank = false, children, href }) => {
   }
 };
 export const Footer: FC = () => {
-  const user = supabase.auth.session();
+  const user = supabase.auth.user();
 
   return (
     <>

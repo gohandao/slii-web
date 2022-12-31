@@ -9,7 +9,6 @@ type Props = {
   setBookmarks: React.Dispatch<React.SetStateAction<Bookmark[]>>;
   setUpvotes: React.Dispatch<React.SetStateAction<Upvote[]>>;
   upvotes: Upvote[];
-  user: any;
 };
 export const AuthContext = createContext<Props>({
   bookmarks: [],
@@ -21,5 +20,4 @@ export const AuthContext = createContext<Props>({
     return;
   },
   upvotes: [],
-  user: {},
 });

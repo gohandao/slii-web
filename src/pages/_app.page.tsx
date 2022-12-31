@@ -1,8 +1,6 @@
 import "@/styles/style.scss";
 import "@/styles/globals.css";
 
-import type { User } from "@supabase/supabase-js";
-import { useAtom } from "jotai";
 import { nanoid } from "nanoid";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -12,7 +10,6 @@ import { useEffect, useState } from "react";
 
 import { description, site_name, title, twitter_id } from "@/constant/seo.const";
 import { AuthContext } from "@/contexts/AuthContext";
-import { userAtom } from "@/contexts/state/auth.state";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import * as gtag from "@/libs/gtag";
 import { supabase } from "@/libs/supabase";
@@ -25,12 +22,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   const [, setLoading] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string | undefined>();
-  const [user, setUser] = useState<User>();
   const [profile, setProfile] = useState<any>();
   const [userProfile, setUserProfile] = useState<Profile>();
   const [loginModal, setLoginModal] = useState<boolean>(false);
   const [upvotes, setUpvotes] = useState<Upvote[]>([]);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+  const user = supabase.auth.session()?.user;
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -105,7 +102,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const getProfile = async () => {
     try {
       setLoading(true);
-      const user = supabase.auth.user();
       if (user) {
         const { data, error, status } = await supabase.from<Profile>("profiles").select("*").eq("id", user.id).single();
         if (error && status !== 406) throw error;
@@ -121,16 +117,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     if (!user) {
-      const data = supabase.auth.user();
-      setUseratom(data);
-      // MEMO:グローバルステートにセット、これは毎回sessionからとってこればいい
-      data && setUser(data);
       !profile && getProfile();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const [useratom, setUseratom] = useAtom(userAtom);
 
   return (
     <>
@@ -168,7 +158,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           setBookmarks,
           setUpvotes,
           upvotes,
-          user,
         }}
       >
         <UtilitiesContext.Provider
@@ -184,7 +173,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           }}
         >
           <div className={`bg-stripe flex min-h-screen flex-col overflow-hidden`}>
-            <h1>{useratom?.email}</h1>
             <Component {...pageProps} />
           </div>
         </UtilitiesContext.Provider>

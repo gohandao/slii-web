@@ -123,6 +123,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     if (!user) {
       const data = supabase.auth.user();
       setUseratom(data);
+      // MEMO:グローバルステートにセット、これは毎回sessionからとってこればいい
       data && setUser(data);
       !profile && getProfile();
     }

@@ -1,21 +1,24 @@
 import Link from "next/link";
 import type { FC, ReactNode } from "react";
-import { useContext } from "react";
 import { BiHomeAlt, BiPurchaseTagAlt } from "react-icons/bi";
 import { BsMailbox } from "react-icons/bs";
 import { FaDiscord, FaRegUserCircle } from "react-icons/fa";
 import { SiNotion } from "react-icons/si";
 import { TbDiamond, TbMailbox } from "react-icons/tb";
 
-import { AuthContext } from "@/contexts/AuthContext";
+import { supabase } from "../../libs/supabase";
 
 type FixedMenuProps = {
   blank?: boolean;
   children: ReactNode;
   href: string;
 };
+
+const buttonClass =
+  "relative flex justify-center gap-4 items-center w-[240px] max-w-[90%] mx-auto py-2 border-2 text-sm text-center rounded transition-all duration-200 transform";
+
 export const Footer: FC = () => {
-  const { user } = useContext(AuthContext);
+  const user = supabase.auth.session();
   const FixedMenu = ({ blank = false, children, href }: FixedMenuProps) => {
     if (!blank) {
       return (
@@ -38,8 +41,7 @@ export const Footer: FC = () => {
       );
     }
   };
-  const buttonClass =
-    "relative flex justify-center gap-4 items-center w-[240px] max-w-[90%] mx-auto py-2 border-2 text-sm text-center rounded transition-all duration-200 transform";
+
   return (
     <>
       <div className="pt-16"></div>
@@ -93,12 +95,10 @@ export const Footer: FC = () => {
         >
           <BsMailbox />
         </FixedMenu>
-        {user ? (
+        {user && (
           <FixedMenu href="/account">
             <FaRegUserCircle />
           </FixedMenu>
-        ) : (
-          <></>
         )}
       </div>
     </>

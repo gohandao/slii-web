@@ -42,10 +42,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   }, [router.events]);
 
   useEffect(() => {
-    if (user) {
-      getBookmarks();
-      getUpvotes();
-    }
+    getBookmarks();
+    getUpvotes();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
@@ -58,6 +56,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         }
         const new_bookmarks = data as Bookmark[];
         setBookmarks(new_bookmarks);
+      } else {
+        setBookmarks([]);
       }
     } catch (error: any) {
       alert(error.message);
@@ -78,6 +78,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         }
         const new_upvotes = data as Upvote[];
         setUpvotes(new_upvotes);
+      } else {
+        setUpvotes([]);
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -150,7 +152,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user]);
 
   const site_name = "NFT OTAKU";
   const title = "NFT OTAKU | Japanese NFT Creators / Collections Database";
@@ -192,7 +194,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           bookmarks,
           profile,
           setBookmarks,
+          setProfile,
           setUpvotes,
+          setUser,
           upvotes,
           user,
         }}
@@ -213,8 +217,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             <Component {...pageProps} />
           </div>
           <ToastContainer
-            position="top-right"
-            autoClose={false}
+            position="bottom-right"
+            autoClose={3000}
             hideProgressBar={false}
             newestOnTop={false}
             closeOnClick
@@ -222,7 +226,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             pauseOnFocusLoss
             draggable
             pauseOnHover
-            theme="colored"
+            theme="light"
           />
         </UtilitiesContext.Provider>
       </AuthContext.Provider>

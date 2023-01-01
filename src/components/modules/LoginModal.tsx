@@ -1,12 +1,15 @@
 import type { FC, SetStateAction } from "react";
 import { useContext, useEffect, useState } from "react";
 import ReactCodeInput from "react-code-input";
+import { toast } from "react-toastify";
 
 import { BaseModal } from "@/components/modules/BaseModal";
+import { AuthContext } from "@/contexts/AuthContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { supabase } from "@/libs/supabase";
 
 export const LoginModal: FC = () => {
+  const { setUser } = useContext(AuthContext);
   const { loginModal, setLoginModal } = useContext(UtilitiesContext);
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(false);
@@ -19,9 +22,13 @@ export const LoginModal: FC = () => {
       setLoading(true);
       if (supabase) {
         const { error } = await supabase.auth.signInWithOtp({ email: email });
-        if (error) throw error;
+        if (error) {
+          toast.error("Failed.");
+          throw error;
+        }
         setSentCode(true);
-        alert("We sent verification code!");
+        setOtpToken("");
+        toast.success("We sent verification code!");
       }
     } catch (error) {
       //alert(error.error_description || error.message)
@@ -34,19 +41,25 @@ export const LoginModal: FC = () => {
     try {
       setChecking(true);
       if (supabase) {
-        const { error } = await supabase.auth.verifyOtp({
+        const {
+          data: { user },
+        } = await supabase.auth.verifyOtp({
           email: email,
           token: otpToken,
           type: "magiclink",
         });
-        if (error) throw error;
-        alert("Login success!");
+        if (!user) {
+          toast.error("Login failed.");
+        } else {
+          setUser(user);
+          toast.success("Login success!");
+        }
+        setLoginModal(false);
       }
     } catch (error: any) {
-      alert(error.error_description || error.message);
+      console.log(error.error_description || error.message);
     } finally {
       setChecking(false);
-      location.reload();
     }
   };
 

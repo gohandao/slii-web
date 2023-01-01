@@ -2,7 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+.Toastify {
+    position: fixed !important;
+    z-index: 99999;
+}
 .Toastify__toast {
+    font-family: lores-12, sans-serif !important;
     @apply min-h-0 p-4 sm:mb-3 #{!important};
     & > div {
         @apply flex p-0 #{!important};
@@ -15,8 +20,8 @@
         @apply text-green-400 dark:text-green-500 #{!important};
     }
     .Toastify__close-button {
-        margin-top: 2px !important;
-        @apply text-green-400 dark:text-green-500 #{!important};
+        margin-top: 4px !important;
+        @apply text-green-500 dark:text-green-600 #{!important};
     }
 }
 //error
@@ -26,8 +31,8 @@
         @apply text-red-400 dark:text-red-500 #{!important};
     }
     .Toastify__close-button {
-        margin-top: 2px !important;
-        @apply text-red-400 dark:text-red-500 #{!important};
+        margin-top: 4px !important;
+        @apply text-red-500 dark:text-red-600 #{!important};
     }
 }
 //warm
@@ -37,8 +42,8 @@
         @apply text-yellow-400 dark:text-yellow-500 #{!important};
     }
     .Toastify__close-button {
-        margin-top: 2px !important;
-        @apply text-yellow-400 dark:text-yellow-500 #{!important};
+        margin-top: 4px !important;
+        @apply text-yellow-500 dark:text-yellow-600 #{!important};
     }
 }
 //info
@@ -48,7 +53,7 @@
         @apply text-blue-400 dark:text-blue-500 #{!important};
     }
     .Toastify__close-button {
-        margin-top: 2px !important;
-        @apply text-blue-400 dark:text-blue-500 #{!important};
+        margin-top: 4px !important;
+        @apply text-blue-500 dark:text-blue-600 #{!important};
     }
 }

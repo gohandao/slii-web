@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 
 import { AuthContext } from "@/contexts/AuthContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
@@ -16,22 +16,6 @@ export const useHandleBookmark = (id: string, type: string) => {
   const collection_slug = (() => {
     if (type === "collection") return id;
   })();
-
-  useEffect(() => {
-    const fetchBookmarks = async () => {
-      const fetchData = async () => {
-        const { data, error } = await supabase.from("bookmarks").select("*");
-        if (error) {
-          console.log("error at useHandleBookmark");
-          console.log(error);
-        }
-        return data as Bookmark[];
-      };
-      const data = await fetchData();
-      if (data) setBookmarks(data);
-    };
-    fetchBookmarks();
-  }, [setBookmarks]);
 
   const addBookmark = useCallback(async () => {
     if (user) {

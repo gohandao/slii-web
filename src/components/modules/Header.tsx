@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { BiHomeAlt, BiPurchaseTagAlt } from "react-icons/bi";
 import { FaRegUser } from "react-icons/fa";
 import { TbDiamond } from "react-icons/tb";
+import { toast } from "react-toastify";
 
 import { HeaderIcon } from "@/components/modules/HeaderIcon";
 import { AuthContext } from "@/contexts/AuthContext";
@@ -14,7 +15,7 @@ import { supabase } from "@/libs/supabase";
 
 export const Header: FC = () => {
   const router = useRouter();
-  const { profile, user } = useContext(AuthContext);
+  const { profile, setProfile, setUser, user } = useContext(AuthContext);
   const { setLoginModal } = useContext(UtilitiesContext);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [avatorSrc, setAvatorSrc] = useState<string>();
@@ -41,6 +42,8 @@ export const Header: FC = () => {
   useEffect(() => {
     const src = profile && profile.avatar_url ? profile.avatar_url : "/default-avatar.jpg";
     setAvatorSrc(src);
+    if (!user) setProfile(undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   return (
@@ -123,7 +126,10 @@ export const Header: FC = () => {
                     onClick={async () => {
                       const { error } = await supabase.auth.signOut();
                       if (error) {
-                        location.reload();
+                        toast.error("Signout failed.");
+                      } else {
+                        setUser(undefined);
+                        toast.success("Logout succeeded.");
                       }
                     }}
                     className="block px-5 py-3 text-sm text-gray-400"

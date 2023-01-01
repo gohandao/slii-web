@@ -47,6 +47,7 @@ export const CollectionCard = ({ collection, index }: any) => {
                   objectFit: "cover",
                 }}
                 onError={(e) => {
+                  e.currentTarget.srcset = "";
                   e.currentTarget.src = `https://placehold.jp/42/333/ffffff/150x150.png?text=${collection.name.charAt(
                     0
                   )}`;

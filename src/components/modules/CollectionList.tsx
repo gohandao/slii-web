@@ -104,6 +104,7 @@ export const CollectionList: FC<Props> = ({ collections, limit }) => {
                                 objectFit: "cover",
                               }}
                               onError={(e) => {
+                                e.currentTarget.srcset = "";
                                 e.currentTarget.src = `https://placehold.jp/42/333/ffffff/150x150.png?text=${collection.name.charAt(
                                   0
                                 )}`;

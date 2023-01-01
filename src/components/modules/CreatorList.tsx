@@ -103,6 +103,7 @@ export const CreatorList: FC<Props> = ({ creators, limit }) => {
                                 objectFit: "cover",
                               }}
                               onError={(e) => {
+                                e.currentTarget.srcset = "";
                                 e.currentTarget.src = `https://placehold.jp/42/333/ffffff/150x150.png?text=${creator.username.charAt(
                                   0
                                 )}`;

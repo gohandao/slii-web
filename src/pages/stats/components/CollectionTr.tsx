@@ -90,6 +90,7 @@ export const CollectionTr: FC<any> = ({ index, item, limit }) => {
                           objectFit: "cover",
                         }}
                         onError={(e) => {
+                          e.currentTarget.srcset = "";
                           e.currentTarget.src = `https://placehold.jp/42/333/ffffff/150x150.png?text=${item.name.charAt(
                             0
                           )}`;

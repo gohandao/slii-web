@@ -1,6 +1,6 @@
 export type Profile = {
   address: string | undefined;
-  avatar_url?: string | Blob | MediaSource;
+  avatar_url?: string;
   background_url?: string;
   description: string;
   discord_url?: string;

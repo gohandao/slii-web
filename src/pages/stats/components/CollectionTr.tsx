@@ -89,6 +89,11 @@ export const CollectionTr: FC<any> = ({ index, item, limit }) => {
                         style={{
                           objectFit: "cover",
                         }}
+                        onError={(e) => {
+                          e.currentTarget.src = `https://placehold.jp/42/333/ffffff/150x150.png?text=${item.name.charAt(
+                            0
+                          )}`;
+                        }}
                       />
                     )}
                   </div>
@@ -113,7 +118,7 @@ export const CollectionTr: FC<any> = ({ index, item, limit }) => {
           {/*upvote*/}
           <Td>
             {item.slug ? (
-              <UpvoteButton id={item.slug} type="collection" property="simple" count={item.upvotes_count} />
+              <UpvoteButton id={item.slug} type="collection" property="simple" count={item.upvotes_count_function} />
             ) : (
               <Hyphen />
             )}

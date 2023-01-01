@@ -50,7 +50,7 @@ export const ProfileHeader: FC<Props> = ({
   tags,
   title,
   upvotes_count,
-}: Props) => {
+}) => {
   const [requestDropdown, setRequestDropdown] = useState<boolean>(false);
   // const [shareDropdown, setShareDropdown] = useState<boolean>(false);
 
@@ -124,6 +124,9 @@ export const ProfileHeader: FC<Props> = ({
                     height: "auto",
                     maxWidth: "100%",
                     objectFit: "cover",
+                  }}
+                  onError={(e) => {
+                    e.currentTarget.src = `https://placehold.jp/42/333/ffffff/150x150.png?text=N&css=%7B%22color%22%3A%22%20%23333%22%7D`;
                   }}
                 />
               )}

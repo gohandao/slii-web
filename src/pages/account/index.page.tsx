@@ -10,30 +10,37 @@ import { Input } from "@/components/elements/Input";
 import { Textarea } from "@/components/elements/Textarea";
 import { BaseLayout } from "@/components/layouts/BaseLayout";
 import { AuthContext } from "@/contexts/AuthContext";
-import { getImageUrl, supabase } from "@/libs/supabase";
+import { supabase } from "@/libs/supabase";
+import { UploadAvatar } from "@/pages/account/components/UploadAvatar";
 import { UploadBackground } from "@/pages/account/components/UploadBackground";
-import { UploadImage } from "@/pages/account/components/UploadImage";
 
 const AccountPage: NextPage = () => {
-  const { avatar, profile, user } = useContext(AuthContext);
+  const { profile, user } = useContext(AuthContext);
+  const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [newAvatar, setNewAvatar] = useState<File>();
-  const [label, setLabel] = useState<string>();
-  const [description, setDescription] = useState<string>();
-  const [background, setBackground] = useState<File>();
+  const [backgroundUrl, setBackgroundUrl] = useState<string>("");
+  const [newBackground, setNewBackground] = useState<File>();
+  const [label, setLabel] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [avatarUrl, setAvatarUrl] = useState<string>("");
 
   // const options = {
   //   maxSizeMB: 1, // 最大ファイルサイズ
   //   maxWidthOrHeight: 80, // 最大画像幅もしくは高さ
   // };
   useEffect(() => {
-    if (!user) {
-      router.push("/");
-    }
+    // reload時に!userとなるためauthチェック
+    const fetchData = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        router.push("/");
+      }
+    };
+    fetchData();
   }, [user]);
 
   useEffect(() => {
@@ -43,40 +50,50 @@ const AccountPage: NextPage = () => {
     if (profile) {
       setUsername(profile.username);
       setAvatarUrl(profile.avatar_url);
-      const getBackgroundBlob = async () => {
-        const background_blob = profile && profile.background_url && (await getImageUrl(profile.background_url));
-        setBackground(background_blob);
-      };
-      getBackgroundBlob();
+      setBackgroundUrl(profile.background_url);
+      setLabel(profile.label);
+      setDescription(profile.description);
     }
   }, [user, profile]);
 
-  const uploadImage = async (image: File, path: string) => {
+  type UploadImageProps = {
+    image: File;
+    path: string;
+    storage: string;
+  };
+  const uploadImage = async ({ image, path, storage }: UploadImageProps) => {
+    const STORAGE_URL = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_URL;
     const uuid = uuidv4();
-    if (supabase) {
-      const { data } = await supabase.storage.from(path).upload(`public/${uuid}.jpg`, image, {
-        cacheControl: "3600",
-        upsert: false,
-      });
-      return data;
+    const { data, error } = await supabase.storage.from(storage).upload(`${path}/${uuid}.jpg`, image, {
+      cacheControl: "3600",
+      upsert: false,
+    });
+    if (error) {
+      console.log("error at uploadImage");
+      console.log(error);
+      return;
     }
+    const image_url = STORAGE_URL && STORAGE_URL + "/" + storage + "/" + data?.path;
+    return image_url;
   };
 
   const updateProfile = async () => {
     try {
       setLoading(true);
-      const user = supabase && supabase.auth.user();
+      const {
+        data: { user },
+      } = supabase && (await supabase.auth.getUser());
       let new_avatar_url;
       let new_background_url;
       if (user) {
-        if (avatar) {
-          new_avatar_url = await uploadImage(avatar, "avatars");
-          new_avatar_url = new_avatar_url?.Key;
+        if (newAvatar) {
+          new_avatar_url = await uploadImage({ image: newAvatar, path: "public", storage: "avatars" });
         }
-        if (background) {
-          new_background_url = await uploadImage(background, "public");
-          new_background_url = new_background_url?.Key;
+        new_avatar_url = new_avatar_url ? new_avatar_url : profile.avatar_url;
+        if (newBackground) {
+          new_background_url = await uploadImage({ image: newBackground, path: "images", storage: "publichhhhh" });
         }
+        new_background_url = new_background_url ? new_background_url : profile.background_url;
         const updates = {
           id: user.id,
           avatar_url: new_avatar_url,
@@ -88,9 +105,7 @@ const AccountPage: NextPage = () => {
         };
 
         if (supabase) {
-          const { error } = await supabase.from("profiles").upsert(updates, {
-            returning: "minimal", // Don't return the value after inserting
-          });
+          const { error } = await supabase.from("profiles").upsert(updates);
           alert("upload success");
           if (error) {
             throw error;
@@ -132,24 +147,23 @@ const AccountPage: NextPage = () => {
                     >
                       <IoChevronBackOutline className="text-gray-400" />
                     </button>
-                    {/* FIX: Loading時レイアウト崩れる */}
                     <button
-                      className="overflow-hidden whitespace-nowrap rounded-full bg-green-600 py-2 px-5 text-center text-green-100"
+                      className="overflow-hidden whitespace-nowrap rounded-full bg-green-600 py-2 px-7 text-center text-green-100"
                       onClick={() => {
                         return updateProfile();
                       }}
                       disabled={loading}
                     >
-                      {loading ? "Loading ..." : "Save"}
+                      Save
                     </button>
                   </div>
                   <div className="relative px-5 md:px-16 ">
                     <div className="absolute left-0 top-0 flex h-[120px] w-full items-center justify-center">
-                      <UploadBackground image={background} newImage={background} setNewImage={setBackground} />
+                      <UploadBackground image={backgroundUrl} newImage={newBackground} setNewImage={setNewBackground} />
                     </div>
                     <div className=" pt-16 ">
                       <div className="mb-3 flex">
-                        <UploadImage image={avatar} newImage={newAvatar} setNewImage={setNewAvatar} />
+                        <UploadAvatar image={avatarUrl} newImage={newAvatar} setNewImage={setNewAvatar} />
                       </div>
                       <div className="mb-5">
                         <Input

@@ -102,6 +102,11 @@ export const CreatorList: FC<Props> = ({ creators, limit }) => {
                                 maxWidth: "100%",
                                 objectFit: "cover",
                               }}
+                              onError={(e) => {
+                                e.currentTarget.src = `https://placehold.jp/42/333/ffffff/150x150.png?text=${creator.username.charAt(
+                                  0
+                                )}`;
+                              }}
                             />
                           )}
                         </div>
@@ -132,7 +137,7 @@ export const CreatorList: FC<Props> = ({ creators, limit }) => {
                               property="simple"
                               type="creator"
                               id={creator.username}
-                              count={creator.upvotes_count ? creator.upvotes_count : 0}
+                              count={creator.upvotes_count_function ? creator.upvotes_count_function : 0}
                             />
                           </div>
                         </div>

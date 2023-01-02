@@ -1,5 +1,7 @@
+import type { User } from "@supabase/gotrue-js";
 import Link from "next/link";
 import type { FC, ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { BiHomeAlt, BiPurchaseTagAlt } from "react-icons/bi";
 import { BsMailbox } from "react-icons/bs";
 import { FaDiscord, FaRegUserCircle } from "react-icons/fa";
@@ -40,7 +42,16 @@ const FixedMenu: FC<FixedMenuProps> = ({ blank = false, children, href }) => {
   }
 };
 export const Footer: FC = () => {
-  const user = supabase.auth.user();
+  const [user, setUser] = useState<User>();
+  useEffect(() => {
+    const fetchDate = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) setUser(user);
+    };
+    fetchDate();
+  }, []);
 
   return (
     <>

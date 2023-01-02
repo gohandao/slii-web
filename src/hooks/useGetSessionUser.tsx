@@ -6,13 +6,13 @@ import { supabase } from "@/libs/supabase";
 export const useGetSessionUser = () => {
   const [user, setUser] = useState<User>();
   useEffect(() => {
-    const fetchDate = async () => {
+    const fetchUser = async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
       if (session) setUser(session.user);
     };
-    fetchDate();
+    fetchUser();
   }, [user]);
 
   return { user };

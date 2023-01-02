@@ -1,4 +1,3 @@
-import type { User } from "@supabase/supabase-js";
 import { useCallback, useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "@/contexts/AuthContext";
@@ -18,16 +17,7 @@ export const useHandleBookmark = (id: string, type: string) => {
     if (type === "collection") return id;
   })();
 
-  const [user, setUser] = useState<User>();
-  useEffect(() => {
-    const fetchDate = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) setUser(user);
-    };
-    fetchDate();
-  }, []);
+  const user = supabase.auth.user();
 
   useEffect(() => {
     const fetchBookmarks = async () => {

@@ -1,4 +1,3 @@
-import type { User } from "@supabase/gotrue-js";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -19,17 +18,7 @@ export const Header: FC = () => {
   const { setLoginModal } = useContext(UtilitiesContext);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [avatorSrc, setAvatorSrc] = useState<string>();
-  const [user, setUser] = useState<User>();
-
-  useEffect(() => {
-    const fetchDate = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) setUser(user);
-    };
-    fetchDate();
-  }, []);
+  const user = supabase.auth.user();
 
   const delQuery = (url: string) => {
     return url.split("?")[0];

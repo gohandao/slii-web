@@ -25,6 +25,7 @@ const AccountPage: NextPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
+  const user = supabase.auth.user();
 
   // const options = {
   //   maxSizeMB: 1, // 最大ファイルサイズ

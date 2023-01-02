@@ -14,17 +14,21 @@ export const useGetUserId = () => {
   const [userId, setUserId] = useState<Profile["id"]>("");
   const getUserId = useCallback(async (userName: string) => {
     try {
-      const { data, error, status } = await supabase
-        .from<Profile>("profiles")
-        .select("*", {
-          count: "exact",
-          head: false,
-        })
-        .eq("username", `${userName}`)
-        .single();
-      if (error && status !== 406) {
-        throw error;
-      }
+      const fetchData = async () => {
+        const { data, error, status } = await supabase
+          .from("profiles")
+          .select("*", {
+            count: "exact",
+            head: false,
+          })
+          .eq("username", `${userName}`)
+          .single();
+        if (error && status !== 406) {
+          throw error;
+        }
+        return data as Profile;
+      };
+      const data = await fetchData();
       if (data) {
         setUserId(data.id);
       }

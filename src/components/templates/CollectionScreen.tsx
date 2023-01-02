@@ -154,7 +154,7 @@ export const CollectionScreen = () => {
             stats={stats}
             twitter_id={collection.twitter_id}
             discord_url={collection.discord_url}
-            upvotes_count={collection.upvotes_count}
+            upvotes_count={collection.upvotes_count_function}
           />
         )}
         {assets && assets.length > 0 && (

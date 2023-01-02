@@ -68,7 +68,7 @@ export const CollectionCard = ({ collection, index }: any) => {
                   property="simple"
                   type="collection"
                   id={collection.slug}
-                  count={collection.upvotes_count}
+                  count={collection.upvotes_count_function}
                 />
               </div>
             </div>

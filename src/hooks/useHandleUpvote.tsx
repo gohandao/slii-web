@@ -17,9 +17,10 @@ export const useHandleUpvote = (count: number, type: string, id: string) => {
 
   useEffect(() => {
     let new_count = count;
-    if (added) new_count = count ? count + 1 : 1;
-    if (removed) new_count = count ? count - 1 : 0;
+    if (added) new_count = currentCount + 1;
+    if (removed) new_count = currentCount - 1;
     setCurrentCount(new_count);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count, added, removed]);
 
   const creator_username = type === "creator" ? id : "";
@@ -31,22 +32,29 @@ export const useHandleUpvote = (count: number, type: string, id: string) => {
         return upvote.creator_username == id;
       });
       if (checkLiked.length === 0) {
-        const { data, error } = await supabase.from<Upvote>("upvotes").insert([
-          {
-            collection_slug: collection_slug,
-            created_at: new Date(),
-            creator_username: creator_username,
-            user_id: user.id,
-          },
-        ]);
+        const fetchData = async () => {
+          const { data, error } = await supabase
+            .from("upvotes")
+            .insert([
+              {
+                collection_slug: collection_slug,
+                created_at: new Date(),
+                creator_username: creator_username,
+                user_id: user.id,
+              },
+            ])
+            .select();
+          if (error) {
+            console.log("error");
+            console.log(error);
+          }
+          return data as Upvote[];
+        };
+        const data = await fetchData();
         data && setUpvotes([...upvotes, ...data]);
         setUpvoted(true);
         setRemoved(false);
         setAdded(true);
-        if (error) {
-          console.log("error");
-          console.log(error);
-        }
       }
     } else {
       setLoginModal(true);
@@ -55,14 +63,19 @@ export const useHandleUpvote = (count: number, type: string, id: string) => {
 
   const removeLike = useCallback(async () => {
     if (user) {
-      const { data } = await supabase
-        .from<Upvote>("upvotes")
-        .delete()
-        .match({
-          [type === "creator" ? "creator_username" : "collection_slug"]:
-            type === "creator" ? creator_username : collection_slug,
-          user_id: user.id,
-        });
+      const fetchData = async () => {
+        const { data } = await supabase
+          .from("upvotes")
+          .delete()
+          .match({
+            [type === "creator" ? "creator_username" : "collection_slug"]:
+              type === "creator" ? creator_username : collection_slug,
+            user_id: user.id,
+          })
+          .select();
+        return data as Upvote[];
+      };
+      const data = await fetchData();
       if (data) {
         const removedUpvotes = upvotes.filter((upvote) => {
           return upvote.creator_username !== creator_username;

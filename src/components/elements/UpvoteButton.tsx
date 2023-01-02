@@ -13,7 +13,7 @@ export const UpvoteButton: FC<Props> = ({ id, count, property = "default", type 
   const { addLike, currentCount, removeLike, upvoted } = useHandleUpvote(count, type, id);
   const propertyClass =
     property == "simple"
-      ? "rounded px-2 py-[3px] flex items-center justify-center gap-1"
+      ? "rounded px-1 py-[3px] flex items-center justify-center gap-1"
       : "px-3 py-[10px] flex items-center justify-center gap-1";
 
   const heartIconClass = upvoted ? "text-pink-500 opacity-90" : "text-white opacity-30";
@@ -28,9 +28,9 @@ export const UpvoteButton: FC<Props> = ({ id, count, property = "default", type 
           }}
         >
           {property === "simple" ? (
-            <div className={`bg-gray-700 ${propertyClass} `}>
+            <div className={`min-w-[40px] bg-gray-700 ${propertyClass} `}>
               <AiFillHeart className={`text-sm ${heartIconClass}`} />
-              <p className="text-sm text-gray-100">{currentCount}</p>
+              <p className="min-w-[9px] text-sm text-gray-100">{currentCount}</p>
             </div>
           ) : (
             <div className="bg-upvote h-[44px] rounded">

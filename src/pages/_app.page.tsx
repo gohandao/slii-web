@@ -1,6 +1,7 @@
 import "@/styles/style.scss";
 import "@/styles/globals.css";
 
+import type { User } from "@supabase/supabase-js";
 import { nanoid } from "nanoid";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -23,11 +24,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const [, setLoading] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string | undefined>();
   const [profile, setProfile] = useState<any>();
+  const [user, setUser] = useState<User>();
   const [userProfile, setUserProfile] = useState<Profile>();
   const [loginModal, setLoginModal] = useState<boolean>(false);
   const [upvotes, setUpvotes] = useState<Upvote[]>([]);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
-  const user = supabase.auth.session()?.user;
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -50,13 +51,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const getBookmarks = async () => {
     try {
       if (user) {
-        const { data, error, status } = await supabase
-          .from<Bookmark>("bookmarks")
-          .select("*, profiles(*)", {
-            count: "exact",
-            head: false,
-          })
-          .eq("user_id", `${user.id}`);
+        const { data, error, status } = await supabase.from("bookmarks").select("*").eq("user_id", `${user.id}`);
         if (error && status !== 406) {
           throw error;
         }
@@ -66,11 +61,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       if (error instanceof Error) alert(error.message);
     }
   };
+
   const getUpvotes = async () => {
     try {
       if (user) {
         const { data, error, status } = await supabase
-          .from<Upvote>("upvotes")
+          .from("upvotes")
           .select("*, profiles(*)", {
             count: "exact",
             head: false,
@@ -93,20 +89,39 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       updated_at: new Date(),
       username: init_username,
     };
-    const { error } = await supabase.from("profiles").upsert(updates, {
-      returning: "minimal", // Don't return the value after inserting
-    });
+    const { error } = await supabase.from("profiles").upsert(updates);
     if (error) throw error;
   };
 
   const getProfile = async () => {
     try {
       setLoading(true);
-      if (user) {
-        const { data, error, status } = await supabase.from<Profile>("profiles").select("*").eq("id", user.id).single();
-        if (error && status !== 406) throw error;
-        if (data) setProfile(data);
-        if (!profile && !data) createProfile();
+      if (supabase) {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (user) {
+          const { data, error, status } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+          supabase
+            .channel(`public:profile:id=eq.${user.id}`)
+            .on(
+              "postgres_changes",
+              { event: "*", filter: `id=eq.${user.id}`, schema: "public", table: "profiles" },
+              (payload: { new: any }) => {
+                setProfile(payload.new);
+              }
+            )
+            .subscribe();
+          if (error && status !== 406) {
+            throw error;
+          }
+          if (data) {
+            setProfile(data);
+          }
+          if (!profile && !data) {
+            createProfile();
+          }
+        }
       }
     } catch (error) {
       if (error instanceof Error) alert(error.message);
@@ -116,6 +131,16 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   };
 
   useEffect(() => {
+    const fetchUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session) {
+        setUser(session.user);
+        console.log("session.user!!!!!!!!!!!!!!!!!!", session);
+      }
+    };
+    fetchUser();
     if (!user) {
       !profile && getProfile();
     }

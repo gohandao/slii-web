@@ -8,11 +8,15 @@ export const useGetUserBookmarks = () => {
   const { userId } = useGetUserId();
   const [userBookmarks, setUserBookmarks] = useState<Bookmark[]>([]);
   const getUserBookmarks = useCallback(async (user_id: string) => {
-    const { data, error } = await supabase.from<Bookmark>("bookmarks").select().eq("user_id", `${user_id}`);
-    if (error) {
-      console.log("error at getUserBookmarks");
-      console.log(error);
-    }
+    const fetchData = async () => {
+      const { data, error } = await supabase.from("bookmarks").select().eq("user_id", `${user_id}`);
+      if (error) {
+        console.log("error at getUserBookmarks");
+        console.log(error);
+      }
+      return data as Bookmark[];
+    };
+    const data = await fetchData();
     if (data) {
       setUserBookmarks(data);
     }

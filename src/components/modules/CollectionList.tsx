@@ -140,7 +140,7 @@ export const CollectionList: FC<Props> = ({ collections, limit }) => {
                               property="simple"
                               type="collection"
                               id={collection.slug}
-                              count={collection.upvotes_count}
+                              count={collection.upvotes_count_function}
                             />
                             {/*<AiOutlineHeart className=" text-gray-400 opacity-50" />*/}
                           </div>

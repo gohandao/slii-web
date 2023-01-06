@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "@/contexts/AuthContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { useGetUser } from "@/hooks/useGetUser";
 import { supabase } from "@/libs/supabase";
 
 import type { Upvote } from "../types/upvote";
@@ -13,7 +14,7 @@ export const useHandleUpvote = (count: number, type: string, id: string) => {
   const [added, setAdded] = useState<boolean>(false);
   const [removed, setRemoved] = useState<boolean>(false);
   const [currentCount, setCurrentCount] = useState<number>(count);
-  const user = supabase.auth.user();
+  const { user } = useGetUser();
 
   useEffect(() => {
     let new_count = count;

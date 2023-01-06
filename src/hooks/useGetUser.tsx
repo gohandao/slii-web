@@ -13,7 +13,7 @@ export const useGetUser = () => {
       if (user) setUser(user);
     };
     fetchUser();
-  }, [user]);
+  }, []);
 
   return { user };
 };

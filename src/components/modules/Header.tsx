@@ -18,7 +18,7 @@ export const Header: FC = () => {
   const { setLoginModal } = useContext(UtilitiesContext);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [avatorSrc, setAvatorSrc] = useState<string>();
-  const user = supabase.auth.user();
+  const user = supabase.auth.getUser();
 
   const delQuery = (url: string) => {
     return url.split("?")[0];

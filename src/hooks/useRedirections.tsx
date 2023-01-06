@@ -1,12 +1,12 @@
 import { useRouter } from "next/router";
 
-import { supabase } from "@/libs/supabase";
+import { useGetUser } from "@/hooks/useGetUser";
 
 export const useRedirections = () => {
   const router = useRouter();
   const { prev } = router.query;
   const currentPath = router.pathname;
-  const user = supabase.auth.user();
+  const { user } = useGetUser();
   switch (currentPath) {
     case "/login":
       if (user) {

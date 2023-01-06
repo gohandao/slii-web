@@ -10,6 +10,7 @@ import { Input } from "@/components/elements/Input";
 import { Textarea } from "@/components/elements/Textarea";
 import { BaseLayout } from "@/components/layouts/BaseLayout";
 import { AuthContext } from "@/contexts/AuthContext";
+import { useGetUser } from "@/hooks/useGetUser";
 import { supabase } from "@/libs/supabase";
 import { UploadAvatar } from "@/pages/account/components/UploadAvatar";
 import { UploadBackground } from "@/pages/account/components/UploadBackground";
@@ -25,24 +26,12 @@ const AccountPage: NextPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
-  const user = supabase.auth.user();
+  const { user } = useGetUser();
 
   // const options = {
   //   maxSizeMB: 1, // 最大ファイルサイズ
   //   maxWidthOrHeight: 80, // 最大画像幅もしくは高さ
   // };
-  useEffect(() => {
-    // reload時に!userとなるためauthチェック
-    const fetchData = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/");
-      }
-    };
-    fetchData();
-  }, [user]);
 
   useEffect(() => {
     if (user && typeof user.email === "string") {

@@ -6,7 +6,7 @@ import { FaDiscord, FaRegUserCircle } from "react-icons/fa";
 import { SiNotion } from "react-icons/si";
 import { TbDiamond, TbMailbox } from "react-icons/tb";
 
-import { supabase } from "../../libs/supabase";
+import { useGetUser } from "@/hooks/useGetUser";
 
 type FixedMenuProps = {
   blank?: boolean;
@@ -40,7 +40,7 @@ const FixedMenu: FC<FixedMenuProps> = ({ blank = false, children, href }) => {
   }
 };
 export const Footer: FC = () => {
-  const user = supabase.auth.user();
+  const { user } = useGetUser();
 
   return (
     <>

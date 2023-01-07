@@ -32,10 +32,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [user, setUser] = useAtom(userAtom);
   const { session } = useGetSession();
-  if (session) {
-    console.log("session", session);
-    setUser(session.user);
-  }
+  if (session) setUser(session.user);
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {

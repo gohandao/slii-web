@@ -8,6 +8,7 @@ type Profile = {
   username: string;
 };
 
+// userIDはjotaiに保存されているのでこのhookは不要
 export const useGetUserId = () => {
   const router = useRouter();
   const { username } = router.query;

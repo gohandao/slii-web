@@ -1,3 +1,4 @@
+import type { User } from "@supabase/supabase-js";
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 
@@ -7,10 +8,9 @@ import type { Bookmark } from "@/types/bookmark";
 import { userAtom } from "../contexts/state/auth.state";
 
 export const useGetUserBookmarks = () => {
-  const [user] = useAtom(userAtom);
+  const [user] = useAtom(userAtom) as [User, (user: User) => void];
   const [userBookmarks, setUserBookmarks] = useState<Bookmark[]>([]);
   const getUserBookmarks = useCallback(async () => {
-    if (!user) return;
     const { data, error } = await supabase.from("bookmarks").select().eq("user_id", user.id);
     if (error) {
       console.log("error at getUserBookmarks");

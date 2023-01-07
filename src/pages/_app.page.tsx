@@ -63,6 +63,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const getProfile = async () => {
     try {
       setLoading(true);
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (user) {
         const { data, error, status } = await supabase.from("profiles").select("*").eq("id", user.id).single();
         supabase

@@ -1,29 +1,29 @@
+import { useAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 
-import { useGetUserId } from "@/hooks/useGetUserId";
 import { supabase } from "@/libs/supabase";
 import type { Bookmark } from "@/types/bookmark";
 
+import { userAtom } from "../contexts/state/auth.state";
+
 export const useGetUserBookmarks = () => {
-  const { userId } = useGetUserId();
+  const [user] = useAtom(userAtom);
   const [userBookmarks, setUserBookmarks] = useState<Bookmark[]>([]);
-  const getUserBookmarks = useCallback(async (user_id: string) => {
-    const fetchData = async () => {
-      const { data, error } = await supabase.from("bookmarks").select().eq("user_id", `${user_id}`);
-      if (error) {
-        console.log("error at getUserBookmarks");
-        console.log(error);
-      }
-      return data as Bookmark[];
-    };
-    const data = await fetchData();
+  const getUserBookmarks = useCallback(async () => {
+    if (!user) return;
+    const { data, error } = await supabase.from("bookmarks").select().eq("user_id", user.id);
+    if (error) {
+      console.log("error at getUserBookmarks");
+      console.log(error);
+    }
     if (data) {
+      data as Bookmark[];
       setUserBookmarks(data);
     }
-  }, []);
+  }, [user]);
   useEffect(() => {
-    if (userId) getUserBookmarks(userId);
-  }, [getUserBookmarks, userId]);
+    getUserBookmarks();
+  }, [getUserBookmarks]);
 
   return { userBookmarks };
 };

@@ -11,12 +11,11 @@ import { useEffect, useState } from "react";
 
 import { description, site_name, title, twitter_id } from "@/constant/seo.const";
 import { AuthContext } from "@/contexts/AuthContext";
-import { userAtom } from "@/contexts/state/auth.state";
+import { bookmarkAtom, userAtom } from "@/contexts/state/auth.state";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { useGetSession } from "@/hooks/useGetSession";
 import * as gtag from "@/libs/gtag";
 import { supabase } from "@/libs/supabase";
-import type { Bookmark } from "@/types/bookmark";
 import type { Profile } from "@/types/profile";
 import type { Upvote } from "@/types/upvote";
 
@@ -29,10 +28,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const [userProfile, setUserProfile] = useState<Profile>();
   const [loginModal, setLoginModal] = useState<boolean>(false);
   const [upvotes, setUpvotes] = useState<Upvote[]>([]);
-  const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [user, setUser] = useAtom(userAtom);
   const { session } = useGetSession();
   if (session) setUser(session.user);
+  const [, setBookmarks] = useAtom(bookmarkAtom);
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -164,9 +163,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       />
       <AuthContext.Provider
         value={{
-          bookmarks,
           profile,
-          setBookmarks,
           setUpvotes,
           upvotes,
         }}

@@ -1,14 +1,15 @@
+import { useAtom } from "jotai";
 import { useRouter } from "next/router";
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { supabase } from "@/libs/supabase";
+import { userProfileAtom } from "@/state/utilities.state";
 import type { Profile } from "@/types/profile";
 
 export const useGetUserProfile = () => {
   const router = useRouter();
   const { username } = router.query;
-  const { setUserProfile, userProfile } = useContext(UtilitiesContext);
+  const [userProfile, setUserProfile] = useAtom(userProfileAtom);
 
   const getUserProfile = useCallback(async () => {
     try {

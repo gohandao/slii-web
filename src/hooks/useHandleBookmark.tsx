@@ -1,14 +1,14 @@
 import { useAtom } from "jotai";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-import { bookmarkAtom, userAtom } from "@/contexts/state/auth.state";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { supabase } from "@/libs/supabase";
+import { bookmarkAtom, userAtom } from "@/state/auth.state";
 
+import { loginModalAtom } from "../state/utilities.state";
 import type { Bookmark } from "../types/bookmark";
 
 export const useHandleBookmark = (id: string, type: string) => {
-  const { setLoginModal } = useContext(UtilitiesContext);
+  const [, setLoginModal] = useAtom(loginModalAtom);
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const creator_username = (() => {
     if (type === "creator") return id;

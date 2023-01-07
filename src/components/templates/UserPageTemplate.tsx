@@ -1,5 +1,6 @@
+import { useAtom } from "jotai";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MdVerified } from "react-icons/md";
 
 import { OrderButton } from "@/components/elements/OrderButton";
@@ -12,10 +13,10 @@ import { CreatorList } from "@/components/modules/CreatorList";
 import { Dropdown } from "@/components/modules/Dropdown";
 import { Pagination } from "@/components/modules/Pagination";
 import { ProfileHeader } from "@/components/modules/ProfileHeader";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { useGetCreators } from "@/hooks/useGetCreators";
 import { useGetUserProfile } from "@/hooks/useGetUserProfile";
 import { getCollections } from "@/libs/supabase";
+import { userProfileAtom } from "@/state/utilities.state";
 import type { Bookmark } from "@/types/bookmark";
 import type { Creator } from "@/types/creator";
 import type { Upvote } from "@/types/upvote";
@@ -37,7 +38,7 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
   const [collections, setCollections] = useState<Collection[]>([]);
   const [creatorsCount, setCreatorsCount] = useState<number>(0);
   const [collectionsCount, setCollectionsCount] = useState<number>(0);
-  const { setUserProfile } = useContext(UtilitiesContext);
+  const [, setUserProfile] = useAtom(userProfileAtom);
   const { userProfile } = useGetUserProfile();
   if (userProfile && username !== userProfile.username) {
     setUserProfile(undefined);

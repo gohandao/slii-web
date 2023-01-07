@@ -10,10 +10,10 @@ import { v4 as uuidv4 } from "uuid";
 import { Input } from "@/components/elements/Input";
 import { Textarea } from "@/components/elements/Textarea";
 import { BaseLayout } from "@/components/layouts/BaseLayout";
-import { profileAtom, userAtom } from "@/contexts/state/auth.state";
 import { supabase } from "@/libs/supabase";
 import { UploadAvatar } from "@/pages/account/components/UploadAvatar";
 import { UploadBackground } from "@/pages/account/components/UploadBackground";
+import { profileAtom, userAtom } from "@/state/auth.state";
 
 const AccountPage: NextPage = () => {
   const [profile] = useAtom(profileAtom);

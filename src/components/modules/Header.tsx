@@ -3,21 +3,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import type { FC } from "react";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BiHomeAlt, BiPurchaseTagAlt } from "react-icons/bi";
 import { FaRegUser } from "react-icons/fa";
 import { TbDiamond } from "react-icons/tb";
 
 import { HeaderIcon } from "@/components/modules/HeaderIcon";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { supabase } from "@/libs/supabase";
+import { loginModalAtom } from "@/state/utilities.state";
 
-import { profileAtom, userAtom } from "../../contexts/state/auth.state";
+import { profileAtom, userAtom } from "../../state/auth.state";
 
 export const Header: FC = () => {
   const router = useRouter();
   const [profile] = useAtom(profileAtom);
-  const { setLoginModal } = useContext(UtilitiesContext);
+  const [, setLoginModal] = useAtom(loginModalAtom);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [avatorSrc, setAvatorSrc] = useState<string>();
   const [user] = useAtom(userAtom);

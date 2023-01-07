@@ -11,7 +11,6 @@ export const useGetUserProfile = () => {
   const { setUserProfile, userProfile } = useContext(UtilitiesContext);
 
   const getUserProfile = useCallback(async () => {
-    console.log(username);
     try {
       const { data, error, status } = await supabase
         .from("profiles")

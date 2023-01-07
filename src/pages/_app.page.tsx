@@ -49,6 +49,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   const getBookmarks = async () => {
     try {
+      // MEMO: そもそもuserの判定をuseEffect内でしているので、userの判定を2回もする必要ない
       if (user) {
         const { data, error, status } = await supabase.from("bookmarks").select("*").eq("user_id", `${user.id}`);
         if (error && status !== 406) {
@@ -63,6 +64,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   const getUpvotes = async () => {
     try {
+      // MEMO: そもそもuserの判定をuseEffect内でしているので、userの判定を2回もする必要ない
       if (user) {
         const { data, error, status } = await supabase
           .from("upvotes")
@@ -71,9 +73,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             head: false,
           })
           .eq("user_id", `${user.id}`);
-        if (error && status !== 406) {
-          throw error;
-        }
+        if (error && status !== 406) throw error;
         data && setUpvotes(data);
       }
     } catch (error) {
@@ -111,15 +111,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
               }
             )
             .subscribe();
-          if (error && status !== 406) {
-            throw error;
-          }
-          if (data) {
-            setProfile(data);
-          }
-          if (!profile && !data) {
-            createProfile();
-          }
+          if (error && status !== 406) throw error;
+          if (data) setProfile(data);
+          if (!profile && !data) createProfile();
         }
       }
     } catch (error) {

@@ -9,15 +9,14 @@ import { FaRegUser } from "react-icons/fa";
 import { TbDiamond } from "react-icons/tb";
 
 import { HeaderIcon } from "@/components/modules/HeaderIcon";
-import { AuthContext } from "@/contexts/AuthContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { supabase } from "@/libs/supabase";
 
-import { userAtom } from "../../contexts/state/auth.state";
+import { profileAtom, userAtom } from "../../contexts/state/auth.state";
 
 export const Header: FC = () => {
   const router = useRouter();
-  const { profile } = useContext(AuthContext);
+  const [profile] = useAtom(profileAtom);
   const { setLoginModal } = useContext(UtilitiesContext);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [avatorSrc, setAvatorSrc] = useState<string>();
@@ -114,7 +113,7 @@ export const Header: FC = () => {
           )}
           {dropdown && (
             <div className={`absolute top-full right-0 z-20 mt-2 w-40 rounded border border-gray-700 bg-gray-800`}>
-              {user && (
+              {user && profile && (
                 <>
                   <Link href={`/${profile.username}`} legacyBehavior>
                     <a className="block border-b border-gray-700 px-5 py-3 text-sm text-gray-400">Profile</a>

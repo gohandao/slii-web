@@ -3,21 +3,20 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import router from "next/router";
 import { NextSeo } from "next-seo";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { v4 as uuidv4 } from "uuid";
 
 import { Input } from "@/components/elements/Input";
 import { Textarea } from "@/components/elements/Textarea";
 import { BaseLayout } from "@/components/layouts/BaseLayout";
-import { AuthContext } from "@/contexts/AuthContext";
-import { userAtom } from "@/contexts/state/auth.state";
+import { profileAtom, userAtom } from "@/contexts/state/auth.state";
 import { supabase } from "@/libs/supabase";
 import { UploadAvatar } from "@/pages/account/components/UploadAvatar";
 import { UploadBackground } from "@/pages/account/components/UploadBackground";
 
 const AccountPage: NextPage = () => {
-  const { profile } = useContext(AuthContext);
+  const [profile] = useAtom(profileAtom);
   const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [newAvatar, setNewAvatar] = useState<File>();
   const [backgroundUrl, setBackgroundUrl] = useState<string>("");
@@ -73,7 +72,7 @@ const AccountPage: NextPage = () => {
       setLoading(true);
       let new_avatar_url;
       let new_background_url;
-      if (user) {
+      if (user && profile) {
         if (newAvatar) {
           new_avatar_url = await uploadImage({ image: newAvatar, path: "public", storage: "avatars" });
         }

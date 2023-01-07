@@ -1,3 +1,4 @@
+import { useAtom } from "jotai";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -12,13 +13,15 @@ import { AuthContext } from "@/contexts/AuthContext";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { supabase } from "@/libs/supabase";
 
+import { userAtom } from "../../contexts/state/auth.state";
+
 export const Header: FC = () => {
   const router = useRouter();
-  const { profile, user } = useContext(AuthContext);
+  const { profile } = useContext(AuthContext);
   const { setLoginModal } = useContext(UtilitiesContext);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [avatorSrc, setAvatorSrc] = useState<string>();
-
+  const [user] = useAtom(userAtom);
   const delQuery = (url: string) => {
     return url.split("?")[0];
   };

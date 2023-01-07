@@ -1,34 +1,38 @@
 import "@/styles/style.scss";
 import "@/styles/globals.css";
 
+import { useAtom } from "jotai";
+import { nanoid } from "nanoid";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { DefaultSeo } from "next-seo";
 import { useEffect, useState } from "react";
 
+import { description, site_name, title, twitter_id } from "@/constant/seo.const";
 import { AuthContext } from "@/contexts/AuthContext";
+import { userAtom } from "@/contexts/state/auth.state";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { useGetSession } from "@/hooks/useGetSession";
 import * as gtag from "@/libs/gtag";
 import { supabase } from "@/libs/supabase";
 import type { Bookmark } from "@/types/bookmark";
 import type { Profile } from "@/types/profile";
 import type { Upvote } from "@/types/upvote";
 
-const shortid = require("shortid");
-
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [loading, setLoading] = useState<boolean>(false);
+  const [, setLoading] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string | undefined>();
-  const [user, setUser] = useState<any>();
   const [profile, setProfile] = useState<any>();
   const [userProfile, setUserProfile] = useState<Profile>();
-  const [loginModal, setLoginModal] = useState(false);
+  const [loginModal, setLoginModal] = useState<boolean>(false);
   const [upvotes, setUpvotes] = useState<Upvote[]>([]);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+  const [user, setUser] = useAtom(userAtom);
+  const { session } = useGetSession();
+  if (session) setUser(session.user);
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -40,31 +44,25 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     };
   }, [router.events]);
 
-  useEffect(() => {
-    if (user) {
-      getBookmarks();
-      getUpvotes();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
-
   const getBookmarks = async () => {
     try {
+      // MEMO: そもそもuserの判定をuseEffect内でしているので、userの判定を2回もする必要ない
       if (user) {
         const { data, error, status } = await supabase.from("bookmarks").select("*").eq("user_id", `${user.id}`);
         if (error && status !== 406) {
           throw error;
         }
-        const new_bookmarks = data as Bookmark[];
-        setBookmarks(new_bookmarks);
+        data && setBookmarks(data);
       }
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error) {
+      if (error instanceof Error) alert(error.message);
     }
   };
+
   const getUpvotes = async () => {
     try {
-      if (user && supabase) {
+      // MEMO: そもそもuserの判定をuseEffect内でしているので、userの判定を2回もする必要ない
+      if (user) {
         const { data, error, status } = await supabase
           .from("upvotes")
           .select("*, profiles(*)", {
@@ -72,32 +70,23 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             head: false,
           })
           .eq("user_id", `${user.id}`);
-        if (error && status !== 406) {
-          throw error;
-        }
-        const new_upvotes = data as Upvote[];
-        setUpvotes(new_upvotes);
+        if (error && status !== 406) throw error;
+        data && setUpvotes(data);
       }
     } catch (error) {
-      if (error instanceof Error) {
-        alert(error.message);
-      }
+      if (error instanceof Error) alert(error.message);
     }
   };
 
   const createProfile = async () => {
-    const init_username = shortid.generate();
+    const init_username = nanoid();
     const updates = {
       id: user?.id,
       updated_at: new Date(),
       username: init_username,
     };
-    if (supabase) {
-      const { error } = await supabase.from("profiles").upsert(updates);
-      if (error) {
-        throw error;
-      }
-    }
+    const { error } = await supabase.from("profiles").upsert(updates);
+    if (error) throw error;
   };
 
   const getProfile = async () => {
@@ -114,48 +103,35 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             .on(
               "postgres_changes",
               { event: "*", filter: `id=eq.${user.id}`, schema: "public", table: "profiles" },
-              (payload) => {
+              (payload: { new: any }) => {
                 setProfile(payload.new);
               }
             )
             .subscribe();
-          if (error && status !== 406) {
-            throw error;
-          }
-          if (data) {
-            setProfile(data);
-          }
-          if (!profile && !data) {
-            createProfile();
-          }
+          if (error && status !== 406) throw error;
+          if (data) setProfile(data);
+          if (!profile && !data) createProfile();
         }
       }
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error) {
+      if (error instanceof Error) alert(error.message);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-      user && !profile && getProfile();
-    };
-    if (!user) {
-      fetchData();
+    if (user) {
+      getBookmarks();
+      getUpvotes();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user]);
 
-  const site_name = "NFT OTAKU";
-  const title = "NFT OTAKU | Japanese NFT Creators / Collections Database";
-  const description =
-    "Discover favorite Japanese NFT creators, projects and collections. NFT OTAKU is one of the biggest NFT creator search application in Japan.";
-  const twitter_id = "nftotaku_dao";
+  useEffect(() => {
+    if (!user) !profile && getProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -193,7 +169,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           setBookmarks,
           setUpvotes,
           upvotes,
-          user,
         }}
       >
         <UtilitiesContext.Provider

@@ -1,3 +1,4 @@
+import { useAtom } from "jotai";
 import Link from "next/link";
 import type { FC, ReactNode } from "react";
 import { BiHomeAlt, BiPurchaseTagAlt } from "react-icons/bi";
@@ -6,7 +7,7 @@ import { FaDiscord, FaRegUserCircle } from "react-icons/fa";
 import { SiNotion } from "react-icons/si";
 import { TbDiamond, TbMailbox } from "react-icons/tb";
 
-import { useGetUser } from "@/hooks/useGetUser";
+import { userAtom } from "../../contexts/state/auth.state";
 
 type FixedMenuProps = {
   blank?: boolean;
@@ -40,7 +41,7 @@ const FixedMenu: FC<FixedMenuProps> = ({ blank = false, children, href }) => {
   }
 };
 export const Footer: FC = () => {
-  const { user } = useGetUser();
+  const [user] = useAtom(userAtom);
 
   return (
     <>

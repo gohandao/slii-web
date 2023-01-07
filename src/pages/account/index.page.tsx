@@ -1,3 +1,4 @@
+import { useAtom } from "jotai";
 import type { NextPage } from "next";
 import Link from "next/link";
 import router from "next/router";
@@ -10,7 +11,7 @@ import { Input } from "@/components/elements/Input";
 import { Textarea } from "@/components/elements/Textarea";
 import { BaseLayout } from "@/components/layouts/BaseLayout";
 import { AuthContext } from "@/contexts/AuthContext";
-import { useGetUser } from "@/hooks/useGetUser";
+import { userAtom } from "@/contexts/state/auth.state";
 import { supabase } from "@/libs/supabase";
 import { UploadAvatar } from "@/pages/account/components/UploadAvatar";
 import { UploadBackground } from "@/pages/account/components/UploadBackground";
@@ -26,7 +27,7 @@ const AccountPage: NextPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
-  const { user } = useGetUser();
+  const [user] = useAtom(userAtom);
 
   // const options = {
   //   maxSizeMB: 1, // 最大ファイルサイズ
@@ -70,9 +71,6 @@ const AccountPage: NextPage = () => {
   const updateProfile = async () => {
     try {
       setLoading(true);
-      const {
-        data: { user },
-      } = supabase && (await supabase.auth.getUser());
       let new_avatar_url;
       let new_background_url;
       if (user) {

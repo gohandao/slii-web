@@ -7,10 +7,20 @@ export const useGetUser = () => {
   const [user, setUser] = useState<User>();
   useEffect(() => {
     const fetchUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) setUser(user);
+      try {
+        const {
+          data: { user },
+          error,
+        } = await supabase.auth.getUser();
+        if (error) {
+          throw error;
+        }
+        if (user) {
+          setUser(user);
+        }
+      } catch {
+        console.log("error at fetchUser");
+      }
     };
     fetchUser();
   }, []);

@@ -1,12 +1,13 @@
+import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 
-import { useGetUser } from "@/hooks/useGetUser";
+import { userAtom } from "@/contexts/state/auth.state";
 
 export const useRedirections = () => {
   const router = useRouter();
   const { prev } = router.query;
   const currentPath = router.pathname;
-  const { user } = useGetUser();
+  const [user] = useAtom(userAtom);
   switch (currentPath) {
     case "/login":
       if (user) {

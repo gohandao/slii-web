@@ -1,7 +1,7 @@
 import "@/styles/style.scss";
 import "@/styles/globals.css";
 
-import type { User } from "@supabase/supabase-js";
+import { useAtom } from "jotai";
 import { nanoid } from "nanoid";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 
 import { description, site_name, title, twitter_id } from "@/constant/seo.const";
 import { AuthContext } from "@/contexts/AuthContext";
+import { userAtom } from "@/contexts/state/auth.state";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import * as gtag from "@/libs/gtag";
 import { supabase } from "@/libs/supabase";
@@ -24,11 +25,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const [, setLoading] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string | undefined>();
   const [profile, setProfile] = useState<any>();
-  const [user, setUser] = useState<User>();
   const [userProfile, setUserProfile] = useState<Profile>();
   const [loginModal, setLoginModal] = useState<boolean>(false);
   const [upvotes, setUpvotes] = useState<Upvote[]>([]);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+  const [user, setUser] = useAtom(userAtom);
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -137,7 +138,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       } = await supabase.auth.getSession();
       if (session) {
         setUser(session.user);
-        console.log("session.user!!!!!!!!!!!!!!!!!!", session);
       }
     };
     fetchUser();

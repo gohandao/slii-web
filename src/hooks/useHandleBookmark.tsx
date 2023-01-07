@@ -1,8 +1,9 @@
+import { useAtom } from "jotai";
 import { useCallback, useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "@/contexts/AuthContext";
+import { userAtom } from "@/contexts/state/auth.state";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
-import { useGetUser } from "@/hooks/useGetUser";
 import { supabase } from "@/libs/supabase";
 
 import type { Bookmark } from "../types/bookmark";
@@ -18,7 +19,7 @@ export const useHandleBookmark = (id: string, type: string) => {
     if (type === "collection") return id;
   })();
 
-  const { user } = useGetUser();
+  const [user] = useAtom(userAtom);
 
   useEffect(() => {
     const fetchBookmarks = async () => {

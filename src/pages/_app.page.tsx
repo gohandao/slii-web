@@ -10,8 +10,7 @@ import { DefaultSeo } from "next-seo";
 import { useEffect, useState } from "react";
 
 import { description, site_name, title, twitter_id } from "@/constant/seo.const";
-import { AuthContext } from "@/contexts/AuthContext";
-import { bookmarkAtom, upvoteAtom, userAtom } from "@/contexts/state/auth.state";
+import { bookmarkAtom, profileAtom, upvoteAtom, userAtom } from "@/contexts/state/auth.state";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { useGetSession } from "@/hooks/useGetSession";
 import { useGetUserUpvotes } from "@/hooks/useGetUserUpvotes";
@@ -26,7 +25,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   const [, setLoading] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string | undefined>();
-  const [profile, setProfile] = useState<any>();
+  //const [profile, setProfile] = useState<any>();
   const [userProfile, setUserProfile] = useState<Profile>();
   const [loginModal, setLoginModal] = useState<boolean>(false);
   const [user, setUser] = useAtom(userAtom);
@@ -38,6 +37,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const [, setUpvotes] = useAtom(upvoteAtom);
   const { userUpvotes } = useGetUserUpvotes();
   if (userUpvotes) setUpvotes(userUpvotes);
+  const [profile, setProfile] = useAtom(profileAtom);
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -123,28 +123,22 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           handle: `@${twitter_id}`,
         }}
       />
-      <AuthContext.Provider
+      <UtilitiesContext.Provider
         value={{
-          profile,
+          keyword: keyword,
+          loginModal: loginModal,
+          NFTKeyword: keyword,
+          setKeyword: setKeyword,
+          setLoginModal: setLoginModal,
+          setNFTKeyword: setKeyword,
+          setUserProfile: setUserProfile,
+          userProfile: userProfile,
         }}
       >
-        <UtilitiesContext.Provider
-          value={{
-            keyword: keyword,
-            loginModal: loginModal,
-            NFTKeyword: keyword,
-            setKeyword: setKeyword,
-            setLoginModal: setLoginModal,
-            setNFTKeyword: setKeyword,
-            setUserProfile: setUserProfile,
-            userProfile: userProfile,
-          }}
-        >
-          <div className={`bg-stripe flex min-h-screen flex-col overflow-hidden`}>
-            <Component {...pageProps} />
-          </div>
-        </UtilitiesContext.Provider>
-      </AuthContext.Provider>
+        <div className={`bg-stripe flex min-h-screen flex-col overflow-hidden`}>
+          <Component {...pageProps} />
+        </div>
+      </UtilitiesContext.Provider>
     </>
   );
 }

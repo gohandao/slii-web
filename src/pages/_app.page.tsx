@@ -13,6 +13,7 @@ import { description, site_name, title, twitter_id } from "@/constant/seo.const"
 import { AuthContext } from "@/contexts/AuthContext";
 import { userAtom } from "@/contexts/state/auth.state";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { useGetSession } from "@/hooks/useGetSession";
 import * as gtag from "@/libs/gtag";
 import { supabase } from "@/libs/supabase";
 import type { Bookmark } from "@/types/bookmark";
@@ -30,6 +31,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const [upvotes, setUpvotes] = useState<Upvote[]>([]);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [user, setUser] = useAtom(userAtom);
+  const { session } = useGetSession();
+  if (session) {
+    console.log("session", session);
+    setUser(session.user);
+  }
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -40,14 +46,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
   }, [router.events]);
-
-  useEffect(() => {
-    if (user) {
-      getBookmarks();
-      getUpvotes();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
 
   const getBookmarks = async () => {
     try {
@@ -132,18 +130,15 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   };
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (session) {
-        setUser(session.user);
-      }
-    };
-    fetchUser();
-    if (!user) {
-      !profile && getProfile();
+    if (user) {
+      getBookmarks();
+      getUpvotes();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) !profile && getProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

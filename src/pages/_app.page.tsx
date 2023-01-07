@@ -14,9 +14,12 @@ import { AuthContext } from "@/contexts/AuthContext";
 import { bookmarkAtom, upvoteAtom, userAtom } from "@/contexts/state/auth.state";
 import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { useGetSession } from "@/hooks/useGetSession";
+import { useGetUserUpvotes } from "@/hooks/useGetUserUpvotes";
 import * as gtag from "@/libs/gtag";
 import { supabase } from "@/libs/supabase";
 import type { Profile } from "@/types/profile";
+
+import { useGetUserBookmarks } from "../hooks/useGetUserBookmarks";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -30,7 +33,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const { session } = useGetSession();
   if (session) setUser(session.user);
   const [, setBookmarks] = useAtom(bookmarkAtom);
+  const { userBookmarks } = useGetUserBookmarks();
+  if (userBookmarks) setBookmarks(userBookmarks);
   const [, setUpvotes] = useAtom(upvoteAtom);
+  const { userUpvotes } = useGetUserUpvotes();
+  if (userUpvotes) setUpvotes(userUpvotes);
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -41,40 +48,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
   }, [router.events]);
-
-  const getBookmarks = async () => {
-    try {
-      // MEMO: そもそもuserの判定をuseEffect内でしているので、userの判定を2回もする必要ない
-      if (user) {
-        const { data, error, status } = await supabase.from("bookmarks").select("*").eq("user_id", `${user.id}`);
-        if (error && status !== 406) {
-          throw error;
-        }
-        data && setBookmarks(data);
-      }
-    } catch (error) {
-      if (error instanceof Error) alert(error.message);
-    }
-  };
-
-  const getUpvotes = async () => {
-    try {
-      // MEMO: そもそもuserの判定をuseEffect内でしているので、userの判定を2回もする必要ない
-      if (user) {
-        const { data, error, status } = await supabase
-          .from("upvotes")
-          .select("*, profiles(*)", {
-            count: "exact",
-            head: false,
-          })
-          .eq("user_id", `${user.id}`);
-        if (error && status !== 406) throw error;
-        data && setUpvotes(data);
-      }
-    } catch (error) {
-      if (error instanceof Error) alert(error.message);
-    }
-  };
 
   const createProfile = async () => {
     const init_username = nanoid();
@@ -90,26 +63,21 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const getProfile = async () => {
     try {
       setLoading(true);
-      if (supabase) {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (user) {
-          const { data, error, status } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-          supabase
-            .channel(`public:profile:id=eq.${user.id}`)
-            .on(
-              "postgres_changes",
-              { event: "*", filter: `id=eq.${user.id}`, schema: "public", table: "profiles" },
-              (payload: { new: any }) => {
-                setProfile(payload.new);
-              }
-            )
-            .subscribe();
-          if (error && status !== 406) throw error;
-          if (data) setProfile(data);
-          if (!profile && !data) createProfile();
-        }
+      if (user) {
+        const { data, error, status } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+        supabase
+          .channel(`public:profile:id=eq.${user.id}`)
+          .on(
+            "postgres_changes",
+            { event: "*", filter: `id=eq.${user.id}`, schema: "public", table: "profiles" },
+            (payload: { new: any }) => {
+              setProfile(payload.new);
+            }
+          )
+          .subscribe();
+        if (error && status !== 406) throw error;
+        if (data) setProfile(data);
+        if (!profile && !data) createProfile();
       }
     } catch (error) {
       if (error instanceof Error) alert(error.message);
@@ -117,14 +85,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (user) {
-      getBookmarks();
-      getUpvotes();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
 
   useEffect(() => {
     if (!user) !profile && getProfile();

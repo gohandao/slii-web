@@ -7,7 +7,7 @@ import { FaDiscord, FaRegUserCircle } from "react-icons/fa";
 import { SiNotion } from "react-icons/si";
 import { TbDiamond, TbMailbox } from "react-icons/tb";
 
-import { userAtom } from "../../contexts/state/auth.state";
+import { userAtom } from "../../state/auth.state";
 
 type FixedMenuProps = {
   blank?: boolean;

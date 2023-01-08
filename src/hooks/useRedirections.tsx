@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 
-import { userAtom } from "@/contexts/state/auth.state";
+import { userAtom } from "@/state/auth.state";
 
 export const useRedirections = () => {
   const router = useRouter();

@@ -8,22 +8,18 @@ type Props = {
   type: "creator" | "collection";
 };
 export const TagList: FC<Props> = ({ tags, type }) => {
-  let typeClass = "bg-gray-500 text-gray-100";
-  if (type == "creator") {
-    typeClass = "bg-indigo-900 text-indigo-100";
-  } else if (type == "collection") {
-    typeClass = "bg-teal-900 text-teal-100";
-  }
+  const typeClassMap = {
+    collection: "bg-teal-900 text-teal-100",
+    creator: "bg-indigo-900 text-indigo-100",
+    default: "bg-gray-500 text-gray-100",
+  };
+  const typeClass = typeClassMap[type] || typeClassMap.default;
+
   return (
     <div className="flex flex-wrap gap-2">
       {tags &&
         tags.map((tag, index) => {
-          let path;
-          if (type == "collection") {
-            path = `/tags/${tag.name}?tab=${type}`;
-          } else {
-            path = `/tags/${tag.name}`;
-          }
+          const path = type === "collection" ? `/tags/${tag.name}?tab=${type}` : `/tags/${tag.name}`;
           return (
             <div key={index}>
               {tag && tag.name && (

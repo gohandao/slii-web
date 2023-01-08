@@ -1,8 +1,8 @@
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 
-import { userAtom } from "@/contexts/state/auth.state";
 import { supabase } from "@/libs/supabase";
+import { userAtom } from "@/state/auth.state";
 import type { Upvote } from "@/types/upvote";
 
 export const useGetUserUpvotes = () => {

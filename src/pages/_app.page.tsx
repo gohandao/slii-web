@@ -10,13 +10,11 @@ import { DefaultSeo } from "next-seo";
 import { useEffect, useState } from "react";
 
 import { description, site_name, title, twitter_id } from "@/constant/seo.const";
-import { bookmarkAtom, profileAtom, upvoteAtom, userAtom } from "@/contexts/state/auth.state";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { useGetSession } from "@/hooks/useGetSession";
 import { useGetUserUpvotes } from "@/hooks/useGetUserUpvotes";
 import * as gtag from "@/libs/gtag";
 import { supabase } from "@/libs/supabase";
-import type { Profile } from "@/types/profile";
+import { bookmarkAtom, profileAtom, upvoteAtom, userAtom } from "@/state/auth.state";
 
 import { useGetUserBookmarks } from "../hooks/useGetUserBookmarks";
 
@@ -24,10 +22,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
   const [, setLoading] = useState<boolean>(false);
-  const [keyword, setKeyword] = useState<string | undefined>();
-  //const [profile, setProfile] = useState<any>();
-  const [userProfile, setUserProfile] = useState<Profile>();
-  const [loginModal, setLoginModal] = useState<boolean>(false);
   const [user, setUser] = useAtom(userAtom);
   const { session } = useGetSession();
   if (session) setUser(session.user);
@@ -123,22 +117,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           handle: `@${twitter_id}`,
         }}
       />
-      <UtilitiesContext.Provider
-        value={{
-          keyword: keyword,
-          loginModal: loginModal,
-          NFTKeyword: keyword,
-          setKeyword: setKeyword,
-          setLoginModal: setLoginModal,
-          setNFTKeyword: setKeyword,
-          setUserProfile: setUserProfile,
-          userProfile: userProfile,
-        }}
-      >
-        <div className={`bg-stripe flex min-h-screen flex-col overflow-hidden`}>
-          <Component {...pageProps} />
-        </div>
-      </UtilitiesContext.Provider>
+      <div className={`bg-stripe flex min-h-screen flex-col overflow-hidden`}>
+        <Component {...pageProps} />
+      </div>
     </>
   );
 }

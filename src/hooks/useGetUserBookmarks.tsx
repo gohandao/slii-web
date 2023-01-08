@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/libs/supabase";
 import type { Bookmark } from "@/types/bookmark";
 
-import { userAtom } from "../contexts/state/auth.state";
+import { userAtom } from "../state/auth.state";
 
 export const useGetUserBookmarks = () => {
   const [user] = useAtom(userAtom);

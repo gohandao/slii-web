@@ -5904,7 +5904,6 @@ __metadata:
     i: ^0.3.7
     jotai: ^1.12.0
     local-storage: ^2.0.0
-    moment: ^2.29.4
     moralis: ^2.7.4
     nanoid: ^4.0.0
     next: ^13.0.4
@@ -5922,7 +5921,6 @@ __metadata:
     react-icons: ^4.6.0
     react-loading: ^2.0.3
     react-modal: ^3.16.1
-    react-moment: ^1.1.2
     react-scroll: ^1.8.8
     sass: ^1.56.1
     scrape-it: ^5.3.2
@@ -7706,13 +7704,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"moment@npm:^2.29.4":
-  version: 2.29.4
-  resolution: "moment@npm:2.29.4"
-  checksum: 0ec3f9c2bcba38dc2451b1daed5daded747f17610b92427bebe1d08d48d8b7bdd8d9197500b072d14e326dd0ccf3e326b9e3d07c5895d3d49e39b6803b76e80e
-  languageName: node
-  linkType: hard
-
 "moralis@npm:^2.7.4":
   version: 2.10.3
   resolution: "moralis@npm:2.10.3"
@@ -9030,17 +9021,6 @@ __metadata:
     react: ^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18
     react-dom: ^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18
   checksum: 978936e9320fad839c039b9ee4de55d40888156cb40e093615d6fbc2ff07139d5db06f14782cb7767f780bd5fb57956778669426c535ebc0068a7a03882c7e75
-  languageName: node
-  linkType: hard
-
-"react-moment@npm:^1.1.2":
-  version: 1.1.2
-  resolution: "react-moment@npm:1.1.2"
-  peerDependencies:
-    moment: ^2.29.0
-    prop-types: ^15.7.0
-    react: ^16.0 || ^17.0.0 || ^18.0.0
-  checksum: 89ad1a668b98015950682ce0c55de29e96915e0c001167089a78377da1fce9ea3484f6203f48e59c677df5474bdf6bd4cf0d75867f1ccb6135b3103d4a12c1d8
   languageName: node
   linkType: hard
 

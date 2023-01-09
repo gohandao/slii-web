@@ -1,4 +1,5 @@
 import { JP } from "country-flag-icons/react/3x2";
+import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -7,7 +8,6 @@ import { BsTwitter } from "react-icons/bs";
 import { FaDiscord } from "react-icons/fa";
 import { IoMdListBox } from "react-icons/io";
 import { MdVerified } from "react-icons/md";
-import Moment from "react-moment";
 
 import { BookmarkButton } from "@/components/elements/BookmarkButton";
 import { Hyphen } from "@/components/elements/Hyphen";
@@ -204,10 +204,7 @@ export const CollectionList: FC<Props> = ({ collections, limit }) => {
                           />
                         </div>
                         {collection.listed_at && (
-                          <ListSocial
-                            icon={<IoMdListBox />}
-                            text={<Moment format="DD.MM.YYYY">{collection.listed_at}</Moment>}
-                          />
+                          <ListSocial icon={<IoMdListBox />} text={dayjs(collection.listed_at).format("DD.MM.YYYY")} />
                         )}
                       </div>
                     </div>

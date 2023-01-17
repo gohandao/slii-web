@@ -1,21 +1,22 @@
+import { useAtom } from "jotai";
 import type { NextPage } from "next";
 import Link from "next/link";
 import router from "next/router";
 import { NextSeo } from "next-seo";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { v4 as uuidv4 } from "uuid";
 
 import { Input } from "@/components/elements/Input";
 import { Textarea } from "@/components/elements/Textarea";
 import { BaseLayout } from "@/components/layouts/BaseLayout";
-import { AuthContext } from "@/contexts/AuthContext";
 import { supabase } from "@/libs/supabase";
 import { UploadAvatar } from "@/pages/account/components/UploadAvatar";
 import { UploadBackground } from "@/pages/account/components/UploadBackground";
+import { profileAtom, userAtom } from "@/state/auth.state";
 
 const AccountPage: NextPage = () => {
-  const { profile, user } = useContext(AuthContext);
+  const [profile] = useAtom(profileAtom);
   const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [newAvatar, setNewAvatar] = useState<File>();
   const [backgroundUrl, setBackgroundUrl] = useState<string>("");
@@ -25,26 +26,15 @@ const AccountPage: NextPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
+  const [user] = useAtom(userAtom);
 
   // const options = {
   //   maxSizeMB: 1, // 最大ファイルサイズ
   //   maxWidthOrHeight: 80, // 最大画像幅もしくは高さ
   // };
-  useEffect(() => {
-    // reload時に!userとなるためauthチェック
-    const fetchData = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/");
-      }
-    };
-    fetchData();
-  }, [user]);
 
   useEffect(() => {
-    if (user) {
+    if (user && typeof user.email === "string") {
       setEmail(user.email);
     }
     if (profile) {
@@ -80,12 +70,9 @@ const AccountPage: NextPage = () => {
   const updateProfile = async () => {
     try {
       setLoading(true);
-      const {
-        data: { user },
-      } = supabase && (await supabase.auth.getUser());
       let new_avatar_url;
       let new_background_url;
-      if (user) {
+      if (user && profile) {
         if (newAvatar) {
           new_avatar_url = await uploadImage({ image: newAvatar, path: "public", storage: "avatars" });
         }

@@ -2,7 +2,7 @@ import type { FC } from "react";
 
 type StatsProps = {
   icon: JSX.Element | JSX.Element[];
-  text: JSX.Element | JSX.Element[] | number;
+  text: string | number;
 };
 export const ListSocial: FC<StatsProps> = ({ icon, text }) => {
   return (

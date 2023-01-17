@@ -1,18 +1,20 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useAtom } from "jotai";
+import { useCallback, useEffect, useState } from "react";
 
-import { AuthContext } from "@/contexts/AuthContext";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { supabase } from "@/libs/supabase";
+import { upvoteAtom, userAtom } from "@/state/auth.state";
+import { loginModalAtom } from "@/state/utilities.state";
 
 import type { Upvote } from "../types/upvote";
 
 export const useHandleUpvote = (count: number, type: string, id: string) => {
-  const { setUpvotes, upvotes, user } = useContext(AuthContext);
-  const { setLoginModal } = useContext(UtilitiesContext);
+  const [, setLoginModal] = useAtom(loginModalAtom);
   const [upvoted, setUpvoted] = useState<boolean>(false);
   const [added, setAdded] = useState<boolean>(false);
   const [removed, setRemoved] = useState<boolean>(false);
   const [currentCount, setCurrentCount] = useState<number>(count);
+  const [user] = useAtom(userAtom);
+  const [upvotes, setUpvotes] = useAtom(upvoteAtom);
 
   useEffect(() => {
     let new_count = count;

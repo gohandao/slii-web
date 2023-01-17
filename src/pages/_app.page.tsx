@@ -1,34 +1,37 @@
 import "@/styles/style.scss";
 import "@/styles/globals.css";
 
+import { useAtom } from "jotai";
+import { nanoid } from "nanoid";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { DefaultSeo } from "next-seo";
 import { useEffect, useState } from "react";
 
-import { AuthContext } from "@/contexts/AuthContext";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { description, site_name, title, twitter_id } from "@/constant/seo.const";
+import { useGetSession } from "@/hooks/useGetSession";
+import { useGetUserUpvotes } from "@/hooks/useGetUserUpvotes";
 import * as gtag from "@/libs/gtag";
 import { supabase } from "@/libs/supabase";
-import type { Bookmark } from "@/types/bookmark";
-import type { Profile } from "@/types/profile";
-import type { Upvote } from "@/types/upvote";
+import { bookmarkAtom, profileAtom, upvoteAtom, userAtom } from "@/state/auth.state";
 
-const shortid = require("shortid");
+import { useGetUserBookmarks } from "../hooks/useGetUserBookmarks";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [loading, setLoading] = useState<boolean>(false);
-  const [keyword, setKeyword] = useState<string | undefined>();
-  const [user, setUser] = useState<any>();
-  const [profile, setProfile] = useState<any>();
-  const [userProfile, setUserProfile] = useState<Profile>();
-  const [loginModal, setLoginModal] = useState(false);
-  const [upvotes, setUpvotes] = useState<Upvote[]>([]);
-  const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+  const [, setLoading] = useState<boolean>(false);
+  const [user, setUser] = useAtom(userAtom);
+  const { session } = useGetSession();
+  if (session) setUser(session.user);
+  const [, setBookmarks] = useAtom(bookmarkAtom);
+  const { userBookmarks } = useGetUserBookmarks();
+  if (userBookmarks) setBookmarks(userBookmarks);
+  const [, setUpvotes] = useAtom(upvoteAtom);
+  const { userUpvotes } = useGetUserUpvotes();
+  if (userUpvotes) setUpvotes(userUpvotes);
+  const [profile, setProfile] = useAtom(profileAtom);
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -40,122 +43,50 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     };
   }, [router.events]);
 
-  useEffect(() => {
-    if (user) {
-      getBookmarks();
-      getUpvotes();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
-
-  const getBookmarks = async () => {
-    try {
-      if (user) {
-        const { data, error, status } = await supabase.from("bookmarks").select("*").eq("user_id", `${user.id}`);
-        if (error && status !== 406) {
-          throw error;
-        }
-        const new_bookmarks = data as Bookmark[];
-        setBookmarks(new_bookmarks);
-      }
-    } catch (error: any) {
-      alert(error.message);
-    }
-  };
-  const getUpvotes = async () => {
-    try {
-      if (user && supabase) {
-        const { data, error, status } = await supabase
-          .from("upvotes")
-          .select("*, profiles(*)", {
-            count: "exact",
-            head: false,
-          })
-          .eq("user_id", `${user.id}`);
-        if (error && status !== 406) {
-          throw error;
-        }
-        const new_upvotes = data as Upvote[];
-        setUpvotes(new_upvotes);
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        alert(error.message);
-      }
-    }
-  };
-
   const createProfile = async () => {
-    const init_username = shortid.generate();
+    const init_username = nanoid();
     const updates = {
       id: user?.id,
       updated_at: new Date(),
       username: init_username,
     };
-    if (supabase) {
-      const { error } = await supabase.from("profiles").upsert(updates);
-      if (error) {
-        throw error;
-      }
-    }
+    const { error } = await supabase.from("profiles").upsert(updates);
+    if (error) throw error;
   };
 
   const getProfile = async () => {
     try {
       setLoading(true);
-      if (supabase) {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (user) {
-          const { data, error, status } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-          supabase
-            .channel(`public:profile:id=eq.${user.id}`)
-            .on(
-              "postgres_changes",
-              { event: "*", filter: `id=eq.${user.id}`, schema: "public", table: "profiles" },
-              (payload) => {
-                setProfile(payload.new);
-              }
-            )
-            .subscribe();
-          if (error && status !== 406) {
-            throw error;
-          }
-          if (data) {
-            setProfile(data);
-          }
-          if (!profile && !data) {
-            createProfile();
-          }
-        }
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        const { data, error, status } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+        supabase
+          .channel(`public:profile:id=eq.${user.id}`)
+          .on(
+            "postgres_changes",
+            { event: "*", filter: `id=eq.${user.id}`, schema: "public", table: "profiles" },
+            (payload: { new: any }) => {
+              setProfile(payload.new);
+            }
+          )
+          .subscribe();
+        if (error && status !== 406) throw error;
+        if (data) setProfile(data);
+        if (!profile && !data) createProfile();
       }
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error) {
+      if (error instanceof Error) alert(error.message);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-      user && !profile && getProfile();
-    };
-    if (!user) {
-      fetchData();
-    }
+    if (!user) !profile && getProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const site_name = "NFT OTAKU";
-  const title = "NFT OTAKU | Japanese NFT Creators / Collections Database";
-  const description =
-    "Discover favorite Japanese NFT creators, projects and collections. NFT OTAKU is one of the biggest NFT creator search application in Japan.";
-  const twitter_id = "nftotaku_dao";
 
   return (
     <>
@@ -186,33 +117,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           handle: `@${twitter_id}`,
         }}
       />
-      <AuthContext.Provider
-        value={{
-          bookmarks,
-          profile,
-          setBookmarks,
-          setUpvotes,
-          upvotes,
-          user,
-        }}
-      >
-        <UtilitiesContext.Provider
-          value={{
-            keyword: keyword,
-            loginModal: loginModal,
-            NFTKeyword: keyword,
-            setKeyword: setKeyword,
-            setLoginModal: setLoginModal,
-            setNFTKeyword: setKeyword,
-            setUserProfile: setUserProfile,
-            userProfile: userProfile,
-          }}
-        >
-          <div className={`bg-stripe flex min-h-screen flex-col overflow-hidden`}>
-            <Component {...pageProps} />
-          </div>
-        </UtilitiesContext.Provider>
-      </AuthContext.Provider>
+      <div className={`bg-stripe flex min-h-screen flex-col overflow-hidden`}>
+        <Component {...pageProps} />
+      </div>
     </>
   );
 }

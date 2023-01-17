@@ -1,4 +1,5 @@
 // kata: creatorのコンポーネントのひとつ
+import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -8,7 +9,6 @@ import { BsTwitter } from "react-icons/bs";
 import { FaDiscord } from "react-icons/fa";
 import { IoMdListBox } from "react-icons/io";
 import { MdVerified } from "react-icons/md";
-import Moment from "react-moment";
 
 import { BookmarkButton } from "@/components/elements/BookmarkButton";
 import { UpvoteButton } from "@/components/elements/UpvoteButton";
@@ -144,10 +144,7 @@ export const CreatorList: FC<Props> = ({ creators, limit }) => {
                       </div>
                       <div className="flex items-end justify-end gap-5">
                         {creator.listed_at && (
-                          <ListSocial
-                            icon={<IoMdListBox />}
-                            text={<Moment format="DD.MM.YYYY">{creator.listed_at}</Moment>}
-                          />
+                          <ListSocial icon={<IoMdListBox />} text={dayjs(creator.listed_at).format("DD.MM.YYYY")} />
                         )}
                       </div>
                     </div>

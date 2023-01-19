@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 import { useEffect, useState } from "react";
 
-import { BaseLayout } from "@/components/layouts/BaseLayout";
 import { ScreenModal } from "@/components/modules/ScreenModal";
 import { CollectionScreen } from "@/components/templates/CollectionScreen";
 import { CollectionsIndexScreen } from "@/components/templates/CollectionsIndexScreen";
@@ -33,9 +32,9 @@ const CollectionsPage: NextPage = () => {
         <ScreenModal modalIsOpen={screenModal} setModalIsOpen={setScreenModal} path="/collections">
           <CollectionScreen />
         </ScreenModal>
-        <BaseLayout>
+        <SplitLayout>
           <CollectionsIndexScreen />
-        </BaseLayout>
+        </SplitLayout>
       </div>
     </div>
   );

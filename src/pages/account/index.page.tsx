@@ -9,7 +9,6 @@ import { v4 as uuidv4 } from "uuid";
 
 import { Input } from "@/components/elements/Input";
 import { Textarea } from "@/components/elements/Textarea";
-import { BaseLayout } from "@/components/layouts/BaseLayout";
 import { supabase } from "@/libs/supabase";
 import { UploadAvatar } from "@/pages/account/components/UploadAvatar";
 import { UploadBackground } from "@/pages/account/components/UploadBackground";
@@ -119,7 +118,7 @@ const AccountPage: NextPage = () => {
           url: process.env.NEXT_PUBLIC_SITE_URL + "/",
         }}
       />
-      <BaseLayout>
+      <SplitLayout>
         <div className="mt-8 px-5">
           <div className="mx-auto max-w-2xl  ">
             {user ? (
@@ -249,7 +248,7 @@ const AccountPage: NextPage = () => {
             )}
           </div>
         </div>
-      </BaseLayout>
+      </SplitLayout>
     </div>
   );
 };

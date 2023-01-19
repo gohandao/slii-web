@@ -11,6 +11,7 @@ export type Creator = {
   discord_members?: number | null;
   discord_url?: string;
   instagram_id?: string;
+  labels?: string[];
   listed_at: Date | null | string;
   tags?: string[];
   token_symbol?: string | false;

@@ -7,7 +7,7 @@ import { OrderButton } from "@/components/elements/OrderButton";
 import { Searchbox } from "@/components/elements/Searchbox";
 import { SmallTab } from "@/components/elements/SmallTab";
 import { TabIndex } from "@/components/elements/TabIndex";
-import { BaseLayout } from "@/components/layouts/BaseLayout";
+import { SplitLayout } from "@/components/layouts/SplitLayout";
 import { CollectionList } from "@/components/modules/CollectionList";
 import { CreatorList } from "@/components/modules/CreatorList";
 import { Dropdown } from "@/components/modules/Dropdown";
@@ -99,7 +99,7 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
 
   return (
     <>
-      <BaseLayout>
+      <SplitLayout>
         <div className="flex flex-col gap-8 pb-10">
           {userProfile && (
             <ProfileHeader
@@ -176,7 +176,7 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
             )}
           </section>
         </div>
-      </BaseLayout>
+      </SplitLayout>
     </>
   );
 };

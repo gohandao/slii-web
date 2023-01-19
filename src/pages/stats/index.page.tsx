@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { IoMdSync } from "react-icons/io";
 
 import { Searchbox } from "@/components/elements/Searchbox";
-import { BaseLayout } from "@/components/layouts/BaseLayout";
 import { Dropdown } from "@/components/modules/Dropdown";
 import { Pagination } from "@/components/modules/Pagination";
 import { getCollections } from "@/libs/supabase";
@@ -52,7 +51,7 @@ const StatsPage: NextPage = () => {
           url: process.env.NEXT_PUBLIC_SITE_URL + "/stats",
         }}
       />
-      <BaseLayout>
+      <SplitLayout>
         <section className="mx-auto mt-3 px-5 md:px-8">
           <h1 className="mb-3 text-sm tracking-[0.2em] text-gray-500">Japanese awesome NFT collections stats.</h1>
           {collections && (
@@ -79,7 +78,7 @@ const StatsPage: NextPage = () => {
             <Pagination currentPage={currentPage} length={count} limit={limit} />
           </div>
         </section>
-      </BaseLayout>
+      </SplitLayout>
     </div>
   );
 };

@@ -117,7 +117,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           handle: `@${twitter_id}`,
         }}
       />
-      <div className={`bg-stripe flex min-h-screen flex-col overflow-hidden`}>
+      <div className={`flex min-h-screen flex-col overflow-hidden bg-[#F8FAFC]`}>
         <Component {...pageProps} />
       </div>
     </>

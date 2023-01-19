@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import { OrderButton } from "@/components/elements/OrderButton";
 import { Searchbox } from "@/components/elements/Searchbox";
 import { TabIndex } from "@/components/elements/TabIndex";
-import { BaseLayout } from "@/components/layouts/BaseLayout";
 import { CollectionList } from "@/components/modules/CollectionList";
 import { CreatorList } from "@/components/modules/CreatorList";
 import { Dropdown } from "@/components/modules/Dropdown";
@@ -76,7 +75,7 @@ const TagPage: NextPage<Props> = (props) => {
           url: process.env.NEXT_PUBLIC_SITE_URL + "/tags/" + tag,
         }}
       />
-      <BaseLayout>
+      <SplitLayout>
         <section className="mx-auto mt-5 px-5 md:px-8">
           <h1 className="mb-3 text-sm tracking-[0.2em] text-gray-500">
             Resulut of <span className="text-bold ml-1 text-3xl">#{tag}</span>
@@ -120,7 +119,7 @@ const TagPage: NextPage<Props> = (props) => {
             </div>
           )}
         </section>
-      </BaseLayout>
+      </SplitLayout>
     </div>
   );
 };

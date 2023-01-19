@@ -2,7 +2,6 @@ import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { useEffect, useState } from "react";
 
-import { BaseLayout } from "@/components/layouts/BaseLayout";
 import { getTags } from "@/libs/airtable";
 import { TagList } from "@/pages/tags/TagList";
 import type { Tag } from "@/types/tag";
@@ -30,7 +29,7 @@ const TagsPage: NextPage = () => {
           url: process.env.NEXT_PUBLIC_SITE_URL + "/404",
         }}
       />
-      <BaseLayout>
+      <SplitLayout>
         <div className="">
           <div className="mx-auto mt-3 px-5 md:px-8">
             <h1 className="mb-3 text-sm tracking-[0.2em] text-gray-500">Tags for search.</h1>
@@ -43,7 +42,7 @@ const TagsPage: NextPage = () => {
             </section>
           )}
         </div>
-      </BaseLayout>
+      </SplitLayout>
     </div>
   );
 };

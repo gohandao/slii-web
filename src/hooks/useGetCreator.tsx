@@ -10,7 +10,7 @@ if (!supabaseUrl) throw new Error("Missing env.NEXT_PUBLIC_SUPABASE_URL");
 if (!supabaseAnonKey) throw new Error("Missing env.NEXT_PUBLIC_SUPABASE_KEY");
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-export const useGetCreators = () => {
+export const useGetCreator = () => {
   type CreatorsFilterProps = {
     order?: string;
     page?: number;
@@ -18,13 +18,12 @@ export const useGetCreators = () => {
     sort?: string;
     type?: string;
     username?: string;
-    usernames?: string[];
   };
-  const [creators, setCreators] = useState<Creator[]>([]);
-  const getCreators = async ({ order, page, search, sort, type, username, usernames }: CreatorsFilterProps = {}) => {
-    const limit = 5;
+  const [creator, setCreator] = useState<Creator>();
+  const getCreator = async ({ order, page, search, sort, type, username }: CreatorsFilterProps = {}) => {
+    const limit = 20;
     const start = page ? (Number(page) - 1) * limit : 0;
-    const end = page ? Number(page) * limit - 1 : limit;
+    const end = page ? Number(page) * limit - 1 : 99;
     const rangeFilter = `.range(${start}, ${end})`;
     let typeFilter = "";
     if (type && type != "all") {
@@ -68,28 +67,26 @@ export const useGetCreators = () => {
     } else {
       sortFilter = `.order("${sort_param}", { ascending: ${orderFilter} })`;
     }
-    const usernamesArray = usernames?.map((username) => {
-      return `"` + username + `"`;
-    });
-    const usernameFilter = username ? `.eq("username", "${username}").single()` : "";
-    const usernamesFilter = usernames ? `.in("username", [${usernamesArray}])` : "";
+    const usernameFilter = username ? `.eq("username", "${username}")` : "";
     const filter = username
       ? `supabase.from("creators").select('"*", upvotes_count_function')${usernameFilter}`
-      : `supabase.from("creators").select('"*", upvotes_count_function', { count: 'exact' })${usernamesFilter}${typeFilter}${searchFilter}${sortFilter}${usernameFilter}${rangeFilter}`;
-
+      : `supabase.from("creators").select('"*", upvotes_count_function', { count: 'exact' })${typeFilter}${searchFilter}${sortFilter}${usernameFilter}.limit(1).single()`;
     console.log("filter");
     console.log(filter);
 
     const { count, data, error } = await eval(filter);
+    console.log("data");
+    console.log(data);
+
     if (error) {
       console.log("error at getCreators");
       console.log(error);
     }
     if (data) {
-      setCreators(data as Creator[]);
+      setCreator(data as Creator);
     }
     return { count, data };
   };
 
-  return { creators, getCreators };
+  return { creator, getCreator };
 };

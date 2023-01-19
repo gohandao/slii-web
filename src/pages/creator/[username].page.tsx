@@ -5,7 +5,6 @@ import type { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 
-import { BaseLayout } from "@/components/layouts/BaseLayout";
 import { CreatorScreen } from "@/components/templates/CreatorScreen";
 import { getCreators, supabase } from "@/libs/supabase";
 import type { Creator } from "@/types/creator";
@@ -40,9 +39,9 @@ const CreatorIndex: NextPage<Props> = ({ description, ogImageUrl, title }) => {
           url: process.env.NEXT_PUBLIC_SITE_URL + `/creator/${username}`,
         }}
       />
-      <BaseLayout>
+      <SplitLayout>
         <CreatorScreen />
-      </BaseLayout>
+      </SplitLayout>
     </>
   );
 };

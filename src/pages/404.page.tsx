@@ -2,8 +2,6 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import { NextSeo } from "next-seo";
 
-import { BaseLayout } from "@/components/layouts/BaseLayout";
-
 export const Custom404: NextPage = () => {
   return (
     <div>
@@ -17,7 +15,7 @@ export const Custom404: NextPage = () => {
           url: process.env.NEXT_PUBLIC_SITE_URL + "/404",
         }}
       />
-      <BaseLayout>
+      <SplitLayout>
         <section className="flex h-full items-center p-16 text-gray-100">
           <div className="container mx-auto my-8 flex flex-col items-center justify-center px-5">
             <div className="max-w-md text-center">
@@ -34,7 +32,7 @@ export const Custom404: NextPage = () => {
             </div>
           </div>
         </section>
-      </BaseLayout>
+      </SplitLayout>
     </div>
   );
 };

@@ -10,7 +10,9 @@ export default class MyDocument extends Document {
         <Head>
           <link rel="manifest" href="/manifest.json" />
           <link rel="apple-touch-icon" href="/apple-touch-icon.png"></link>
-          <link rel="stylesheet" href="https://use.typekit.net/xbj6ysr.css" />
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+          <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@100;300;400;500;700;800;900&display=swap" rel="stylesheet" />
           {/* Global Site Tag (gtag.js) - Google Analytics */}
           <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
           <script
@@ -26,7 +28,7 @@ export default class MyDocument extends Document {
             }}
           />
         </Head>
-        <body className="font-digital">
+        <body className="font-default">
           <Main />
           <NextScript />
         </body>

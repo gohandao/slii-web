@@ -11,11 +11,12 @@ type Props = {
 };
 export const SplitLayout = ({ children }: Props) => {
   useRedirections();
+
   return (
     <div className="flex h-full min-h-screen flex-col">
       <div id="container" className="flex">
-        <div className="fixed h-screen w-[320px] py-5 pl-5">
-          <div className="flex h-full rounded-lg bg-white shadow-lg">
+        <div className="fixed z-50 h-screen w-[320px] py-5 pl-5">
+          <div className="flex h-full rounded-lg bg-white shadow-xl shadow-gray-200">
             <SideNavigation />
           </div>
         </div>

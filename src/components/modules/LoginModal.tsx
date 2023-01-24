@@ -60,14 +60,14 @@ export const LoginModal: FC = () => {
 
   return (
     <BaseModal modalIsOpen={loginModal} setModalIsOpen={setLoginModal}>
-      <div className="flex-center mx-auto flex w-full max-w-xl rounded bg-gray-800 px-8 pt-8 pb-10 ">
+      <div className="flex-center mx-auto flex w-full max-w-xl rounded bg-white px-8 pt-8 pb-10 ">
         <div className="mx-auto flex w-[400px] flex-col gap-4">
           <div className="">
-            <h1 className="text-center text-2xl text-gray-100">Login with email </h1>
-            <p className="text-center text-xs text-gray-500">You can login only with email.</p>
+            <h1 className="text-center text-2xl text-gray-900">Login with email </h1>
+            <p className="text-center text-xs font-normal text-gray-400">You can login only with email.</p>
           </div>
           <input
-            className="block w-full rounded bg-white px-5 py-3"
+            className="block w-full rounded-lg border border-gray-300 bg-slate-50 px-5 py-3 "
             type="email"
             placeholder="Your email"
             name="email"
@@ -89,9 +89,9 @@ export const LoginModal: FC = () => {
               <span>{loading ? "Sending" : "Send verification code"}</span>
             </button>
           </div>
-          {sentCode && (
+          {!sentCode && (
             <div>
-              <p className="mt-3 mb-1 text-center text-lg text-gray-100">Verify code</p>
+              <p className="mt-3 mb-1 text-center text-lg text-gray-900">Verify code</p>
               <ReactCodeInput
                 type="number"
                 fields={6}

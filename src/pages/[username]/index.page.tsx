@@ -4,8 +4,8 @@ import type { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 
-import { UserPageTemplate } from "@/components/templates/UserPageTemplate";
-import { useGetUserUpvotes } from "@/hooks/useGetUserUpvotes";
+import { SplitLayout } from "@/components/layouts/SplitLayout";
+import { ProfilePageTemplate } from "@/components/templates/ProfilePageTemplate";
 import { supabase } from "@/libs/supabase";
 
 type Props = {
@@ -16,14 +16,6 @@ type Props = {
 const UserPage: NextPage<Props> = ({ description, ogImageUrl, title }) => {
   const router = useRouter();
   const { username } = router.query;
-  const { userUpvotes } = useGetUserUpvotes();
-
-  const upvotes_creators = userUpvotes.filter((upvote) => {
-    return upvote.creator_username;
-  });
-  const upvotes_collections = userUpvotes.filter((upvote) => {
-    return upvote.collection_slug;
-  });
 
   return (
     <>
@@ -46,7 +38,9 @@ const UserPage: NextPage<Props> = ({ description, ogImageUrl, title }) => {
           url: process.env.NEXT_PUBLIC_SITE_URL + `/${username}`,
         }}
       />
-      <UserPageTemplate property="upvoted" creatorList={upvotes_creators} collectionList={upvotes_collections} />
+      <SplitLayout>
+        <ProfilePageTemplate />
+      </SplitLayout>
     </>
   );
 };

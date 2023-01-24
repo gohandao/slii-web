@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { IoMdSync } from "react-icons/io";
 
 import { Searchbox } from "@/components/elements/Searchbox";
+import { SplitLayout } from "@/components/layouts/SplitLayout";
 import { Dropdown } from "@/components/modules/Dropdown";
 import { Pagination } from "@/components/modules/Pagination";
 import { getCollections } from "@/libs/supabase";

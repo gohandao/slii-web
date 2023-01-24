@@ -1,21 +1,10 @@
 import type { NextPage } from "next";
-import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { useEffect, useState } from "react";
 
-import { ScreenModal } from "@/components/modules/ScreenModal";
-import { CollectionScreen } from "@/components/templates/CollectionScreen";
+import { SplitLayout } from "@/components/layouts/SplitLayout";
 import { CollectionsIndexScreen } from "@/components/templates/CollectionsIndexScreen";
 
 const CollectionsPage: NextPage = () => {
-  const router = useRouter();
-  const { slug } = router.query;
-  const [screenModal, setScreenModal] = useState(false);
-
-  useEffect(() => {
-    setScreenModal(slug ? true : false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug]);
   return (
     <div>
       <NextSeo
@@ -29,9 +18,6 @@ const CollectionsPage: NextPage = () => {
         }}
       />
       <div>
-        <ScreenModal modalIsOpen={screenModal} setModalIsOpen={setScreenModal} path="/collections">
-          <CollectionScreen />
-        </ScreenModal>
         <SplitLayout>
           <CollectionsIndexScreen />
         </SplitLayout>

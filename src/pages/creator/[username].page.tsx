@@ -5,7 +5,8 @@ import type { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 
-import { CreatorScreen } from "@/components/templates/CreatorScreen";
+import { SplitLayout } from "@/components/layouts/SplitLayout";
+import { BasePageTemplate } from "@/components/templates/BasePageTemplate";
 import { getCreators, supabase } from "@/libs/supabase";
 import type { Creator } from "@/types/creator";
 
@@ -40,7 +41,18 @@ const CreatorIndex: NextPage<Props> = ({ description, ogImageUrl, title }) => {
         }}
       />
       <SplitLayout>
-        <CreatorScreen />
+        <BasePageTemplate
+          category="test"
+          collections={[]}
+          description="description"
+          image={undefined}
+          label="label"
+          liked_counts={100}
+          nfts={[]}
+          stars_counts={200}
+          tags={[]}
+          title="username"
+        />
       </SplitLayout>
     </>
   );

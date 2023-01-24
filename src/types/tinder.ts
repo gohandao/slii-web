@@ -1,5 +1,5 @@
 export type TItem = {
-  buttons?: TButtons;
+  buttonHandlers?: TButtons;
   cards: TCard[];
 };
 export type TCard = {
@@ -9,6 +9,7 @@ export type TCard = {
   label?: string;
   name: string;
   order?: number;
+  path: string;
   verified?: boolean;
 };
 export type TButtons = {

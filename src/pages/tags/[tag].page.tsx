@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { OrderButton } from "@/components/elements/OrderButton";
 import { Searchbox } from "@/components/elements/Searchbox";
 import { TabIndex } from "@/components/elements/TabIndex";
+import { SplitLayout } from "@/components/layouts/SplitLayout";
 import { CollectionList } from "@/components/modules/CollectionList";
 import { CreatorList } from "@/components/modules/CreatorList";
 import { Dropdown } from "@/components/modules/Dropdown";

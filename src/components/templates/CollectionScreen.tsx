@@ -6,7 +6,6 @@ import { MdVerified } from "react-icons/md";
 import { IconEth } from "@/components/elements/IconEth";
 import { RandomButton } from "@/components/elements/RandomButton";
 import { NFTList } from "@/components/modules/NFTList";
-import { ProfileHeader } from "@/components/modules/ProfileHeader";
 import { getCollections, getNFTs, upsertNFTPrices } from "@/libs/supabase";
 import { abbreviateNumber } from "@/utilities/abbreviateNumber";
 
@@ -140,7 +139,7 @@ export const CollectionScreen = () => {
   return (
     <>
       <div className="flex flex-col gap-10 pb-10">
-        {collection && (
+        {/* {collection && (
           <ProfileHeader
             page="collection"
             id={collection.slug}
@@ -156,7 +155,7 @@ export const CollectionScreen = () => {
             discord_url={collection.discord_url}
             upvotes_count={collection.upvotes_count_function}
           />
-        )}
+        )} */}
         {assets && assets.length > 0 && (
           <div className="px-5 lg:px-8">
             <div className="relative z-20 mb-5 flex justify-between gap-3 sm:gap-5">

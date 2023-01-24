@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { useEffect, useState } from "react";
 
+import { SplitLayout } from "@/components/layouts/SplitLayout";
 import { getTags } from "@/libs/airtable";
 import { TagList } from "@/pages/tags/TagList";
 import type { Tag } from "@/types/tag";

@@ -2,6 +2,8 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import { NextSeo } from "next-seo";
 
+import { SplitLayout } from "@/components/layouts/SplitLayout";
+
 export const Custom404: NextPage = () => {
   return (
     <div>

@@ -1,42 +1,38 @@
 import { useAtom } from "jotai";
-import { useRouter } from "next/router";
+import Link from "next/link";
 import type { FC } from "react";
-import { useEffect, useState } from "react";
 import { FaBell } from "react-icons/fa";
 
 import { loginModalAtom } from "@/state/utilities.state";
 
-import { profileAtom, userAtom } from "../../state/auth.state";
+import { authUserAtom } from "../../state/auth.state";
 
 export const Header: FC = () => {
-  const router = useRouter();
-  const [profile] = useAtom(profileAtom);
   const [, setLoginModal] = useAtom(loginModalAtom);
-  const [avatorSrc, setAvatorSrc] = useState<string>();
-  const [user] = useAtom(userAtom);
-  const delQuery = (url: string) => {
-    return url.split("?")[0];
-  };
-  const { asPath } = router;
-  const currentPath = delQuery(asPath);
-
-  useEffect(() => {
-    const src = profile && profile.avatar_url ? profile.avatar_url : "/default-avatar.jpg";
-    setAvatorSrc(src);
-  }, [profile]);
+  const [authUser] = useAtom(authUserAtom);
 
   return (
     <header className="relative z-50 py-3">
       <div className="mx-auto flex justify-end px-5 md:px-8">
         <div className="relative flex items-center gap-5">
-          <button
-            onClick={() => {
-              setLoginModal(true);
-            }}
-            className="flex h-10 w-10 items-center justify-center gap-3 rounded-full border border-gray-700 bg-gray-800 font-bold text-gray-400"
+          {!authUser && (
+            <button
+              onClick={() => {
+                setLoginModal(true);
+              }}
+              className="mt-[1px] flex items-center justify-center rounded-full border-2 border-sky-500 bg-white py-1 px-5 font-bold text-sky-500 shadow-lg shadow-gray-100 transition-all duration-300 hover:bg-sky-500 hover:text-white"
+            >
+              Login
+            </button>
+          )}
+          <Link
+            href="https://google.com"
+            className="flex h-[44px] w-[44px] cursor-pointer items-center justify-center rounded-full bg-white font-bold text-gray-900 shadow-lg shadow-gray-100 "
+            target="_blank"
+            rel="noreferrer"
           >
             <FaBell />
-          </button>
+          </Link>
         </div>
       </div>
     </header>

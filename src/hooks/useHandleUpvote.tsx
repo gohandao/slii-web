@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 
 import { supabase } from "@/libs/supabase";
-import { upvoteAtom, userAtom } from "@/state/auth.state";
+import { authUpvotesAtom, authUserAtom } from "@/state/auth.state";
 import { loginModalAtom } from "@/state/utilities.state";
 
 import type { Upvote } from "../types/upvote";
@@ -13,8 +13,8 @@ export const useHandleUpvote = (count: number, type: string, id: string) => {
   const [added, setAdded] = useState<boolean>(false);
   const [removed, setRemoved] = useState<boolean>(false);
   const [currentCount, setCurrentCount] = useState<number>(count);
-  const [user] = useAtom(userAtom);
-  const [upvotes, setUpvotes] = useAtom(upvoteAtom);
+  const [user] = useAtom(authUserAtom);
+  const [upvotes, setUpvotes] = useAtom(authUpvotesAtom);
 
   useEffect(() => {
     let new_count = count;

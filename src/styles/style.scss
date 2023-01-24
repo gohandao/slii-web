@@ -1,6 +1,5 @@
 .font-default {
     font-style: normal;
-    font-weight: 700;
     font-family: "M PLUS Rounded 1c", sans-serif;
 }
 .card-shadow {
@@ -219,6 +218,7 @@ $stripe02: #1a1a1a;
         color: #222222 !important;
         font-size: 24px !important;
         text-align: center;
+        @apply border border-gray-300 bg-slate-50;
     }
 }
 .translucent-white {

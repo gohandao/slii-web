@@ -31,7 +31,7 @@ export const ProfileDropdown: FC<Props> = ({ dropdown, icon, menus, position, se
         onClick={() => {
           setDropdown(!dropdown);
         }}
-        className="flex h-5 items-center text-xl"
+        className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-sky-500 shadow-xl shadow-sky-50"
       >
         {icon}
       </button>

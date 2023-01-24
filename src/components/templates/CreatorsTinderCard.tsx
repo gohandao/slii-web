@@ -45,10 +45,11 @@ export const CreatorsTinderCard = () => {
     return {
       above_tags: creator.tags,
       below_tags: creator.tags,
-      image_src: creator.avatar,
+      image: creator.avatar,
       label: "Creator",
       name: creator.username,
       order: index,
+      path: `/creator/${creator.username}`,
       verified: creator.verified,
     } as TCard;
   });
@@ -56,7 +57,7 @@ export const CreatorsTinderCard = () => {
     <>
       <section className="mx-auto w-full">
         {/* SwipeCard = ({(labels, name, tags, type, (varified = false))} */}
-        {creators && window !== undefined && (
+        {cards && window !== undefined && (
           <div className="flex flex-col gap-8">
             <TinderItem cards={cards} />
           </div>

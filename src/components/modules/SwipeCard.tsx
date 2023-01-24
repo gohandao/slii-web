@@ -1,12 +1,13 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { FC } from "react";
 
 import type { TCard } from "@/types/tinder";
 
-export const SwipeCard: FC<TCard> = ({ above_tags, below_tags, image, label, name, verified = false }) => {
+export const SwipeCard: FC<TCard> = ({ above_tags, below_tags, image, label, name, path, verified = false }) => {
   const image_src = image ? image : "/dummy-nft.jpg";
   return (
-    <div className="flex flex-col rounded-lg bg-white p-2">
+    <Link href={path} className="flex flex-col rounded-lg bg-white p-2">
       <div
         className="relative flex"
         style={{
@@ -44,6 +45,6 @@ export const SwipeCard: FC<TCard> = ({ above_tags, below_tags, image, label, nam
         </h2>
         <p className="text-sm opacity-50">{label}</p>
       </div>
-    </div>
+    </Link>
   );
 };

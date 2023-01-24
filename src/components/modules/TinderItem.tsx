@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import React, { useMemo, useRef, useState } from "react";
 import { AiFillHeart, AiFillStar } from "react-icons/ai";
 import { IoClose } from "react-icons/io5";
@@ -5,29 +6,12 @@ import { VscDebugRestart } from "react-icons/vsc";
 import TinderCard from "react-tinder-card";
 
 import { SwipeCard } from "@/components/modules/SwipeCard";
-// import { TinderButtons } from "@/components/modules/TinderButtons";
 import type { TCard, TItem } from "@/types/tinder";
 
-// const TinderButtons = dynamic(
-//   () => {
-//     return import("@/components/modules/TinderButtons");
-//   },
-//   {
-//     ssr: false,
-//   }
-// );
-// dynamic import
-// const TinderCard = dynamic(
-//   () => {
-//     return import("react-tinder-card");
-//   },
-//   {
-//     ssr: false,
-//   }
-// );
-// dynamic import
 // eslint-disable-next-line import/no-default-export
 export default function TinderItem({ buttonHandlers, cards }: TItem) {
+  console.log(buttonHandlers);
+
   const [currentIndex, setCurrentIndex] = useState(cards.length - 1);
   const [lastDirection, setLastDirection] = useState<"left" | "right" | "up" | "down">();
   // used for outOfFrame closure
@@ -146,7 +130,7 @@ export default function TinderItem({ buttonHandlers, cards }: TItem) {
   ];
   return (
     <div className="relative flex flex-col gap-8 ">
-      <div className="cardContainer h-[512px] w-full overflow-hidden rounded-lg shadow-lg">
+      <div className="cardContainer h-[512px] w-full overflow-hidden rounded-lg bg-white shadow-lg">
         {cards &&
           childRefs &&
           cards.map((card: TCard, index: number) => {
@@ -180,6 +164,7 @@ export default function TinderItem({ buttonHandlers, cards }: TItem) {
                     verified={card.verified}
                     image={card.image}
                     order={card.order}
+                    path={card.path}
                   />
                 </div>
               </TinderCard>

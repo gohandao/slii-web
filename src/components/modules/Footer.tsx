@@ -6,7 +6,7 @@ import { BsMailbox } from "react-icons/bs";
 import { FaRegUserCircle } from "react-icons/fa";
 import { TbDiamond } from "react-icons/tb";
 
-import { userAtom } from "../../state/auth.state";
+import { authUserAtom } from "../../state/auth.state";
 
 type FixedMenuProps = {
   blank?: boolean;
@@ -40,7 +40,7 @@ const FixedMenu: FC<FixedMenuProps> = ({ blank = false, children, href }) => {
   }
 };
 export const Footer: FC = () => {
-  const [user] = useAtom(userAtom);
+  const [authUser] = useAtom(authUserAtom);
 
   return (
     <>
@@ -60,7 +60,7 @@ export const Footer: FC = () => {
         >
           <BsMailbox />
         </FixedMenu>
-        {user && (
+        {authUser && (
           <FixedMenu href="/account">
             <FaRegUserCircle />
           </FixedMenu>

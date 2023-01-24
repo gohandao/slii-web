@@ -20,19 +20,6 @@
       "@*": ["./src*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "src/pages/api/twitter.page.tsx",
-    "src/libs/supabase.tsx",
-    "src/pages/api/twitter.tsx",
-    "src/utilities/removeUndefinedObject.ts",
-    "src/libs/discord.jsx",
-    "src/libs/twitter.jsx",
-    "src/hooks/useRedirections.tsx",
-    "src/components/_Categories",
-    "src/components/modules/TinderItem.jsx"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/libs/discord.jsx", "src/libs/twitter.jsx"],
   "exclude": ["node_modules"]
 }

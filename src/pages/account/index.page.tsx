@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { Input } from "@/components/elements/Input";
 import { Textarea } from "@/components/elements/Textarea";
+import { SplitLayout } from "@/components/layouts/SplitLayout";
 import { supabase } from "@/libs/supabase";
 import { UploadAvatar } from "@/pages/account/components/UploadAvatar";
 import { UploadBackground } from "@/pages/account/components/UploadBackground";

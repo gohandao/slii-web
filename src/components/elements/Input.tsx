@@ -12,7 +12,7 @@ export const Input: FC<Props> = ({ id, label, onChange, placeholder, type, value
   return (
     <>
       <div className="flex flex-col gap-1">
-        <label htmlFor={id} className="text-gray-100">
+        <label htmlFor={id} className="text-sm font-bold text-gray-400">
           {label}
         </label>
         <input
@@ -22,7 +22,7 @@ export const Input: FC<Props> = ({ id, label, onChange, placeholder, type, value
           onChange={(e) => {
             return onChange(e.target.value);
           }}
-          className="rounded px-5 py-3"
+          className="rounded-lg border-2 bg-slate-50 px-5 py-3"
           placeholder={placeholder}
         />
       </div>

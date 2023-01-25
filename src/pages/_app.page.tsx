@@ -10,28 +10,35 @@ import { DefaultSeo } from "next-seo";
 import { useEffect, useState } from "react";
 
 import { description, site_name, title, twitter_id } from "@/constant/seo.const";
+import { useGetAuthBookmarks } from "@/hooks/useGetAuthBookmarks";
+import { useGetAuthUpvotes } from "@/hooks/useGetAuthUpvotes";
 import { useGetSession } from "@/hooks/useGetSession";
-import { useGetUserUpvotes } from "@/hooks/useGetUserUpvotes";
 import * as gtag from "@/libs/gtag";
 import { supabase } from "@/libs/supabase";
-import { bookmarkAtom, profileAtom, upvoteAtom, userAtom } from "@/state/auth.state";
-
-import { useGetUserBookmarks } from "../hooks/useGetUserBookmarks";
+import { authBookmarksAtom, authProfileAtom, authUpvotesAtom, authUserAtom } from "@/state/auth.state";
+import { pageHistoryAtom } from "@/state/utilities.state";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
   const [, setLoading] = useState<boolean>(false);
-  const [user, setUser] = useAtom(userAtom);
+  const [authUser, setAuthUser] = useAtom(authUserAtom);
   const { session } = useGetSession();
-  if (session) setUser(session.user);
-  const [, setBookmarks] = useAtom(bookmarkAtom);
-  const { userBookmarks } = useGetUserBookmarks();
-  if (userBookmarks) setBookmarks(userBookmarks);
-  const [, setUpvotes] = useAtom(upvoteAtom);
-  const { userUpvotes } = useGetUserUpvotes();
-  if (userUpvotes) setUpvotes(userUpvotes);
-  const [profile, setProfile] = useAtom(profileAtom);
+  if (session) setAuthUser(session.user);
+  const [, setAuthBookmarks] = useAtom(authBookmarksAtom);
+  const { authBookmarks } = useGetAuthBookmarks();
+  if (authBookmarks) setAuthBookmarks(authBookmarks);
+  const [, setAuthUpvotes] = useAtom(authUpvotesAtom);
+  const { authUpvotes } = useGetAuthUpvotes();
+  if (authUpvotes) setAuthUpvotes(authUpvotes);
+  const [authProfile, setAuthProfile] = useAtom(authProfileAtom);
+
+  const [pageHistory, setPageHistory] = useAtom(pageHistoryAtom);
+
+  useEffect(() => {
+    setPageHistory([router.asPath, pageHistory[0]]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.asPath]);
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -46,7 +53,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const createProfile = async () => {
     const init_username = nanoid();
     const updates = {
-      id: user?.id,
+      id: authUser?.id,
       updated_at: new Date(),
       username: init_username,
     };
@@ -54,7 +61,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     if (error) throw error;
   };
 
-  const getProfile = async () => {
+  const getAuthProfile = async () => {
     try {
       setLoading(true);
       const {
@@ -68,13 +75,13 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             "postgres_changes",
             { event: "*", filter: `id=eq.${user.id}`, schema: "public", table: "profiles" },
             (payload: { new: any }) => {
-              setProfile(payload.new);
+              setAuthProfile(payload.new);
             }
           )
           .subscribe();
         if (error && status !== 406) throw error;
-        if (data) setProfile(data);
-        if (!profile && !data) createProfile();
+        if (data) setAuthProfile(data);
+        if (!authProfile && !data) createProfile();
       }
     } catch (error) {
       if (error instanceof Error) alert(error.message);
@@ -84,7 +91,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   };
 
   useEffect(() => {
-    if (!user) !profile && getProfile();
+    if (!authUser) !authProfile && getAuthProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -117,7 +124,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           handle: `@${twitter_id}`,
         }}
       />
-      <div className={`bg-stripe flex min-h-screen flex-col overflow-hidden`}>
+      <div className={`flex min-h-screen flex-col overflow-hidden bg-[#F8FAFC]`}>
         <Component {...pageProps} />
       </div>
     </>

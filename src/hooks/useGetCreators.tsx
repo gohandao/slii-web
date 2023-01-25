@@ -22,9 +22,9 @@ export const useGetCreators = () => {
   };
   const [creators, setCreators] = useState<Creator[]>([]);
   const getCreators = async ({ order, page, search, sort, type, username, usernames }: CreatorsFilterProps = {}) => {
-    const limit = 20;
+    const limit = 6;
     const start = page ? (Number(page) - 1) * limit : 0;
-    const end = page ? Number(page) * limit - 1 : 99;
+    const end = page ? Number(page) * limit - 1 : limit;
     const rangeFilter = `.range(${start}, ${end})`;
     let typeFilter = "";
     if (type && type != "all") {

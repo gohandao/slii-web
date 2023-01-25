@@ -5,6 +5,7 @@ import { Count } from "@/components/elements/Count";
 
 type Props = {
   id?: string;
+  label?: string;
   maxLength?: number;
   placeholder?: string;
   required: boolean;
@@ -23,18 +24,19 @@ type Props = {
   addClass = ""
 />
 */
-export const Textarea: FC<Props> = ({ id, maxLength, required = false, setText, text, ...props }) => {
+export const Textarea: FC<Props> = ({ id, label, maxLength, required = false, setText, text, ...props }) => {
   const [count, setCount] = useState<number>(0);
   const countHandler = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     setCount(e.currentTarget.value.length);
   };
   return (
     <>
+      {label && <p className="text-sm font-bold text-gray-400">{label}</p>}
       <div className={`relative`}>
         <textarea
           id={id}
           {...props}
-          className={`min-h-[150px] w-full rounded px-5 py-2`}
+          className={`min-h-[150px] w-full rounded-lg border-2 bg-slate-50 px-5 py-3`}
           onChange={(e) => {
             setText(e.currentTarget.value);
           }}

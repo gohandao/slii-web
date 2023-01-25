@@ -1,25 +1,29 @@
+import { useAtom } from "jotai";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import type { FC } from "react";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { BiHomeAlt, BiPurchaseTagAlt } from "react-icons/bi";
 import { FaRegUser } from "react-icons/fa";
 import { TbDiamond } from "react-icons/tb";
 import { toast } from "react-toastify";
 
 import { HeaderIcon } from "@/components/modules/HeaderIcon";
-import { AuthContext } from "@/contexts/AuthContext";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { supabase } from "@/libs/supabase";
+import { loginModalAtom } from "@/state/utilities.state";
+
+import { profileAtom, userAtom } from "../../state/auth.state";
 
 export const Header: FC = () => {
   const router = useRouter();
   const { profile, setProfile, setUser, user } = useContext(AuthContext);
   const { setLoginModal } = useContext(UtilitiesContext);
+  const [profile] = useAtom(profileAtom);
+  const [, setLoginModal] = useAtom(loginModalAtom);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [avatorSrc, setAvatorSrc] = useState<string>();
-
+  const [user] = useAtom(userAtom);
   const delQuery = (url: string) => {
     return url.split("?")[0];
   };
@@ -114,7 +118,7 @@ export const Header: FC = () => {
           )}
           {dropdown && (
             <div className={`absolute top-full right-0 z-20 mt-2 w-40 rounded border border-gray-700 bg-gray-800`}>
-              {user && (
+              {user && profile && (
                 <>
                   <Link href={`/${profile.username}`} legacyBehavior>
                     <a className="block border-b border-gray-700 px-5 py-3 text-sm text-gray-400">Profile</a>

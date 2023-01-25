@@ -1,45 +1,48 @@
+import { useAtom } from "jotai";
 import Link from "next/link";
 import type { FC, ReactNode } from "react";
-import { useContext } from "react";
 import { BiHomeAlt, BiPurchaseTagAlt } from "react-icons/bi";
 import { BsMailbox } from "react-icons/bs";
 import { FaDiscord, FaRegUserCircle } from "react-icons/fa";
 import { SiNotion } from "react-icons/si";
 import { TbDiamond, TbMailbox } from "react-icons/tb";
 
-import { AuthContext } from "@/contexts/AuthContext";
+import { userAtom } from "../../state/auth.state";
 
 type FixedMenuProps = {
   blank?: boolean;
   children: ReactNode;
   href: string;
 };
-export const Footer: FC = () => {
-  const { user } = useContext(AuthContext);
-  const FixedMenu = ({ blank = false, children, href }: FixedMenuProps) => {
-    if (!blank) {
-      return (
-        <Link href={href} legacyBehavior>
-          <a className="flex w-full items-center justify-center border-r border-gray-700 px-3 py-[14px] text-2xl text-gray-400 last:border-none">
-            {children}
-          </a>
-        </Link>
-      );
-    } else {
-      return (
-        <a
-          href={href}
-          target="_blank"
-          className="flex w-full items-center justify-center border-r border-gray-700 px-3 py-[14px] text-2xl text-gray-400 last:border-none"
-          rel="noreferrer"
-        >
+
+const buttonClass =
+  "relative flex justify-center gap-4 items-center w-[240px] max-w-[90%] mx-auto py-2 border-2 text-sm text-center rounded transition-all duration-200 transform";
+
+const FixedMenu: FC<FixedMenuProps> = ({ blank = false, children, href }) => {
+  if (!blank) {
+    return (
+      <Link href={href} legacyBehavior>
+        <a className="flex w-full items-center justify-center border-r border-gray-700 px-3 py-[14px] text-2xl text-gray-400 last:border-none">
           {children}
         </a>
-      );
-    }
-  };
-  const buttonClass =
-    "relative flex justify-center gap-4 items-center w-[240px] max-w-[90%] mx-auto py-2 border-2 text-sm text-center rounded transition-all duration-200 transform";
+      </Link>
+    );
+  } else {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        className="flex w-full items-center justify-center border-r border-gray-700 px-3 py-[14px] text-2xl text-gray-400 last:border-none"
+        rel="noreferrer"
+      >
+        {children}
+      </a>
+    );
+  }
+};
+export const Footer: FC = () => {
+  const [user] = useAtom(userAtom);
+
   return (
     <>
       <div className="pt-16"></div>
@@ -93,12 +96,10 @@ export const Footer: FC = () => {
         >
           <BsMailbox />
         </FixedMenu>
-        {user ? (
+        {user && (
           <FixedMenu href="/account">
             <FaRegUserCircle />
           </FixedMenu>
-        ) : (
-          <></>
         )}
       </div>
     </>

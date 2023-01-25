@@ -1,14 +1,14 @@
-import { useCallback, useContext, useState } from "react";
+import { useAtom } from "jotai";
+import { useCallback, useCallback, useEffect, useState, useState } from "react";
 
-import { AuthContext } from "@/contexts/AuthContext";
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
 import { supabase } from "@/libs/supabase";
+import { bookmarkAtom, userAtom } from "@/state/auth.state";
 
+import { loginModalAtom } from "../state/utilities.state";
 import type { Bookmark } from "../types/bookmark";
 
 export const useHandleBookmark = (id: string, type: string) => {
-  const { bookmarks, setBookmarks, user } = useContext(AuthContext);
-  const { setLoginModal } = useContext(UtilitiesContext);
+  const [, setLoginModal] = useAtom(loginModalAtom);
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const creator_username = (() => {
     if (type === "creator") return id;
@@ -16,6 +16,25 @@ export const useHandleBookmark = (id: string, type: string) => {
   const collection_slug = (() => {
     if (type === "collection") return id;
   })();
+
+  const [user] = useAtom(userAtom);
+  const [bookmarks, setBookmarks] = useAtom(bookmarkAtom);
+
+  useEffect(() => {
+    const fetchBookmarks = async () => {
+      const fetchData = async () => {
+        const { data, error } = await supabase.from("bookmarks").select("*");
+        if (error) {
+          console.log("error at useHandleBookmark");
+          console.log(error);
+        }
+        return data as Bookmark[];
+      };
+      const data = await fetchData();
+      if (data) setBookmarks(data);
+    };
+    fetchBookmarks();
+  }, [setBookmarks]);
 
   const addBookmark = useCallback(async () => {
     if (user) {

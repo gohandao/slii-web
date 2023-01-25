@@ -17,7 +17,6 @@ export const CreatorsIndexScreen = () => {
   const { order, page, search, sort, type } = router.query;
   const currentPage = page ? Number(page) : 1;
   const limit = 20;
-  // const { hiddenParams } = useContext(UtilitiesContext);
   const [creators, setCreators] = useState<Creator[]>();
   const [count, setCount] = useState<number>(0);
   const { getCreators } = useGetCreators();

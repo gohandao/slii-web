@@ -1,5 +1,5 @@
 import type { FC, SetStateAction } from "react";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ReactCodeInput from "react-code-input";
 import { toast } from "react-toastify";
 

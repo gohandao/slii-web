@@ -1,9 +1,10 @@
+import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 import type { FC } from "react";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BiSearchAlt2 } from "react-icons/bi";
 
-import { UtilitiesContext } from "@/contexts/UtilitiesContext";
+import { keywordAtom } from "@/state/utilities.state";
 import { setParams } from "@/utilities/setParams";
 
 type Props = {
@@ -14,7 +15,7 @@ export const Searchbox: FC<Props> = ({ id }) => {
   const { order, screen, search, sort, tab, term, type } = router.query;
   const [value, setValue] = useState<string>("");
 
-  const { setKeyword } = useContext(UtilitiesContext);
+  const [, setKeyword] = useAtom(keywordAtom);
 
   useEffect(() => {
     if (search) {

@@ -18,5 +18,10 @@
   "files.eol": "\n",
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.tsdk": "node_modules/typescript/lib",
-  "eslint.useESLintClass": true
+  "eslint.useESLintClass": true,
+  "css.customData": [".vscode/css_custom_data.json"],
+  "css.lint.unknownAtRules": "ignore",
+  "css.lint.emptyRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "scss.lint.emptyRules": "ignore"
 }

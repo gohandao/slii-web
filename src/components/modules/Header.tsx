@@ -3,10 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import type { FC } from "react";
-import { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { BiHomeAlt, BiPurchaseTagAlt } from "react-icons/bi";
 import { FaRegUser } from "react-icons/fa";
 import { TbDiamond } from "react-icons/tb";
+import { toast } from "react-toastify";
 
 import { HeaderIcon } from "@/components/modules/HeaderIcon";
 import { supabase } from "@/libs/supabase";
@@ -16,6 +17,8 @@ import { profileAtom, userAtom } from "../../state/auth.state";
 
 export const Header: FC = () => {
   const router = useRouter();
+  const { profile, setProfile, setUser, user } = useContext(AuthContext);
+  const { setLoginModal } = useContext(UtilitiesContext);
   const [profile] = useAtom(profileAtom);
   const [, setLoginModal] = useAtom(loginModalAtom);
   const [dropdown, setDropdown] = useState<boolean>(false);
@@ -43,6 +46,8 @@ export const Header: FC = () => {
   useEffect(() => {
     const src = profile && profile.avatar_url ? profile.avatar_url : "/default-avatar.jpg";
     setAvatorSrc(src);
+    if (!user) setProfile(undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   return (
@@ -125,7 +130,10 @@ export const Header: FC = () => {
                     onClick={async () => {
                       const { error } = await supabase.auth.signOut();
                       if (error) {
-                        location.reload();
+                        toast.error("Signout failed.");
+                      } else {
+                        setUser(undefined);
+                        toast.success("Logout succeeded.");
                       }
                     }}
                     className="block px-5 py-3 text-sm text-gray-400"

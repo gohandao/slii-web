@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useCallback, useEffect, useState, useState } from "react";
 
 import { supabase } from "@/libs/supabase";
 import { bookmarkAtom, userAtom } from "@/state/auth.state";

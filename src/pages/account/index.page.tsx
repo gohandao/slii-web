@@ -5,6 +5,7 @@ import router from "next/router";
 import { NextSeo } from "next-seo";
 import { useEffect, useState } from "react";
 import { IoChevronBackOutline } from "react-icons/io5";
+import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
 import { Input } from "@/components/elements/Input";
@@ -80,7 +81,7 @@ const AccountPage: NextPage = () => {
         }
         new_avatar_url = new_avatar_url ? new_avatar_url : authProfile.avatar_url;
         if (newBackground) {
-          new_background_url = await uploadImage({ image: newBackground, path: "images", storage: "publichhhhh" });
+          new_background_url = await uploadImage({ image: newBackground, path: "images", storage: "public" });
         }
         new_background_url = new_background_url ? new_background_url : authProfile.background_url;
         const updates = {
@@ -92,12 +93,17 @@ const AccountPage: NextPage = () => {
           updated_at: new Date(),
           username: username,
         };
-
-        if (supabase) {
+        if (
+          new_avatar_url ||
+          new_background_url ||
+          description != authProfile.description ||
+          label != authProfile.label
+        ) {
           const { error } = await supabase.from("profiles").upsert(updates);
-          alert("upload success");
-          if (error) {
-            throw error;
+          if (!error) {
+            toast.success("Upload succeeded.");
+          } else {
+            toast.error("Failed to upload data.");
           }
         }
       }

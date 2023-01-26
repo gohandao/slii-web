@@ -1,5 +1,6 @@
 import "@/styles/style.scss";
-import "@/styles/globals.css";
+import "@/styles/globals.scss";
+import "react-toastify/dist/ReactToastify.css";
 
 import { useAtom } from "jotai";
 import { nanoid } from "nanoid";
@@ -20,7 +21,7 @@ import { pageHistoryAtom } from "@/state/utilities.state";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [, setLoading] = useState<boolean>(false);
   const [authUser, setAuthUser] = useAtom(authUserAtom);
   const { session } = useGetSession();
@@ -93,7 +94,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if (!authUser) !authProfile && getAuthProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [authUser]);
 
   return (
     <>

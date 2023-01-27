@@ -6,17 +6,18 @@ import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { FiArrowLeft } from "react-icons/fi";
 
 import { ArticleArea } from "@/components/layouts/ArticleArea";
+import { LikedBox } from "@/components/modules/LikedBox";
 import { LikedItem } from "@/components/modules/LikedItem";
 import { ProfileCount } from "@/components/modules/ProfileCount";
 
 type Props = {
   category?: string;
-  collections?: [];
+  collections?: any[];
   description?: string;
   image?: string;
   label: string;
   liked_counts: number;
-  nfts?: [];
+  nfts?: any[];
   stars_counts: number;
   tags?: string[];
   title: string;
@@ -110,23 +111,27 @@ export const BasePageTemplate: FC<Props> = ({
             <div className="flex flex-col gap-1">
               <h2 className="text-lg font-bold">Collections</h2>
               {collections.length > 0 ? (
-                collections.map((collection: any, index: number) => {
-                  return (
-                    <div className="" key={index}>
-                      <LikedItem
-                        image={collection.image}
-                        label="100 ETH"
-                        likeHandler={() => {
-                          return;
-                        }}
-                        path={`/collection/${collection.slug}`}
-                        starHandler={() => {
-                          return;
-                        }}
-                      />
-                    </div>
-                  );
-                })
+                <>
+                  <LikedBox>
+                    {collections.map((collection: any, index: number) => {
+                      return (
+                        <div className="" key={index}>
+                          <LikedItem
+                            image={collection.image_url}
+                            label="100 ETH"
+                            likeHandler={() => {
+                              return;
+                            }}
+                            path={`/collection/${collection.slug}`}
+                            starHandler={() => {
+                              return;
+                            }}
+                          />
+                        </div>
+                      );
+                    })}
+                  </LikedBox>
+                </>
               ) : (
                 <p className="text-sm font-normal">No collections.</p>
               )}
@@ -135,23 +140,31 @@ export const BasePageTemplate: FC<Props> = ({
           {nfts && nfts.length > 0 && (
             <div className="flex flex-col gap-1">
               <h2 className="text-lg font-bold">NFTs</h2>
-              {nfts.map((nft: any, index: number) => {
-                return (
-                  <div className="" key={index}>
-                    <LikedItem
-                      image={nft.image}
-                      label="10 ETH"
-                      likeHandler={() => {
-                        return;
-                      }}
-                      path={`/nft/${nft.id}`}
-                      starHandler={() => {
-                        return;
-                      }}
-                    />
-                  </div>
-                );
-              })}
+              {nfts.length > 0 ? (
+                <>
+                  <LikedBox>
+                    {nfts.map((nft: any, index: number) => {
+                      return (
+                        <div className="" key={index}>
+                          <LikedItem
+                            image={nft.image_thumbnail_url}
+                            label="10 ETH"
+                            likeHandler={() => {
+                              return;
+                            }}
+                            path={`/nft/${nft.id}`}
+                            starHandler={() => {
+                              return;
+                            }}
+                          />
+                        </div>
+                      );
+                    })}
+                  </LikedBox>
+                </>
+              ) : (
+                <p className="text-sm font-normal">No NFTs.</p>
+              )}
             </div>
           )}
         </div>

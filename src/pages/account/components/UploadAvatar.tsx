@@ -53,7 +53,7 @@ export const UploadAvatar: FC<Props> = ({ image, newImage, setNewImage }) => {
           }}
           className="hidden"
         />
-        <div className="relative flex h-[100px] w-[100px] items-center justify-center overflow-hidden rounded-full border-4 border-gray-700 bg-gray-800">
+        <div className="relative flex h-[56px] w-[56px] items-center justify-center overflow-hidden rounded-full border-2 border-gray-300 bg-gray-200">
           {image && !newImage ? (
             <Image
               src={image}

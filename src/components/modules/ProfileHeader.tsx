@@ -11,6 +11,7 @@ import { FiArrowLeft, FiEdit } from "react-icons/fi";
 import { NavButton } from "@/components/elements/NavButton";
 import { DropdownBox } from "@/components/modules/DropdownBox";
 import { DropdownLink } from "@/components/modules/DropdownLink";
+import { ProfileBlock } from "@/components/modules/ProfileBlock";
 import { ProfileCount } from "@/components/modules/ProfileCount";
 import { ProfileLink } from "@/components/modules/ProfileLink";
 import { useGetUserProfile } from "@/hooks/useGetUserProfile";
@@ -101,7 +102,7 @@ export const ProfileHeader: FC = () => {
         </DropdownBox>
       </div>
       <div className="flex w-full flex-col gap-4">
-        <div className="mx-auto flex w-full flex-col overflow-hidden rounded-2xl bg-white shadow-2xl shadow-gray-200">
+        <ProfileBlock>
           <div className="flex flex-col gap-1 px-5 pt-5 pb-4">
             <div className="relative flex items-center gap-4">
               <div
@@ -173,8 +174,8 @@ export const ProfileHeader: FC = () => {
               Edit
             </Link>
           </div>
-        </div>
-        <div className={`relative flex flex-col rounded-2xl bg-white shadow-lg shadow-gray-200`}>
+        </ProfileBlock>
+        <ProfileBlock>
           {links &&
             links.map((link, index) => {
               return (
@@ -183,7 +184,7 @@ export const ProfileHeader: FC = () => {
                 </div>
               );
             })}
-        </div>
+        </ProfileBlock>
       </div>
     </section>
   );

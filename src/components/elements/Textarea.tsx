@@ -30,7 +30,7 @@ export const Textarea: FC<Props> = ({ id, label, maxLength, required = false, se
     setCount(e.currentTarget.value.length);
   };
   return (
-    <>
+    <div className="flex flex-col gap-2">
       {label && <p className="text-sm font-bold text-gray-400">{label}</p>}
       <div className={`relative`}>
         <textarea
@@ -50,6 +50,6 @@ export const Textarea: FC<Props> = ({ id, label, maxLength, required = false, se
         />
         {maxLength && <Count count={count} maxLength={maxLength} property="textarea" />}
       </div>
-    </>
+    </div>
   );
 };

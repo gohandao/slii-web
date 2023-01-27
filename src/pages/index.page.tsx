@@ -7,39 +7,12 @@ import { SplitLayout } from "@/components/layouts/SplitLayout";
 import { IndexCategoryTabs } from "@/components/modules/CategoryTabs";
 import { DropdownBox } from "@/components/modules/DropdownBox";
 import { CreatorsTinderCard } from "@/components/templates/CreatorsTinderCard";
+import { combinedFilterMenus } from "@/constant/filter.const";
 
 const Home: NextPage = () => {
   const [requestDropdown, setRequestDropdown] = useState(false);
   const [filterType, setFilterType] = useState<string | undefined>();
-  const filterMenus = {
-    //順番に意味がある
-    /*eslint-disable*/
-    type: [
-      {
-        param: "creator",
-        title: "Creator",
-      },
-      {
-        param: "project",
-        title: "Project",
-      },
-      {
-        param: "company",
-        title: "Company",
-      },
-    ],
-    sort: [
-      {
-        param: "upvotes_count",
-        title: "Popular",
-      },
-      {
-        param: "name",
-        title: "Name",
-      },
-    ],
-    /*eslint-enable*/
-  };
+  const filterMenus = combinedFilterMenus;
   const filterKeys = Object.keys(filterMenus);
 
   return (
@@ -48,7 +21,7 @@ const Home: NextPage = () => {
         <div className="relative mx-auto flex w-[420px] flex-col gap-4">
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <h2 className="items-baseline text-2xl">
+              <h2 className="items-baseline text-2xl font-bold">
                 Discover <span className="text-lg">with</span>
                 <Image src="/logo.svg" width={55} height={22} alt="title" className="mt-[2px] ml-2 inline" />
               </h2>

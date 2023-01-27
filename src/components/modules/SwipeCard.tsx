@@ -39,11 +39,11 @@ export const SwipeCard: FC<TCard> = ({ above_tags, below_tags, image, label, nam
         <Image src={image_src} className="w-full rounded-t-lg" alt="" fill sizes="300px" />
       </div>
       <div className="bg-gradient flex flex-col rounded-b-lg px-5 py-5 text-white">
-        <h2 className="w-full text-2xl">
+        <h2 className="w-full text-2xl font-bold">
           {name}
           {verified && "icon"}
         </h2>
-        <p className="text-sm opacity-50">{label}</p>
+        <p className="text-sm font-medium opacity-50">{label}</p>
       </div>
     </Link>
   );

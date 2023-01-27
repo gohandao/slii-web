@@ -29,12 +29,14 @@ export const LikedItem = ({ image, label, likeHandler, path, starHandler }: Prop
     );
   };
   return (
-    <Link href={path} className="relative flex w-full flex-col overflow-hidden rounded-lg shadow-xl">
-      <p className="absolute left-1 top-1 rounded-full  bg-black px-3 py-[2px] text-sm text-white opacity-50">
+    <Link href={path} className="relative flex w-full flex-col overflow-hidden rounded-lg bg-gray-200 shadow-xl">
+      <p className="absolute left-1 top-1 z-10  rounded-full bg-black px-3 py-[2px] text-sm text-white opacity-50">
         {label}
       </p>
-      <Image src={image_src} alt="" width={150} height={150} sizes="200px" quality={10} className="w-full" />
-      <div className="absolute -left-0 bottom-0 flex w-full">
+      <div className="relative flex pt-[100%]">
+        <Image src={image_src} alt="" fill sizes="100px" quality={5} className="w-full" />
+      </div>
+      <div className="absolute -left-0 bottom-0 z-20 flex w-full">
         <Button
           active_color={"text-pink-500 border-r border-dotted border-gray-700"}
           icon={<AiFillHeart />}

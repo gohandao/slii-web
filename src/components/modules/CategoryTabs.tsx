@@ -34,7 +34,7 @@ export const IndexCategoryTabs = () => {
           <li key={index} className="py-[5px] px-1">
             <Link
               href={tab.path}
-              className={`cursor-pointer rounded-full px-[14px] py-[5px] transition-all duration-200 hover:bg-sky-600 hover:text-white ${status}`}
+              className={`cursor-pointer rounded-full px-[14px] py-[5px] font-medium transition-all duration-200 hover:bg-sky-600 hover:text-white ${status}`}
             >
               {tab.title}
             </Link>

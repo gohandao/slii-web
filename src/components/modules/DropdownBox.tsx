@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from "react";
-import { IoClose } from "react-icons/io5";
 
+import { CloseButton } from "@/components/elements/CloseButton";
 import { NavButton } from "@/components/elements/NavButton";
 
 type Props = {
@@ -29,12 +29,12 @@ export const DropdownBox: FC<Props> = ({ children, dropdown, icon, setDropdown, 
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-bold">{title ? title : "Menu"}</h3>
               <button
-                className="ml-auto flex h-8 w-8 items-center justify-center rounded-full bg-black text-white"
+                className="ml-auto flex h-8 w-8 items-center justify-center rounded-full bg-black text-lg text-white"
                 onClick={() => {
                   setDropdown(!dropdown);
                 }}
               >
-                <IoClose className="text-lg" />
+                <CloseButton />
               </button>
             </div>
             {children}

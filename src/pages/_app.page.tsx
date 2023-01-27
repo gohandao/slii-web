@@ -21,7 +21,6 @@ import { pageHistoryAtom } from "@/state/utilities.state";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [, setLoading] = useState<boolean>(false);
   const [authUser, setAuthUser] = useAtom(authUserAtom);
   const { session } = useGetSession();
@@ -55,6 +54,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     const init_username = nanoid();
     const updates = {
       id: authUser?.id,
+      name: init_username,
       updated_at: new Date(),
       username: init_username,
     };

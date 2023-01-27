@@ -1,150 +1,54 @@
 import { useAtom } from "jotai";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import type { FC } from "react";
-import React, { useContext, useEffect, useState } from "react";
-import { BiHomeAlt, BiPurchaseTagAlt } from "react-icons/bi";
-import { FaRegUser } from "react-icons/fa";
-import { TbDiamond } from "react-icons/tb";
-import { toast } from "react-toastify";
+import { FaBell } from "react-icons/fa";
 
-import { HeaderIcon } from "@/components/modules/HeaderIcon";
-import { supabase } from "@/libs/supabase";
-import { loginModalAtom } from "@/state/utilities.state";
+import { loginModalAtom, showSideNavigationAtom } from "@/state/utilities.state";
 
-import { profileAtom, userAtom } from "../../state/auth.state";
+import { authProfileAtom } from "../../state/auth.state";
 
 export const Header: FC = () => {
-  const router = useRouter();
-  const { profile, setProfile, setUser, user } = useContext(AuthContext);
-  const { setLoginModal } = useContext(UtilitiesContext);
-  const [profile] = useAtom(profileAtom);
   const [, setLoginModal] = useAtom(loginModalAtom);
-  const [dropdown, setDropdown] = useState<boolean>(false);
-  const [avatorSrc, setAvatorSrc] = useState<string>();
-  const [user] = useAtom(userAtom);
-  const delQuery = (url: string) => {
-    return url.split("?")[0];
-  };
-  const { asPath } = router;
-  const currentPath = delQuery(asPath);
+  const [authProfile] = useAtom(authProfileAtom);
+  const [showSideNavigation, setShowSideNavigation] = useAtom(showSideNavigationAtom);
 
-  const [homeClass, setHomeClass] = useState<"hidden" | "">("hidden");
-  const [statsClass, setStatsClass] = useState<"hidden" | "">("hidden");
-  const [tagsClass, setTagsClass] = useState<"hidden" | "">("hidden");
-
-  useEffect(() => {
-    const isHiddenPath = (path: string) => {
-      return path === "/" || path === "/collections" || path === "/login";
-    };
-    setHomeClass(isHiddenPath(currentPath) ? "hidden" : "");
-    setStatsClass(currentPath === "/stats" ? "hidden" : "");
-    setTagsClass(currentPath === "/tags" ? "hidden" : "");
-  }, [currentPath]);
-
-  useEffect(() => {
-    const src = profile && profile.avatar_url ? profile.avatar_url : "/default-avatar.jpg";
-    setAvatorSrc(src);
-    if (!user) setProfile(undefined);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile]);
+  const avatar_src = authProfile?.avatar_url ? authProfile.avatar_url : "/default-avatar.jpg";
 
   return (
-    <header className="relative z-50 py-3" x-data="{expanded: false}">
-      <div className="header-triangle"></div>
-      <div className="mx-auto flex justify-between px-5 md:px-8">
-        <div className="flex flex-1 items-center justify-between gap-20">
-          <div className="flex flex-shrink-0 items-center gap-8">
-            <HeaderIcon />
-          </div>
-          <div className="hidden gap-10 pr-16 lg:flex ">
-            <Link href="/" legacyBehavior>
-              <a className={`flex items-center text-sm font-bold tracking-wider text-gray-100 ${homeClass}`}>
-                <span className="mr-2 -mt-[1px] text-xl">
-                  <BiHomeAlt />
-                </span>
-                Home
-              </a>
-            </Link>
-            <Link href="/stats" legacyBehavior>
-              <a className={`flex items-center text-sm font-bold tracking-wider text-gray-100 ${statsClass}`}>
-                <span className="mr-2 -mt-[1px] text-xl">
-                  <TbDiamond />
-                </span>
-                Stats
-              </a>
-            </Link>
-            <Link href="/tags" legacyBehavior>
-              <a className={`flex items-center text-sm font-bold tracking-wider text-gray-100 ${tagsClass}`}>
-                <span className="mr-2 -mt-[1px] text-xl">
-                  <BiPurchaseTagAlt />
-                </span>
-                Tags
-              </a>
-            </Link>
-          </div>
-        </div>
+    <header className="relative z-10 h-[68px] w-full py-3">
+      <div className="fixed right-0 top-3 mx-auto flex w-full flex-row-reverse items-center justify-between px-5 lg:w-[calc(100%-320px)]">
         <div className="relative flex items-center gap-5">
-          {!user ? (
+          {!authProfile && (
             <button
               onClick={() => {
                 setLoginModal(true);
               }}
-              className="flex h-10 w-10 items-center justify-center gap-3 rounded-full border border-gray-700 bg-gray-800 font-bold text-gray-400"
+              className="mt-[1px] flex items-center justify-center rounded-full border-2 border-sky-500 bg-white py-1 px-5 font-bold text-sky-500 shadow-lg shadow-gray-100 transition-all duration-300 hover:bg-sky-500 hover:text-white"
             >
-              <FaRegUser />
-            </button>
-          ) : (
-            <button
-              onClick={() => {
-                setDropdown(!dropdown);
-              }}
-              className="relative flex h-[44px] w-[44px] items-center justify-center gap-3 overflow-hidden rounded-full border-[3px] border-gray-700 bg-gray-800 text-xl font-bold text-gray-400"
-            >
-              <Image
-                src={avatorSrc as string}
-                alt=""
-                loading="lazy"
-                className=""
-                quality={10}
-                fill
-                sizes="100px"
-                style={{
-                  objectFit: "cover",
-                }}
-              />
+              Login
             </button>
           )}
-          {dropdown && (
-            <div className={`absolute top-full right-0 z-20 mt-2 w-40 rounded border border-gray-700 bg-gray-800`}>
-              {user && profile && (
-                <>
-                  <Link href={`/${profile.username}`} legacyBehavior>
-                    <a className="block border-b border-gray-700 px-5 py-3 text-sm text-gray-400">Profile</a>
-                  </Link>
-                  <Link href="/account" legacyBehavior>
-                    <a className="block border-b border-gray-700 px-5 py-3 text-sm text-gray-400">Account</a>
-                  </Link>
-                  <button
-                    onClick={async () => {
-                      const { error } = await supabase.auth.signOut();
-                      if (error) {
-                        toast.error("Signout failed.");
-                      } else {
-                        setUser(undefined);
-                        toast.success("Logout succeeded.");
-                      }
-                    }}
-                    className="block px-5 py-3 text-sm text-gray-400"
-                  >
-                    Logout
-                  </button>
-                </>
-              )}
-            </div>
-          )}
+          <Link
+            href="https://google.com"
+            className="relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white font-bold text-gray-900 shadow-lg shadow-gray-100 lg:h-[44px] lg:w-[44px] "
+            target="_blank"
+            rel="noreferrer"
+          >
+            <div className="absolute right-[5px] top-[7px] h-2 w-2 rounded-full bg-yellow-300 lg:right-[9px] lg:top-[10px]"></div>
+            <FaBell />
+          </Link>
         </div>
+        {authProfile && (
+          <button
+            onClick={() => {
+              setShowSideNavigation(!showSideNavigation);
+            }}
+            className="relative flex h-8 w-8 overflow-hidden rounded-full shadow-lg lg:hidden"
+          >
+            <Image src={avatar_src} fill alt="avatar" />
+          </button>
+        )}
       </div>
     </header>
   );

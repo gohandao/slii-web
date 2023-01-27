@@ -1,5 +1,7 @@
 import { useAtom } from "jotai";
+import { nanoid } from "nanoid";
 import type { NextPage } from "next";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import router from "next/router";
 import { NextSeo } from "next-seo";
@@ -9,25 +11,51 @@ import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
 import { Input } from "@/components/elements/Input";
+import { NavButton } from "@/components/elements/NavButton";
 import { Textarea } from "@/components/elements/Textarea";
-import { BaseLayout } from "@/components/layouts/BaseLayout";
+import { ArticleArea } from "@/components/layouts/ArticleArea";
+import { SplitLayout } from "@/components/layouts/SplitLayout";
+// import { OptionalInputs } from "@/components/modules/OptionalInputs";
+import { ProfileBlock } from "@/components/modules/ProfileBlock";
+import { useRedirections } from "@/hooks/useRedirections";
 import { supabase } from "@/libs/supabase";
 import { UploadAvatar } from "@/pages/account/components/UploadAvatar";
-import { UploadBackground } from "@/pages/account/components/UploadBackground";
-import { profileAtom, userAtom } from "@/state/auth.state";
+import { authProfileAtom, authUserAtom } from "@/state/auth.state";
+import type { LinksField } from "@/types/linksField";
 
+const AccountLinks = dynamic(
+  () => {
+    return import("@/components/modules/AccountLinks");
+  },
+  {
+    ssr: false,
+  }
+);
 const AccountPage: NextPage = () => {
-  const [profile] = useAtom(profileAtom);
+  useRedirections();
+  const initial_id = nanoid();
+
+  const [authProfile] = useAtom(authProfileAtom);
   const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [newAvatar, setNewAvatar] = useState<File>();
-  const [backgroundUrl, setBackgroundUrl] = useState<string>("");
-  const [newBackground, setNewBackground] = useState<File>();
+  // const [backgroundUrl, setBackgroundUrl] = useState<string>("");
+  // const [newBackground, setNewBackground] = useState<File>();
   const [label, setLabel] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
+  const [name, setName] = useState<string>("");
   const [username, setUsername] = useState<string>("");
-  const [user] = useAtom(userAtom);
+  const [twitterId, setTwitterId] = useState<string | null>("");
+  const [instagramId, setInstagramId] = useState<string | null>("");
+  const [links, setLinks] = useState<LinksField[]>([
+    {
+      id: initial_id,
+      label: "",
+      value: "",
+    },
+  ]);
+  const [authUser] = useAtom(authUserAtom);
 
   // const options = {
   //   maxSizeMB: 1, // 最大ファイルサイズ
@@ -35,17 +63,21 @@ const AccountPage: NextPage = () => {
   // };
 
   useEffect(() => {
-    if (user && typeof user.email === "string") {
-      setEmail(user.email);
+    if (authUser && typeof authUser.email === "string") {
+      setEmail(authUser.email);
     }
-    if (profile) {
-      setUsername(profile.username);
-      setAvatarUrl(profile.avatar_url);
-      setBackgroundUrl(profile.background_url);
-      setLabel(profile.label);
-      setDescription(profile.description);
+    if (authProfile) {
+      setName(authProfile.name);
+      setUsername(authProfile.username);
+      setAvatarUrl(authProfile.avatar_url);
+      // setBackgroundUrl(authProfile.background_url);
+      setLabel(authProfile.label);
+      setDescription(authProfile.description);
+      setTwitterId(authProfile.twitter_id);
+      setInstagramId(authProfile.instagram_id);
+      setLinks(authProfile.links);
     }
-  }, [user, profile]);
+  }, [authUser, authProfile]);
 
   type UploadImageProps = {
     image: File;
@@ -72,26 +104,28 @@ const AccountPage: NextPage = () => {
     try {
       setLoading(true);
       let new_avatar_url;
-      let new_background_url;
-      if (user && profile) {
+      // let new_background_url;
+      if (authUser && authProfile) {
         if (newAvatar) {
           new_avatar_url = await uploadImage({ image: newAvatar, path: "public", storage: "avatars" });
         }
-        new_avatar_url = new_avatar_url ? new_avatar_url : profile.avatar_url;
-        if (newBackground) {
-          new_background_url = await uploadImage({ image: newBackground, path: "images", storage: "publichhhhh" });
-        }
-        new_background_url = new_background_url ? new_background_url : profile.background_url;
+        new_avatar_url = new_avatar_url ? new_avatar_url : authProfile.avatar_url;
+        // if (newBackground) {
+        //   new_background_url = await uploadImage({ image: newBackground, path: "images", storage: "public" });
+        // }
+        // new_background_url = new_background_url ? new_background_url : authProfile.background_url;
         const updates = {
-          id: user.id,
+          id: authUser.id,
           avatar_url: new_avatar_url,
-          background_url: new_background_url,
+          // background_url: new_background_url,
           description: description,
-          label: label,
+          instagram_id: instagramId,
+          links: links,
+          twitter_id: twitterId,
           updated_at: new Date(),
           username: username,
         };
-        if (new_avatar_url || new_background_url || description != profile.description || label != profile.label) {
+        if (new_avatar_url || description != authProfile.description || label != authProfile.label) {
           const { error } = await supabase.from("profiles").upsert(updates);
           if (!error) {
             toast.success("Upload succeeded.");
@@ -120,23 +154,25 @@ const AccountPage: NextPage = () => {
           url: process.env.NEXT_PUBLIC_SITE_URL + "/",
         }}
       />
-      <BaseLayout>
-        <div className="mt-8 px-5">
-          <div className="mx-auto max-w-2xl  ">
-            {user ? (
+      <SplitLayout>
+        <ArticleArea>
+          <div className="w-full">
+            {authUser ? (
               <>
-                <div className="relative overflow-hidden rounded bg-gray-800 pb-10">
-                  <div className="relative z-10 flex items-center justify-between gap-5 py-2 px-5">
+                <div className="flex flex-col gap-[10px]">
+                  <div className="relative z-10 flex items-center justify-between">
                     <button
-                      className="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-gray-600 text-gray-300 "
+                      className=""
                       onClick={() => {
                         return router.back();
                       }}
                     >
-                      <IoChevronBackOutline className="text-gray-400" />
+                      <NavButton>
+                        <IoChevronBackOutline />
+                      </NavButton>
                     </button>
                     <button
-                      className="overflow-hidden whitespace-nowrap rounded-full bg-green-600 py-2 px-7 text-center text-green-100"
+                      className="overflow-hidden whitespace-nowrap rounded-full bg-sky-500 py-2 px-7 text-center text-white"
                       onClick={() => {
                         return updateProfile();
                       }}
@@ -145,25 +181,22 @@ const AccountPage: NextPage = () => {
                       Save
                     </button>
                   </div>
-                  <div className="relative px-5 md:px-16 ">
-                    <div className="absolute left-0 top-0 flex h-[120px] w-full items-center justify-center">
-                      <UploadBackground image={backgroundUrl} newImage={newBackground} setNewImage={setNewBackground} />
-                    </div>
-                    <div className=" pt-16 ">
-                      <div className="mb-3 flex">
+                  <ProfileBlock addClass="p-5">
+                    <div className="flex flex-col gap-3">
+                      <div className="flex">
                         <UploadAvatar image={avatarUrl} newImage={newAvatar} setNewImage={setNewAvatar} />
                       </div>
-                      <div className="mb-5">
+                      <div className="">
                         <Input
-                          label="Email"
-                          id="email"
-                          type="email"
-                          placeholder="sample@nftotaku.xyz"
-                          value={email}
-                          onChange={setEmail}
+                          label="Name"
+                          id="name"
+                          type="text"
+                          value={name}
+                          placeholder="Minimum 4 characters"
+                          onChange={setUsername}
                         />
                       </div>
-                      <div className="mb-5">
+                      <div className="">
                         <Input
                           label="Username"
                           id="username"
@@ -178,69 +211,53 @@ const AccountPage: NextPage = () => {
                           </a>
                         </Link>
                       </div>
-                      <div className="mb-5">
+                      <div className="">
                         <Input
-                          label="Label"
-                          id="label"
-                          type="text"
-                          value={label}
-                          placeholder="NFT Collecter"
-                          onChange={setLabel}
+                          label="Email"
+                          id="email"
+                          type="email"
+                          placeholder="sample@nftotaku.xyz"
+                          value={email}
+                          onChange={setEmail}
                         />
                       </div>
-                      <div className="flex flex-col gap-1">
-                        <p className="text-gray-100">Description</p>
+                      <div className="">
                         <Textarea
                           id="description"
+                          label="Description"
                           required={false}
                           maxLength={200}
                           text={description}
                           setText={setDescription}
                         />
                       </div>
-                      {/* <div className="">
-              <div className="bg-gray-700 px-5 py-2 rounded mt-8 mb-4">
-                <p className="text-gray-200 text-center ">Verified user only</p>
-              </div>
-              <div className="mb-5">
-                <Input
-                  label="Twitter ID"
-                  id="email"
-                  type="email"
-                  value={email || ""}
-                  onChange={setEmail}
-                />
-              </div>
-              <div className="mb-5">
-                <Input
-                  label="Instagram ID"
-                  id="email"
-                  type="email"
-                  value={email || ""}
-                  onChange={setEmail}
-                />
-              </div>
-              <div className="mb-5">
-                <Input
-                  label="Discord URL"
-                  id="email"
-                  type="email"
-                  value={email || ""}
-                  onChange={setEmail}
-                />
-              </div>
-              <div className="mb-5">
-                <Input
-                  label="Website URL"
-                  id="email"
-                  type="email"
-                  value={email || ""}
-                  onChange={setEmail}
-                />
-              </div>
-            </div> */}
                     </div>
-                  </div>
+                  </ProfileBlock>
+                  <ProfileBlock addClass="p-5">
+                    <div className="flex flex-col gap-3">
+                      <div className="">
+                        <Input
+                          label="Twitter ID"
+                          id="twitter"
+                          before="@"
+                          type="text"
+                          value={twitterId || ""}
+                          onChange={setTwitterId}
+                        />
+                      </div>
+                      <div className="">
+                        <Input
+                          label="Instagram ID"
+                          id="instagram"
+                          before="@"
+                          type="text"
+                          value={instagramId || ""}
+                          onChange={setInstagramId}
+                        />
+                      </div>
+                      <AccountLinks fields={links} setFields={setLinks} />
+                    </div>
+                  </ProfileBlock>
                 </div>
               </>
             ) : (
@@ -249,8 +266,8 @@ const AccountPage: NextPage = () => {
               </>
             )}
           </div>
-        </div>
-      </BaseLayout>
+        </ArticleArea>
+      </SplitLayout>
     </div>
   );
 };

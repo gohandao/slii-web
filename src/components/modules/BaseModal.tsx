@@ -55,9 +55,9 @@ export const BaseModal: FC<Props> = ({ children, modalIsOpen, setModalIsOpen }) 
         {children}
         <button
           onClick={closeModal}
-          className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-gray-600"
+          className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-black opacity-80"
         >
-          <IoIosClose className="text-xl text-gray-400" />
+          <IoIosClose className="text-xl text-white" />
         </button>
       </div>
     </Modal>

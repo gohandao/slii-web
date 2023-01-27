@@ -9,3 +9,8 @@ export const userAtom = atom<User | null>(null);
 export const bookmarkAtom = atom<Bookmark[]>([]);
 export const upvoteAtom = atom<Upvote[]>([]);
 export const profileAtom = atom<Profile | null>(null);
+
+export const authUserAtom = atom<User | null>(null);
+export const authBookmarksAtom = atom<Bookmark[]>([]);
+export const authUpvotesAtom = atom<Upvote[]>([]);
+export const authProfileAtom = atom<Profile | null>(null);

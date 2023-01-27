@@ -2,7 +2,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { useState } from "react";
 
-import type { Creator } from "@/types/creator";
+import type { TCard } from "@/types/tinder";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABSE_ANON_KEY;
@@ -10,7 +10,7 @@ if (!supabaseUrl) throw new Error("Missing env.NEXT_PUBLIC_SUPABASE_URL");
 if (!supabaseAnonKey) throw new Error("Missing env.NEXT_PUBLIC_SUPABASE_KEY");
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-export const useGetCreators = () => {
+export const useGetCombinedList = () => {
   type CreatorsFilterProps = {
     order?: string;
     page?: number;
@@ -20,16 +20,12 @@ export const useGetCreators = () => {
     username?: string;
     usernames?: string[];
   };
-  const [creators, setCreators] = useState<Creator[]>([]);
-  const getCreators = async ({ order, page, search, sort, type, username, usernames }: CreatorsFilterProps = {}) => {
+  const [list, setList] = useState<TCard[]>([]);
+  const getCombinedList = async ({ order, page, search, sort }: CreatorsFilterProps = {}) => {
     const limit = 6;
     const start = page ? (Number(page) - 1) * limit : 0;
     const end = page ? Number(page) * limit - 1 : limit;
     const rangeFilter = `.range(${start}, ${end})`;
-    let typeFilter = "";
-    if (type && type != "all") {
-      typeFilter = `.eq("type", type)`;
-    }
     let searchFilter = "";
     if (search) {
       searchFilter = `.ilike("username", "%${search}%")`;
@@ -68,14 +64,7 @@ export const useGetCreators = () => {
     } else {
       sortFilter = `.order("${sort_param}", { ascending: ${orderFilter} })`;
     }
-    const usernamesArray = usernames?.map((username) => {
-      return `"` + username + `"`;
-    });
-    const usernameFilter = username ? `.eq("username", "${username}").single()` : "";
-    const usernamesFilter = usernames ? `.in("username", [${usernamesArray}])` : "";
-    const filter = username
-      ? `supabase.from("creators").select('"*", upvotes_count_function')${usernameFilter}`
-      : `supabase.from("creators").select('"*", upvotes_count_function', { count: 'exact' })${usernamesFilter}${typeFilter}${searchFilter}${sortFilter}${usernameFilter}${rangeFilter}`;
+    const filter = `supabase.from("combined_table").select("*", { count: 'exact' })${searchFilter}${sortFilter}${rangeFilter}`;
 
     console.log("filter");
     console.log(filter);
@@ -86,10 +75,10 @@ export const useGetCreators = () => {
       console.log(error);
     }
     if (data) {
-      setCreators(data as Creator[]);
+      setList(data as TCard[]);
     }
     return { count, data };
   };
 
-  return { creators, getCreators };
+  return { getCombinedList, list };
 };

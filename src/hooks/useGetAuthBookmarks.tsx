@@ -6,9 +6,9 @@ import type { Bookmark } from "@/types/bookmark";
 
 import { authProfileAtom } from "../state/auth.state";
 
-export const useGetUserBookmarks = () => {
+export const useGetAuthBookmarks = () => {
   const [authUser] = useAtom(authProfileAtom);
-  const [userBookmarks, setUserBookmarks] = useState<Bookmark[]>([]);
+  const [authBookmarks, setAuthBookmarks] = useState<Bookmark[]>([]);
   const getUserBookmarks = useCallback(async () => {
     if (!authUser) return;
     const { data, error } = await supabase.from("bookmarks").select().eq("user_id", authUser.id);
@@ -18,12 +18,12 @@ export const useGetUserBookmarks = () => {
     }
     if (data) {
       data as Bookmark[];
-      setUserBookmarks(data);
+      setAuthBookmarks(data);
     }
   }, [authUser]);
   useEffect(() => {
     getUserBookmarks();
   }, [getUserBookmarks]);
 
-  return { userBookmarks };
+  return { authBookmarks };
 };

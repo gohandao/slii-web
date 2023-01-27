@@ -49,7 +49,7 @@ export default function AccountLinks({ fields, setFields }: Props) {
       <p className="text-sm font-bold text-gray-400">Links</p>
       <div className="flex flex-col">
         <ReactSortable list={fields} setList={setFields}>
-          {fields.length > 0 &&
+          {fields?.length > 0 &&
             fields.map((item, index) => {
               return (
                 <div key={item.id} className="relative mb-2 flex flex-col items-start gap-3">

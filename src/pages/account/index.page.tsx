@@ -6,6 +6,8 @@ import Link from "next/link";
 import router from "next/router";
 import { NextSeo } from "next-seo";
 import { useEffect, useState } from "react";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
@@ -31,9 +33,26 @@ const AccountLinks = dynamic(
     ssr: false,
   }
 );
+
+interface IFormInput {
+  age: number;
+  firstName: string;
+  lastName: string;
+}
+
+type UploadImageProps = {
+  image: File;
+  path: string;
+  storage: string;
+};
+
 const AccountPage: NextPage = () => {
   useRedirections();
   const initial_id = nanoid();
+  const { handleSubmit, register } = useForm<IFormInput>();
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    return console.log(data);
+  };
 
   const [authProfile] = useAtom(authProfileAtom);
   const [avatarUrl, setAvatarUrl] = useState<string>("");
@@ -79,11 +98,6 @@ const AccountPage: NextPage = () => {
     }
   }, [authUser, authProfile]);
 
-  type UploadImageProps = {
-    image: File;
-    path: string;
-    storage: string;
-  };
   const uploadImage = async ({ image, path, storage }: UploadImageProps) => {
     const STORAGE_URL = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_URL;
     const uuid = uuidv4();
@@ -127,10 +141,10 @@ const AccountPage: NextPage = () => {
         };
         if (new_avatar_url || description != authProfile.description || label != authProfile.label) {
           const { error } = await supabase.from("profiles").upsert(updates);
-          if (!error) {
-            toast.success("Upload succeeded.");
-          } else {
+          if (error) {
             toast.error("Failed to upload data.");
+          } else {
+            toast.success("Upload succeeded.");
           }
         }
       }

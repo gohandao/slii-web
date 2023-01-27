@@ -25,5 +25,4 @@ export const combinedFilterMenus = {
       title: "Name",
     },
   ],
-  /*eslint-enable*/
-};
+} as const;

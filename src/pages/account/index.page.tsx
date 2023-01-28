@@ -28,9 +28,7 @@ const AccountLinks = dynamic(
   () => {
     return import("@/components/modules/AccountLinks");
   },
-  {
-    ssr: false,
-  }
+  { ssr: false }
 );
 
 type IFormInput = {
@@ -54,10 +52,13 @@ type UploadImageProps = {
 const schema = yup
   .object({
     avatar_url: yup.string().required(),
-    description: yup.string().required(),
-    email: yup.string().required(),
-    instagram_id: yup.string().required(),
-    label: yup.string().required(),
+    name: yup.string().required().min(4),
+    username: yup.string().required().min(4),
+    email: yup.string().required().email(),
+    description: yup.string().max(200),
+    instagram_id: yup.string(),
+    twitter_id: yup.string(),
+    label: yup.string(),
     links: yup.array().of(
       yup.object().shape({
         id: yup.string().required(),
@@ -65,9 +66,6 @@ const schema = yup
         value: yup.string().required(),
       })
     ),
-    twitter_id: yup.string().required(),
-    username: yup.string().required().min(4),
-    name: yup.string().required().min(4),
   })
   .required();
 
@@ -102,15 +100,18 @@ const AccountPage: NextPage = () => {
     formState: { errors },
     handleSubmit,
     register,
+    reset,
   } = useForm<IFormInput>({
     resolver: yupResolver(schema),
-
     defaultValues: {
-      avatar_url: authProfile?.avatar_url || "",
-      description: authProfile?.description || "",
-      email: authUser?.email || "",
-      instagram_id: authProfile?.instagram_id || "",
-      label: authProfile?.label || "",
+      avatar_url: authProfile?.avatar_url,
+      name: authProfile?.name,
+      username: authProfile?.username,
+      email: authUser?.email,
+      description: authProfile?.description,
+      twitter_id: authProfile?.twitter_id,
+      instagram_id: authProfile?.instagram_id,
+      label: authProfile?.label,
       links: [
         {
           id: initial_id,
@@ -118,9 +119,6 @@ const AccountPage: NextPage = () => {
           value: "",
         },
       ],
-      name: authProfile?.name || "nothing",
-      twitter_id: authProfile?.twitter_id || "",
-      username: authProfile?.username || "",
     },
   });
 
@@ -136,6 +134,20 @@ const AccountPage: NextPage = () => {
 
   useEffect(() => {
     if (authProfile?.description) setCount(authProfile.description.length);
+    if (authProfile && authUser) {
+      const { avatar_url, description, instagram_id, label, links, twitter_id, username, name } = authProfile;
+      reset({
+        name,
+        username,
+        description,
+        avatar_url,
+        twitter_id,
+        instagram_id,
+        label,
+        links,
+        email: authUser.email,
+      });
+    }
   }, [authProfile]);
 
   // const uploadImage = async ({ image, path, storage }: UploadImageProps) => {
@@ -241,12 +253,16 @@ const AccountPage: NextPage = () => {
                       type="submit"
                       value="save"
                       className="overflow-hidden whitespace-nowrap rounded-full bg-sky-500 py-2 px-7 text-center text-white"
-                      // disabled={loading}
+                      disabled={loading}
                     />
                     <ProfileBlock addClass="p-5">
                       <div className="flex flex-col gap-3">
                         <div className="flex">
-                          <UploadAvatar image={avatarUrl} newImage={newAvatar} setNewImage={setNewAvatar} />
+                          <UploadAvatar
+                            image={authProfile?.avatar_url}
+                            newImage={newAvatar}
+                            setNewImage={setNewAvatar}
+                          />
                         </div>
                         <div className="">
                           {/* <Input
@@ -324,12 +340,15 @@ const AccountPage: NextPage = () => {
                               <input
                                 id={"email"}
                                 type={"email"}
-                                {...register("email", { pattern: /^\S+@\S+$/i, required: true })}
+                                {...register("email")}
                                 className={`flex-1 rounded-lg bg-slate-50 py-3 px-4 `}
                                 placeholder={"sample@nftotaku.xyz"}
                               />
                             </div>
                           </div>
+                          <p className="text-red-500">
+                            <ErrorMessage errors={errors} name="email" />
+                          </p>
                         </div>
                         <div className="">
                           {/* <Textarea
@@ -346,7 +365,7 @@ const AccountPage: NextPage = () => {
                               <textarea
                                 id={"description"}
                                 className={`min-h-[150px] w-full rounded-lg border-2 bg-slate-50 px-5 py-3`}
-                                {...register("description", { maxLength: 200 })}
+                                {...register("description")}
                                 onKeyUp={(e) => {
                                   countHandler(e);
                                 }}
@@ -356,6 +375,9 @@ const AccountPage: NextPage = () => {
                               <Count count={count} maxLength={200} property="textarea" />
                             </div>
                           </div>
+                          <p className="text-red-400">
+                            <ErrorMessage errors={errors} name="description" />
+                          </p>
                         </div>
                       </div>
                     </ProfileBlock>

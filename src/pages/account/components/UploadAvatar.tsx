@@ -11,14 +11,14 @@ export type Props = {
   setNewImage: (value: React.SetStateAction<File | undefined>) => void;
 };
 
+const options = {
+  maxSizeMB: 1, // 最大ファイルサイズ
+  maxWidthOrHeight: 500, // 最大画像幅もしくは高さ
+  maxWidthOrWidth: 500, // 最大画像幅もしくは高さ
+};
 export const UploadAvatar: FC<Props> = ({ image, newImage, setNewImage }) => {
   // const [images, setImages] = useState<File[]>([]);
   // const [image, setImage] = useState<File>();
-  const options = {
-    maxSizeMB: 1, // 最大ファイルサイズ
-    maxWidthOrHeight: 500, // 最大画像幅もしくは高さ
-    maxWidthOrWidth: 500, // 最大画像幅もしくは高さ
-  };
 
   const handleOnAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;

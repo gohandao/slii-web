@@ -1,15 +1,19 @@
+import { ErrorMessage } from "@hookform/error-message";
 import type { FC } from "react";
+import { useFormContext } from "react-hook-form";
 
 type Props = {
   id: string;
   before?: string;
   label?: string;
-  onChange: (arg: string) => void;
   placeholder?: string;
   type: string;
-  value?: string;
 };
-export const Input: FC<Props> = ({ id, before, label, onChange, placeholder, type, value }) => {
+export const Input: FC<Props> = ({ id, before, label, placeholder, type }) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
   return (
     <>
       <div className="flex flex-col">
@@ -21,15 +25,15 @@ export const Input: FC<Props> = ({ id, before, label, onChange, placeholder, typ
           <input
             id={id}
             type={type}
-            value={value}
-            onChange={(e) => {
-              return onChange(e.target.value);
-            }}
+            {...register(id)}
             className={`flex-1 rounded-lg bg-slate-50 py-3 px-4 ${before && "pl-9"}`}
             placeholder={placeholder}
           />
         </div>
       </div>
+      <p className="text-red-400">
+        <ErrorMessage errors={errors} name={id} />
+      </p>
     </>
   );
 };

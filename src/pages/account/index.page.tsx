@@ -1,3 +1,5 @@
+import { ErrorMessage } from "@hookform/error-message";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useAtom } from "jotai";
 import { nanoid } from "nanoid";
 import type { NextPage } from "next";
@@ -9,18 +11,15 @@ import { useEffect, useState } from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { IoChevronBackOutline } from "react-icons/io5";
-import { toast } from "react-toastify";
-import { v4 as uuidv4 } from "uuid";
+import * as yup from "yup";
 
-import { Input } from "@/components/elements/Input";
+import { Count } from "@/components/elements/Count";
 import { NavButton } from "@/components/elements/NavButton";
-import { Textarea } from "@/components/elements/Textarea";
 import { ArticleArea } from "@/components/layouts/ArticleArea";
 import { SplitLayout } from "@/components/layouts/SplitLayout";
 // import { OptionalInputs } from "@/components/modules/OptionalInputs";
 import { ProfileBlock } from "@/components/modules/ProfileBlock";
 import { useRedirections } from "@/hooks/useRedirections";
-import { supabase } from "@/libs/supabase";
 import { UploadAvatar } from "@/pages/account/components/UploadAvatar";
 import { authProfileAtom, authUserAtom } from "@/state/auth.state";
 import type { LinksField } from "@/types/linksField";
@@ -34,11 +33,17 @@ const AccountLinks = dynamic(
   }
 );
 
-interface IFormInput {
-  age: number;
-  firstName: string;
-  lastName: string;
-}
+type IFormInput = {
+  avatar_url: string;
+  description: string;
+  email: string;
+  instagram_id: string;
+  label: string;
+  links: LinksField[];
+  name: string;
+  twitter_id: string;
+  username: string;
+};
 
 type UploadImageProps = {
   image: File;
@@ -46,27 +51,39 @@ type UploadImageProps = {
   storage: string;
 };
 
+const schema = yup
+  .object({
+    avatar_url: yup.string().required(),
+    description: yup.string().required(),
+    email: yup.string().required(),
+    instagram_id: yup.string().required(),
+    label: yup.string().required(),
+    links: yup.array().of(
+      yup.object().shape({
+        id: yup.string().required(),
+        label: yup.string().required(),
+        value: yup.string().required(),
+      })
+    ),
+    twitter_id: yup.string().required(),
+    username: yup.string().required().min(4),
+    name: yup.string().required().min(4),
+  })
+  .required();
+
 const AccountPage: NextPage = () => {
   useRedirections();
   const initial_id = nanoid();
-  const { handleSubmit, register } = useForm<IFormInput>();
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    return console.log(data);
+
+  const [count, setCount] = useState<number>(0);
+  const countHandler = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    setCount(e.currentTarget.value.length);
   };
 
   const [authProfile] = useAtom(authProfileAtom);
-  const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [newAvatar, setNewAvatar] = useState<File>();
-  // const [backgroundUrl, setBackgroundUrl] = useState<string>("");
-  // const [newBackground, setNewBackground] = useState<File>();
-  const [label, setLabel] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const [name, setName] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
-  const [twitterId, setTwitterId] = useState<string | null>("");
-  const [instagramId, setInstagramId] = useState<string | null>("");
   const [links, setLinks] = useState<LinksField[]>([
     {
       id: initial_id,
@@ -81,79 +98,102 @@ const AccountPage: NextPage = () => {
   //   maxWidthOrHeight: 80, // 最大画像幅もしくは高さ
   // };
 
+  const {
+    formState: { errors },
+    handleSubmit,
+    register,
+  } = useForm<IFormInput>({
+    resolver: yupResolver(schema),
+
+    defaultValues: {
+      avatar_url: authProfile?.avatar_url || "",
+      description: authProfile?.description || "",
+      email: authUser?.email || "",
+      instagram_id: authProfile?.instagram_id || "",
+      label: authProfile?.label || "",
+      links: [
+        {
+          id: initial_id,
+          label: "",
+          value: "",
+        },
+      ],
+      name: authProfile?.name || "nothing",
+      twitter_id: authProfile?.twitter_id || "",
+      username: authProfile?.username || "",
+    },
+  });
+
   useEffect(() => {
-    if (authUser && typeof authUser.email === "string") {
-      setEmail(authUser.email);
-    }
-    if (authProfile) {
-      setName(authProfile.name);
-      setUsername(authProfile.username);
-      setAvatarUrl(authProfile.avatar_url);
-      // setBackgroundUrl(authProfile.background_url);
-      setLabel(authProfile.label);
-      setDescription(authProfile.description);
-      setTwitterId(authProfile.twitter_id);
-      setInstagramId(authProfile.instagram_id);
-      setLinks(authProfile.links);
-    }
-  }, [authUser, authProfile]);
+    console.log(errors);
+    console.log(authProfile);
+  }, [authProfile, errors]);
 
-  const uploadImage = async ({ image, path, storage }: UploadImageProps) => {
-    const STORAGE_URL = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_URL;
-    const uuid = uuidv4();
-    const { data, error } = await supabase.storage.from(storage).upload(`${path}/${uuid}.jpg`, image, {
-      cacheControl: "3600",
-      upsert: false,
-    });
-    if (error) {
-      console.log("error at uploadImage");
-      console.log(error);
-      return;
-    }
-    const image_url = STORAGE_URL && STORAGE_URL + "/" + storage + "/" + data?.path;
-    return image_url;
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    console.log(data);
+    console.log(errors);
   };
 
-  const updateProfile = async () => {
-    try {
-      setLoading(true);
-      let new_avatar_url;
-      // let new_background_url;
-      if (authUser && authProfile) {
-        if (newAvatar) {
-          new_avatar_url = await uploadImage({ image: newAvatar, path: "public", storage: "avatars" });
-        }
-        new_avatar_url = new_avatar_url ? new_avatar_url : authProfile.avatar_url;
-        // if (newBackground) {
-        //   new_background_url = await uploadImage({ image: newBackground, path: "images", storage: "public" });
-        // }
-        // new_background_url = new_background_url ? new_background_url : authProfile.background_url;
-        const updates = {
-          id: authUser.id,
-          avatar_url: new_avatar_url,
-          // background_url: new_background_url,
-          description: description,
-          instagram_id: instagramId,
-          links: links,
-          twitter_id: twitterId,
-          updated_at: new Date(),
-          username: username,
-        };
-        if (new_avatar_url || description != authProfile.description || label != authProfile.label) {
-          const { error } = await supabase.from("profiles").upsert(updates);
-          if (error) {
-            toast.error("Failed to upload data.");
-          } else {
-            toast.success("Upload succeeded.");
-          }
-        }
-      }
-    } catch (error) {
-      if (error instanceof Error) alert(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    if (authProfile?.description) setCount(authProfile.description.length);
+  }, [authProfile]);
+
+  // const uploadImage = async ({ image, path, storage }: UploadImageProps) => {
+  //   const STORAGE_URL = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_URL;
+  //   const uuid = uuidv4();
+  //   const { data, error } = await supabase.storage.from(storage).upload(`${path}/${uuid}.jpg`, image, {
+  //     cacheControl: "3600",
+  //     upsert: false,
+  //   });
+  //   if (error) {
+  //     console.log("error at uploadImage");
+  //     console.log(error);
+  //     return;
+  //   }
+  //   const image_url = STORAGE_URL && STORAGE_URL + "/" + storage + "/" + data?.path;
+  //   return image_url;
+  // };
+
+  // const updateProfile = async () => {
+  //   try {
+  //     setLoading(true);
+  //     let new_avatar_url;
+  //     // let new_background_url;
+  //     if (authUser && authProfile) {
+  //       if (newAvatar) {
+  //         new_avatar_url = await uploadImage({ image: newAvatar, path: "public", storage: "avatars" });
+  //       }
+  //       new_avatar_url = new_avatar_url ? new_avatar_url : authProfile.avatar_url;
+  //       // if (newBackground) {
+  //       //   new_background_url = await uploadImage({ image: newBackground, path: "images", storage: "public" });
+  //       // }
+  //       // new_background_url = new_background_url ? new_background_url : authProfile.background_url;
+  //       const updates = {
+  //         id: authUser.id,
+  //         avatar_url: new_avatar_url,
+  //         // background_url: new_background_url,
+  //         description: description,
+  //         instagram_id: instagramId,
+  //         links: links,
+  //         twitter_id: twitterId,
+  //         updated_at: new Date(),
+  //         username: username,
+  //       };
+  //       if (new_avatar_url || description != authProfile.description || label != authProfile.label) {
+  //         const { error } = await supabase.from("profiles").upsert(updates);
+  //         if (error) {
+  //           toast.error("Failed to upload data.");
+  //         } else {
+  //           toast.success("Upload succeeded.");
+  //         }
+  //       }
+  //     }
+  //   } catch (error) {
+  //     if (error instanceof Error) alert(error.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div>
@@ -185,7 +225,7 @@ const AccountPage: NextPage = () => {
                         <IoChevronBackOutline />
                       </NavButton>
                     </button>
-                    <button
+                    {/* <button
                       className="overflow-hidden whitespace-nowrap rounded-full bg-sky-500 py-2 px-7 text-center text-white"
                       onClick={() => {
                         return updateProfile();
@@ -193,91 +233,190 @@ const AccountPage: NextPage = () => {
                       disabled={loading}
                     >
                       Save
-                    </button>
+                    </button> */}
                   </div>
-                  <ProfileBlock addClass="p-5">
-                    <div className="flex flex-col gap-3">
-                      <div className="flex">
-                        <UploadAvatar image={avatarUrl} newImage={newAvatar} setNewImage={setNewAvatar} />
-                      </div>
-                      <div className="">
-                        <Input
+
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <input
+                      type="submit"
+                      value="save"
+                      className="overflow-hidden whitespace-nowrap rounded-full bg-sky-500 py-2 px-7 text-center text-white"
+                      // disabled={loading}
+                    />
+                    <ProfileBlock addClass="p-5">
+                      <div className="flex flex-col gap-3">
+                        <div className="flex">
+                          <UploadAvatar image={avatarUrl} newImage={newAvatar} setNewImage={setNewAvatar} />
+                        </div>
+                        <div className="">
+                          {/* <Input
                           label="Name"
                           id="name"
                           type="text"
                           value={name}
                           placeholder="Minimum 4 characters"
                           onChange={setUsername}
-                        />
-                      </div>
-                      <div className="">
-                        <Input
+                        /> */}
+                          <div className="flex flex-col">
+                            <label htmlFor={"name"} className="text-sm font-bold text-gray-400">
+                              Name
+                            </label>
+                            <div className="relative flex items-center rounded-lg border-2 bg-slate-50">
+                              <input
+                                id={"name"}
+                                type={"text"}
+                                {...register("name")}
+                                className={`flex-1 rounded-lg bg-slate-50 py-3 px-4 `}
+                                placeholder={"Minimum 4 characters"}
+                              />
+                            </div>
+                          </div>
+                          <p className="text-red-400">
+                            <ErrorMessage errors={errors} name="name" />
+                          </p>
+                        </div>
+                        <div className="">
+                          {/* <Input
                           label="Username"
                           id="username"
                           type="text"
                           value={username}
                           placeholder="Minimum 4 characters"
                           onChange={setUsername}
-                        />
-                        <Link href={`/${username}`} legacyBehavior>
-                          <a className="mt-1 inline-block text-sm text-blue-500 underline hover:no-underline">
-                            https://nftotaku.xyz/{username}
-                          </a>
-                        </Link>
-                      </div>
-                      <div className="">
-                        <Input
+                        /> */}
+                          <div className="flex flex-col">
+                            <label htmlFor={"username"} className="text-sm font-bold text-gray-400">
+                              Username
+                            </label>
+                            <div className="relative flex items-center rounded-lg border-2 bg-slate-50">
+                              <input
+                                id={"username"}
+                                type={"text"}
+                                {...register("username")}
+                                className={`flex-1 rounded-lg bg-slate-50 py-3 px-4 `}
+                                placeholder={"Minimum 4 characters"}
+                              />
+                            </div>
+                          </div>
+                          <p className="text-red-500">
+                            <ErrorMessage errors={errors} name="username" />
+                          </p>
+                          <Link href={`/${authProfile?.username}`} legacyBehavior>
+                            <a className="mt-1 inline-block text-sm text-blue-500 underline hover:no-underline">
+                              https://nftotaku.xyz/{authProfile?.username}
+                            </a>
+                          </Link>
+                        </div>
+                        <div className="">
+                          {/* <Input
                           label="Email"
                           id="email"
                           type="email"
                           placeholder="sample@nftotaku.xyz"
                           value={email}
                           onChange={setEmail}
-                        />
+                        /> */}
+                          <div className="flex flex-col">
+                            <label htmlFor={"email"} className="text-sm font-bold text-gray-400">
+                              Email
+                            </label>
+                            <div className="relative flex items-center rounded-lg border-2 bg-slate-50">
+                              <input
+                                id={"email"}
+                                type={"email"}
+                                {...register("email", { pattern: /^\S+@\S+$/i, required: true })}
+                                className={`flex-1 rounded-lg bg-slate-50 py-3 px-4 `}
+                                placeholder={"sample@nftotaku.xyz"}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="">
+                          {/* <Textarea
+                            id="description"
+                            label="Description"
+                            required={false}
+                            maxLength={200}
+                            text={description}
+                            setText={setDescription}
+                          /> */}
+                          <div className="flex flex-col gap-2">
+                            <p className="text-sm font-bold text-gray-400">Description</p>
+                            <div className={`relative`}>
+                              <textarea
+                                id={"description"}
+                                className={`min-h-[150px] w-full rounded-lg border-2 bg-slate-50 px-5 py-3`}
+                                {...register("description", { maxLength: 200 })}
+                                onKeyUp={(e) => {
+                                  countHandler(e);
+                                }}
+                                required={false}
+                                placeholder="Maximum 200 characters"
+                              />
+                              <Count count={count} maxLength={200} property="textarea" />
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div className="">
-                        <Textarea
-                          id="description"
-                          label="Description"
-                          required={false}
-                          maxLength={200}
-                          text={description}
-                          setText={setDescription}
-                        />
-                      </div>
-                    </div>
-                  </ProfileBlock>
-                  <ProfileBlock addClass="p-5">
-                    <div className="flex flex-col gap-3">
-                      <div className="">
-                        <Input
+                    </ProfileBlock>
+                    <ProfileBlock addClass="p-5">
+                      <div className="flex flex-col gap-3">
+                        <div className="">
+                          {/* <Input
                           label="Twitter ID"
                           id="twitter"
                           before="@"
                           type="text"
                           value={twitterId || ""}
                           onChange={setTwitterId}
-                        />
-                      </div>
-                      <div className="">
-                        <Input
+                        /> */}
+                          <div className="flex flex-col">
+                            <label htmlFor={"twitter"} className="text-sm font-bold text-gray-400">
+                              Twitter ID
+                            </label>
+                            <div className="relative flex items-center rounded-lg border-2 bg-slate-50">
+                              <div className="absolute left-3 text-gray-400">@</div>
+                              <input
+                                id={"twitter"}
+                                type={"text"}
+                                {...register("twitter_id")}
+                                className={`flex-1 rounded-lg bg-slate-50 py-3 px-4 pl-10`}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="">
+                          {/* <Input
                           label="Instagram ID"
                           id="instagram"
                           before="@"
                           type="text"
                           value={instagramId || ""}
                           onChange={setInstagramId}
-                        />
+                        /> */}
+                          <div className="flex flex-col">
+                            <label htmlFor={"instagram"} className="text-sm font-bold text-gray-400">
+                              Instagram ID
+                            </label>
+                            <div className="relative flex items-center rounded-lg border-2 bg-slate-50">
+                              <div className="absolute left-3 text-gray-400">@</div>
+                              <input
+                                id={"instagram"}
+                                type={"text"}
+                                {...register("instagram_id")}
+                                className={`flex-1 rounded-lg bg-slate-50 py-3 px-4 pl-10`}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <AccountLinks fields={links} setFields={setLinks} />
                       </div>
-                      <AccountLinks fields={links} setFields={setLinks} />
-                    </div>
-                  </ProfileBlock>
+                    </ProfileBlock>
+                  </form>
                 </div>
               </>
             ) : (
-              <>
-                <p className="text-gray-400">Please login.</p>
-              </>
+              <p className="text-gray-400">Please login.</p>
             )}
           </div>
         </ArticleArea>

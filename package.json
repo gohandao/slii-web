@@ -53,6 +53,8 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@hookform/error-message": "^2.0.1",
+    "@hookform/resolvers": "^2.9.10",
     "@types/await-timeout": "^0.3.1",
     "@types/node": "18.11.18",
     "@types/react": "18.0.27",
@@ -78,6 +80,7 @@
     "prettier": "^2.8.0",
     "prettier-plugin-tailwindcss": "^0.2.0",
     "tailwindcss": "^3.2.4",
-    "typescript": "4.9.4"
+    "typescript": "4.9.4",
+    "yup": "^0.32.11"
   }
 }

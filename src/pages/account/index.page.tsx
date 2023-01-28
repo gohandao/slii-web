@@ -39,7 +39,7 @@ type IFormInput = {
   email: string;
   instagram_id: string;
   label: string;
-  links: LinksField[];
+  links: LinksField[][];
   name: string;
   twitter_id: string;
   username: string;
@@ -52,43 +52,34 @@ type UploadImageProps = {
 };
 
 const schema = yup.object({
-  avatar_url: yup.string().required(),
+  avatar_url: yup.string().required().url(),
   name: yup.string().required().min(4),
   username: yup.string().required().min(4),
   email: yup.string().required().email(),
   description: yup.string().max(200),
   instagram_id: yup.string(),
   twitter_id: yup.string(),
-  // links: yup.array().of(
-  //   yup.object().shape({
-  //     id: yup.string(),
-  //     label: yup.string(),
-  //     value: yup.string(),
-  //   })
-  // ),
+  links: yup.array().of(
+    yup.array().of(
+      yup.object().shape({
+        id: yup.string().uuid(),
+        label: yup.string(),
+        value: yup.string(),
+      })
+    )
+  ),
 });
 
 const AccountPage: NextPage = () => {
   useRedirections();
-  const initial_id = nanoid();
+  const firstInitId = nanoid();
+  const secondInitId = nanoid();
 
   const [authProfile] = useAtom(authProfileAtom);
   const [newAvatar, setNewAvatar] = useState<File>();
   const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [links, setLinks] = useState<LinksField[]>([
-    {
-      id: initial_id,
-      label: "",
-      value: "",
-    },
-  ]);
   const [authUser] = useAtom(authUserAtom);
-
-  // const options = {
-  //   maxSizeMB: 1, // 最大ファイルサイズ
-  //   maxWidthOrHeight: 80, // 最大画像幅もしくは高さ
-  // };
 
   const methods = useForm<IFormInput>({
     resolver: yupResolver(schema),
@@ -100,32 +91,35 @@ const AccountPage: NextPage = () => {
       description: authProfile?.description,
       twitter_id: authProfile?.twitter_id,
       instagram_id: authProfile?.instagram_id,
-      // label: authProfile?.label,
-      // links: [
-      //   {
-      //     id: initial_id,
-      //     label: "",
-      //     value: "",
-      //   },
-      // ],
+      links: [
+        [
+          {
+            id: firstInitId,
+            label: "111",
+            value: "222",
+          },
+          {
+            id: secondInitId,
+            label: "333",
+            value: "444",
+          },
+        ],
+      ],
     },
   });
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    console.log(data);
+    alert("submit");
+    setLoading(true);
     try {
       let new_avatar_url;
-      // let new_background_url;
       if (authUser && authProfile) {
         const { description, instagram_id, label, links, twitter_id, username } = data;
         new_avatar_url = new_avatar_url ? new_avatar_url : authProfile.avatar_url;
-        // if (newBackground) {
-        //   new_background_url = await uploadImage({ image: newBackground, path: "images", storage: "public" });
-        // }
-        // new_background_url = new_background_url ? new_background_url : authProfile.background_url;
         const updates = {
           id: authUser.id,
           avatar_url: new_avatar_url,
-          // background_url: new_background_url,
           description,
           instagram_id,
           links,
@@ -146,12 +140,14 @@ const AccountPage: NextPage = () => {
       }
     } catch (error) {
       if (error instanceof Error) alert(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     if (authProfile && authUser) {
-      const { avatar_url, description, instagram_id, label, links, twitter_id, username, name } = authProfile;
+      const { avatar_url, description, instagram_id, links, twitter_id, username, name } = authProfile;
       methods.reset({
         name,
         username,
@@ -159,8 +155,7 @@ const AccountPage: NextPage = () => {
         avatar_url,
         twitter_id,
         instagram_id,
-        // label,
-        // links,
+        links,
         email: authUser.email,
       });
     }
@@ -211,7 +206,7 @@ const AccountPage: NextPage = () => {
                     <form onSubmit={methods.handleSubmit(onSubmit)}>
                       <input
                         type="submit"
-                        value="save"
+                        value={loading ? "Loading..." : "Save"}
                         className="overflow-hidden whitespace-nowrap rounded-full bg-sky-500 py-2 px-7 text-center text-white"
                         disabled={loading}
                       />
@@ -244,7 +239,7 @@ const AccountPage: NextPage = () => {
                         <div className="flex flex-col gap-3">
                           <Input label="Twitter ID" id="twitter" before="@" type="text" />
                           <Input label="Instagram ID" id="instagram" before="@" type="text" />
-                          {/* <AccountLinks fields={links} setFields={setLinks} /> */}
+                          <AccountLinks />
                         </div>
                       </ProfileBlock>
                     </form>

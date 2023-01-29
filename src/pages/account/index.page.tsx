@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import router from "next/router";
 import { NextSeo } from "next-seo";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { FormProvider, useForm } from "react-hook-form";
 import { IoChevronBackOutline } from "react-icons/io5";
@@ -82,7 +82,6 @@ const AccountPage: NextPage = () => {
   const secondInitId = nanoid();
 
   const [authProfile] = useAtom(authProfileAtom);
-  const [loading, setLoading] = useState<boolean>(false);
   const [authUser] = useAtom(authUserAtom);
 
   const methods = useForm<IFormInput>({
@@ -130,7 +129,6 @@ const AccountPage: NextPage = () => {
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     alert("submit");
     console.log(data);
-    setLoading(true);
     try {
       if (authUser && authProfile) {
         const new_avatar_url = await (async () => {
@@ -163,8 +161,6 @@ const AccountPage: NextPage = () => {
       }
     } catch (error) {
       if (error instanceof Error) alert(error.message);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -218,9 +214,9 @@ const AccountPage: NextPage = () => {
                         </button>
                         <input
                           type="submit"
-                          value={loading ? "Loading..." : "Save"}
+                          value={methods.formState.isSubmitting ? "Loading..." : "Save"}
                           className="overflow-hidden whitespace-nowrap rounded-full bg-sky-500 py-2 px-7 text-center text-white"
-                          disabled={loading}
+                          disabled={methods.formState.isSubmitting}
                         />
                       </div>
 

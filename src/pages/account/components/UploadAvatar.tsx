@@ -4,8 +4,6 @@ import type { FC } from "react";
 import { RiImageAddLine } from "react-icons/ri";
 
 export type Props = {
-  // uploadImages: File[];
-  // setUploadImages: (value: React.SetStateAction<File[]>) => void;
   image?: string;
   newImage?: File;
   setNewImage: (value: React.SetStateAction<File | undefined>) => void;
@@ -16,10 +14,8 @@ const OPTIONS = {
   maxWidthOrHeight: 500, // 最大画像幅もしくは高さ
   maxWidthOrWidth: 500, // 最大画像幅もしくは高さ
 };
-export const UploadAvatar: FC<Props> = ({ image, newImage, setNewImage }) => {
-  // const [images, setImages] = useState<File[]>([]);
-  // const [image, setImage] = useState<File>();
 
+export const UploadAvatar: FC<Props> = ({ image, newImage, setNewImage }) => {
   const handleOnAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     if (e.target.files[0]) {

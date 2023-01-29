@@ -1,3 +1,4 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useAtom } from "jotai";
 import { nanoid } from "nanoid";
 import type { NextPage } from "next";
@@ -5,23 +6,23 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import router from "next/router";
 import { NextSeo } from "next-seo";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import type { SubmitHandler } from "react-hook-form";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
+import * as yup from "yup";
 
 import { Input } from "@/components/elements/Input";
 import { NavButton } from "@/components/elements/NavButton";
 import { Textarea } from "@/components/elements/Textarea";
 import { ArticleArea } from "@/components/layouts/ArticleArea";
 import { SplitLayout } from "@/components/layouts/SplitLayout";
-// import { OptionalInputs } from "@/components/modules/OptionalInputs";
 import { ProfileBlock } from "@/components/modules/ProfileBlock";
 import { useRedirections } from "@/hooks/useRedirections";
 import { supabase } from "@/libs/supabase";
-import { UploadAvatar } from "@/pages/account/components/UploadAvatar";
+import { handleCompressImage, UploadAvatar } from "@/pages/account/components/UploadAvatar";
 import { authProfileAtom, authUserAtom } from "@/state/auth.state";
 import type { LinksField } from "@/types/linksField";
 
@@ -29,16 +30,21 @@ const AccountLinks = dynamic(
   () => {
     return import("@/components/modules/AccountLinks");
   },
-  {
-    ssr: false,
-  }
+  { ssr: false }
 );
 
-interface IFormInput {
-  age: number;
-  firstName: string;
-  lastName: string;
-}
+type IFormInput = {
+  profile_image: FileList;
+  avatar_url: string;
+  name: string;
+  username: string;
+  description: string;
+  links: LinksField[][];
+  twitter_id: string;
+  instagram_id: string;
+  email: string;
+  label: string;
+};
 
 type UploadImageProps = {
   image: File;
@@ -46,57 +52,64 @@ type UploadImageProps = {
   storage: string;
 };
 
+const schema = yup.object({
+  profile_image: yup.mixed().test("fileSize", "File too large", (value) => {
+    console.log(value);
+    if (value) return value[0].size <= 1000000;
+    return true;
+  }),
+  avatar_url: yup.string().required().url(),
+  name: yup.string().required().min(4),
+  username: yup.string().required().min(4),
+  email: yup.string().required().email(),
+  description: yup.string().max(200),
+  instagram_id: yup.string(),
+  twitter_id: yup.string(),
+  links: yup.array().of(
+    yup.array().of(
+      yup.object().shape({
+        id: yup.string().uuid(),
+        label: yup.string(),
+        value: yup.string(),
+      })
+    )
+  ),
+});
+
 const AccountPage: NextPage = () => {
   useRedirections();
-  const initial_id = nanoid();
-  const { handleSubmit, register } = useForm<IFormInput>();
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    return console.log(data);
-  };
+  const firstInitId = nanoid();
+  const secondInitId = nanoid();
 
   const [authProfile] = useAtom(authProfileAtom);
-  const [avatarUrl, setAvatarUrl] = useState<string>("");
-  const [newAvatar, setNewAvatar] = useState<File>();
-  // const [backgroundUrl, setBackgroundUrl] = useState<string>("");
-  // const [newBackground, setNewBackground] = useState<File>();
-  const [label, setLabel] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const [name, setName] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
-  const [twitterId, setTwitterId] = useState<string | null>("");
-  const [instagramId, setInstagramId] = useState<string | null>("");
-  const [links, setLinks] = useState<LinksField[]>([
-    {
-      id: initial_id,
-      label: "",
-      value: "",
-    },
-  ]);
   const [authUser] = useAtom(authUserAtom);
 
-  // const options = {
-  //   maxSizeMB: 1, // 最大ファイルサイズ
-  //   maxWidthOrHeight: 80, // 最大画像幅もしくは高さ
-  // };
-
-  useEffect(() => {
-    if (authUser && typeof authUser.email === "string") {
-      setEmail(authUser.email);
-    }
-    if (authProfile) {
-      setName(authProfile.name);
-      setUsername(authProfile.username);
-      setAvatarUrl(authProfile.avatar_url);
-      // setBackgroundUrl(authProfile.background_url);
-      setLabel(authProfile.label);
-      setDescription(authProfile.description);
-      setTwitterId(authProfile.twitter_id);
-      setInstagramId(authProfile.instagram_id);
-      setLinks(authProfile.links);
-    }
-  }, [authUser, authProfile]);
+  const methods = useForm<IFormInput>({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      avatar_url: authProfile?.avatar_url,
+      name: authProfile?.name,
+      username: authProfile?.username,
+      email: authUser?.email,
+      description: authProfile?.description,
+      twitter_id: authProfile?.twitter_id,
+      instagram_id: authProfile?.instagram_id,
+      links: [
+        [
+          {
+            id: firstInitId,
+            label: "111",
+            value: "222",
+          },
+          {
+            id: secondInitId,
+            label: "333",
+            value: "444",
+          },
+        ],
+      ],
+    },
+  });
 
   const uploadImage = async ({ image, path, storage }: UploadImageProps) => {
     const STORAGE_URL = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_URL;
@@ -110,50 +123,62 @@ const AccountPage: NextPage = () => {
       console.log(error);
       return;
     }
-    const image_url = STORAGE_URL && STORAGE_URL + "/" + storage + "/" + data?.path;
-    return image_url;
+    return `${STORAGE_URL}/${storage}/${data?.path}`;
   };
 
-  const updateProfile = async () => {
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    alert("submit");
+    console.log(data);
     try {
-      setLoading(true);
-      let new_avatar_url;
-      // let new_background_url;
       if (authUser && authProfile) {
-        if (newAvatar) {
-          new_avatar_url = await uploadImage({ image: newAvatar, path: "public", storage: "avatars" });
-        }
-        new_avatar_url = new_avatar_url ? new_avatar_url : authProfile.avatar_url;
-        // if (newBackground) {
-        //   new_background_url = await uploadImage({ image: newBackground, path: "images", storage: "public" });
-        // }
-        // new_background_url = new_background_url ? new_background_url : authProfile.background_url;
+        const new_avatar_url = await (async () => {
+          const avatar_file = await handleCompressImage(authProfile.avatar_url, data.profile_image[0]);
+          return avatar_file
+            ? await uploadImage({ image: avatar_file, path: "public", storage: "avatars" })
+            : authProfile.avatar_url;
+        })();
+        const { description, instagram_id, label, links, twitter_id, username } = data;
         const updates = {
           id: authUser.id,
           avatar_url: new_avatar_url,
-          // background_url: new_background_url,
-          description: description,
-          instagram_id: instagramId,
-          links: links,
-          twitter_id: twitterId,
+          description,
+          links,
+          twitter_id,
+          instagram_id,
           updated_at: new Date(),
-          username: username,
+          username,
         };
-        if (new_avatar_url || description != authProfile.description || label != authProfile.label) {
+        if (new_avatar_url || description !== authProfile.description || label !== authProfile.label) {
           const { error } = await supabase.from("profiles").upsert(updates);
           if (error) {
+            alert("Failed to upload data.");
             toast.error("Failed to upload data.");
           } else {
+            alert("Upload succeeded.");
             toast.success("Upload succeeded.");
           }
         }
       }
     } catch (error) {
       if (error instanceof Error) alert(error.message);
-    } finally {
-      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (authProfile && authUser) {
+      const { avatar_url, description, instagram_id, links, twitter_id, username, name } = authProfile;
+      methods.reset({
+        name,
+        username,
+        description,
+        avatar_url,
+        twitter_id,
+        instagram_id,
+        links,
+        email: authUser.email,
+      });
+    }
+  }, [authProfile, authUser]);
 
   return (
     <div>
@@ -174,110 +199,61 @@ const AccountPage: NextPage = () => {
             {authUser ? (
               <>
                 <div className="flex flex-col gap-[10px]">
-                  <div className="relative z-10 flex items-center justify-between">
-                    <button
-                      className=""
-                      onClick={() => {
-                        return router.back();
-                      }}
-                    >
-                      <NavButton>
-                        <IoChevronBackOutline />
-                      </NavButton>
-                    </button>
-                    <button
-                      className="overflow-hidden whitespace-nowrap rounded-full bg-sky-500 py-2 px-7 text-center text-white"
-                      onClick={() => {
-                        return updateProfile();
-                      }}
-                      disabled={loading}
-                    >
-                      Save
-                    </button>
-                  </div>
-                  <ProfileBlock addClass="p-5">
-                    <div className="flex flex-col gap-3">
-                      <div className="flex">
-                        <UploadAvatar image={avatarUrl} newImage={newAvatar} setNewImage={setNewAvatar} />
-                      </div>
-                      <div className="">
-                        <Input
-                          label="Name"
-                          id="name"
-                          type="text"
-                          value={name}
-                          placeholder="Minimum 4 characters"
-                          onChange={setUsername}
+                  <FormProvider {...methods}>
+                    <form onSubmit={methods.handleSubmit(onSubmit)}>
+                      <div className="relative z-10 my-2 flex items-center justify-between">
+                        <button
+                          className=""
+                          onClick={() => {
+                            return router.back();
+                          }}
+                        >
+                          <NavButton>
+                            <IoChevronBackOutline />
+                          </NavButton>
+                        </button>
+                        <input
+                          type="submit"
+                          value={methods.formState.isSubmitting ? "Loading..." : "Save"}
+                          className="overflow-hidden whitespace-nowrap rounded-full bg-sky-500 py-2 px-7 text-center text-white"
+                          disabled={methods.formState.isSubmitting}
                         />
                       </div>
-                      <div className="">
-                        <Input
-                          label="Username"
-                          id="username"
-                          type="text"
-                          value={username}
-                          placeholder="Minimum 4 characters"
-                          onChange={setUsername}
-                        />
-                        <Link href={`/${username}`} legacyBehavior>
-                          <a className="mt-1 inline-block text-sm text-blue-500 underline hover:no-underline">
-                            https://nftotaku.xyz/{username}
-                          </a>
-                        </Link>
-                      </div>
-                      <div className="">
-                        <Input
-                          label="Email"
-                          id="email"
-                          type="email"
-                          placeholder="sample@nftotaku.xyz"
-                          value={email}
-                          onChange={setEmail}
-                        />
-                      </div>
-                      <div className="">
-                        <Textarea
-                          id="description"
-                          label="Description"
-                          required={false}
-                          maxLength={200}
-                          text={description}
-                          setText={setDescription}
-                        />
-                      </div>
-                    </div>
-                  </ProfileBlock>
-                  <ProfileBlock addClass="p-5">
-                    <div className="flex flex-col gap-3">
-                      <div className="">
-                        <Input
-                          label="Twitter ID"
-                          id="twitter"
-                          before="@"
-                          type="text"
-                          value={twitterId || ""}
-                          onChange={setTwitterId}
-                        />
-                      </div>
-                      <div className="">
-                        <Input
-                          label="Instagram ID"
-                          id="instagram"
-                          before="@"
-                          type="text"
-                          value={instagramId || ""}
-                          onChange={setInstagramId}
-                        />
-                      </div>
-                      <AccountLinks fields={links} setFields={setLinks} />
-                    </div>
-                  </ProfileBlock>
+
+                      <ProfileBlock addClass="p-5">
+                        <div className="flex flex-col gap-3">
+                          <div className="flex">
+                            <UploadAvatar image={authProfile?.avatar_url} />
+                          </div>
+                          <Input label="Name" id="name" type="text" placeholder="Minimum 4 characters" />
+                          <Input label="Username" id="username" type="text" placeholder="Minimum 4 characters" />
+                          <Link href={`/${authProfile?.username}`} legacyBehavior>
+                            <a className="mt-1 inline-block text-sm text-blue-500 underline hover:no-underline">
+                              https://nftotaku.xyz/{authProfile?.username}
+                            </a>
+                          </Link>
+                          <Input label="Email" id="email" type="email" placeholder="sample@nftotaku.xyz" />
+                          <Textarea
+                            id="description"
+                            label="Description"
+                            maxLength={200}
+                            initDescriptionLength={authProfile?.description.length}
+                          />
+                        </div>
+                      </ProfileBlock>
+                      <ProfileBlock addClass="p-5">
+                        <div className="flex flex-col gap-3">
+                          <Input label="Twitter ID" id="twitter" before="@" type="text" />
+                          <Input label="Instagram ID" id="instagram" before="@" type="text" />
+                          <AccountLinks />
+                        </div>
+                      </ProfileBlock>
+                    </form>
+                  </FormProvider>
                 </div>
               </>
             ) : (
-              <>
-                <p className="text-gray-400">Please login.</p>
-              </>
+              <p className="text-gray-400">Please login.</p>
             )}
           </div>
         </ArticleArea>

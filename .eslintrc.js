@@ -80,11 +80,11 @@ module.exports = {
     // インポート順序を強制
     "simple-import-sort/imports": "error",
     // オブジェクトキーのソート（ id は一番先頭に配置）
-    "sort-keys-custom-order/object-keys": ["error", { orderedKeys: ["id"] }],
+    // "sort-keys-custom-order/object-keys": ["error", { orderedKeys: ["id"] }],
 
     /* others */
     // typeキーのソート（ id は一番先頭に配置）
-    "sort-keys-custom-order/type-keys": ["error", { orderedKeys: ["id"] }],
+    // "sort-keys-custom-order/type-keys": ["error", { orderedKeys: ["id"] }],
     // 使用していないインポートを禁止
     "unused-imports/no-unused-imports": "error",
   },

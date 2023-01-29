@@ -11,6 +11,7 @@ import type { SubmitHandler } from "react-hook-form";
 import { FormProvider, useForm } from "react-hook-form";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
 import * as yup from "yup";
 
 import { Input } from "@/components/elements/Input";
@@ -18,11 +19,10 @@ import { NavButton } from "@/components/elements/NavButton";
 import { Textarea } from "@/components/elements/Textarea";
 import { ArticleArea } from "@/components/layouts/ArticleArea";
 import { SplitLayout } from "@/components/layouts/SplitLayout";
-// import { OptionalInputs } from "@/components/modules/OptionalInputs";
 import { ProfileBlock } from "@/components/modules/ProfileBlock";
 import { useRedirections } from "@/hooks/useRedirections";
 import { supabase } from "@/libs/supabase";
-import { UploadAvatar } from "@/pages/account/components/UploadAvatar";
+import { handleCompressImage, UploadAvatar } from "@/pages/account/components/UploadAvatar";
 import { authProfileAtom, authUserAtom } from "@/state/auth.state";
 import type { LinksField } from "@/types/linksField";
 
@@ -34,6 +34,7 @@ const AccountLinks = dynamic(
 );
 
 type IFormInput = {
+  profile_image: FileList;
   avatar_url: string;
   name: string;
   username: string;
@@ -52,6 +53,11 @@ type UploadImageProps = {
 };
 
 const schema = yup.object({
+  profile_image: yup.mixed().test("fileSize", "File too large", (value) => {
+    console.log(value);
+    if (value) return value[0].size <= 1000000;
+    return true;
+  }),
   avatar_url: yup.string().required().url(),
   name: yup.string().required().min(4),
   username: yup.string().required().min(4),
@@ -76,8 +82,6 @@ const AccountPage: NextPage = () => {
   const secondInitId = nanoid();
 
   const [authProfile] = useAtom(authProfileAtom);
-  const [newAvatar, setNewAvatar] = useState<File>();
-  const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [authUser] = useAtom(authUserAtom);
 
@@ -108,15 +112,34 @@ const AccountPage: NextPage = () => {
     },
   });
 
+  const uploadImage = async ({ image, path, storage }: UploadImageProps) => {
+    const STORAGE_URL = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_URL;
+    const uuid = uuidv4();
+    const { data, error } = await supabase.storage.from(storage).upload(`${path}/${uuid}.jpg`, image, {
+      cacheControl: "3600",
+      upsert: false,
+    });
+    if (error) {
+      console.log("error at uploadImage");
+      console.log(error);
+      return;
+    }
+    return `${STORAGE_URL}/${storage}/${data?.path}`;
+  };
+
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    console.log(data);
     alert("submit");
+    console.log(data);
     setLoading(true);
     try {
-      let new_avatar_url;
       if (authUser && authProfile) {
+        const new_avatar_url = await (async () => {
+          const avatar_file = await handleCompressImage(authProfile.avatar_url, data.profile_image[0]);
+          return avatar_file
+            ? await uploadImage({ image: avatar_file, path: "public", storage: "avatars" })
+            : authProfile.avatar_url;
+        })();
         const { description, instagram_id, label, links, twitter_id, username } = data;
-        new_avatar_url = new_avatar_url ? new_avatar_url : authProfile.avatar_url;
         const updates = {
           id: authUser.id,
           avatar_url: new_avatar_url,
@@ -127,7 +150,7 @@ const AccountPage: NextPage = () => {
           updated_at: new Date(),
           username,
         };
-        if (new_avatar_url || description != authProfile.description || label != authProfile.label) {
+        if (new_avatar_url || description !== authProfile.description || label !== authProfile.label) {
           const { error } = await supabase.from("profiles").upsert(updates);
           if (error) {
             alert("Failed to upload data.");
@@ -159,7 +182,7 @@ const AccountPage: NextPage = () => {
         email: authUser.email,
       });
     }
-  }, [authProfile]);
+  }, [authProfile, authUser]);
 
   return (
     <div>
@@ -180,44 +203,31 @@ const AccountPage: NextPage = () => {
             {authUser ? (
               <>
                 <div className="flex flex-col gap-[10px]">
-                  <div className="relative z-10 flex items-center justify-between">
-                    <button
-                      className=""
-                      onClick={() => {
-                        return router.back();
-                      }}
-                    >
-                      <NavButton>
-                        <IoChevronBackOutline />
-                      </NavButton>
-                    </button>
-                    {/* <button
-                      className="overflow-hidden whitespace-nowrap rounded-full bg-sky-500 py-2 px-7 text-center text-white"
-                      onClick={() => {
-                        return updateProfile();
-                      }}
-                      disabled={loading}
-                    >
-                      Save
-                    </button> */}
-                  </div>
-
                   <FormProvider {...methods}>
                     <form onSubmit={methods.handleSubmit(onSubmit)}>
-                      <input
-                        type="submit"
-                        value={loading ? "Loading..." : "Save"}
-                        className="overflow-hidden whitespace-nowrap rounded-full bg-sky-500 py-2 px-7 text-center text-white"
-                        disabled={loading}
-                      />
+                      <div className="relative z-10 my-2 flex items-center justify-between">
+                        <button
+                          className=""
+                          onClick={() => {
+                            return router.back();
+                          }}
+                        >
+                          <NavButton>
+                            <IoChevronBackOutline />
+                          </NavButton>
+                        </button>
+                        <input
+                          type="submit"
+                          value={loading ? "Loading..." : "Save"}
+                          className="overflow-hidden whitespace-nowrap rounded-full bg-sky-500 py-2 px-7 text-center text-white"
+                          disabled={loading}
+                        />
+                      </div>
+
                       <ProfileBlock addClass="p-5">
                         <div className="flex flex-col gap-3">
                           <div className="flex">
-                            <UploadAvatar
-                              image={authProfile?.avatar_url}
-                              newImage={newAvatar}
-                              setNewImage={setNewAvatar}
-                            />
+                            <UploadAvatar image={authProfile?.avatar_url} />
                           </div>
                           <Input label="Name" id="name" type="text" placeholder="Minimum 4 characters" />
                           <Input label="Username" id="username" type="text" placeholder="Minimum 4 characters" />

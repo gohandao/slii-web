@@ -1,33 +1,39 @@
 import imageCompression from "browser-image-compression";
 import Image from "next/image";
 import type { FC } from "react";
+import { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import { RiImageAddLine } from "react-icons/ri";
 
 export type Props = {
   image?: string;
-  newImage?: File;
-  setNewImage: (value: React.SetStateAction<File | undefined>) => void;
 };
 
-const OPTIONS = {
+export const OPTIONS = {
   maxSizeMB: 1, // 最大ファイルサイズ
   maxWidthOrHeight: 500, // 最大画像幅もしくは高さ
   maxWidthOrWidth: 500, // 最大画像幅もしくは高さ
 };
 
-export const UploadAvatar: FC<Props> = ({ image, newImage, setNewImage }) => {
-  const handleOnAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
-    if (e.target.files[0]) {
-      const current_prototype = image && Object.getPrototypeOf(image);
-      const new_prototype = Object.getPrototypeOf(e.target.files[0]);
-      if (new_prototype !== current_prototype) {
-        const compressed_file = await imageCompression(e.target.files[0], OPTIONS);
-        setNewImage(compressed_file);
-      }
+export const handleCompressImage = async (image: string, file: File) => {
+  if (!file) return;
+  const current_prototype = image && (Object.getPrototypeOf(image) as File);
+  const new_prototype = Object.getPrototypeOf(file) as File;
+  if (new_prototype !== current_prototype) {
+    return await imageCompression(file, OPTIONS);
+  }
+};
+
+export const UploadAvatar: FC<Props> = ({ image }) => {
+  const [newImage, setNewImage] = useState<File | undefined>(undefined);
+  const { register, watch } = useFormContext();
+
+  const val = watch("profile_image");
+  useEffect(() => {
+    if (typeof val?.[0] !== undefined) {
+      setNewImage(val?.[0]);
     }
-    // setImages([...images, ...e.target.files]);
-  };
+  }, [val]);
 
   // const handleOnRemoveImage = (index: number) => {
   //   // 選択した画像は削除可能
@@ -42,12 +48,9 @@ export const UploadAvatar: FC<Props> = ({ image, newImage, setNewImage }) => {
         <input
           id="profile_image"
           type="file"
-          // multiple
           accept="image/*,.png,.jpg,.jpeg,.gif"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            return handleOnAddImage(e);
-          }}
           className="hidden"
+          {...register("profile_image")}
         />
         <div className="relative flex h-[56px] w-[56px] items-center justify-center overflow-hidden rounded-full border-2 border-gray-300 bg-gray-200">
           {image && !newImage ? (

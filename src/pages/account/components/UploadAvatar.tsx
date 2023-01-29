@@ -11,7 +11,7 @@ export type Props = {
   setNewImage: (value: React.SetStateAction<File | undefined>) => void;
 };
 
-const options = {
+const OPTIONS = {
   maxSizeMB: 1, // 最大ファイルサイズ
   maxWidthOrHeight: 500, // 最大画像幅もしくは高さ
   maxWidthOrWidth: 500, // 最大画像幅もしくは高さ
@@ -25,8 +25,8 @@ export const UploadAvatar: FC<Props> = ({ image, newImage, setNewImage }) => {
     if (e.target.files[0]) {
       const current_prototype = image && Object.getPrototypeOf(image);
       const new_prototype = Object.getPrototypeOf(e.target.files[0]);
-      if (new_prototype != current_prototype) {
-        const compressed_file = await imageCompression(e.target.files[0], options);
+      if (new_prototype !== current_prototype) {
+        const compressed_file = await imageCompression(e.target.files[0], OPTIONS);
         setNewImage(compressed_file);
       }
     }
@@ -99,20 +99,7 @@ export const UploadAvatar: FC<Props> = ({ image, newImage, setNewImage }) => {
               </>
             )
           )}
-          {!image && !newImage && (
-            <Image
-              src="/default-avatar.jpg"
-              alt=""
-              loading="lazy"
-              className=""
-              quality={40}
-              fill
-              sizes="300px"
-              style={{
-                objectFit: "cover",
-              }}
-            />
-          )}
+          {!image && !newImage && <DefaultImage />}
           <div className="absolute left-0 top-0 right-0 bottom-0 m-auto flex items-center justify-center">
             <div className="translucent-black flex h-8 w-8 items-center justify-center rounded-full">
               <RiImageAddLine className="text-sm text-gray-300" />
@@ -149,5 +136,22 @@ export const UploadAvatar: FC<Props> = ({ image, newImage, setNewImage }) => {
         </div>
           ))*/}
     </div>
+  );
+};
+
+const DefaultImage: FC = () => {
+  return (
+    <Image
+      src="/default-avatar.jpg"
+      alt=""
+      loading="lazy"
+      className=""
+      quality={40}
+      fill
+      sizes="300px"
+      style={{
+        objectFit: "cover",
+      }}
+    />
   );
 };

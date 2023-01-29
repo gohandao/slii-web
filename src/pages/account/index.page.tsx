@@ -35,14 +35,14 @@ const AccountLinks = dynamic(
 
 type IFormInput = {
   avatar_url: string;
-  description: string;
-  email: string;
-  instagram_id: string;
-  label: string;
-  links: LinksField[][];
   name: string;
-  twitter_id: string;
   username: string;
+  description: string;
+  links: LinksField[][];
+  twitter_id: string;
+  instagram_id: string;
+  email: string;
+  label: string;
 };
 
 type UploadImageProps = {
@@ -121,9 +121,9 @@ const AccountPage: NextPage = () => {
           id: authUser.id,
           avatar_url: new_avatar_url,
           description,
-          instagram_id,
           links,
           twitter_id,
+          instagram_id,
           updated_at: new Date(),
           username,
         };

@@ -92,7 +92,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   };
 
   useEffect(() => {
-    if (!authUser) !authProfile && getAuthProfile();
+    if (!authUser && !authProfile) {
+      getAuthProfile();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authUser]);
 

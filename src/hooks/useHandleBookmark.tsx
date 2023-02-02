@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 
 import { supabase } from "@/libs/supabase";
@@ -8,7 +8,7 @@ import { loginModalAtom } from "../state/utilities.state";
 import type { Bookmark } from "../types/bookmark";
 
 export const useHandleBookmark = (id: string, type: string) => {
-  const [, setLoginModal] = useAtom(loginModalAtom);
+  const setLoginModal = useSetAtom(loginModalAtom);
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const creator_username = (() => {
     if (type === "creator") return id;

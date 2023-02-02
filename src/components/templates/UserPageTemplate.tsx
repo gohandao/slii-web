@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { MdVerified } from "react-icons/md";
@@ -38,7 +38,7 @@ export const UserPageTemplate = ({ collectionList, creatorList }: Props) => {
   const [collections, setCollections] = useState<Collection[]>([]);
   const [creatorsCount, setCreatorsCount] = useState<number>(0);
   const [collectionsCount, setCollectionsCount] = useState<number>(0);
-  const [, setUserProfile] = useAtom(userProfileAtom);
+  const setUserProfile = useSetAtom(userProfileAtom);
   const { userProfile } = useGetUserProfile();
   if (userProfile && username !== userProfile.username) {
     setUserProfile(undefined);

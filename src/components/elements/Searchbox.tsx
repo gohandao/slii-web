@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { useRouter } from "next/router";
 import type { FC } from "react";
 import { useEffect, useState } from "react";
@@ -15,7 +15,7 @@ export const Searchbox: FC<Props> = ({ id }) => {
   const { order, screen, search, sort, tab, term, type } = router.query;
   const [value, setValue] = useState<string>("");
 
-  const [, setKeyword] = useAtom(keywordAtom);
+  const setKeyword = useSetAtom(keywordAtom);
 
   useEffect(() => {
     if (search) {

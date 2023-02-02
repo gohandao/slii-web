@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import Image from "next/image";
 import Link from "next/link";
 import type { FC } from "react";
@@ -9,7 +9,7 @@ import { loginModalAtom, showSideNavigationAtom } from "@/state/utilities.state"
 import { authProfileAtom } from "../../state/auth.state";
 
 export const Header: FC = () => {
-  const [, setLoginModal] = useAtom(loginModalAtom);
+  const setLoginModal = useSetAtom(loginModalAtom);
   const [authProfile] = useAtom(authProfileAtom);
   const [showSideNavigation, setShowSideNavigation] = useAtom(showSideNavigationAtom);
 

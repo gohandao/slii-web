@@ -2,7 +2,7 @@ import "@/styles/style.scss";
 import "@/styles/globals.scss";
 import "react-toastify/dist/ReactToastify.css";
 
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { nanoid } from "nanoid";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -25,10 +25,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const [authUser, setAuthUser] = useAtom(authUserAtom);
   const { session } = useGetSession();
   if (session) setAuthUser(session.user);
-  const [, setAuthBookmarks] = useAtom(authBookmarksAtom);
+  const setAuthBookmarks = useSetAtom(authBookmarksAtom);
   const { authBookmarks } = useGetAuthBookmarks();
   if (authBookmarks) setAuthBookmarks(authBookmarks);
-  const [, setAuthUpvotes] = useAtom(authUpvotesAtom);
+  const setAuthUpvotes = useSetAtom(authUpvotesAtom);
   const { authUpvotes } = useGetAuthUpvotes();
   if (authUpvotes) setAuthUpvotes(authUpvotes);
   const [authProfile, setAuthProfile] = useAtom(authProfileAtom);

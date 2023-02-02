@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -24,7 +24,7 @@ export const ProfilePageTemplate = ({}: Props) => {
   const router = useRouter();
   const { tab, username } = router.query;
   const [creators, setCreators] = useState<Creator[]>([]);
-  const [, setUserProfile] = useAtom(userProfileAtom);
+  const setUserProfile = useSetAtom(userProfileAtom);
   const { userProfile } = useGetUserProfile();
   if (userProfile && username !== userProfile.username) {
     setUserProfile(undefined);

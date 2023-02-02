@@ -1,12 +1,12 @@
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import { useRouter } from "next/router";
 
-import { authUserAtom } from "@/state/auth.state";
+import { readOnlyAuthUserAtom } from "@/state/auth.state";
 
 export const useRedirections = () => {
   const router = useRouter();
   const currentPath = router.pathname;
-  const [authUser] = useAtom(authUserAtom);
+  const authUser = useAtomValue(readOnlyAuthUserAtom);
   switch (currentPath) {
     case "/account":
       if (!authUser) {

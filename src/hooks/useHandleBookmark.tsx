@@ -1,8 +1,8 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 
 import { supabase } from "@/libs/supabase";
-import { authBookmarksAtom, authUserAtom } from "@/state/auth.state";
+import { authBookmarksAtom, readOnlyAuthUserAtom } from "@/state/auth.state";
 
 import { loginModalAtom } from "../state/utilities.state";
 import type { Bookmark } from "../types/bookmark";
@@ -17,7 +17,7 @@ export const useHandleBookmark = (id: string, type: string) => {
     if (type === "collection") return id;
   })();
 
-  const [user] = useAtom(authUserAtom);
+  const user = useAtomValue(readOnlyAuthUserAtom);
   const [bookmarks, setBookmarks] = useAtom(authBookmarksAtom);
 
   useEffect(() => {

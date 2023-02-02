@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { nanoid } from "nanoid";
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
@@ -6,8 +6,6 @@ import Link from "next/link";
 import router from "next/router";
 import { NextSeo } from "next-seo";
 import { useEffect, useState } from "react";
-import type { SubmitHandler } from "react-hook-form";
-import { useForm } from "react-hook-form";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
@@ -22,7 +20,7 @@ import { ProfileBlock } from "@/components/modules/ProfileBlock";
 import { useRedirections } from "@/hooks/useRedirections";
 import { supabase } from "@/libs/supabase";
 import { UploadAvatar } from "@/pages/account/components/UploadAvatar";
-import { authProfileAtom, authUserAtom } from "@/state/auth.state";
+import { authProfileAtom, readOnlyAuthUserAtom } from "@/state/auth.state";
 import type { LinksField } from "@/types/linksField";
 
 const AccountLinks = dynamic(
@@ -49,10 +47,6 @@ type UploadImageProps = {
 const AccountPage: NextPage = () => {
   useRedirections();
   const initial_id = nanoid();
-  const { handleSubmit, register } = useForm<IFormInput>();
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    return console.log(data);
-  };
 
   const [authProfile] = useAtom(authProfileAtom);
   const [avatarUrl, setAvatarUrl] = useState<string>("");
@@ -74,7 +68,7 @@ const AccountPage: NextPage = () => {
       value: "",
     },
   ]);
-  const [authUser] = useAtom(authUserAtom);
+  const authUser = useAtomValue(readOnlyAuthUserAtom);
 
   // const options = {
   //   maxSizeMB: 1, // 最大ファイルサイズ

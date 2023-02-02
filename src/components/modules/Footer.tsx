@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import Link from "next/link";
 import type { FC, ReactNode } from "react";
 import { BiHomeAlt, BiPurchaseTagAlt } from "react-icons/bi";
@@ -14,8 +14,8 @@ type FixedMenuProps = {
   href: string;
 };
 
-const buttonClass =
-  "relative flex justify-center gap-4 items-center w-[240px] max-w-[90%] mx-auto py-2 border-2 text-sm text-center rounded transition-all duration-200 transform";
+// const buttonClass =
+//   "relative flex justify-center gap-4 items-center w-[240px] max-w-[90%] mx-auto py-2 border-2 text-sm text-center rounded transition-all duration-200 transform";
 
 const FixedMenu: FC<FixedMenuProps> = ({ blank = false, children, href }) => {
   if (!blank) {
@@ -40,7 +40,8 @@ const FixedMenu: FC<FixedMenuProps> = ({ blank = false, children, href }) => {
   }
 };
 export const Footer: FC = () => {
-  const [authUser] = useAtom(authUserAtom);
+  // const [authUser] = useAtom(authUserAtom);
+  const authUser = useAtomValue(authUserAtom);
 
   return (
     <>

@@ -2,11 +2,11 @@ import { useAtomValue } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 
 import { supabase } from "@/libs/supabase";
-import { readOnlyAuthUserAtom } from "@/state/auth.state";
+import { getAuthUserAtom } from "@/state/auth.state";
 import type { Upvote } from "@/types/upvote";
 
 export const useGetAuthUpvotes = () => {
-  const authUser = useAtomValue(readOnlyAuthUserAtom);
+  const authUser = useAtomValue(getAuthUserAtom);
   const [authUpvotes, setAuthUpvotes] = useState<Upvote[]>([]);
 
   const getAuthUpvotes = useCallback(async () => {

@@ -6,12 +6,13 @@ import { toast } from "react-toastify";
 
 import { BaseModal } from "@/components/modules/BaseModal";
 import { supabase } from "@/libs/supabase";
-import { authUserAtom } from "@/state/auth.state";
 import { loginModalAtom } from "@/state/utilities.state";
+
+import { setAuthUserAtom } from "../../state/auth.state";
 
 export const LoginModal: FC = () => {
   const [loginModal, setLoginModal] = useAtom(loginModalAtom);
-  const setAuthUser = useSetAtom(authUserAtom);
+  const setAuthUser = useSetAtom(setAuthUserAtom);
   const [loading, setLoading] = useState<boolean>(false);
   const [isChecking, setIsChecking] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");

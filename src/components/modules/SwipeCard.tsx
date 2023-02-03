@@ -4,7 +4,7 @@ import type { FC } from "react";
 
 import type { TCard } from "@/types/tinder";
 
-export const SwipeCard: FC<TCard> = ({ above_tags, below_tags, image, label, name, path, verified = false }) => {
+export const SwipeCard: FC<TCard> = ({ above_tags, below_tags, image, name, path, type, verified = false }) => {
   const image_src = image ? image : "/dummy-nft.jpg";
   return (
     <Link href={path} className="flex flex-col rounded-lg bg-white p-2">
@@ -38,12 +38,12 @@ export const SwipeCard: FC<TCard> = ({ above_tags, below_tags, image, label, nam
         )}
         <Image src={image_src} className="w-full rounded-t-lg" alt="" fill sizes="300px" />
       </div>
-      <div className="bg-gradient flex flex-col rounded-b-lg px-5 py-5 text-white">
-        <h2 className="w-full text-2xl font-bold">
+      <div className="bg-gradient flex flex-col rounded-b-lg px-5 py-3 text-white">
+        <h2 className="w-full text-xl font-bold line-clamp-1">
           {name}
           {verified && "icon"}
         </h2>
-        <p className="text-sm font-medium opacity-50">{label}</p>
+        <p className="text-xs font-medium capitalize opacity-50">{type}</p>
       </div>
     </Link>
   );

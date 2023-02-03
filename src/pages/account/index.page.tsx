@@ -6,6 +6,8 @@ import Link from "next/link";
 import router from "next/router";
 import { NextSeo } from "next-seo";
 import { useEffect, useState } from "react";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
@@ -47,6 +49,10 @@ type UploadImageProps = {
 const AccountPage: NextPage = () => {
   useRedirections();
   const initial_id = nanoid();
+  const { handleSubmit, register } = useForm<IFormInput>();
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    return console.log(data);
+  };
 
   const [authProfile] = useAtom(authProfileAtom);
   const [avatarUrl, setAvatarUrl] = useState<string>("");
@@ -82,7 +88,7 @@ const AccountPage: NextPage = () => {
     if (authProfile) {
       setName(authProfile.name);
       setUsername(authProfile.username);
-      setAvatarUrl(authProfile.avatar_url);
+      setAvatarUrl(authProfile.avatar_url ? authProfile.avatar_url : "/default-avatar.jpg");
       // setBackgroundUrl(authProfile.background_url);
       setLabel(authProfile.label);
       setDescription(authProfile.description);

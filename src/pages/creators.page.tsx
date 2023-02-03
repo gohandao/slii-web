@@ -3,7 +3,7 @@ import { NextSeo } from "next-seo";
 
 import { IndexPageTemplate } from "@/components/templates/IndexPageTemplate";
 
-const ColectionsPage: NextPage = () => {
+const CreatorsPage: NextPage = () => {
   return (
     <div>
       <NextSeo
@@ -26,4 +26,4 @@ const ColectionsPage: NextPage = () => {
   );
 };
 
-export default ColectionsPage;
+export default CreatorsPage;

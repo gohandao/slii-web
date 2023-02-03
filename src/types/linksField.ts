@@ -1,5 +1,5 @@
 export type LinksField = {
   id: string;
   label: string;
-  value: string;
+  url: string;
 };

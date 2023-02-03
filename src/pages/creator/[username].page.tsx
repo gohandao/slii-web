@@ -33,8 +33,9 @@ const CreatorIndex: NextPage<Props> = ({ description, ogImageUrl, title }) => {
       const props = {
         username: username as string,
       };
-      const { data } = await getCreators(props);
+      const { count, data } = await getCreators(props);
       data && setCreator(data as Creator);
+      count && setCount(count as number);
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps

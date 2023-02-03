@@ -117,6 +117,8 @@ export const BasePageTemplate: FC<Props> = ({
                       return (
                         <div className="" key={index}>
                           <LikedItem
+                            id={collection.slug}
+                            type="collection"
                             image={collection.image_url}
                             label="100 ETH"
                             likeHandler={() => {
@@ -147,6 +149,8 @@ export const BasePageTemplate: FC<Props> = ({
                       return (
                         <div className="" key={index}>
                           <LikedItem
+                            id={nft.id}
+                            type="nft"
                             image={nft.image_thumbnail_url}
                             label="10 ETH"
                             likeHandler={() => {

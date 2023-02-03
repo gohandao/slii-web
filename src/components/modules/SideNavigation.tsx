@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -13,7 +13,7 @@ import { authProfileAtom } from "@/state/auth.state";
 import { showSideNavigationAtom } from "@/state/utilities.state";
 
 export const SideNavigation = () => {
-  const [, setShowSideNavigation] = useAtom(showSideNavigationAtom);
+  const setShowSideNavigation = useSetAtom(showSideNavigationAtom);
 
   const router = useRouter();
   const currentPath = router.asPath;

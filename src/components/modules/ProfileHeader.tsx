@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -27,7 +27,7 @@ export const ProfileHeader: FC = () => {
   const { order, page, search, sort, tab, term, type, username } = router.query;
   console.log(order, page, search, sort, tab, term, type, username);
 
-  const [, setUserProfile] = useAtom(userProfileAtom);
+  const setUserProfile = useSetAtom(userProfileAtom);
   const { userProfile } = useGetUserProfile();
   if (userProfile && username !== userProfile.username) {
     setUserProfile(undefined);

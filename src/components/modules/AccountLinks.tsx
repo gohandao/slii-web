@@ -32,7 +32,7 @@ export default function AccountLinks({ fields, setFields }: Props) {
             {
               id: new_id,
               label: "",
-              value: "",
+              url: "",
             },
           ];
           setFields(() => {
@@ -89,10 +89,10 @@ export default function AccountLinks({ fields, setFields }: Props) {
                         placeholder="https://example.com"
                         id={`${item.id}_value`}
                         name={`${item.id}_value`}
-                        value={item.value}
+                        value={item.url}
                         onChange={(e) => {
                           const new_fields = fields;
-                          new_fields[index].value = e.target.value;
+                          new_fields[index].url = e.target.value;
                           setFields(() => {
                             return [...new_fields];
                           });

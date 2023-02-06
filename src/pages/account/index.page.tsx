@@ -3,11 +3,9 @@ import { nanoid } from "nanoid";
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import router from "next/router";
+import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 import { useEffect, useState } from "react";
-import type { SubmitHandler } from "react-hook-form";
-import { useForm } from "react-hook-form";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
@@ -17,7 +15,6 @@ import { NavButton } from "@/components/elements/NavButton";
 import { Textarea } from "@/components/elements/Textarea";
 import { ArticleArea } from "@/components/layouts/ArticleArea";
 import { SplitLayout } from "@/components/layouts/SplitLayout";
-// import { OptionalInputs } from "@/components/modules/OptionalInputs";
 import { ProfileBlock } from "@/components/modules/ProfileBlock";
 import { useRedirections } from "@/hooks/useRedirections";
 import { supabase } from "@/libs/supabase";
@@ -34,11 +31,11 @@ const AccountLinks = dynamic(
   }
 );
 
-interface IFormInput {
-  age: number;
-  firstName: string;
-  lastName: string;
-}
+// interface IFormInput {
+//   age: number;
+//   firstName: string;
+//   lastName: string;
+// }
 
 type UploadImageProps = {
   image: File;
@@ -47,12 +44,14 @@ type UploadImageProps = {
 };
 
 const AccountPage: NextPage = () => {
+  const router = useRouter();
+  const isReady = router.isReady;
   useRedirections();
   const initial_id = nanoid();
-  const { handleSubmit, register } = useForm<IFormInput>();
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    return console.log(data);
-  };
+  // const { handleSubmit, register } = useForm<IFormInput>();
+  // const onSubmit: SubmitHandler<IFormInput> = (data) => {
+  //   return console.log(data);
+  // };
 
   const [authProfile] = useAtom(authProfileAtom);
   const [avatarUrl, setAvatarUrl] = useState<string>("");
@@ -71,7 +70,7 @@ const AccountPage: NextPage = () => {
     {
       id: initial_id,
       label: "",
-      value: "",
+      url: "",
     },
   ]);
   const [authUser] = useAtom(authUserAtom);
@@ -88,7 +87,7 @@ const AccountPage: NextPage = () => {
     if (authProfile) {
       setName(authProfile.name);
       setUsername(authProfile.username);
-      setAvatarUrl(authProfile.avatar_url);
+      setAvatarUrl(authProfile.avatar_url ? authProfile.avatar_url : "/default-avatar.jpg");
       // setBackgroundUrl(authProfile.background_url);
       setLabel(authProfile.label);
       setDescription(authProfile.description);
@@ -178,7 +177,7 @@ const AccountPage: NextPage = () => {
                     <button
                       className=""
                       onClick={() => {
-                        return router.back();
+                        return isReady && router.back();
                       }}
                     >
                       <NavButton>

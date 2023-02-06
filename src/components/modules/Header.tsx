@@ -16,7 +16,7 @@ export const Header: FC = () => {
   const avatar_src = authProfile?.avatar_url ? authProfile.avatar_url : "/default-avatar.jpg";
 
   return (
-    <header className="relative z-10 h-[68px] w-full py-3">
+    <header className="relative z-40 h-[68px] w-full py-3">
       <div className="fixed right-0 top-3 mx-auto flex w-full flex-row-reverse items-center justify-between px-5 lg:w-[calc(100%-320px)]">
         <div className="relative flex items-center gap-5">
           {!authProfile && (
@@ -24,14 +24,14 @@ export const Header: FC = () => {
               onClick={() => {
                 setLoginModal(true);
               }}
-              className="mt-[1px] flex items-center justify-center rounded-full border-2 border-sky-500 bg-white py-1 px-5 font-bold text-sky-500 shadow-lg shadow-gray-100 transition-all duration-300 hover:bg-sky-500 hover:text-white"
+              className="mt-[1px] flex items-center justify-center rounded-full border-2 border-sky-500 bg-white py-1 px-5 font-bold text-sky-500 shadow transition-all duration-300 hover:bg-sky-500 hover:text-white"
             >
               Login
             </button>
           )}
           <Link
             href="https://google.com"
-            className="relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white font-bold text-gray-900 shadow-lg shadow-gray-100 lg:h-[44px] lg:w-[44px] "
+            className="relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white font-bold text-gray-900 shadow lg:h-[44px] lg:w-[44px] "
             target="_blank"
             rel="noreferrer"
           >
@@ -39,16 +39,14 @@ export const Header: FC = () => {
             <FaBell />
           </Link>
         </div>
-        {authProfile && (
-          <button
-            onClick={() => {
-              setShowSideNavigation(!showSideNavigation);
-            }}
-            className="relative flex h-8 w-8 overflow-hidden rounded-full shadow-lg lg:hidden"
-          >
-            <Image src={avatar_src} fill alt="avatar" />
-          </button>
-        )}
+        <button
+          onClick={() => {
+            setShowSideNavigation(!showSideNavigation);
+          }}
+          className="relative flex h-8 w-8 overflow-hidden rounded-full shadow lg:hidden"
+        >
+          <Image src={avatar_src} fill alt="avatar" />
+        </button>
       </div>
     </header>
   );

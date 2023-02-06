@@ -6,6 +6,10 @@ import { NextSeo } from "next-seo";
 
 import { SplitLayout } from "@/components/layouts/SplitLayout";
 import { ProfilePageTemplate } from "@/components/templates/ProfilePageTemplate";
+import { useGetUserBookmarks } from "@/hooks/useGetUserBookmarks";
+import { useGetUserHiddens } from "@/hooks/useGetUserHiddens";
+import { useGetUserProfile } from "@/hooks/useGetUserProfile";
+import { useGetUserUpvotes } from "@/hooks/useGetUserUpvotes";
 import { supabase } from "@/libs/supabase";
 
 type Props = {
@@ -16,6 +20,10 @@ type Props = {
 const UserPage: NextPage<Props> = ({ description, ogImageUrl, title }) => {
   const router = useRouter();
   const { username } = router.query;
+  useGetUserProfile();
+  useGetUserUpvotes();
+  useGetUserBookmarks();
+  useGetUserHiddens();
 
   return (
     <>

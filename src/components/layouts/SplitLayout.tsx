@@ -14,7 +14,6 @@ type Props = {
 export const SplitLayout = ({ children }: Props) => {
   useRedirections();
   const [showSideNavigation] = useAtom(showSideNavigationAtom);
-
   const navToggleClass = showSideNavigation ? "left-0" : "-left-[320px]";
   return (
     <div className="flex h-full min-h-screen flex-col">

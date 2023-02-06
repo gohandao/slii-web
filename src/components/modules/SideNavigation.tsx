@@ -9,18 +9,24 @@ import { HiHome } from "react-icons/hi";
 
 import { CloseButton } from "@/components/elements/CloseButton";
 import { ProfileCount } from "@/components/modules/ProfileCount";
-import { authProfileAtom } from "@/state/auth.state";
+import { authBookmarksAtom, authProfileAtom, authUpvotesAtom } from "@/state/auth.state";
 import { showSideNavigationAtom } from "@/state/utilities.state";
 
 export const SideNavigation = () => {
   const [, setShowSideNavigation] = useAtom(showSideNavigationAtom);
 
   const router = useRouter();
-  const currentPath = router.asPath;
+  const currentPath = router.pathname;
+  const currentAsPath = router.asPath;
   const [authProfile] = useAtom(authProfileAtom);
+  const [authUpvotes] = useAtom(authUpvotesAtom);
+  const [authBookmarks] = useAtom(authBookmarksAtom);
+
+  const liked_count = authUpvotes ? authUpvotes.length : 0;
+  const stars_count = authBookmarks ? authBookmarks.length : 0;
   const avatar_url = authProfile?.avatar_url ? authProfile.avatar_url : "/default-avatar.jpg";
   const name = authProfile ? authProfile.name : "Guest";
-  const username = authProfile ? authProfile.username : "not_login";
+  const username = authProfile ? authProfile.username : "guest";
   type Menu = {
     icon: JSX.Element;
     path: string;
@@ -29,7 +35,7 @@ export const SideNavigation = () => {
 
   const menus = [
     { icon: <HiHome />, path: "/", text: "Home" },
-    { icon: <FaUserAlt />, path: `/${authProfile ? authProfile.username : "sample"}`, text: "Profile" },
+    { icon: <FaUserAlt />, path: `/${authProfile ? authProfile.username : "guest"}`, text: "Profile" },
     { icon: <BsGearFill />, path: "/settings", text: "Settings" },
   ] as Menu[];
   return (
@@ -51,20 +57,23 @@ export const SideNavigation = () => {
               </button>
             </div>
             <div className="flex flex-col">
-              <p className="text-xl font-bold text-sky-800">{name}</p>
-              <p className="text-sm font-medium text-sky-800 opacity-50">@{username}</p>
+              <p className="text-xl font-bold text-sky-800 line-clamp-1">{name}</p>
+              <p className="text-sm font-medium text-sky-800 opacity-50 line-clamp-1">@{username}</p>
             </div>
           </div>
           <div className="flex gap-5">
-            <ProfileCount label="Liked" count={327} />
-            <ProfileCount label="Stars" count={18} />
+            <ProfileCount label="Liked" count={liked_count} />
+            <ProfileCount label="Stars" count={stars_count} />
           </div>
         </div>
         <nav>
           <ul className="flex flex-col">
             {menus.map((menu: Menu, index: number) => {
               const status =
-                currentPath == menu.path || (currentPath == "/account" && menu.path == `/${authProfile?.username}`);
+                currentAsPath == menu.path ||
+                (currentPath == "/account" && menu.path == `/${authProfile?.username}`) ||
+                (currentPath == "/creators" && menu.path == `/${authProfile?.username}`) ||
+                (currentPath == "/collections" && menu.path == `/${authProfile?.username}`);
               const border = status ? "bg-sky-500" : "";
               const icon_color = status ? "text-sky-500" : "text-gray-400";
               const text_color = status ? "text-sky-700" : "text-gray-700";

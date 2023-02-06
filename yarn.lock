@@ -6963,10 +6963,9 @@ react-sortablejs@^6.1.4:
     classnames "2.3.1"
     tiny-invariant "1.2.0"
 
-react-tinder-card@^1.6.2:
+"react-tinder-card@ssh://git@github.com:mrgishi/react-tinder-card.git":
   version "1.6.2"
-  resolved "https://registry.yarnpkg.com/react-tinder-card/-/react-tinder-card-1.6.2.tgz#d7ea67691973293ed9e3687fc2763003389c7baa"
-  integrity sha512-jtdgINFQ4bNA7YoqnoS4Z603mYCtrRHVc+K4R6JHuUzjsRsgO7hEooCUXz++HF5WE+fkOHjkuc22w+rxUlkMJw==
+  resolved "ssh://git@github.com:mrgishi/react-tinder-card.git#9093c46dcb813dce483cfcc5f5b7ad8dae87e1f3"
   dependencies:
     p-sleep "^1.1.0"
 

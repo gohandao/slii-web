@@ -9,15 +9,15 @@ import { BasePageScreen } from "@/components/templates/BasePageScreen";
 import { IndexPageTemplate } from "@/components/templates/IndexPageTemplate";
 import { screenModalAtom } from "@/state/utilities.state";
 
-const ColectionsPage: NextPage = () => {
+const CreatorsPage: NextPage = () => {
   const router = useRouter();
   const [screenModal, setScreenModal] = useAtom(screenModalAtom);
-  const { slug } = router.query;
+  const { username } = router.query;
 
   useEffect(() => {
-    slug ? setScreenModal(true) : setScreenModal(false);
+    username ? setScreenModal(true) : setScreenModal(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug]);
+  }, [username]);
 
   return (
     <div>
@@ -43,4 +43,4 @@ const ColectionsPage: NextPage = () => {
   );
 };
 
-export default ColectionsPage;
+export default CreatorsPage;

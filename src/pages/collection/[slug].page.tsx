@@ -3,7 +3,7 @@ import type { ParsedUrlQuery } from "node:querystring";
 import type { GetStaticProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 
-import { BaseLayout } from "@/components/layouts/BaseLayout";
+import { SplitLayout } from "@/components/layouts/SplitLayout";
 import { CollectionScreen } from "@/components/templates/CollectionScreen";
 import { getCollections, supabase } from "@/libs/supabase";
 
@@ -37,9 +37,9 @@ const CollectionIndex: NextPage<Props> = (props) => {
           url: process.env.NEXT_PUBLIC_SITE_URL + `/${slug}`,
         }}
       />
-      <BaseLayout>
+      <SplitLayout>
         <CollectionScreen />
-      </BaseLayout>
+      </SplitLayout>
     </>
   );
 };

@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import type { FC, SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import ReactCodeInput from "react-code-input";
@@ -6,31 +6,30 @@ import { toast } from "react-toastify";
 
 import { BaseModal } from "@/components/modules/BaseModal";
 import { supabase } from "@/libs/supabase";
-import { authUserAtom } from "@/state/auth.state";
 import { loginModalAtom } from "@/state/utilities.state";
+
+import { setAuthUserAtom } from "../../state/auth.state";
 
 export const LoginModal: FC = () => {
   const [loginModal, setLoginModal] = useAtom(loginModalAtom);
-  const [, setAuthUser] = useAtom(authUserAtom);
-  const [loading, setLoading] = useState(false);
-  const [checking, setChecking] = useState(false);
-  const [email, setEmail] = useState("");
-  const [otpToken, setOtpToken] = useState("");
+  const setAuthUser = useSetAtom(setAuthUserAtom);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isChecking, setIsChecking] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+  const [otpToken, setOtpToken] = useState<string>("");
   const [sentCode, setSentCode] = useState<boolean>(false);
 
   const handleLogin = async (email: string) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      if (supabase) {
-        const { error } = await supabase.auth.signInWithOtp({ email: email });
-        if (error) {
-          toast.error("Failed.");
-          throw error;
-        }
-        setSentCode(true);
-        setOtpToken("");
-        toast.success("We sent verification code!");
+      const { error } = await supabase.auth.signInWithOtp({ email: email });
+      if (error) {
+        toast.error("Failed.");
+        throw error;
       }
+      setSentCode(true);
+      setOtpToken("");
+      toast.success("We sent verification code!");
     } catch (error) {
       //alert(error.error_description || error.message)
     } finally {
@@ -39,28 +38,26 @@ export const LoginModal: FC = () => {
   };
 
   const handleVerify = async () => {
+    setIsChecking(true);
     try {
-      setChecking(true);
-      if (supabase) {
-        const {
-          data: { user },
-        } = await supabase.auth.verifyOtp({
-          email: email,
-          token: otpToken,
-          type: "magiclink",
-        });
-        if (!user) {
-          toast.error("Login failed.");
-        } else {
-          setAuthUser(user);
-          toast.success("Login success!");
-        }
-        setLoginModal(false);
+      const {
+        data: { user },
+      } = await supabase.auth.verifyOtp({
+        email: email,
+        token: otpToken,
+        type: "magiclink",
+      });
+      if (!user) {
+        toast.error("Login failed.");
+      } else {
+        setAuthUser(user);
+        toast.success("Login success!");
       }
-    } catch (error: any) {
-      console.log(error.error_description || error.message);
+      setLoginModal(false);
+    } catch (error) {
+      if (error instanceof Error) console.log(error.message);
     } finally {
-      setChecking(false);
+      setIsChecking(false);
     }
   };
 
@@ -124,9 +121,9 @@ export const LoginModal: FC = () => {
                     handleVerify();
                   }}
                   className="block rounded bg-blue-500 px-10 py-3 text-center text-blue-100"
-                  disabled={checking}
+                  disabled={isChecking}
                 >
-                  <span>{checking ? "Checking" : "Login"}</span>
+                  <span>{isChecking ? "Checking" : "Login"}</span>
                 </button>
               </div>
             </div>

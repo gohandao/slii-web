@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { nanoid } from "nanoid";
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
@@ -20,7 +20,7 @@ import { ProfileBlock } from "@/components/modules/ProfileBlock";
 import { useRedirections } from "@/hooks/useRedirections";
 import { supabase } from "@/libs/supabase";
 import { UploadAvatar } from "@/pages/account/components/UploadAvatar";
-import { authProfileAtom, authUserAtom } from "@/state/auth.state";
+import { authProfileAtom, getAuthUserAtom } from "@/state/auth.state";
 import type { LinksField } from "@/types/linksField";
 
 const AccountLinks = dynamic(
@@ -68,7 +68,7 @@ const AccountPage: NextPage = () => {
       value: "",
     },
   ]);
-  const [authUser] = useAtom(authUserAtom);
+  const authUser = useAtomValue(getAuthUserAtom);
 
   // const options = {
   //   maxSizeMB: 1, // 最大ファイルサイズ

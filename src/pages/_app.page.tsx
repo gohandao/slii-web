@@ -2,7 +2,7 @@ import "@/styles/style.scss";
 import "@/styles/globals.scss";
 import "react-toastify/dist/ReactToastify.css";
 
-import { useAtom } from "jotai";
+import { Provider, useAtom } from "jotai";
 import { nanoid } from "nanoid";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -128,7 +128,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         }}
       />
       <div className={`flex min-h-screen flex-col overflow-hidden bg-[#F8FAFC]`}>
-        <Component {...pageProps} />
+        <Provider>
+          <Component {...pageProps} />
+        </Provider>
       </div>
     </>
   );

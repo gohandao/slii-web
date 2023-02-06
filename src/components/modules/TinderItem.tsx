@@ -289,7 +289,6 @@ export default function TinderItem({ buttonHandlers, cards }: TItem) {
                   console.log("at onCardLeftScreen");
                   return outOfFrame(card.name, index);
                 }}
-                preventSwipe={["right", "left"]}
                 // preventSwipe={["right", "left"]}
               >
                 <div className="card">

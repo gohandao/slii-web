@@ -21,3 +21,7 @@
   - issueに紐づける
   - レビューをしたもののみマージ
 
+- ## ブランチ名
+  - feature/{$issue_number}
+  - refactor/{$issue_number}
+  - fix/{$issue_number}

@@ -3,8 +3,9 @@ import type { ParsedUrlQuery } from "node:querystring";
 import type { GetStaticProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 
-import { BaseLayout } from "@/components/layouts/BaseLayout";
+import { SplitLayout } from "@/components/layouts/SplitLayout";
 import { CollectionScreen } from "@/components/templates/CollectionScreen";
+import { site_name } from "@/constant/seo.const";
 import { getCollections, supabase } from "@/libs/supabase";
 
 type Props = {
@@ -37,9 +38,9 @@ const CollectionIndex: NextPage<Props> = (props) => {
           url: process.env.NEXT_PUBLIC_SITE_URL + `/${slug}`,
         }}
       />
-      <BaseLayout>
+      <SplitLayout>
         <CollectionScreen />
-      </BaseLayout>
+      </SplitLayout>
     </>
   );
 };
@@ -73,7 +74,6 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params
   if (supabase) {
     const { data, error } = await supabase.from("collections").select().eq("slug", slug).single();
     if (error) {
-      console.log("error");
       console.log(error);
     }
     collection = data as any;
@@ -83,26 +83,27 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params
       notFound: true,
     };
   }
-  let baseUrl;
-  if (process.env.NODE_ENV != "test") {
-    baseUrl = {
-      development: "http://localhost:3000",
-      production: "https://nftotaku.xyz",
-    }[process.env.NODE_ENV];
-  }
+  // let baseUrl;
+  // if (process.env.NODE_ENV != "test") {
+  //   baseUrl = {
+  //     development: "http://localhost:3000",
+  //     production: "https://slii.xyz",
+  //   }[process.env.NODE_ENV];
+  // }
 
-  const avatar = collection.image_url ? collection.image_url : "";
-  const background = collection.banner_image_url ? collection.banner_image_url : "";
-  const verified = collection.safelist_request_status == "verified" ? "true" : "";
+  // const avatar = collection.image_url ? collection.image_url : "";
+  // const background = collection.banner_image_url ? collection.banner_image_url : "";
+  // const verified = collection.safelist_request_status == "verified" ? "true" : "";
 
   return {
     props: {
       description: `${collection.name} is a NFT collection created by ${collection.creator_username}.`,
       // OGP画像は絶対URLで記述する必要があります
-      ogImageUrl: `${baseUrl}/api/ogp?title=${slug}&page=collections&type=user&avatar=${avatar}&background=${background}&verified=${verified}`,
+      ogImageUrl: process.env.NEXT_PUBLIC_SITE_URL + "/default-ogp.jpg",
+      // ogImageUrl: `${baseUrl}/api/ogp?title=${slug}&page=collections&type=user&avatar=${avatar}&background=${background}&verified=${verified}`,
       revalidate: 600,
       slug: collection.slug,
-      title: `${collection.name} collection by ${collection.creator_username} | NFT OTAKU`,
+      title: `${collection.name} by ${collection.creator_username} | ${site_name}`,
     },
   };
 };

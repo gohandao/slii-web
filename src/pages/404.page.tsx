@@ -2,39 +2,37 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import { NextSeo } from "next-seo";
 
-import { BaseLayout } from "@/components/layouts/BaseLayout";
+import { SplitLayout } from "@/components/layouts/SplitLayout";
+import { site_name } from "@/constant/seo.const";
 
 export const Custom404: NextPage = () => {
   return (
     <div>
       <NextSeo
-        title="404 Error | NFT OTAKU"
+        title={`404 Error | ${site_name}`}
         description="Sorry, we could not find this page."
         openGraph={{
           description: "Sorry, we could not find this page.",
-          title: "404 Error | NFT OTAKU",
+          title: `404 Error | ${site_name}`,
           type: "article",
           url: process.env.NEXT_PUBLIC_SITE_URL + "/404",
         }}
       />
-      <BaseLayout>
-        <section className="flex h-full items-center p-16 text-gray-100">
+      <SplitLayout>
+        <section className="flex h-full items-center">
           <div className="container mx-auto my-8 flex flex-col items-center justify-center px-5">
-            <div className="max-w-md text-center">
-              <h2 className="mb-8 text-9xl font-extrabold text-gray-600">
+            <div className="flex max-w-md flex-col gap-5 text-center">
+              <h2 className="text-9xl font-bold">
                 <span className="sr-only">Error</span>404
               </h2>
-              <p className="text-2xl md:text-3xl">Sorry, we could not find this page.</p>
-              <p className="mt-4 mb-8 text-gray-400">
-                But dont worry, you can find plenty of other things on our homepage.
-              </p>
-              <Link href="/" className="rounded bg-blue-900 px-8 py-3 text-blue-100">
-                Back to homepage
+              <p className="text-lg">Sorry, we could not find this page.</p>
+              <Link href="/" className="inline-block rounded bg-blue-800 px-8 py-3 text-white">
+                Back to Home
               </Link>
             </div>
           </div>
         </section>
-      </BaseLayout>
+      </SplitLayout>
     </div>
   );
 };

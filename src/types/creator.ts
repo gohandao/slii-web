@@ -5,6 +5,7 @@ export type Creator = {
   average_volume?: number | null;
   background?: string;
   background_image?: string;
+  bookmarks_count_function?: number;
   category?: string;
   collections?: string[];
   description?: string;
@@ -24,7 +25,7 @@ export type Creator = {
   updated_at?: Date | null | string | number;
   updatedAt?: Date | null | string | number;
   upvotes_count?: number | null;
-  upvotes_count_function?: number | null;
+  upvotes_count_function?: number;
   username: string;
   verified?: boolean;
   website_url?: string;

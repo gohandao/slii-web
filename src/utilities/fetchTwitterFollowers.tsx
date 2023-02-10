@@ -3,7 +3,7 @@ export const fetchTwitterFollowers = async (twitter_id: string) => {
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
       development: "http://localhost:3000",
-      production: "https://nftotaku.xyz",
+      production: "https://slii.xyz",
     }[process.env.NODE_ENV];
   }
   let twitter_followers;

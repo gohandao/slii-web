@@ -1,7 +1,31 @@
-.font-digital {
+//モーダルでスクロールを可能にする
+.ReactModalPortal {
+    position: relative;
+}
+.ReactModalPortal {
+    z-index: 50;
+}
+.ReactModal__Overlay {
+    overflow-y: auto;
+}
+.font-default {
     font-style: normal;
-    font-weight: 700;
-    font-family: lores-12, sans-serif;
+    font-family: "M PLUS Rounded 1c", sans-serif;
+}
+.card-shadow {
+    box-shadow: 0 4px 20px #eceef0;
+}
+.tinder-custom-card {
+    // transition: all 1s ease-out 0s;
+}
+.tinder-custom-undo-card-position {
+    transform: translate3d(0px, 0px, 0px) rotate(0deg) !important;
+}
+.tinder-custom-undo-card-animation {
+    transition: all .5s ease-out 0s;
+}
+.bg-gradient {
+    background: linear-gradient(92.63deg, #2d74b6 0%, #33d2bf 100%);
 }
 .text-gradient {
     background: linear-gradient(90deg, #4ac7fa 0%, #e649f5 100%);
@@ -20,9 +44,9 @@
             text-fill-color: transparent;
     -webkit-text-fill-color: transparent;
 }
-.bg-gradient {
-    background-image: linear-gradient(to right, #fc5c7d, #6a82fb);
-}
+// .bg-gradient {
+//     background-image: linear-gradient(to right, #fc5c7d, #6a82fb);
+// }
 .bg-gradient-animation {
     background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
     background-size: 400% 400%;
@@ -204,6 +228,7 @@ $stripe02: #1a1a1a;
         color: #222222 !important;
         font-size: 24px !important;
         text-align: center;
+        @apply border border-gray-300 bg-slate-50;
     }
 }
 .translucent-white {

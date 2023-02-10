@@ -2,10 +2,10 @@ import { useAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 
 import { supabase } from "@/libs/supabase";
-import { bookmarkAtom, userAtom } from "@/state/auth.state";
+import { authBookmarksAtom, authUserAtom } from "@/state/auth.state";
+import type { Bookmark } from "@/types/bookmark";
 
 import { loginModalAtom } from "../state/utilities.state";
-import type { Bookmark } from "../types/bookmark";
 
 export const useHandleBookmark = (id: string, type: string) => {
   const [, setLoginModal] = useAtom(loginModalAtom);
@@ -17,15 +17,14 @@ export const useHandleBookmark = (id: string, type: string) => {
     if (type === "collection") return id;
   })();
 
-  const [user] = useAtom(userAtom);
-  const [bookmarks, setBookmarks] = useAtom(bookmarkAtom);
+  const [user] = useAtom(authUserAtom);
+  const [bookmarks, setBookmarks] = useAtom(authBookmarksAtom);
 
   useEffect(() => {
     const fetchBookmarks = async () => {
       const fetchData = async () => {
         const { data, error } = await supabase.from("bookmarks").select("*");
         if (error) {
-          console.log("error at useHandleBookmark");
           console.log(error);
         }
         return data as Bookmark[];
@@ -55,7 +54,6 @@ export const useHandleBookmark = (id: string, type: string) => {
             ])
             .select();
           if (error) {
-            console.log("error at useHandleBookmark");
             console.log(error);
           }
           return data as Bookmark[];

@@ -1,29 +1,30 @@
 import { useAtom } from "jotai";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 
+import { useGetUserId } from "@/hooks/useGetUserId";
 import { supabase } from "@/libs/supabase";
-import { userAtom } from "@/state/auth.state";
+import { userUpvotesAtom } from "@/state/user.state";
 import type { Upvote } from "@/types/upvote";
 
 export const useGetUserUpvotes = () => {
-  const [user] = useAtom(userAtom);
-  const [userUpvotes, setUserUpvotes] = useState<Upvote[]>([]);
+  const { userId } = useGetUserId();
+  const [, setUserUpvotes] = useAtom(userUpvotesAtom);
+
   const getUserUpvotes = useCallback(async () => {
-    if (!user) return;
-    const { data, error } = await supabase.from("upvotes").select().eq("user_id", user.id);
+    if (!userId) return;
+    const { data, error } = await supabase.from("upvotes").select().eq("user_id", userId);
     if (error) {
-      console.log("error at getUserUpvotes");
       console.log(error);
     }
     if (data) {
       data as Upvote[];
       setUserUpvotes(data);
     }
-  }, [user]);
+  }, [setUserUpvotes, userId]);
 
   useEffect(() => {
     getUserUpvotes();
   }, [getUserUpvotes]);
 
-  return { userUpvotes };
+  return;
 };

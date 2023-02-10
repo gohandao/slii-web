@@ -1,79 +1,84 @@
+import { useAtom } from "jotai";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import type { FC } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { AiOutlineTwitter } from "react-icons/ai";
 import { BsThreeDots } from "react-icons/bs";
 import { FaRegFlag } from "react-icons/fa";
-import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { FiArrowLeft, FiEdit } from "react-icons/fi";
 
-import { BookmarkButton } from "@/components/elements/BookmarkButton";
-import { Label } from "@/components/elements/Label";
-import { Stats } from "@/components/elements/Stats";
-import { StatsBox } from "@/components/elements/StatsBox";
-import { UpvoteButton } from "@/components/elements/UpvoteButton";
-import { ProfileDropdown } from "@/components/modules/ProfileDropdown";
-import { ProfileLinks } from "@/components/modules/ProfileLinks";
+import { NavButton } from "@/components/elements/NavButton";
+import { DropdownBox } from "@/components/modules/DropdownBox";
+import { DropdownLink } from "@/components/modules/DropdownLink";
+import { ProfileBlock } from "@/components/modules/ProfileBlock";
+import { ProfileCount } from "@/components/modules/ProfileCount";
+import { ProfileLink } from "@/components/modules/ProfileLink";
+import { authProfileAtom } from "@/state/auth.state";
+import { guestBookmarksAtom, guestHiddensAtom, guestProfileAtom, guestUpvotesAtom } from "@/state/guest.state";
+import { userBookmarksAtom, userHiddensAtom, userProfileAtom, userUpvotesAtom } from "@/state/user.state";
+import { pageHistoryAtom } from "@/state/utilities.state";
+import type { Profile } from "@/types/profile";
 
-type Props = {
-  id: string;
-  avatar_url?: string;
-  background_url?: string;
-  description?: string;
-  discord_members?: number | null;
-  discord_url?: string;
-  instagram_id?: string;
-  links: {
-    address?: string;
-    discord_url?: string;
-    instagram_id?: string;
-    opensea_username?: string;
-    twitter_id?: string;
-    website_url?: string;
-  };
-  page: string;
-  stats?: { field: any; value: any }[];
-  sub_title?: any;
-  tags?: any[];
-  title: any;
-  twitter_followers?: number | null;
-  twitter_id?: string;
-  upvotes_count?: number | null;
-};
-export const ProfileHeader: FC<Props> = ({
-  id,
-  avatar_url,
-  background_url,
-  description,
-  links,
-  page,
-  stats,
-  sub_title,
-  tags,
-  title,
-  upvotes_count,
-}) => {
+export const ProfileHeader: FC = () => {
+  const [authProfile] = useAtom(authProfileAtom);
+  const pageHistory = useAtom(pageHistoryAtom);
+
   const [requestDropdown, setRequestDropdown] = useState<boolean>(false);
-  // const [shareDropdown, setShareDropdown] = useState<boolean>(false);
+  const router = useRouter();
+  const currentPath = router.asPath;
+  const { username } = router.query;
+  const [likedCount, setLikedCount] = useState<number>(0);
+  const [starsCount, setStarsCount] = useState<number>(0);
+  const [hiddensCount, setHiddensCount] = useState<number>(0);
 
-  // let baseUrl = "" as string;
-  // if (process.env.NODE_ENV != "test") {
-  //   baseUrl = {
-  //     development: "http://localhost:3000",
-  //     production: "https://nftotaku.xyz",
-  //   }[process.env.NODE_ENV];
-  // }
+  const [userProfile] = useAtom(userProfileAtom);
+  const [userUpvotes] = useAtom(userUpvotesAtom);
+  const [userBookmarks] = useAtom(userBookmarksAtom);
+  const [userHiddens] = useAtom(userHiddensAtom);
+  const [guestProfile] = useAtom(guestProfileAtom);
+  const [guestUpvotes] = useAtom(guestUpvotesAtom);
+  const [guestBookmarks] = useAtom(guestBookmarksAtom);
+  const [guestHiddens] = useAtom(guestHiddensAtom);
+
+  const currentProfile = userProfile ? userProfile : guestProfile;
+  const currentUpvotes = userProfile ? userUpvotes : guestUpvotes;
+  const currentBookmarks = userProfile ? userBookmarks : guestBookmarks;
+  const currentHiddens = userProfile ? userHiddens : guestHiddens;
+
+  const { avatar_url, description, instagram_id, links, name, twitter_id } = currentProfile as Profile;
+  const dummy_image = "/default-avatar.jpg";
+  const [avatarSrc, setAvatarSrc] = useState<string>(dummy_image);
+
+  useEffect(() => {
+    avatar_url ? setAvatarSrc(avatar_url) : setAvatarSrc(dummy_image);
+  }, [avatar_url]);
+
+  useEffect(() => {
+    setLikedCount(currentUpvotes.length);
+    setStarsCount(currentBookmarks.length);
+    setHiddensCount(currentHiddens.length);
+  }, [currentBookmarks.length, currentUpvotes.length, currentHiddens.length]);
+
+  let baseUrl = "" as string;
+  if (process.env.NODE_ENV != "test") {
+    baseUrl = {
+      development: "http://localhost:3000",
+      production: "https://slii.xyz",
+    }[process.env.NODE_ENV];
+  }
   // シェアボタンのリンク先
-  // const currentUrl = baseUrl + router.asPath;
-  // let twitterShareUrl = "https://twitter.com/intent/tweet";
-  // twitterShareUrl += "?text=" + encodeURIComponent("ツイート内容テキスト");
-  // twitterShareUrl += "&url=" + encodeURIComponent(currentUrl);
-  // const shareMenus = [
-  //   {
-  //     icon: <BsTwitter />,
-  //     title: "Share on Twitter",
-  //     url: twitterShareUrl,
-  //   },
-  // ];
+  const currentUrl = baseUrl + router.asPath;
+  let twitterShareUrl = "https://twitter.com/intent/tweet";
+  twitterShareUrl += "?text=" + encodeURIComponent("");
+  twitterShareUrl += "&url=" + encodeURIComponent(currentUrl);
   const requestMenus = [
+    {
+      icon: <AiOutlineTwitter />,
+      title: "Share on Twitter",
+      url: twitterShareUrl,
+    },
     {
       icon: <FaRegFlag />,
       title: "Report",
@@ -81,40 +86,50 @@ export const ProfileHeader: FC<Props> = ({
     },
   ];
   // description
-  const slicedDescription = description && description.length > 160 ? description.slice(0, 160) + "…" : description;
+  const slicedDescription = description && description.length > 80 ? description.slice(0, 80) + "…" : description;
   const [showDescription, setShowDescription] = useState<boolean>(false);
 
   return (
-    <section>
-      <div className="relative -mt-[68px] flex h-40 w-full overflow-hidden border-x-[10px] border-t-[10px] border-transparent md:h-60 ">
-        <div className="h-full w-full overflow-hidden rounded-lg bg-gray-800 opacity-50">
-          <div className="relative h-full w-full opacity-40">
-            {background_url && background_url != "false" && (
-              <Image
-                src={background_url}
-                alt=""
-                loading="lazy"
-                className="rounded-lg"
-                quality={10}
-                fill
-                sizes="300px"
-                style={{
-                  objectFit: "cover",
-                }}
-              />
-            )}
-          </div>
-        </div>
+    <section className="flex flex-col gap-3">
+      <div className="flex items-center justify-between gap-5">
+        <button
+          onClick={() => {
+            if (pageHistory[0].length > 1 && currentPath !== pageHistory[0][1] && pageHistory[0][1]) {
+              router.push(pageHistory[0][1]);
+            } else {
+              router.push("/");
+            }
+          }}
+          className=""
+        >
+          <NavButton>
+            <FiArrowLeft />
+          </NavButton>
+        </button>
+        <DropdownBox
+          icon={<BsThreeDots className="" />}
+          title="Links"
+          dropdown={requestDropdown}
+          setDropdown={setRequestDropdown}
+        >
+          {requestMenus.map((menu, index) => {
+            return (
+              <div key={index} className="w-full">
+                <DropdownLink title={menu.title} link={menu.url} />
+              </div>
+            );
+          })}
+        </DropdownBox>
       </div>
-      <div className="mx-auto flex flex-col gap-2 px-5 lg:px-8">
-        <div className={`relative -mt-[38px] flex items-end justify-between lg:-mt-[43px]`}>
-          <div className="relative flex">
-            <div
-              className={`relative z-10 flex h-[90px] w-[90px] items-center justify-center overflow-hidden rounded-full border-[5px] border-gray-800 bg-gray-800 lg:h-[100px] lg:w-[100px]`}
-            >
-              {avatar_url && (
+      <div className="flex w-full flex-col gap-4">
+        <ProfileBlock>
+          <div className="flex flex-col gap-1 px-5 pt-5 pb-4">
+            <div className="relative flex items-center gap-4">
+              <div
+                className={`relative z-10 flex h-[52px] w-[52px] items-center justify-center overflow-hidden rounded-full border-2 border-gray-200 bg-gray-300`}
+              >
                 <Image
-                  src={avatar_url}
+                  src={avatarSrc}
                   width={100}
                   height={100}
                   alt=""
@@ -125,109 +140,90 @@ export const ProfileHeader: FC<Props> = ({
                     maxWidth: "100%",
                     objectFit: "cover",
                   }}
-                  onError={(e) => {
-                    e.currentTarget.src = `https://placehold.jp/42/333/ffffff/150x150.png?text=N&css=%7B%22color%22%3A%22%20%23333%22%7D`;
+                  onError={() => {
+                    setAvatarSrc(dummy_image);
+                    // e.currentTarget.src = `https://placehold.jp/42/333/ffffff/150x150.png?text=N&css=%7B%22color%22%3A%22%20%23333%22%7D`;
                   }}
                 />
-              )}
-            </div>
-            <div className={`absolute top-1 left-full ml-2 flex items-center gap-4`}>
-              {links && (
-                <ProfileLinks
-                  address={links.address}
-                  twitter_id={links.twitter_id}
-                  instagram_id={links.instagram_id}
-                  discord_url={links.discord_url}
-                  website_url={links.website_url}
-                  opensea_username={links.opensea_username}
-                />
-              )}
-            </div>
-          </div>
-          <div className="ml-3 flex h-[44px] w-full flex-1 justify-between">
-            <div className=" flex items-center justify-center gap-5 capitalize">
-              <ProfileDropdown
-                icon={<BsThreeDots className="text-gray-500" />}
-                position="left"
-                dropdown={requestDropdown}
-                setDropdown={setRequestDropdown}
-                menus={requestMenus}
-              />
-            </div>
-            <div className="flex items-center gap-3">
-              {page != "user" && (
-                <>
-                  <BookmarkButton id={id} type={page} />
-                  {upvotes_count != null && (
-                    <UpvoteButton id={id} property="default" type={page} count={upvotes_count} />
-                  )}
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-1 justify-between gap-16">
-          <div className="flex flex-col gap-2">
-            <h1 className={`inline items-center justify-center text-2xl font-bold text-gray-100`}>{title}</h1>
-            <div className="flex items-center gap-1 text-xs text-gray-400">{sub_title}</div>
-            {description && tags && (
-              <div className="flex max-w-5xl flex-col gap-1">
-                {description && (
-                  <>
-                    <p className="mt-1 break-all text-justify text-sm text-gray-100 transition-all duration-200 md:text-[15px] ">
-                      {showDescription ? description : slicedDescription}
-                    </p>
-                    {description.length > 80 && (
-                      <>
-                        <button
-                          className="inline-flex items-center gap-1 text-sm text-gray-500"
-                          onClick={() => {
-                            showDescription ? setShowDescription(false) : setShowDescription(true);
-                          }}
-                        >
-                          {showDescription ? (
-                            <>
-                              <MdKeyboardArrowUp />
-                              Show less
-                            </>
-                          ) : (
-                            <>
-                              <MdKeyboardArrowDown />
-                              Show more
-                            </>
-                          )}
-                        </button>
-                      </>
-                    )}
-                  </>
-                )}
-                <div className="-mt-1 flex w-full gap-2">
-                  {tags &&
-                    tags.map((tag, index) => {
-                      return <Label key={index} name={tag} type="creator" />;
-                    })}
-                </div>
               </div>
+              <div className="flex flex-1 flex-col">
+                <h1
+                  className={`inline items-center justify-center text-lg font-bold leading-tight text-sky-800 lg:text-xl`}
+                >
+                  {name ? name : username}
+                </h1>
+                <p className="flex items-center gap-1 text-sm font-normal text-sky-800 opacity-50">
+                  @{username ? username : guestProfile.username}
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              {description && (
+                <div className="flex max-w-5xl flex-col gap-1">
+                  {description && (
+                    <>
+                      <p className="mt-1 whitespace-pre-wrap break-all text-justify text-sm font-normal leading-relaxed text-sky-800 opacity-60 transition-all duration-200 md:text-[15px]">
+                        {showDescription ? description : slicedDescription}
+                      </p>
+                      {description.length > 80 && (
+                        <>
+                          <button
+                            className="inline-flex items-center gap-1 text-sm font-bold text-sky-500"
+                            onClick={() => {
+                              showDescription ? setShowDescription(false) : setShowDescription(true);
+                            }}
+                          >
+                            {showDescription ? <>Show less</> : <>Read more</>}
+                          </button>
+                        </>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center justify-between gap-2 border-t border-slate-100 px-5 py-[14px]">
+            <div className="flex gap-5">
+              <ProfileCount label="Liked" count={likedCount ? likedCount : 0} />
+              <ProfileCount label="Stars" count={starsCount ? starsCount : 0} />
+              {(authProfile && authProfile.username == username) ||
+                (!authProfile && currentPath == "/guest" && (
+                  <ProfileCount label="Hidden(only you)" count={hiddensCount ? hiddensCount : 0} />
+                ))}
+            </div>
+            {authProfile && authProfile.username == username && (
+              <Link
+                href="/account"
+                className="flex h-9 items-center justify-center gap-2 rounded-full bg-gray-900 px-3 text-sm text-white"
+              >
+                <FiEdit />
+                Edit
+              </Link>
             )}
           </div>
-        </div>
-        {stats && stats.length > 0 && (
-          <div className="mt-2 flex flex-wrap items-start gap-4">
-            {stats.map((data, index) => {
-              return (
-                <div key={index}>
-                  <StatsBox>
-                    {data.field && data.value && data.value != 0 && (
-                      <Stats
-                        field={data.field}
-                        value={<div className="flex w-full items-center justify-end gap-2">{data.value}</div>}
-                      />
-                    )}
-                  </StatsBox>
-                </div>
-              );
-            })}
-          </div>
+        </ProfileBlock>
+        {(twitter_id || instagram_id || links.length > 0) && (
+          <ProfileBlock>
+            {twitter_id && (
+              <div className="w-full border-b border-gray-100 px-3 py-2 last:border-b-0">
+                <ProfileLink label={twitter_id} property="twitter" url={`https://twitter.com/${twitter_id}`} />
+              </div>
+            )}
+            {instagram_id && (
+              <div className="w-full border-b border-gray-100 px-3 py-2 last:border-b-0">
+                <ProfileLink label={instagram_id} property="instagram" url={`https://instagram.com/${instagram_id}`} />
+              </div>
+            )}
+            {links &&
+              links.map((link, index) => {
+                return (
+                  <div key={index} className="w-full border-b border-gray-100 px-3 py-2 last:border-b-0">
+                    <ProfileLink label={link.label} property="default" url={`${link.url}`} />
+                  </div>
+                );
+              })}
+          </ProfileBlock>
         )}
       </div>
     </section>

@@ -1,31 +1,31 @@
+import { useAtom } from "jotai";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-import { BaseLayout } from "@/components/layouts/BaseLayout";
 import { ScreenModal } from "@/components/modules/ScreenModal";
-import { CreatorScreen } from "@/components/templates/CreatorScreen";
-import { CreatorsIndexScreen } from "@/components/templates/CreatorsIndexScreen";
+import { BasePageScreen } from "@/components/templates/BasePageScreen";
+import { IndexPageTemplate } from "@/components/templates/IndexPageTemplate";
+import { screenModalAtom } from "@/state/utilities.state";
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const { username } = router.query;
-  const [screenModal, setScreenModal] = useState(false);
+  const [screenModal, setScreenModal] = useAtom(screenModalAtom);
+  const { slug, username } = router.query;
 
   useEffect(() => {
-    setScreenModal(username ? true : false);
+    username || slug ? setScreenModal(true) : setScreenModal(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [username]);
-
+  }, [username, slug]);
   return (
-    <div>
-      <ScreenModal modalIsOpen={screenModal} setModalIsOpen={setScreenModal} path="/">
-        <CreatorScreen />
-      </ScreenModal>
-      <BaseLayout>
-        <CreatorsIndexScreen />
-      </BaseLayout>
-    </div>
+    <>
+      {screenModal && (
+        <ScreenModal>
+          <BasePageScreen />
+        </ScreenModal>
+      )}
+      <IndexPageTemplate />
+    </>
   );
 };
 

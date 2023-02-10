@@ -1,0 +1,29 @@
+import type { User } from "@supabase/gotrue-js";
+import { useEffect, useState } from "react";
+
+import { supabase } from "@/libs/supabase";
+
+export const useGetAuthUser = () => {
+  const [user, setUser] = useState<User>();
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const {
+          data: { user },
+          error,
+        } = await supabase.auth.getUser();
+        if (error) {
+          throw error;
+        }
+        if (user) {
+          setUser(user);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchUser();
+  }, []);
+
+  return { user };
+};

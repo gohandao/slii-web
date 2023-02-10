@@ -26,13 +26,11 @@ export const getNFTListings = async ({ collection_slug }: Props) => {
             return response.json();
           })
           .catch((error) => {
-            console.log("error");
             console.log(error);
           });
         return response;
       };
       for (let index = 0; index < 10000; index++) {
-        console.log(index + "times");
         const data: { listings: any[]; next: string } = await fetchData(next);
         listings = data && data.listings ? [...listings, ...data.listings] : listings;
         next = data && data.next;

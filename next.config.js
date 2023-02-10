@@ -1,5 +1,4 @@
 /** @type {import('next').NextConfig} */
-// const withPWA = require("next-pwa");
 const withPWA = require("next-pwa")({
   dest: "public",
   register: true,
@@ -16,8 +15,9 @@ const nextConfig = withPWA({
       "dl.airtable.com",
       "lh3.googleusercontent.com",
       "openseauserdata.com",
-      "nftotaku.vercel.app",
-      "nftotaku.xyz",
+      "slii.vercel.app",
+      "slii.vercel.app",
+      "slii.xyz",
       "hxyufkirxytryojpqkne.supabase.co",
       "i.seadn.io",
       "storage.googleapis.com",

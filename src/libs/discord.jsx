@@ -10,7 +10,6 @@ export const getDiscordMembers = async (discord_id) => {
       return response.json();
     })
     .catch((error) => {
-      console.log("error");
       console.log(error);
     });
   return response;

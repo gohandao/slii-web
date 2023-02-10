@@ -4,7 +4,12 @@ import type { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 
-import { UserPageTemplate } from "@/components/templates/UserPageTemplate";
+import { SplitLayout } from "@/components/layouts/SplitLayout";
+import { ProfilePageTemplate } from "@/components/templates/ProfilePageTemplate";
+import { site_name } from "@/constant/seo.const";
+import { useGetUserBookmarks } from "@/hooks/useGetUserBookmarks";
+import { useGetUserHiddens } from "@/hooks/useGetUserHiddens";
+import { useGetUserProfile } from "@/hooks/useGetUserProfile";
 import { useGetUserUpvotes } from "@/hooks/useGetUserUpvotes";
 import { supabase } from "@/libs/supabase";
 
@@ -16,14 +21,10 @@ type Props = {
 const UserPage: NextPage<Props> = ({ description, ogImageUrl, title }) => {
   const router = useRouter();
   const { username } = router.query;
-  const { userUpvotes } = useGetUserUpvotes();
-
-  const upvotes_creators = userUpvotes.filter((upvote) => {
-    return upvote.creator_username;
-  });
-  const upvotes_collections = userUpvotes.filter((upvote) => {
-    return upvote.collection_slug;
-  });
+  useGetUserProfile();
+  useGetUserUpvotes();
+  useGetUserBookmarks();
+  useGetUserHiddens();
 
   return (
     <>
@@ -46,7 +47,9 @@ const UserPage: NextPage<Props> = ({ description, ogImageUrl, title }) => {
           url: process.env.NEXT_PUBLIC_SITE_URL + `/${username}`,
         }}
       />
-      <UserPageTemplate property="upvoted" creatorList={upvotes_creators} collectionList={upvotes_collections} />
+      <SplitLayout>
+        <ProfilePageTemplate />
+      </SplitLayout>
     </>
   );
 };
@@ -99,26 +102,27 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params
   }
   const description =
     profile && profile.description ? profile.description.slice(0, 200) : `This is ${username}'s profile page.`;
-  const label = profile && profile.label ? profile.label.slice(0, 20) : `NFT Holder`;
+  // const label = profile && profile.label ? profile.label.slice(0, 20) : `NFT Holder`;
 
-  let baseUrl;
-  if (process.env.NODE_ENV != "test") {
-    baseUrl = {
-      development: "http://localhost:3000",
-      production: "https://nftotaku.xyz",
-    }[process.env.NODE_ENV];
-  }
+  // let baseUrl;
+  // if (process.env.NODE_ENV != "test") {
+  //   baseUrl = {
+  //     development: "http://localhost:3000",
+  //     production: "https://slii.xyz",
+  //   }[process.env.NODE_ENV];
+  // }
 
-  const avatar = profile.avatar_url ? profile.avatar_url : "";
-  const background = profile.background_url ? profile.background_url : "";
+  // const avatar = profile.avatar_url ? profile.avatar_url : "";
+  // const background = profile.background_url ? profile.background_url : "";
 
   return {
     props: {
       description: description,
-      ogImageUrl: `${baseUrl}/api/ogp?title=${username}&label=${label}&type=user&avatar=${avatar}&background=${background}`,
+      ogImageUrl: process.env.NEXT_PUBLIC_SITE_URL + "/default-ogp.jpg",
+      // ogImageUrl: `${baseUrl}/api/ogp?title=${username}&label=${label}&type=user&avatar=${avatar}&background=${background}`,
       revalidate: 10,
       // OGP画像は絶対URLで記述する必要があります
-      title: `${username}'s profile | NFT OTAKU`,
+      title: `${username}'s profile | ${site_name}`,
     },
   };
 };

@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.Toastify {
+    position: fixed !important;
+    z-index: 99999;
+}
+.Toastify__toast {
+    padding: 20px 1em !important;
+    @apply min-h-0 p-4 sm:mb-3 #{!important};
+    & > div {
+        @apply flex p-0 #{!important};
+    }
+}
+//success
+.Toastify__toast--success {
+    @apply bg-green-100 text-green-700 dark:bg-green-200 dark:text-green-800 #{!important};
+    .Toastify__toast-icon {
+        @apply text-green-400 dark:text-green-500 #{!important};
+    }
+    .Toastify__close-button {
+        margin-top: 4px !important;
+        @apply text-green-500 dark:text-green-600 #{!important};
+    }
+}
+//error
+.Toastify__toast--error {
+    @apply bg-red-100 text-red-700 dark:bg-red-200 dark:text-red-800 #{!important};
+    .Toastify__toast-icon {
+        @apply text-red-400 dark:text-red-500 #{!important};
+    }
+    .Toastify__close-button {
+        margin-top: 4px !important;
+        @apply text-red-500 dark:text-red-600 #{!important};
+    }
+}
+//warm
+.Toastify__toast--warm {
+    @apply bg-yellow-100 text-yellow-700 dark:bg-yellow-200 dark:text-yellow-800 #{!important};
+    .Toastify__toast-icon {
+        @apply text-yellow-400 dark:text-yellow-500 #{!important};
+    }
+    .Toastify__close-button {
+        margin-top: 4px !important;
+        @apply text-yellow-500 dark:text-yellow-600 #{!important};
+    }
+}
+//info
+.Toastify__toast--info {
+    @apply bg-blue-100 text-blue-700 dark:bg-blue-200 dark:text-blue-800 #{!important};
+    .Toastify__toast-icon {
+        @apply text-blue-400 dark:text-blue-500 #{!important};
+    }
+    .Toastify__close-button {
+        margin-top: 4px !important;
+        @apply text-blue-500 dark:text-blue-600 #{!important};
+    }
+}

@@ -18,8 +18,8 @@ export const useGetUser = () => {
         if (user) {
           setUser(user);
         }
-      } catch {
-        console.log("error at fetchUser");
+      } catch (error) {
+        console.log(error);
       }
     };
     fetchUser();

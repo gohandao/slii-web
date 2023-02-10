@@ -2,13 +2,17 @@ import { useAtom } from "jotai";
 import type { FC, SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import ReactCodeInput from "react-code-input";
+import { toast } from "react-toastify";
 
+import { LoginButton } from "@/components/elements/LoginButton";
 import { BaseModal } from "@/components/modules/BaseModal";
 import { supabase } from "@/libs/supabase";
+import { authUserAtom } from "@/state/auth.state";
 import { loginModalAtom } from "@/state/utilities.state";
 
 export const LoginModal: FC = () => {
   const [loginModal, setLoginModal] = useAtom(loginModalAtom);
+  const [, setAuthUser] = useAtom(authUserAtom);
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(false);
   const [email, setEmail] = useState("");
@@ -20,9 +24,13 @@ export const LoginModal: FC = () => {
       setLoading(true);
       if (supabase) {
         const { error } = await supabase.auth.signInWithOtp({ email: email });
-        if (error) throw error;
+        if (error) {
+          toast.error("Failed.");
+          throw error;
+        }
         setSentCode(true);
-        alert("We sent verification code!");
+        setOtpToken("");
+        toast.success("We sent verification code!");
       }
     } catch (error) {
       //alert(error.error_description || error.message)
@@ -35,19 +43,25 @@ export const LoginModal: FC = () => {
     try {
       setChecking(true);
       if (supabase) {
-        const { error } = await supabase.auth.verifyOtp({
+        const {
+          data: { user },
+        } = await supabase.auth.verifyOtp({
           email: email,
           token: otpToken,
           type: "magiclink",
         });
-        if (error) throw error;
-        alert("Login success!");
+        if (!user) {
+          toast.error("Login failed.");
+        } else {
+          setAuthUser(user);
+          toast.success("Login success!");
+        }
+        setLoginModal(false);
       }
     } catch (error: any) {
-      alert(error.error_description || error.message);
+      console.log(error.error_description || error.message);
     } finally {
       setChecking(false);
-      location.reload();
     }
   };
 
@@ -60,38 +74,54 @@ export const LoginModal: FC = () => {
 
   return (
     <BaseModal modalIsOpen={loginModal} setModalIsOpen={setLoginModal}>
-      <div className="flex-center mx-auto flex w-full max-w-xl rounded bg-gray-800 px-8 pt-8 pb-10 ">
-        <div className="mx-auto flex w-[400px] flex-col gap-4">
-          <div className="">
-            <h1 className="text-center text-2xl text-gray-100">Login with email </h1>
-            <p className="text-center text-xs text-gray-500">You can login only with email.</p>
+      <div className="flex flex-col py-2">
+        <div className="mx-auto flex w-full max-w-[400px] flex-col gap-4 text-center">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-2xl font-medium text-gray-900">Login easily</h1>
+            <p className="text-sm text-gray-400">You can login with only email.</p>
           </div>
           <input
-            className="block w-full rounded bg-white px-5 py-3"
+            className="block w-full rounded-lg border border-gray-300 bg-slate-50 px-5 py-3 "
             type="email"
             placeholder="Your email"
             name="email"
             autoComplete="email"
             value={email}
             onChange={(e) => {
+              sentCode && setSentCode(false);
               return setEmail(e.target.value);
             }}
           />
-          <div className="flex justify-center">
+          <div className="inline-flex flex-col justify-center gap-2">
             <button
               onClick={(e) => {
                 e.preventDefault();
-                handleLogin(email);
+                !sentCode && handleLogin(email);
               }}
-              className="block rounded bg-blue-500 px-5 py-3 text-center text-blue-100"
+              className=""
               disabled={loading}
             >
-              <span>{loading ? "Sending" : "Send verification code"}</span>
+              <LoginButton property={sentCode}>
+                {loading ? "Sending..." : sentCode ? "Sent code" : "Send verify code"}
+              </LoginButton>
             </button>
+            {sentCode && (
+              <div className="flex justify-center gap-2 text-center text-sm">
+                <p className="text-gray-400">Please check your email box.</p>
+                <button
+                  className="text-sky-500 underline transition-all duration-200 hover:no-underline"
+                  onClick={() => {
+                    setSentCode(false);
+                  }}
+                >
+                  Resend.
+                </button>
+              </div>
+            )}
           </div>
           {sentCode && (
-            <div>
-              <p className="mt-3 mb-1 text-center text-lg text-gray-100">Verify code</p>
+            <div className="flex flex-col gap-2">
+              <p className="mt-3 mb-1 text-center text-xl font-medium text-gray-900">Verify code</p>
               <ReactCodeInput
                 type="number"
                 fields={6}
@@ -104,16 +134,16 @@ export const LoginModal: FC = () => {
                 }}
                 className="no-spin"
               />
-              <div className="mt-4 flex justify-center">
+              <div className="mt-4 inline-flex justify-center">
                 <button
                   onClick={(e) => {
                     e.preventDefault();
                     handleVerify();
                   }}
-                  className="block rounded bg-blue-500 px-10 py-3 text-center text-blue-100"
+                  className=""
                   disabled={checking}
                 >
-                  <span>{checking ? "Checking" : "Login"}</span>
+                  <LoginButton>{checking ? "Checking" : "Login"}</LoginButton>
                 </button>
               </div>
             </div>

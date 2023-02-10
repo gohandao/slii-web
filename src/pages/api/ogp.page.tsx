@@ -5,12 +5,12 @@ import { MdVerified } from "react-icons/md";
 export const config = {
   runtime: "experimental-edge",
 };
-const font = fetch(new URL("../../assets/fonts/lo-res-12-bold-alt-bold.ttf", import.meta.url)).then((res) => {
-  return res.arrayBuffer();
-});
+// const font = fetch(new URL("../../assets/fonts/lo-res-12-bold-alt-bold.ttf", import.meta.url)).then((res) => {
+//   return res.arrayBuffer();
+// });
 
 export const OGPImage = async (req: NextRequest) => {
-  const fontData = await font;
+  // const fontData = await font;
 
   try {
     const { searchParams } = new URL(req.url);
@@ -122,14 +122,14 @@ export const OGPImage = async (req: NextRequest) => {
       {
         width: 1200,
         height: 630,
-        fonts: [
-          {
-            name: "Lo Res 12 Bold Alt",
-            data: fontData,
-            style: "normal",
-            weight: 700,
-          },
-        ],
+        // fonts: [
+        //   {
+        //     name: "Lo Res 12 Bold Alt",
+        //     data: fontData,
+        //     style: "normal",
+        //     weight: 700,
+        //   },
+        // ],
       }
     );
   } catch (e: any) {

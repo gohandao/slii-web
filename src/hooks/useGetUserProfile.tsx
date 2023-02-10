@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect } from "react";
 
 import { supabase } from "@/libs/supabase";
-import { userProfileAtom } from "@/state/utilities.state";
+import { userProfileAtom } from "@/state/user.state";
 import type { Profile } from "@/types/profile";
 
 export const useGetUserProfile = () => {
@@ -11,6 +11,9 @@ export const useGetUserProfile = () => {
   const { username } = router.query;
   const [userProfile, setUserProfile] = useAtom(userProfileAtom);
 
+  if (userProfile && username !== userProfile.username) {
+    setUserProfile(null);
+  }
   const getUserProfile = useCallback(async () => {
     try {
       const { data, error, status } = await supabase

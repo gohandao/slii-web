@@ -1,7 +1,10 @@
+import { useAtom } from "jotai";
 import type { FC, ReactNode } from "react";
+import { useEffect } from "react";
 
 import { CloseButton } from "@/components/elements/CloseButton";
 import { NavButton } from "@/components/elements/NavButton";
+import { overlayAtom } from "@/state/utilities.state";
 
 type Props = {
   children: ReactNode;
@@ -11,9 +14,20 @@ type Props = {
   title?: string;
 };
 export const DropdownBox: FC<Props> = ({ children, dropdown, icon, setDropdown, title }) => {
+  const [, setOverlay] = useAtom(overlayAtom);
+
+  useEffect(() => {
+    if (dropdown) {
+      setOverlay(true);
+    } else {
+      setOverlay(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dropdown]);
+
   return (
     <div className="">
-      {dropdown && <div className="fixed top-0 left-0 z-[9999] h-screen w-screen bg-black bg-opacity-20"></div>}
+      {dropdown && <div className="fixed top-0 left-0 z-[9999] h-screen w-screen bg-black bg-opacity-10"></div>}
       <div className="">
         <button
           onClick={() => {
@@ -29,7 +43,7 @@ export const DropdownBox: FC<Props> = ({ children, dropdown, icon, setDropdown, 
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-bold">{title ? title : "Menu"}</h3>
               <button
-                className="ml-auto flex h-8 w-8 items-center justify-center rounded-full bg-black text-lg text-white"
+                className=""
                 onClick={() => {
                   setDropdown(!dropdown);
                 }}

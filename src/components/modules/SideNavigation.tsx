@@ -2,6 +2,7 @@ import { useAtom } from "jotai";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { AiOutlineLink } from "react-icons/ai";
 import { BsGearFill } from "react-icons/bs";
 import { FaUserAlt } from "react-icons/fa";
@@ -9,27 +10,45 @@ import { HiHome } from "react-icons/hi";
 
 import { CloseButton } from "@/components/elements/CloseButton";
 import { ProfileCount } from "@/components/modules/ProfileCount";
-import { authProfileAtom } from "@/state/auth.state";
+import { authBookmarksAtom, authProfileAtom, authUpvotesAtom, authUserAtom } from "@/state/auth.state";
+import { guestBookmarksAtom, guestProfileAtom, guestUpvotesAtom } from "@/state/guest.state";
 import { showSideNavigationAtom } from "@/state/utilities.state";
 
 export const SideNavigation = () => {
   const [, setShowSideNavigation] = useAtom(showSideNavigationAtom);
 
   const router = useRouter();
-  const currentPath = router.asPath;
+  const currentPath = router.pathname;
+  const currentAsPath = router.asPath;
+  const [authUser] = useAtom(authUserAtom);
   const [authProfile] = useAtom(authProfileAtom);
+  const [authUpvotes] = useAtom(authUpvotesAtom);
+  const [authBookmarks] = useAtom(authBookmarksAtom);
+  const [guestProfile] = useAtom(guestProfileAtom);
+  const [guestUpvotes] = useAtom(guestUpvotesAtom);
+  const [guestBookmarks] = useAtom(guestBookmarksAtom);
+  const [likedCount, setLikedCount] = useState<number>(0);
+  const [starsCount, setStarsCount] = useState<number>(0);
+
   const avatar_url = authProfile?.avatar_url ? authProfile.avatar_url : "/default-avatar.jpg";
-  const name = authProfile ? authProfile.name : "Guest";
-  const username = authProfile ? authProfile.username : "not_login";
+
+  useEffect(() => {
+    setLikedCount(authUser ? authUpvotes.length : guestUpvotes.length);
+    setStarsCount(authUser ? authBookmarks.length : guestBookmarks.length);
+  }, [authBookmarks.length, authUpvotes.length, authUser, guestBookmarks.length, guestUpvotes.length]);
+
+  const name = authProfile ? authProfile.name : guestProfile.name;
+  const username = authProfile ? authProfile.username : guestProfile.username;
   type Menu = {
     icon: JSX.Element;
     path: string;
     text: string;
   };
 
+  const accountPath = `/${authProfile ? authProfile.username : guestProfile.username}`;
   const menus = [
     { icon: <HiHome />, path: "/", text: "Home" },
-    { icon: <FaUserAlt />, path: `/${authProfile ? authProfile.username : "sample"}`, text: "Profile" },
+    { icon: <FaUserAlt />, path: accountPath, text: "Profile" },
     { icon: <BsGearFill />, path: "/settings", text: "Settings" },
   ] as Menu[];
   return (
@@ -51,20 +70,24 @@ export const SideNavigation = () => {
               </button>
             </div>
             <div className="flex flex-col">
-              <p className="text-xl font-bold text-sky-800">{name}</p>
-              <p className="text-sm font-medium text-sky-800 opacity-50">@{username}</p>
+              <p className="text-xl font-bold text-sky-800 line-clamp-1">{name}</p>
+              <p className="text-sm font-medium text-sky-800 opacity-50 line-clamp-1">@{username}</p>
             </div>
           </div>
           <div className="flex gap-5">
-            <ProfileCount label="Liked" count={327} />
-            <ProfileCount label="Stars" count={18} />
+            <ProfileCount label="Liked" count={likedCount} />
+            <ProfileCount label="Stars" count={starsCount} />
           </div>
         </div>
         <nav>
           <ul className="flex flex-col">
             {menus.map((menu: Menu, index: number) => {
               const status =
-                currentPath == menu.path || (currentPath == "/account" && menu.path == `/${authProfile?.username}`);
+                currentAsPath == menu.path ||
+                (currentPath == "/account" && menu.path == accountPath) ||
+                (currentPath == "/" && menu.path == `/`) ||
+                (currentPath == "/creators" && menu.path == `/`) ||
+                (currentPath == "/collections" && menu.path == `/`);
               const border = status ? "bg-sky-500" : "";
               const icon_color = status ? "text-sky-500" : "text-gray-400";
               const text_color = status ? "text-sky-700" : "text-gray-700";
@@ -91,7 +114,7 @@ export const SideNavigation = () => {
       </div>
       <div className="mt-auto flex flex-col gap-1">
         <a
-          href="https://www.google.com/"
+          href="https://iktakagishi.notion.site/Privacy-Policy-0a7bde5ad0e945ff81e9a2dff48c8c62"
           className="flex cursor-pointer items-center gap-2 font-normal text-sky-700 underline transition-all duration-200 hover:no-underline"
           target="_blank"
           rel="noreferrer"
@@ -100,7 +123,7 @@ export const SideNavigation = () => {
           Privacy policy
         </a>
         <a
-          href="https://www.google.com/"
+          href="https://discord.gg/CCwTrB2k6r"
           className="flex cursor-pointer items-center gap-2 font-normal text-sky-700 underline transition-all duration-200 hover:no-underline"
           target="_blank"
           rel="noreferrer"

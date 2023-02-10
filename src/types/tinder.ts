@@ -3,13 +3,15 @@ export type TItem = {
   cards: TCard[];
 };
 export type TCard = {
+  id: string;
   above_tags?: string[];
   below_tags?: string[];
   image?: string;
-  label?: string;
   name: string;
   order?: number;
   path: string;
+  type: string;
+  upvotes_count: number;
   verified?: boolean;
 };
 export type TButtons = {

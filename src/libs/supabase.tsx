@@ -276,11 +276,9 @@ export const getNFTs = async (props: NFTsFilterProps) => {
   });
   const slugsFilter = slugs ? `.in("collection_slug", [${slugsArray}])` : "";
   const filter = `supabase.from("random_nfts").select("*", { count: "exact" })${slugsFilter}${limitFilter}`;
-  console.log("filter");
-  console.log(filter);
+
   const { count, data, error } = await eval(filter);
   if (error) {
-    console.log("error at getNFTs");
     console.log(error);
   }
   return { count, data };

@@ -1,44 +1,48 @@
+import { useAtom } from "jotai";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-import { BaseLayout } from "@/components/layouts/BaseLayout";
 import { ScreenModal } from "@/components/modules/ScreenModal";
-import { CollectionScreen } from "@/components/templates/CollectionScreen";
-import { CollectionsIndexScreen } from "@/components/templates/CollectionsIndexScreen";
+import { BasePageScreen } from "@/components/templates/BasePageScreen";
+import { IndexPageTemplate } from "@/components/templates/IndexPageTemplate";
+import { site_name } from "@/constant/seo.const";
+import { screenModalAtom } from "@/state/utilities.state";
 
-const CollectionsPage: NextPage = () => {
+const ColectionsPage: NextPage = () => {
   const router = useRouter();
+  const [screenModal, setScreenModal] = useAtom(screenModalAtom);
   const { slug } = router.query;
-  const [screenModal, setScreenModal] = useState(false);
 
   useEffect(() => {
-    setScreenModal(slug ? true : false);
+    slug ? setScreenModal(true) : setScreenModal(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
+
   return (
     <div>
       <NextSeo
-        title="All NFT Collections in Japan | NFT OTAKU"
-        description="Find NFT colllections created by Japanese NFT artists and projects."
+        title={`Discover NFT Collections in Japan | ${site_name}`}
+        description="You can easily find your favorite NFT colllections created by Japanese NFT artists and projects."
         openGraph={{
-          description: "Find NFT colllections created by Japanese NFT artists and projects.",
-          title: "All NFT Collections in Japan | NFT OTAKU",
+          description:
+            "You can easily find your favorite NFT colllections created by Japanese NFT artists and projects.",
+          title: `Discover NFT Collections in Japan | ${site_name}`,
           type: "article",
           url: process.env.NEXT_PUBLIC_SITE_URL + "/collections",
         }}
       />
       <div>
-        <ScreenModal modalIsOpen={screenModal} setModalIsOpen={setScreenModal} path="/collections">
-          <CollectionScreen />
-        </ScreenModal>
-        <BaseLayout>
-          <CollectionsIndexScreen />
-        </BaseLayout>
+        {screenModal && (
+          <ScreenModal>
+            <BasePageScreen />
+          </ScreenModal>
+        )}
+        <IndexPageTemplate />
       </div>
     </div>
   );
 };
 
-export default CollectionsPage;
+export default ColectionsPage;

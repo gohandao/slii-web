@@ -3,7 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import type { FC } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { AiOutlineTwitter } from "react-icons/ai";
 import { BsThreeDots } from "react-icons/bs";
 import { FaRegFlag } from "react-icons/fa";
 import { FiArrowLeft, FiEdit } from "react-icons/fi";
@@ -14,48 +15,70 @@ import { DropdownLink } from "@/components/modules/DropdownLink";
 import { ProfileBlock } from "@/components/modules/ProfileBlock";
 import { ProfileCount } from "@/components/modules/ProfileCount";
 import { ProfileLink } from "@/components/modules/ProfileLink";
-import { useGetUserProfile } from "@/hooks/useGetUserProfile";
-import { pageHistoryAtom, userProfileAtom } from "@/state/utilities.state";
+import { authProfileAtom } from "@/state/auth.state";
+import { guestBookmarksAtom, guestHiddensAtom, guestProfileAtom, guestUpvotesAtom } from "@/state/guest.state";
+import { userBookmarksAtom, userHiddensAtom, userProfileAtom, userUpvotesAtom } from "@/state/user.state";
+import { pageHistoryAtom } from "@/state/utilities.state";
 import type { Profile } from "@/types/profile";
 
 export const ProfileHeader: FC = () => {
+  const [authProfile] = useAtom(authProfileAtom);
   const pageHistory = useAtom(pageHistoryAtom);
 
   const [requestDropdown, setRequestDropdown] = useState<boolean>(false);
   const router = useRouter();
   const currentPath = router.asPath;
-  const { order, page, search, sort, tab, term, type, username } = router.query;
-  console.log(order, page, search, sort, tab, term, type, username);
+  const { username } = router.query;
+  const [likedCount, setLikedCount] = useState<number>(0);
+  const [starsCount, setStarsCount] = useState<number>(0);
+  const [hiddensCount, setHiddensCount] = useState<number>(0);
 
-  const [, setUserProfile] = useAtom(userProfileAtom);
-  const { userProfile } = useGetUserProfile();
-  if (userProfile && username !== userProfile.username) {
-    setUserProfile(undefined);
+  const [userProfile] = useAtom(userProfileAtom);
+  const [userUpvotes] = useAtom(userUpvotesAtom);
+  const [userBookmarks] = useAtom(userBookmarksAtom);
+  const [userHiddens] = useAtom(userHiddensAtom);
+  const [guestProfile] = useAtom(guestProfileAtom);
+  const [guestUpvotes] = useAtom(guestUpvotesAtom);
+  const [guestBookmarks] = useAtom(guestBookmarksAtom);
+  const [guestHiddens] = useAtom(guestHiddensAtom);
+
+  const currentProfile = userProfile ? userProfile : guestProfile;
+  const currentUpvotes = userProfile ? userUpvotes : guestUpvotes;
+  const currentBookmarks = userProfile ? userBookmarks : guestBookmarks;
+  const currentHiddens = userProfile ? userHiddens : guestHiddens;
+
+  const { avatar_url, description, instagram_id, links, name, twitter_id } = currentProfile as Profile;
+  const dummy_image = "/default-avatar.jpg";
+  const [avatarSrc, setAvatarSrc] = useState<string>(dummy_image);
+
+  useEffect(() => {
+    avatar_url ? setAvatarSrc(avatar_url) : setAvatarSrc(dummy_image);
+  }, [avatar_url]);
+
+  useEffect(() => {
+    setLikedCount(currentUpvotes.length);
+    setStarsCount(currentBookmarks.length);
+    setHiddensCount(currentHiddens.length);
+  }, [currentBookmarks.length, currentUpvotes.length, currentHiddens.length]);
+
+  let baseUrl = "" as string;
+  if (process.env.NODE_ENV != "test") {
+    baseUrl = {
+      development: "http://localhost:3000",
+      production: "https://slii.xyz",
+    }[process.env.NODE_ENV];
   }
-  const { avatar_url, description, instagram_id, label, liked_count, links, name, stars_count, twitter_id } =
-    userProfile as Profile;
-  // const [shareDropdown, setShareDropdown] = useState<boolean>(false);
-
-  // let baseUrl = "" as string;
-  // if (process.env.NODE_ENV != "test") {
-  //   baseUrl = {
-  //     development: "http://localhost:3000",
-  //     production: "https://nftotaku.xyz",
-  //   }[process.env.NODE_ENV];
-  // }
   // シェアボタンのリンク先
-  // const currentUrl = baseUrl + router.asPath;
-  // let twitterShareUrl = "https://twitter.com/intent/tweet";
-  // twitterShareUrl += "?text=" + encodeURIComponent("ツイート内容テキスト");
-  // twitterShareUrl += "&url=" + encodeURIComponent(currentUrl);
-  // const shareMenus = [
-  //   {
-  //     icon: <BsTwitter />,
-  //     title: "Share on Twitter",
-  //     url: twitterShareUrl,
-  //   },
-  // ];
+  const currentUrl = baseUrl + router.asPath;
+  let twitterShareUrl = "https://twitter.com/intent/tweet";
+  twitterShareUrl += "?text=" + encodeURIComponent("");
+  twitterShareUrl += "&url=" + encodeURIComponent(currentUrl);
   const requestMenus = [
+    {
+      icon: <AiOutlineTwitter />,
+      title: "Share on Twitter",
+      url: twitterShareUrl,
+    },
     {
       icon: <FaRegFlag />,
       title: "Report",
@@ -66,9 +89,6 @@ export const ProfileHeader: FC = () => {
   const slicedDescription = description && description.length > 80 ? description.slice(0, 80) + "…" : description;
   const [showDescription, setShowDescription] = useState<boolean>(false);
 
-  const onClickHandler = (url: string) => {
-    window.open(`${url}`, "_blank");
-  };
   return (
     <section className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-5">
@@ -108,30 +128,33 @@ export const ProfileHeader: FC = () => {
               <div
                 className={`relative z-10 flex h-[52px] w-[52px] items-center justify-center overflow-hidden rounded-full border-2 border-gray-200 bg-gray-300`}
               >
-                {avatar_url && (
-                  <Image
-                    src={avatar_url}
-                    width={100}
-                    height={100}
-                    alt=""
-                    quality={10}
-                    sizes="200px"
-                    style={{
-                      height: "auto",
-                      maxWidth: "100%",
-                      objectFit: "cover",
-                    }}
-                    onError={(e) => {
-                      // e.currentTarget.src = `https://placehold.jp/42/333/ffffff/150x150.png?text=N&css=%7B%22color%22%3A%22%20%23333%22%7D`;
-                    }}
-                  />
-                )}
+                <Image
+                  src={avatarSrc}
+                  width={100}
+                  height={100}
+                  alt=""
+                  quality={10}
+                  sizes="200px"
+                  style={{
+                    height: "auto",
+                    maxWidth: "100%",
+                    objectFit: "cover",
+                  }}
+                  onError={() => {
+                    setAvatarSrc(dummy_image);
+                    // e.currentTarget.src = `https://placehold.jp/42/333/ffffff/150x150.png?text=N&css=%7B%22color%22%3A%22%20%23333%22%7D`;
+                  }}
+                />
               </div>
-              <div className="fle flex-1 flex-col gap-2">
-                <h1 className={`inline items-center justify-center text-xl font-bold text-sky-800`}>
+              <div className="flex flex-1 flex-col">
+                <h1
+                  className={`inline items-center justify-center text-lg font-bold leading-tight text-sky-800 lg:text-xl`}
+                >
                   {name ? name : username}
                 </h1>
-                <p className="flex items-center gap-1 text-sm font-normal text-sky-800 opacity-50">@{username}</p>
+                <p className="flex items-center gap-1 text-sm font-normal text-sky-800 opacity-50">
+                  @{username ? username : guestProfile.username}
+                </p>
               </div>
             </div>
             <div className="flex flex-col gap-2">
@@ -139,7 +162,7 @@ export const ProfileHeader: FC = () => {
                 <div className="flex max-w-5xl flex-col gap-1">
                   {description && (
                     <>
-                      <p className="mt-1 break-all text-justify text-sm font-normal leading-relaxed text-sky-800 opacity-60 transition-all duration-200 md:text-[15px] ">
+                      <p className="mt-1 whitespace-pre-wrap break-all text-justify text-sm font-normal leading-relaxed text-sky-800 opacity-60 transition-all duration-200 md:text-[15px]">
                         {showDescription ? description : slicedDescription}
                       </p>
                       {description.length > 80 && (
@@ -160,31 +183,48 @@ export const ProfileHeader: FC = () => {
               )}
             </div>
           </div>
-          <div className="flex items-center justify-between border-t border-slate-100 px-5 py-[14px]">
+          <div className="flex items-center justify-between gap-2 border-t border-slate-100 px-5 py-[14px]">
             <div className="flex gap-5">
-              <ProfileCount label="Liked" count={liked_count ? liked_count : 0} />
-              <ProfileCount label="Stars" count={stars_count ? stars_count : 0} />
-              <ProfileCount label="Hidden(only you)" count={stars_count ? stars_count : 0} />
+              <ProfileCount label="Liked" count={likedCount ? likedCount : 0} />
+              <ProfileCount label="Stars" count={starsCount ? starsCount : 0} />
+              {(authProfile && authProfile.username == username) ||
+                (!authProfile && currentPath == "/guest" && (
+                  <ProfileCount label="Hidden(only you)" count={hiddensCount ? hiddensCount : 0} />
+                ))}
             </div>
-            <Link
-              href="/account"
-              className="flex h-9 items-center justify-center gap-2 rounded-full bg-gray-900 px-3 text-sm text-white"
-            >
-              <FiEdit />
-              Edit
-            </Link>
+            {authProfile && authProfile.username == username && (
+              <Link
+                href="/account"
+                className="flex h-9 items-center justify-center gap-2 rounded-full bg-gray-900 px-3 text-sm text-white"
+              >
+                <FiEdit />
+                Edit
+              </Link>
+            )}
           </div>
         </ProfileBlock>
-        <ProfileBlock>
-          {links &&
-            links.map((link, index) => {
-              return (
-                <div key={index} className="w-full border-b border-gray-100 px-3 py-2 last:border-b-0">
-                  <ProfileLink label={link.label} property="default" url={`https://${link.url}`} />
-                </div>
-              );
-            })}
-        </ProfileBlock>
+        {(twitter_id || instagram_id || links.length > 0) && (
+          <ProfileBlock>
+            {twitter_id && (
+              <div className="w-full border-b border-gray-100 px-3 py-2 last:border-b-0">
+                <ProfileLink label={twitter_id} property="twitter" url={`https://twitter.com/${twitter_id}`} />
+              </div>
+            )}
+            {instagram_id && (
+              <div className="w-full border-b border-gray-100 px-3 py-2 last:border-b-0">
+                <ProfileLink label={instagram_id} property="instagram" url={`https://instagram.com/${instagram_id}`} />
+              </div>
+            )}
+            {links &&
+              links.map((link, index) => {
+                return (
+                  <div key={index} className="w-full border-b border-gray-100 px-3 py-2 last:border-b-0">
+                    <ProfileLink label={link.label} property="default" url={`${link.url}`} />
+                  </div>
+                );
+              })}
+          </ProfileBlock>
+        )}
       </div>
     </section>
   );

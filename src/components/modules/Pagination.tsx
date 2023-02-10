@@ -1,41 +1,31 @@
-import { useRouter } from "next/router";
+import { useAtom } from "jotai";
 import type { FC } from "react";
 
-import { setParams } from "@/utilities/setParams";
+import { items_per_page } from "@/constant/settings.const";
+import { currentPageAtom } from "@/state/utilities.state";
 
 type Props = {
-  currentPage: number;
   length: number;
-  limit: number;
 };
 type ItemProps = {
   count: number;
 };
-export const Pagination: FC<Props> = ({ currentPage, length, limit }) => {
+export const Pagination: FC<Props> = ({ length }) => {
+  const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   const prevPage = currentPage - 1;
   const nextPage = currentPage + 1;
-  const lastPage = Math.floor(length / limit) + 1;
-  const router = useRouter();
-  const { order, screen, search, sort, term, type } = router.query;
+  const lastPage = Math.floor(length / items_per_page) + 1;
 
   const PaginationItem = ({ count }: ItemProps) => {
     const activeClass =
       count === currentPage
-        ? "bg-gray-700 border-gray-600 cursor-default"
-        : "bg-gray-800 border-gray-700 hover:bg-gray-700 ";
+        ? "bg-sky-500 border-sky-500 cursor-default text-white"
+        : "bg-white border-sky-500 text-sky-500 hover:bg-sky-500 hover:text-white";
     return (
       <button
-        className={`flex h-9 w-9 items-center justify-center rounded border text-gray-300 ${activeClass}`}
+        className={`flex h-9 w-9 items-center justify-center rounded-full border-2 text-sm font-medium transition-all duration-300 ${activeClass}`}
         onClick={() => {
-          setParams({
-            order: order && (order as string),
-            page: count,
-            screen: screen && (screen as string),
-            search: search && (search as string),
-            sort: sort && (sort as string),
-            term: term && (term as string),
-            type: type && (type as string),
-          });
+          setCurrentPage(count);
         }}
       >
         {count}

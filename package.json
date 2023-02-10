@@ -43,7 +43,7 @@
     "react-modal": "^3.16.1",
     "react-scroll": "^1.8.8",
     "react-sortablejs": "^6.1.4",
-    "react-tinder-card": "^1.6.2",
+    "react-tinder-card": "git+https://github.com/mrgishi/react-tinder-card.git",
     "react-toastify": "^9.1.1",
     "sass": "^1.56.1",
     "scrape-it": "^5.3.2",

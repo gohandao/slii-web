@@ -1,113 +1,116 @@
 import { useAtom } from "jotai";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 
 import { supabase } from "@/libs/supabase";
 import { authUpvotesAtom, authUserAtom } from "@/state/auth.state";
-import { loginModalAtom } from "@/state/utilities.state";
+import type { Upvote } from "@/types/upvote";
 
-import type { Upvote } from "../types/upvote";
+export const useHandleUpvote = () => {
+  const [authUser] = useAtom(authUserAtom);
+  const [authUpvotes, setAuthUpvotes] = useAtom(authUpvotesAtom);
 
-export const useHandleUpvote = (count: number, type: string, id: string) => {
-  const [, setLoginModal] = useAtom(loginModalAtom);
-  const [upvoted, setUpvoted] = useState<boolean>(false);
-  const [added, setAdded] = useState<boolean>(false);
-  const [removed, setRemoved] = useState<boolean>(false);
-  const [currentCount, setCurrentCount] = useState<number>(count);
-  const [user] = useAtom(authUserAtom);
-  const [upvotes, setUpvotes] = useAtom(authUpvotesAtom);
+  type AddLike = {
+    id: string;
+    collection_slug?: string;
+    creator_username?: string;
+  };
+  const addLike = useCallback(
+    async ({ id, collection_slug, creator_username }: AddLike) => {
+      if (authUser) {
+        // save database
+        const checkLiked = authUpvotes.filter((upvote) => {
+          return upvote.creator_username == id;
+        });
+        if (checkLiked.length === 0) {
+          const fetchData = async () => {
+            const { data, error } = await supabase
+              .from("upvotes")
+              .insert([
+                {
+                  collection_slug: collection_slug,
+                  created_at: new Date(),
+                  creator_username: creator_username,
+                  user_id: authUser.id,
+                },
+              ])
+              .select();
+            if (error) {
+              console.log(error);
+            }
+            return data as Upvote[];
+          };
+          const data = await fetchData();
+          data && setAuthUpvotes([...authUpvotes, ...data]);
+        }
+      } else {
+        // save localstorage
+      }
+    },
+    [authUser, authUpvotes, setAuthUpvotes]
+  );
 
-  useEffect(() => {
-    let new_count = count;
-    if (added) new_count = currentCount + 1;
-    if (removed) new_count = currentCount - 1;
-    setCurrentCount(new_count);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [count, added, removed]);
-
-  const creator_username = type === "creator" ? id : "";
-  const collection_slug = type === "collection" ? id : "";
-
-  const addLike = useCallback(async () => {
-    if (user) {
-      const checkLiked = upvotes.filter((upvote) => {
-        return upvote.creator_username == id;
-      });
-      if (checkLiked.length === 0) {
+  type RemoveLike = {
+    collection_slug?: string;
+    creator_username?: string;
+  };
+  const removeLike = useCallback(
+    async ({ collection_slug, creator_username }: RemoveLike) => {
+      if (authUser) {
         const fetchData = async () => {
-          const { data, error } = await supabase
+          const { data } = await supabase
             .from("upvotes")
-            .insert([
-              {
-                collection_slug: collection_slug,
-                created_at: new Date(),
-                creator_username: creator_username,
-                user_id: user.id,
-              },
-            ])
+            .delete()
+            .match({
+              [creator_username ? "creator_username" : "collection_slug"]: creator_username
+                ? creator_username
+                : collection_slug,
+              user_id: authUser.id,
+            })
             .select();
-          if (error) {
-            console.log("error");
-            console.log(error);
-          }
           return data as Upvote[];
         };
         const data = await fetchData();
-        data && setUpvotes([...upvotes, ...data]);
-        setUpvoted(true);
-        setRemoved(false);
-        setAdded(true);
+        if (data) {
+          const removedUpvotes = authUpvotes.filter((upvote) => {
+            return upvote.creator_username !== creator_username;
+          });
+          setAuthUpvotes(removedUpvotes);
+        }
       }
-    } else {
-      setLoginModal(true);
-    }
-  }, [user, upvotes, id, collection_slug, creator_username, setUpvotes, setLoginModal]);
+    },
+    [authUpvotes, authUser, setAuthUpvotes]
+  );
 
-  const removeLike = useCallback(async () => {
-    if (user) {
-      const fetchData = async () => {
-        const { data } = await supabase
-          .from("upvotes")
-          .delete()
-          .match({
-            [type === "creator" ? "creator_username" : "collection_slug"]:
-              type === "creator" ? creator_username : collection_slug,
-            user_id: user.id,
-          })
-          .select();
-        return data as Upvote[];
-      };
-      const data = await fetchData();
-      if (data) {
-        const removedUpvotes = upvotes.filter((upvote) => {
-          return upvote.creator_username !== creator_username;
+  type CheckLike = {
+    collection_slug?: string;
+    creator_username?: string;
+  };
+  const checkUpvoted = useCallback(
+    ({ collection_slug, creator_username }: CheckLike) => {
+      let filterdUpvotes = [];
+      if (creator_username) {
+        filterdUpvotes = authUpvotes.filter((upvote) => {
+          return upvote.creator_username === creator_username;
         });
-        setUpvotes(removedUpvotes);
-        setUpvoted(false);
-        setRemoved(true);
-        setAdded(false);
+        if (filterdUpvotes.length > 0) {
+          return true;
+        } else {
+          return false;
+        }
       }
-    }
-  }, [upvotes, user, type, creator_username, collection_slug, setUpvotes]);
+      if (collection_slug) {
+        filterdUpvotes = authUpvotes.filter((upvote) => {
+          return upvote.collection_slug === collection_slug;
+        });
+        if (filterdUpvotes.length > 0) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    },
+    [authUpvotes]
+  );
 
-  const checkUpvoted = useCallback(() => {
-    let filterdUpvotes = [];
-    if (type == "creator") {
-      filterdUpvotes = upvotes.filter((upvote) => {
-        return upvote.creator_username === id;
-      });
-    }
-    if (type == "collection") {
-      filterdUpvotes = upvotes.filter((upvote) => {
-        return upvote.collection_slug === id;
-      });
-    }
-
-    setUpvoted(filterdUpvotes.length > 0);
-  }, [upvotes, id, type]);
-
-  useEffect(() => {
-    checkUpvoted();
-  }, [upvotes, id, checkUpvoted]);
-
-  return { addLike, currentCount, removeLike, upvoted };
+  return { addLike, checkUpvoted, removeLike };
 };

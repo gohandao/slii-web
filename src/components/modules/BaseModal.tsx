@@ -1,6 +1,8 @@
+import Image from "next/image";
 import type { FC, ReactNode } from "react";
-import { IoIosClose } from "react-icons/io";
 import Modal from "react-modal";
+
+import { CloseButton } from "@/components/elements/CloseButton";
 
 type Props = {
   children: ReactNode;
@@ -51,14 +53,21 @@ export const BaseModal: FC<Props> = ({ children, modalIsOpen, setModalIsOpen }) 
         },
       }}
     >
-      <div className="relative bg-transparent p-5 ">
-        {children}
-        <button
-          onClick={closeModal}
-          className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-black opacity-80"
-        >
-          <IoIosClose className="text-xl text-white" />
-        </button>
+      <div className="bg-transparent p-5 ">
+        <div className=" flex w-full flex-col gap-3 rounded-xl bg-white px-5 pt-5 pb-7">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-bold">
+              <Image src="/logo.svg" width={55} height={22} alt="title" className="mt-[2px] inline" />
+            </h3>
+            <button onClick={closeModal}>
+              <CloseButton />
+            </button>
+          </div>
+          {children}
+          {/* <button onClick={closeModal} className="absolute right-5 top-5">
+            <CloseButton />
+          </button> */}
+        </div>
       </div>
     </Modal>
   );

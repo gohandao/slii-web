@@ -2,6 +2,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { useState } from "react";
 
+import { limit } from "@/constant/settings.const";
 import type { Creator } from "@/types/creator";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -14,6 +15,7 @@ export const useGetCreators = () => {
   type CreatorsFilterProps = {
     order?: string;
     page?: number;
+    removeList?: string[];
     search?: string;
     sort?: string;
     type?: string;
@@ -21,8 +23,16 @@ export const useGetCreators = () => {
     usernames?: string[];
   };
   const [creators, setCreators] = useState<Creator[]>([]);
-  const getCreators = async ({ order, page, search, sort, type, username, usernames }: CreatorsFilterProps = {}) => {
-    const limit = 6;
+  const getCreators = async ({
+    order,
+    page,
+    removeList,
+    search,
+    sort,
+    type,
+    username,
+    usernames,
+  }: CreatorsFilterProps = {}) => {
     const start = page ? (Number(page) - 1) * limit : 0;
     const end = page ? Number(page) * limit - 1 : limit;
     const rangeFilter = `.range(${start}, ${end})`;
@@ -68,21 +78,22 @@ export const useGetCreators = () => {
     } else {
       sortFilter = `.order("${sort_param}", { ascending: ${orderFilter} })`;
     }
+    const usernameFilter = username ? `.eq("username", "${username}").single()` : "";
     const usernamesArray = usernames?.map((username) => {
       return `"` + username + `"`;
     });
-    const usernameFilter = username ? `.eq("username", "${username}").single()` : "";
-    const usernamesFilter = usernames ? `.in("username", [${usernamesArray}])` : "";
+    const usernamesFilter = usernames && usernames.length > 0 ? `.in("username", [${usernamesArray}])` : "";
+    const removeUsernamesArray = removeList?.map((username) => {
+      return `"` + username + `"`;
+    });
+    const removeUsernamesFilter =
+      removeList && removeList.length > 0 ? `.not("username", "in", '(${removeUsernamesArray})')` : "";
     const filter = username
-      ? `supabase.from("creators").select('"*", upvotes_count_function')${usernameFilter}`
-      : `supabase.from("creators").select('"*", upvotes_count_function', { count: 'exact' })${usernamesFilter}${typeFilter}${searchFilter}${sortFilter}${usernameFilter}${rangeFilter}`;
-
-    console.log("filter");
-    console.log(filter);
+      ? `supabase.from("creators").select('"*", upvotes_count_function, bookmarks_count_function')${usernameFilter}`
+      : `supabase.from("creators").select('"*", upvotes_count_function, bookmarks_count_function', { count: 'exact' })${usernamesFilter}${removeUsernamesFilter}${typeFilter}${searchFilter}${sortFilter}${usernameFilter}${rangeFilter}`;
 
     const { count, data, error } = await eval(filter);
     if (error) {
-      console.log("error at getCreators");
       console.log(error);
     }
     if (data) {

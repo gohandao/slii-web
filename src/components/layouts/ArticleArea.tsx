@@ -6,7 +6,7 @@ type Props = {
 };
 export const ArticleArea = ({ addClass, children }: Props) => {
   return (
-    <article className={`relative mx-auto flex w-full max-w-[540px] flex-col overflow-hidden rounded-2xl ${addClass}`}>
+    <article className={`relative mx-auto flex w-full max-w-[540px] flex-col rounded-2xl ${addClass}`}>
       {children}
     </article>
   );

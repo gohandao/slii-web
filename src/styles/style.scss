@@ -1,3 +1,13 @@
+//モーダルでスクロールを可能にする
+.ReactModalPortal {
+    position: relative;
+}
+.ReactModalPortal {
+    z-index: 50;
+}
+.ReactModal__Overlay {
+    overflow-y: auto;
+}
 .font-default {
     font-style: normal;
     font-family: "M PLUS Rounded 1c", sans-serif;

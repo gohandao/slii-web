@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
 import { useGetIndexCards } from "@/hooks/useGetIndexCards";
+import { authUserAtom } from "@/state/auth.state";
 import {
   collectionsFilterParamsAtom,
   combinedFilterParamsAtom,
@@ -23,6 +24,7 @@ export const TinderCards = () => {
   const [loading, setLoading] = useState(false);
   const [cards, setCards] = useState<TCard[]>([]);
   const { getIndexCards, indexCards } = useGetIndexCards();
+  const [authUser] = useAtom(authUserAtom);
   const [resetCards] = useAtom(resetCardsAtom);
   const [combinedFilterParams] = useAtom(combinedFilterParamsAtom);
   const [creatorsFilterParams] = useAtom(creatorsFilterParamsAtom);
@@ -45,7 +47,7 @@ export const TinderCards = () => {
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resetCards, combinedFilterParams, creatorsFilterParams, collectionsFilterParams]);
+  }, [resetCards, combinedFilterParams, creatorsFilterParams, collectionsFilterParams, authUser]);
 
   return (
     <>

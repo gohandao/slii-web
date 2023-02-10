@@ -3,7 +3,7 @@ type Props = {
   label: string;
 };
 export const ProfileCount = ({ count, label }: Props) => {
-  count = count ? count : 0;
+  // count = count ? count : 0;
   return (
     <div className="flex flex-col">
       <p className="text-sm font-medium text-sky-800 opacity-50 line-clamp-1">{label}</p>

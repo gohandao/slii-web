@@ -14,7 +14,6 @@ export const useGetUserBookmarks = () => {
     if (!userId) return;
     const { data, error } = await supabase.from("bookmarks").select().eq("user_id", userId);
     if (error) {
-      console.log("error at getUserBookmarks");
       console.log(error);
     }
     if (data) {

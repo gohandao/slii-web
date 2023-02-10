@@ -39,6 +39,9 @@ export const ScreenModal: FC<Props> = ({ children }) => {
           maxWidth: "100%",
           right: "0",
         },
+        overlay: {
+          backgroundColor: "rgba(0,0,0,0.05)",
+        },
       }}
       className="hide-scrollbar	"
     >

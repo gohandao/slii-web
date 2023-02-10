@@ -5,6 +5,7 @@ import { NextSeo } from "next-seo";
 
 import { SplitLayout } from "@/components/layouts/SplitLayout";
 import { ProfilePageTemplate } from "@/components/templates/ProfilePageTemplate";
+import { site_name } from "@/constant/seo.const";
 import { authProfileAtom } from "@/state/auth.state";
 
 type Props = {
@@ -12,32 +13,22 @@ type Props = {
   ogImageUrl: string;
   title: string;
 };
-const UserPage: NextPage<Props> = ({ description, ogImageUrl, title }) => {
+const GuestPage: NextPage<Props> = () => {
   const router = useRouter();
   const [authProfile] = useAtom(authProfileAtom);
-  const { username } = router.query;
   if (authProfile) {
     router.push(`/${authProfile.username}`);
   }
   return (
     <>
       <NextSeo
-        title={title}
-        description={description}
+        title={`Guest page | ${site_name}`}
+        description="If you are a guest user, please check your data on this page."
         openGraph={{
-          description: description,
-          images: [
-            {
-              alt: title,
-              height: 630,
-              type: "image/jpeg",
-              url: ogImageUrl,
-              width: 1200,
-            },
-          ],
-          title: title,
+          description: "If you are a guest user, please check your data on this page.",
+          title: `Guest page | ${site_name}`,
           type: "article",
-          url: process.env.NEXT_PUBLIC_SITE_URL + `/${username}`,
+          url: process.env.NEXT_PUBLIC_SITE_URL + "/creators",
         }}
       />
       <SplitLayout>
@@ -46,4 +37,4 @@ const UserPage: NextPage<Props> = ({ description, ogImageUrl, title }) => {
     </>
   );
 };
-export default UserPage;
+export default GuestPage;

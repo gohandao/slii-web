@@ -13,7 +13,6 @@ export const useGetAuthUpvotes = () => {
     if (!authUser) return;
     const { data, error } = await supabase.from("upvotes").select().eq("user_id", authUser.id);
     if (error) {
-      console.log("error at getAuthUserUpvotes");
       console.log(error);
     }
     if (data) {

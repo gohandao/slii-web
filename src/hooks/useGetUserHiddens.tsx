@@ -14,7 +14,6 @@ export const useGetUserHiddens = () => {
     if (!userId) return;
     const { data, error } = await supabase.from("hiddens").select().eq("user_id", userId);
     if (error) {
-      console.log("error at getUserHiddens");
       console.log(error);
     }
     if (data) {

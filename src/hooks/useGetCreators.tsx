@@ -87,14 +87,13 @@ export const useGetCreators = () => {
       return `"` + username + `"`;
     });
     const removeUsernamesFilter =
-      removeList && removeList.length > 0 ? `.not("id", "in", '(${removeUsernamesArray})')` : "";
+      removeList && removeList.length > 0 ? `.not("username", "in", '(${removeUsernamesArray})')` : "";
     const filter = username
       ? `supabase.from("creators").select('"*", upvotes_count_function, bookmarks_count_function')${usernameFilter}`
       : `supabase.from("creators").select('"*", upvotes_count_function, bookmarks_count_function', { count: 'exact' })${usernamesFilter}${removeUsernamesFilter}${typeFilter}${searchFilter}${sortFilter}${usernameFilter}${rangeFilter}`;
 
     const { count, data, error } = await eval(filter);
     if (error) {
-      console.log("error at getCreators");
       console.log(error);
     }
     if (data) {

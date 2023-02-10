@@ -7,7 +7,7 @@ import { IoMdSync } from "react-icons/io";
 import { Searchbox } from "@/components/elements/Searchbox";
 import { SplitLayout } from "@/components/layouts/SplitLayout";
 import { Dropdown } from "@/components/modules/Dropdown";
-import { Pagination } from "@/components/modules/Pagination";
+import { site_name } from "@/constant/seo.const";
 import { getCollections } from "@/libs/supabase";
 import { CollectionTable } from "@/pages/stats/components/CollectionTable";
 import { TermSort } from "@/pages/stats/components/TermSort";
@@ -44,11 +44,11 @@ const StatsPage: NextPage = () => {
   return (
     <div>
       <NextSeo
-        title="NFT Collection Stats in Japan | NFT OTAKU"
+        title={`NFT Collection Stats in Japan | ${site_name}`}
         description="Search and analize various Japanese NFT collections."
         openGraph={{
           description: "Search and analize various Japanese NFT collections.",
-          title: "NFT Collection Stats in Japan | NFT OTAKU",
+          title: `NFT Collection Stats in Japan | ${site_name}`,
           type: "article",
           url: process.env.NEXT_PUBLIC_SITE_URL + "/stats",
         }}
@@ -76,9 +76,9 @@ const StatsPage: NextPage = () => {
             </div>
           </div>
           <div className="mb-10">{collections && <CollectionTable collections={collections} limit={limit} />}</div>
-          <div className="flex justify-center">
+          {/* <div className="flex justify-center">
             <Pagination currentPage={currentPage} length={count} limit={limit} />
-          </div>
+          </div> */}
         </section>
       </SplitLayout>
     </div>

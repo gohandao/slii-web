@@ -17,6 +17,9 @@ export const CreatorScreen = () => {
   const router = useRouter();
   const { username } = router.query;
 
+  console.log("creator");
+  console.log(creator);
+
   useEffect(() => {
     const fetchData = async () => {
       const props = {
@@ -52,6 +55,7 @@ export const CreatorScreen = () => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creator, random]);
+
   return (
     <>
       {creator ? (
@@ -66,9 +70,16 @@ export const CreatorScreen = () => {
           stars_counts={creator.bookmarks_count_function as number}
           tags={[]}
           title={creator.username}
+          links={{
+            discord_url: creator.discord_url,
+            instagram_id: creator.instagram_id,
+            opensea_url: `https://opensea.io/${creator.username}`,
+            twitter_id: creator.twitter_id,
+            website_url: creator.website_url,
+          }}
         />
       ) : (
-        <p>Loading...</p>
+        <p className="lg:pl-[300px]">Loading...</p>
       )}
     </>
   );

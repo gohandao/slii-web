@@ -16,6 +16,7 @@ import { Textarea } from "@/components/elements/Textarea";
 import { ArticleArea } from "@/components/layouts/ArticleArea";
 import { SplitLayout } from "@/components/layouts/SplitLayout";
 import { ProfileBlock } from "@/components/modules/ProfileBlock";
+import { site_name } from "@/constant/seo.const";
 import { useRedirections } from "@/hooks/useRedirections";
 import { supabase } from "@/libs/supabase";
 import { UploadAvatar } from "@/pages/account/components/UploadAvatar";
@@ -58,7 +59,6 @@ const AccountPage: NextPage = () => {
   const [newAvatar, setNewAvatar] = useState<File>();
   // const [backgroundUrl, setBackgroundUrl] = useState<string>("");
   // const [newBackground, setNewBackground] = useState<File>();
-  const [label, setLabel] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
@@ -89,10 +89,9 @@ const AccountPage: NextPage = () => {
       setUsername(authProfile.username);
       setAvatarUrl(authProfile.avatar_url ? authProfile.avatar_url : "/default-avatar.jpg");
       // setBackgroundUrl(authProfile.background_url);
-      setLabel(authProfile.label);
       setDescription(authProfile.description);
-      setTwitterId(authProfile.twitter_id);
-      setInstagramId(authProfile.instagram_id);
+      authProfile.twitter_id && setTwitterId(authProfile.twitter_id);
+      authProfile.instagram_id && setInstagramId(authProfile.instagram_id);
       setLinks(authProfile.links);
     }
   }, [authUser, authProfile]);
@@ -105,7 +104,6 @@ const AccountPage: NextPage = () => {
       upsert: false,
     });
     if (error) {
-      console.log("error at uploadImage");
       console.log(error);
       return;
     }
@@ -138,7 +136,7 @@ const AccountPage: NextPage = () => {
           updated_at: new Date(),
           username: username,
         };
-        if (new_avatar_url || description != authProfile.description || label != authProfile.label) {
+        if (new_avatar_url || description != authProfile.description) {
           const { error } = await supabase.from("profiles").upsert(updates);
           if (error) {
             toast.error("Failed to upload data.");
@@ -157,12 +155,11 @@ const AccountPage: NextPage = () => {
   return (
     <div>
       <NextSeo
-        title="Account Page | NFT OTAKU"
+        title={`Account Page | ${site_name}`}
         description="Please login."
         openGraph={{
-          description:
-            "Discover favorite Japanese NFT creators, projects and collections. NFT OTAKU is one of the biggest NFT creator search application in Japan.",
-          title: "All NFT Collections in Japan | NFT OTAKU",
+          description: "Edit your account.",
+          title: `Account Page | ${site_name}`,
           type: "article",
           url: process.env.NEXT_PUBLIC_SITE_URL + "/",
         }}
@@ -220,7 +217,7 @@ const AccountPage: NextPage = () => {
                         />
                         <Link href={`/${username}`} legacyBehavior>
                           <a className="mt-1 inline-block text-sm text-blue-500 underline hover:no-underline">
-                            https://nftotaku.xyz/{username}
+                            https://slii.xyz/{username}
                           </a>
                         </Link>
                       </div>
@@ -229,7 +226,7 @@ const AccountPage: NextPage = () => {
                           label="Email"
                           id="email"
                           type="email"
-                          placeholder="sample@nftotaku.xyz"
+                          placeholder="sample@slii.xyz"
                           value={email}
                           onChange={setEmail}
                         />

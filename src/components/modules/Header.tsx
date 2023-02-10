@@ -16,7 +16,7 @@ export const Header: FC = () => {
   const avatar_src = authProfile?.avatar_url ? authProfile.avatar_url : "/default-avatar.jpg";
 
   return (
-    <header className="relative z-40 h-[68px] w-full py-3">
+    <header className="relative z-30 h-[68px] w-full py-3">
       <div className="fixed right-0 top-3 mx-auto flex w-full flex-row-reverse items-center justify-between px-5 lg:w-[calc(100%-320px)]">
         <div className="relative flex items-center gap-5">
           {!authProfile && (
@@ -30,7 +30,7 @@ export const Header: FC = () => {
             </button>
           )}
           <Link
-            href="https://google.com"
+            href="https://iktakagishi.notion.site/Slii-Nortifications-e99e2bad898d4c3fa065e829fe93db98"
             className="relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white font-bold text-gray-900 shadow lg:h-[44px] lg:w-[44px] "
             target="_blank"
             rel="noreferrer"

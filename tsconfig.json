@@ -31,7 +31,8 @@
     "src/libs/discord.jsx",
     "src/libs/twitter.jsx",
     "src/hooks/useRedirections.tsx",
-    "src/components/_Categories"
+    "src/components/_Categories",
+    "src/libs/gtag.jsx"
   ],
   "exclude": ["node_modules"]
 }

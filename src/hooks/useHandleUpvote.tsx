@@ -3,8 +3,7 @@ import { useCallback } from "react";
 
 import { supabase } from "@/libs/supabase";
 import { authUpvotesAtom, authUserAtom } from "@/state/auth.state";
-
-import type { Upvote } from "../types/upvote";
+import type { Upvote } from "@/types/upvote";
 
 export const useHandleUpvote = () => {
   const [authUser] = useAtom(authUserAtom);
@@ -36,7 +35,6 @@ export const useHandleUpvote = () => {
               ])
               .select();
             if (error) {
-              console.log("error");
               console.log(error);
             }
             return data as Upvote[];

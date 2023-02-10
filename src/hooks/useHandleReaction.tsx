@@ -3,9 +3,9 @@ import { useCallback } from "react";
 
 import { supabase } from "@/libs/supabase";
 import { authBookmarksAtom, authUpvotesAtom, authUserAtom } from "@/state/auth.state";
+import { guestBookmarksAtom, guestHiddensAtom, guestUpvotesAtom } from "@/state/guest.state";
 import type { Table } from "@/types/reaction";
-
-import type { Upvote } from "../types/upvote";
+import type { Upvote } from "@/types/upvote";
 
 export const useHandleReaction = () => {
   const [authUser] = useAtom(authUserAtom);
@@ -13,47 +13,86 @@ export const useHandleReaction = () => {
   const [authBookmarks, setAuthBookmarks] = useAtom(authBookmarksAtom);
   const [authHiddens, setAuthHiddens] = useAtom(authBookmarksAtom);
 
+  const [guestUpvotes, setGuestUpvotes] = useAtom(guestUpvotesAtom);
+  const [guestBookmarks, setGuestBookmarks] = useAtom(guestBookmarksAtom);
+  const [guestHiddens, setGuestHiddens] = useAtom(guestHiddensAtom);
+
   const getTargetList = useCallback(
     (table: Table) => {
-      const target_list =
-        table == "upvotes" ? authUpvotes : table == "bookmarks" ? authBookmarks : table == "hiddens" ? authHiddens : [];
+      const target_list = authUser
+        ? table == "upvotes"
+          ? authUpvotes
+          : table == "bookmarks"
+          ? authBookmarks
+          : table == "hiddens"
+          ? authHiddens
+          : []
+        : !authUser
+        ? table == "upvotes"
+          ? guestUpvotes
+          : table == "bookmarks"
+          ? guestBookmarks
+          : table == "hiddens"
+          ? guestHiddens
+          : []
+        : [];
       return target_list;
     },
-    [authUpvotes, authBookmarks, authHiddens]
+    [authUser, authUpvotes, authBookmarks, authHiddens, guestUpvotes, guestBookmarks, guestHiddens]
   );
 
   const setAddHandler = useCallback(
     (data: Upvote[], table: Table) => {
       switch (table) {
         case "upvotes":
-          setAuthUpvotes([...authUpvotes, ...data]);
+          authUser && setAuthUpvotes([...authUpvotes, ...data]);
+          !authUser && setGuestUpvotes([...guestUpvotes, ...data]);
           break;
         case "bookmarks":
-          setAuthBookmarks([...authBookmarks, ...data]);
+          authUser && setAuthBookmarks([...authBookmarks, ...data]);
+          !authUser && setGuestBookmarks([...guestBookmarks, ...data]);
           break;
         case "hiddens":
-          setAuthHiddens([...authHiddens, ...data]);
+          authUser && setAuthHiddens([...authHiddens, ...data]);
+          !authUser && setGuestHiddens([...guestHiddens, ...data]);
           break;
       }
     },
-    [authBookmarks, authHiddens, authUpvotes, setAuthBookmarks, setAuthHiddens, setAuthUpvotes]
+    [
+      authBookmarks,
+      authHiddens,
+      authUpvotes,
+      authUser,
+      guestBookmarks,
+      guestHiddens,
+      guestUpvotes,
+      setAuthBookmarks,
+      setAuthHiddens,
+      setAuthUpvotes,
+      setGuestBookmarks,
+      setGuestHiddens,
+      setGuestUpvotes,
+    ]
   );
 
   const setRemoveHandler = useCallback(
     (data: Upvote[], table: Table) => {
       switch (table) {
         case "upvotes":
-          setAuthUpvotes(data);
+          authUser && setAuthUpvotes(data);
+          !authUser && setGuestUpvotes(data);
           break;
         case "bookmarks":
-          setAuthBookmarks(data);
+          authUser && setAuthBookmarks(data);
+          !authUser && setGuestBookmarks(data);
           break;
         case "hiddens":
-          setAuthHiddens(data);
+          authUser && setAuthHiddens(data);
+          !authUser && setGuestHiddens(data);
           break;
       }
     },
-    [setAuthBookmarks, setAuthHiddens, setAuthUpvotes]
+    [authUser, setAuthBookmarks, setAuthHiddens, setAuthUpvotes, setGuestBookmarks, setGuestHiddens, setGuestUpvotes]
   );
 
   type AddReaction = {
@@ -64,22 +103,21 @@ export const useHandleReaction = () => {
   const addReaction = useCallback(
     async ({ collection_slug, creator_username, table }: AddReaction) => {
       const target_list = getTargetList(table);
-      if (authUser) {
-        // save database
-        const checkLiked_username =
-          creator_username &&
-          target_list.filter((item) => {
-            return item.creator_username == creator_username;
-          });
-        const checkLiked_slug =
-          collection_slug &&
-          target_list.filter((item) => {
-            return item.collection_slug == collection_slug;
-          });
-        const checkLiked =
-          (checkLiked_username && checkLiked_username.length > 0) || (checkLiked_slug && checkLiked_slug.length > 0);
-
-        if (!checkLiked && table) {
+      const checkLiked_username =
+        creator_username &&
+        target_list.filter((item) => {
+          return item.creator_username == creator_username;
+        });
+      const checkLiked_slug =
+        collection_slug &&
+        target_list.filter((item) => {
+          return item.collection_slug == collection_slug;
+        });
+      const checkLiked =
+        (checkLiked_username && checkLiked_username.length > 0) || (checkLiked_slug && checkLiked_slug.length > 0);
+      if (!checkLiked) {
+        if (authUser && table) {
+          // save database
           const fetchData = async () => {
             const { data, error } = await supabase
               .from(table)
@@ -93,7 +131,6 @@ export const useHandleReaction = () => {
               ])
               .select();
             if (error) {
-              console.log("error");
               console.log(error);
             }
             return data as Upvote[];
@@ -101,8 +138,18 @@ export const useHandleReaction = () => {
           const data = await fetchData();
           data && setAddHandler(data, table);
         }
-      } else {
-        // save localstorage
+        if (!authUser) {
+          // save localstorage
+          const data = [
+            {
+              collection_slug: collection_slug,
+              created_at: new Date(),
+              creator_username: creator_username,
+              user_id: "guest",
+            },
+          ] as Upvote[];
+          data && setAddHandler(data, table);
+        }
       }
     },
     [authUser, getTargetList, setAddHandler]
@@ -144,6 +191,20 @@ export const useHandleReaction = () => {
             });
             setRemoveHandler(removedUpvotes, table);
           }
+        }
+      }
+      if (!authUser) {
+        if (creator_username) {
+          const removedUpvotes = target_list.filter((item) => {
+            return item.creator_username !== creator_username;
+          });
+          setRemoveHandler(removedUpvotes, table);
+        }
+        if (collection_slug) {
+          const removedUpvotes = target_list.filter((item) => {
+            return item.collection_slug !== collection_slug;
+          });
+          setRemoveHandler(removedUpvotes, table);
         }
       }
     },

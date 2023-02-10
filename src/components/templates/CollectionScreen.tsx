@@ -2,12 +2,18 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import { BasePageTemplate } from "@/components/templates/BasePageTemplate";
-import { getCollections, getNFTs, upsertNFTPrices } from "@/libs/supabase";
+import { useGetCollections } from "@/hooks/useGetCollections";
+import { useGetCreators } from "@/hooks/useGetCreators";
+import { getNFTs, upsertNFTPrices } from "@/libs/supabase";
+import type { Creator } from "@/types/creator";
 
 export const CollectionScreen = () => {
   const router = useRouter();
   const { slug } = router.query;
+  const { getCollections } = useGetCollections();
+  const { getCreators } = useGetCreators();
   const [random] = useState<boolean>(false);
+  const [creator, setCreator] = useState<Creator>();
   const [collection, setCollection] = useState<any>();
   const [assets, setAssets] = useState<any[]>([]);
   const [, setCount] = useState<number>(0);
@@ -28,6 +34,22 @@ export const CollectionScreen = () => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
+
+  useEffect(() => {
+    if (collection && collection.creator_username) {
+      const fetchData = async () => {
+        const props = {
+          username: collection.creator_username,
+        };
+        const { data } = await getCreators(props);
+        if (data && data != creator) {
+          setCreator(data as Creator);
+        }
+      };
+      fetchData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [collection]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -130,7 +152,6 @@ export const CollectionScreen = () => {
   //     value: collection && collection.total_sales,
   //   },
   // ];
-
   return (
     <>
       {collection ? (
@@ -141,13 +162,21 @@ export const CollectionScreen = () => {
           image={collection.image_url}
           label=""
           liked_counts={collection.upvotes_count_function as number}
+          creator={creator}
           nfts={assets}
           stars_counts={collection.bookmarks_count_function as number}
           tags={[]}
           title={collection.name}
+          links={{
+            discord_url: collection.discord_url,
+            instagram_id: collection.instagram_id,
+            opensea_url: `https://opensea.io/collection/${collection.slug}`,
+            twitter_id: collection.twitter_id,
+            website_url: collection.website_url,
+          }}
         />
       ) : (
-        <p>Loading...</p>
+        <p className="lg:pl-[300px]">Loading...</p>
       )}
     </>
   );

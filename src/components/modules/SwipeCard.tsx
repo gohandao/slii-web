@@ -16,13 +16,6 @@ export const SwipeCard: FC<TCard> = ({ above_tags, below_tags, image, name, path
   const query = category == "creator" ? "username" : category == "collection" && "slug";
   const newPath = currentPath + `?${query}=` + param;
 
-  console.log("paramparamparam");
-  console.log(path);
-  console.log(category);
-  console.log(param);
-  console.log(query);
-  console.log(newPath);
-
   return (
     <Link href={newPath} as={path} className="flex flex-col rounded-lg bg-white p-2">
       <div

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createClient } from "@supabase/supabase-js";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 import { limit } from "@/constant/settings.const";
@@ -21,11 +22,14 @@ export const useGetCombinedList = () => {
     sort?: string;
     type?: string;
   };
+  const router = useRouter();
+  const currentPath = router.pathname;
+  const checkProfilePage = currentPath == "/guest" || currentPath == "/[username]";
   const [list, setList] = useState<TCard[]>([]);
   const getCombinedList = async ({ ids, order, page, removeList, search, sort }: CombinedFilterProps = {}) => {
     const start = page ? (Number(page) - 1) * limit : 0;
     const end = page ? Number(page) * limit - 1 : limit;
-    const rangeFilter = `.range(${start}, ${end})`;
+    const rangeFilter = !checkProfilePage ? `.range(${start}, ${end})` : "";
     let searchFilter = "";
     if (search) {
       searchFilter = `.ilike("id", "%${search}%")`;
@@ -74,21 +78,13 @@ export const useGetCombinedList = () => {
     const removeListFilter = removeList && removeList.length > 0 ? `.not("id", "in", '(${removeListArray})')` : "";
     const filter = `supabase.from("combined_table").select("*", { count: 'exact' })${searchFilter}${sortFilter}${removeListFilter}${idsFilter}${rangeFilter}`;
     // const filter = `supabase.from("combined_table").select("*", { count: 'exact' })${searchFilter}${sortFilter}${rangeFilter}`;
-
-    console.log("filter");
-    console.log(filter);
-
     const { count, data, error } = await eval(filter);
     if (error) {
-      console.log("error at getCombinedList");
       console.log(error);
     }
     if (data) {
       setList(data as TCard[]);
     }
-    console.log("dataaaa");
-    console.log(data);
-
     return { count, data };
   };
 

@@ -7,7 +7,7 @@
     z-index: 99999;
 }
 .Toastify__toast {
-    font-family: lores-12, sans-serif !important;
+    padding: 20px 1em !important;
     @apply min-h-0 p-4 sm:mb-3 #{!important};
     & > div {
         @apply flex p-0 #{!important};

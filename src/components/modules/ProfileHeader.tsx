@@ -16,6 +16,7 @@ import { ProfileBlock } from "@/components/modules/ProfileBlock";
 import { ProfileCount } from "@/components/modules/ProfileCount";
 import { ProfileLink } from "@/components/modules/ProfileLink";
 import { authProfileAtom } from "@/state/auth.state";
+import { guestBookmarksAtom, guestHiddensAtom, guestProfileAtom, guestUpvotesAtom } from "@/state/guest.state";
 import { userBookmarksAtom, userHiddensAtom, userProfileAtom, userUpvotesAtom } from "@/state/user.state";
 import { pageHistoryAtom } from "@/state/utilities.state";
 import type { Profile } from "@/types/profile";
@@ -28,17 +29,25 @@ export const ProfileHeader: FC = () => {
   const router = useRouter();
   const currentPath = router.asPath;
   const { username } = router.query;
+  const [likedCount, setLikedCount] = useState<number>(0);
+  const [starsCount, setStarsCount] = useState<number>(0);
+  const [hiddensCount, setHiddensCount] = useState<number>(0);
 
   const [userProfile] = useAtom(userProfileAtom);
   const [userUpvotes] = useAtom(userUpvotesAtom);
   const [userBookmarks] = useAtom(userBookmarksAtom);
   const [userHiddens] = useAtom(userHiddensAtom);
+  const [guestProfile] = useAtom(guestProfileAtom);
+  const [guestUpvotes] = useAtom(guestUpvotesAtom);
+  const [guestBookmarks] = useAtom(guestBookmarksAtom);
+  const [guestHiddens] = useAtom(guestHiddensAtom);
 
-  const liked_count = userUpvotes.length;
-  const stars_count = userBookmarks.length;
-  const hiddens_count = userHiddens.length;
+  const currentProfile = userProfile ? userProfile : guestProfile;
+  const currentUpvotes = userProfile ? userUpvotes : guestUpvotes;
+  const currentBookmarks = userProfile ? userBookmarks : guestBookmarks;
+  const currentHiddens = userProfile ? userHiddens : guestHiddens;
 
-  const { avatar_url, description, instagram_id, links, name, twitter_id } = userProfile as Profile;
+  const { avatar_url, description, instagram_id, links, name, twitter_id } = currentProfile as Profile;
   const dummy_image = "/default-avatar.jpg";
   const [avatarSrc, setAvatarSrc] = useState<string>(dummy_image);
 
@@ -46,11 +55,17 @@ export const ProfileHeader: FC = () => {
     avatar_url ? setAvatarSrc(avatar_url) : setAvatarSrc(dummy_image);
   }, [avatar_url]);
 
+  useEffect(() => {
+    setLikedCount(currentUpvotes.length);
+    setStarsCount(currentBookmarks.length);
+    setHiddensCount(currentHiddens.length);
+  }, [currentBookmarks.length, currentUpvotes.length, currentHiddens.length]);
+
   let baseUrl = "" as string;
   if (process.env.NODE_ENV != "test") {
     baseUrl = {
       development: "http://localhost:3000",
-      production: "https://nftotaku.xyz",
+      production: "https://slii.xyz",
     }[process.env.NODE_ENV];
   }
   // シェアボタンのリンク先
@@ -137,7 +152,9 @@ export const ProfileHeader: FC = () => {
                 >
                   {name ? name : username}
                 </h1>
-                <p className="flex items-center gap-1 text-sm font-normal text-sky-800 opacity-50">@{username}</p>
+                <p className="flex items-center gap-1 text-sm font-normal text-sky-800 opacity-50">
+                  @{username ? username : guestProfile.username}
+                </p>
               </div>
             </div>
             <div className="flex flex-col gap-2">
@@ -145,7 +162,7 @@ export const ProfileHeader: FC = () => {
                 <div className="flex max-w-5xl flex-col gap-1">
                   {description && (
                     <>
-                      <p className="mt-1 break-all text-justify text-sm font-normal leading-relaxed text-sky-800 opacity-60 transition-all duration-200 md:text-[15px] ">
+                      <p className="mt-1 whitespace-pre-wrap break-all text-justify text-sm font-normal leading-relaxed text-sky-800 opacity-60 transition-all duration-200 md:text-[15px]">
                         {showDescription ? description : slicedDescription}
                       </p>
                       {description.length > 80 && (
@@ -168,11 +185,12 @@ export const ProfileHeader: FC = () => {
           </div>
           <div className="flex items-center justify-between gap-2 border-t border-slate-100 px-5 py-[14px]">
             <div className="flex gap-5">
-              <ProfileCount label="Liked" count={liked_count ? liked_count : 0} />
-              <ProfileCount label="Stars" count={stars_count ? stars_count : 0} />
-              {authProfile && authProfile.username == username && (
-                <ProfileCount label="Hidden(only you)" count={hiddens_count ? hiddens_count : 0} />
-              )}
+              <ProfileCount label="Liked" count={likedCount ? likedCount : 0} />
+              <ProfileCount label="Stars" count={starsCount ? starsCount : 0} />
+              {(authProfile && authProfile.username == username) ||
+                (!authProfile && currentPath == "/guest" && (
+                  <ProfileCount label="Hidden(only you)" count={hiddensCount ? hiddensCount : 0} />
+                ))}
             </div>
             {authProfile && authProfile.username == username && (
               <Link

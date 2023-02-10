@@ -3,16 +3,17 @@ import Link from "next/link";
 import { NextSeo } from "next-seo";
 
 import { SplitLayout } from "@/components/layouts/SplitLayout";
+import { site_name } from "@/constant/seo.const";
 
 export const Custom404: NextPage = () => {
   return (
     <div>
       <NextSeo
-        title="404 Error | NFT OTAKU"
+        title={`404 Error | ${site_name}`}
         description="Sorry, we could not find this page."
         openGraph={{
           description: "Sorry, we could not find this page.",
-          title: "404 Error | NFT OTAKU",
+          title: `404 Error | ${site_name}`,
           type: "article",
           url: process.env.NEXT_PUBLIC_SITE_URL + "/404",
         }}

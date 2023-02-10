@@ -4,10 +4,10 @@ import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-import { useGetAuthSwipedList } from "@/hooks/useGetAuthSwipedList";
 import { useGetCollections } from "@/hooks/useGetCollections";
 import { useGetCombinedList } from "@/hooks/useGetCombinedList";
 import { useGetCreators } from "@/hooks/useGetCreators";
+import { useGetSwipedList } from "@/hooks/useGetSwipedList";
 import {
   collectionsFilterParamsAtom,
   combinedFilterParamsAtom,
@@ -30,7 +30,7 @@ export const useGetIndexCards = () => {
   const [combinedFilterParams] = useAtom(combinedFilterParamsAtom);
   const [creatorsFilterParams] = useAtom(creatorsFilterParamsAtom);
   const [collectionsFilterParams] = useAtom(collectionsFilterParamsAtom);
-  const { swipedCollectionsList, swipedCombinedList, swipedCreatorsList } = useGetAuthSwipedList();
+  const { swipedCollectionsList, swipedCombinedList, swipedCreatorsList } = useGetSwipedList();
   const { getCreators } = useGetCreators();
   const { getCollections } = useGetCollections();
   const { getCombinedList } = useGetCombinedList();
@@ -70,6 +70,7 @@ export const useGetIndexCards = () => {
                 id: creator.username,
                 above_tags: creator.tags,
                 below_tags: creator.tags,
+                bookmarks_count: creator.bookmarks_count_function,
                 image: creator.avatar,
                 label: "Creator",
                 name: creator.username,
@@ -102,6 +103,7 @@ export const useGetIndexCards = () => {
                 id: collection.slug,
                 above_tags: collection.tags,
                 below_tags: collection.tags,
+                bookmarks_count: collection.bookmarks_count_function,
                 image: collection.image_url,
                 label: "Collection",
                 name: collection.name,

@@ -9,11 +9,13 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { DefaultSeo } from "next-seo";
 import { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
 
 import { description, site_name, title, twitter_id } from "@/constant/seo.const";
 import { useGetAuthBookmarks } from "@/hooks/useGetAuthBookmarks";
 import { useGetAuthUpvotes } from "@/hooks/useGetAuthUpvotes";
 import { useGetSession } from "@/hooks/useGetSession";
+import { useMergeGuestData } from "@/hooks/useMergeGuestData";
 import * as gtag from "@/libs/gtag";
 import { supabase } from "@/libs/supabase";
 import { authBookmarksAtom, authProfileAtom, authUpvotesAtom, authUserAtom } from "@/state/auth.state";
@@ -34,6 +36,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const [authProfile, setAuthProfile] = useAtom(authProfileAtom);
 
   const [pageHistory, setPageHistory] = useAtom(pageHistoryAtom);
+  const { mergeGuestData } = useMergeGuestData();
 
   useEffect(() => {
     setPageHistory([router.asPath, pageHistory[0]]);
@@ -93,6 +96,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     if (!authUser) !authProfile && getAuthProfile();
+    mergeGuestData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authUser]);
 
@@ -127,6 +131,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       />
       <div className={`flex min-h-screen flex-col overflow-hidden bg-[#F8FAFC]`}>
         <Component {...pageProps} />
+        <ToastContainer position="bottom-right" autoClose={false} />
       </div>
     </>
   );

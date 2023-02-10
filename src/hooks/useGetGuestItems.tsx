@@ -1,41 +1,41 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useAtom } from "jotai";
 import { useState } from "react";
 
 import { useGetCombinedList } from "@/hooks/useGetCombinedList";
-import { userBookmarksAtom, userUpvotesAtom } from "@/state/user.state";
+import { guestBookmarksAtom, guestUpvotesAtom } from "@/state/guest.state";
 import { profileTabAtom } from "@/state/utilities.state";
 import type { TCard } from "@/types/tinder";
 
-export const useGetUserItems = () => {
-  const [userItems, setUserItems] = useState<TCard[]>([]);
-  const { getCombinedList } = useGetCombinedList();
-
+export const useGetGuestItems = () => {
+  const [guestItems, setGuestItems] = useState<TCard[]>([]);
   const [profileTab] = useAtom(profileTabAtom);
-  const [userUpvotes] = useAtom(userUpvotesAtom);
-  const [userBookmarks] = useAtom(userBookmarksAtom);
+  const { getCombinedList } = useGetCombinedList();
+  const [guestUpvotes] = useAtom(guestUpvotesAtom);
+  const [guestBookmarks] = useAtom(guestBookmarksAtom);
 
-  const upvoted_usernames = userUpvotes
+  const upvoted_usernames = guestUpvotes
     .filter((upvote) => {
       return upvote.creator_username;
     })
     .map((upvote) => {
       return upvote.creator_username;
     });
-  const upvoted_slugs = userUpvotes
+  const upvoted_slugs = guestUpvotes
     .filter((upvote) => {
       return upvote.collection_slug;
     })
     .map((upvote) => {
       return upvote.collection_slug;
     });
-  const bookmarked_usernames = userBookmarks
+  const bookmarked_usernames = guestBookmarks
     .filter((bookmark) => {
       return bookmark.creator_username;
     })
     .map((bookmark) => {
       return bookmark.creator_username;
     });
-  const bookmarked_slugs = userBookmarks
+  const bookmarked_slugs = guestBookmarks
     .filter((bookmark) => {
       return bookmark.collection_slug;
     })
@@ -52,20 +52,25 @@ export const useGetUserItems = () => {
   const stars_ids = [...stars_usernames, ...stars_slugs];
 
   const ids = profileTab != "stars" ? liked_ids : stars_ids;
+  const usernames = profileTab != "stars" ? liked_usernames : stars_usernames;
+  const slugs = profileTab != "stars" ? liked_slugs : stars_slugs;
 
-  const getUserItems = async () => {
+  const getGuestItems = async () => {
     const fetchCombiledListData = async () => {
+      if (!ids || ids.length == 0) {
+        return [];
+      }
       const props = {
         ids: ids,
       };
       const { data } = await getCombinedList(props);
-      if (data != userItems) {
+      if (data != guestItems) {
         const combined_list = data as TCard[];
-        setUserItems(combined_list);
+        setGuestItems(combined_list);
       }
     };
     await fetchCombiledListData();
   };
 
-  return { getUserItems, userItems };
+  return { getGuestItems, guestItems };
 };

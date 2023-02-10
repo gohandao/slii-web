@@ -6,6 +6,7 @@ import { NextSeo } from "next-seo";
 
 import { SplitLayout } from "@/components/layouts/SplitLayout";
 import { ProfilePageTemplate } from "@/components/templates/ProfilePageTemplate";
+import { site_name } from "@/constant/seo.const";
 import { useGetUserBookmarks } from "@/hooks/useGetUserBookmarks";
 import { useGetUserHiddens } from "@/hooks/useGetUserHiddens";
 import { useGetUserProfile } from "@/hooks/useGetUserProfile";
@@ -101,26 +102,27 @@ export const getStaticProps: GetStaticProps<PathProps, Params> = async ({ params
   }
   const description =
     profile && profile.description ? profile.description.slice(0, 200) : `This is ${username}'s profile page.`;
-  const label = profile && profile.label ? profile.label.slice(0, 20) : `NFT Holder`;
+  // const label = profile && profile.label ? profile.label.slice(0, 20) : `NFT Holder`;
 
-  let baseUrl;
-  if (process.env.NODE_ENV != "test") {
-    baseUrl = {
-      development: "http://localhost:3000",
-      production: "https://nftotaku.xyz",
-    }[process.env.NODE_ENV];
-  }
+  // let baseUrl;
+  // if (process.env.NODE_ENV != "test") {
+  //   baseUrl = {
+  //     development: "http://localhost:3000",
+  //     production: "https://slii.xyz",
+  //   }[process.env.NODE_ENV];
+  // }
 
-  const avatar = profile.avatar_url ? profile.avatar_url : "";
-  const background = profile.background_url ? profile.background_url : "";
+  // const avatar = profile.avatar_url ? profile.avatar_url : "";
+  // const background = profile.background_url ? profile.background_url : "";
 
   return {
     props: {
       description: description,
-      ogImageUrl: `${baseUrl}/api/ogp?title=${username}&label=${label}&type=user&avatar=${avatar}&background=${background}`,
+      ogImageUrl: process.env.NEXT_PUBLIC_SITE_URL + "/default-ogp.jpg",
+      // ogImageUrl: `${baseUrl}/api/ogp?title=${username}&label=${label}&type=user&avatar=${avatar}&background=${background}`,
       revalidate: 10,
       // OGP画像は絶対URLで記述する必要があります
-      title: `${username}'s profile | NFT OTAKU`,
+      title: `${username}'s profile | ${site_name}`,
     },
   };
 };

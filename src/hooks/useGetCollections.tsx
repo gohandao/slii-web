@@ -178,7 +178,6 @@ export const useGetCollections = () => {
       : `supabase.from("collections").select('"*", upvotes_count_function, bookmarks_count_function ${ForeignTableFilter}', { count: 'exact' })${slugsFilter}${typeFilter}${searchFilter}${sortFilter}${rangeFilter}${slugFilter}`;
     const { count, data, error } = await eval(filter);
     if (error) {
-      console.log("error at getCollections");
       console.log(error);
     }
     if (data) {

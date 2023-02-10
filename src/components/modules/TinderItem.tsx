@@ -1,4 +1,5 @@
 import { useAtom } from "jotai";
+import { useRouter } from "next/router";
 // ReactはchildRefsで使用
 // eslint-disable-next-line no-restricted-imports
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -9,13 +10,15 @@ import TinderCard from "react-tinder-card";
 
 import { SwipeCard } from "@/components/modules/SwipeCard";
 import { useHandleReaction } from "@/hooks/useHandleReaction";
+import { event } from "@/libs/gtag";
 import { resetCardsAtom } from "@/state/utilities.state";
 import type { Table } from "@/types/reaction";
 import type { TCard, TItem } from "@/types/tinder";
 
 // eslint-disable-next-line import/no-default-export
-export default function TinderItem({ buttonHandlers, cards }: TItem) {
-  console.log(buttonHandlers);
+export default function TinderItem({ cards }: TItem) {
+  const router = useRouter();
+
   const [resetCards, setResetCards] = useAtom(resetCardsAtom);
   const { addReaction, removeReaction } = useHandleReaction();
   const [cardHeight, setCardHeight] = useState<string>();
@@ -45,21 +48,13 @@ export default function TinderItem({ buttonHandlers, cards }: TItem) {
       return val;
     });
     currentIndexRef.current = val;
-    currentIndexRef.current >= val && childRefs[val].current.restoreCard();
   };
 
   const canGoBack = currentIndex < cards.length - 1;
-  console.log("canGoBack");
-  console.log(canGoBack);
-  console.log(currentIndex);
-  console.log(currentIndexRef.current);
-  console.log(cards.length);
-
   const canSwipe = currentIndex >= 0;
 
   // set last direction and decrease current index
   const swiped = (direction: "left" | "right" | "up" | "down", nameToDelete: string, index: number) => {
-    console.log("swiped");
     const currentIndex = currentIndexRef.current;
     const reaction_table =
       direction == "left"
@@ -113,18 +108,22 @@ export default function TinderItem({ buttonHandlers, cards }: TItem) {
     };
     switch (direction) {
       case "left":
+        event({ action: "tinder_action", value: "hide" } as any);
         reactionHandler();
         setLastDirection("Hidden card.");
         break;
       case "right":
+        event({ action: "tinder_action", value: "star" } as any);
         reactionHandler();
         setLastDirection("Liked card.");
         break;
       case "up":
+        event({ action: "tinder_action", value: "star" } as any);
         reactionHandler();
         setLastDirection("Stared card.");
         break;
       case "down":
+        event({ action: "tinder_action", value: "skip" } as any);
         reactionHandler();
         setLastDirection("Skip card.");
         break;
@@ -133,12 +132,7 @@ export default function TinderItem({ buttonHandlers, cards }: TItem) {
   };
 
   const outOfFrame = (name: string, idx: number) => {
-    console.log("outOfFrame");
-    console.log(currentIndexRef);
-    console.log(currentIndexRef.current);
-    console.log(childRefs[idx].current);
-
-    console.log(`${name} (${idx}) left the screen!`, currentIndexRef.current);
+    // console.log(`${name} (${idx}) left the screen!`, currentIndexRef.current);
     // handle the case in which go back is pressed before card goes outOfFrame
     currentIndexRef.current >= idx && childRefs[idx].current.restoreCard();
     // TODO: when quickly swipe and restore multiple times the same card,
@@ -147,7 +141,6 @@ export default function TinderItem({ buttonHandlers, cards }: TItem) {
   };
 
   const swipe = async (dir: string) => {
-    console.log("swipe" + dir);
     const item = document.querySelector<HTMLElement>(`.swipe:nth-child(${currentIndex + 1})`);
     if (item) {
       item.classList.remove("tinder-custom-undo-card-position");
@@ -162,6 +155,7 @@ export default function TinderItem({ buttonHandlers, cards }: TItem) {
     if (!canGoBack) return;
     const newIndex = currentIndex + 1;
     updateCurrentIndex(newIndex);
+    await childRefs[newIndex].current.restoreCard();
   };
 
   const LastDirection = () => {
@@ -192,13 +186,6 @@ export default function TinderItem({ buttonHandlers, cards }: TItem) {
               custom_item.classList.remove("tinder-custom-undo-card-animation");
             }, 3000);
           }
-          console.log("ihgdioahgioahgdiaohgoidahogah");
-
-          console.log("swipedRefs");
-          console.log(swipedRefs.current);
-          console.log(currentIndex);
-          console.log(swipedRefs.current[currentIndex + 1]);
-
           const new_swipedRefs = swipedRefs.current.filter((swipedRef) => {
             return swipedRef.index !== currentIndex + 1;
           });
@@ -272,6 +259,12 @@ export default function TinderItem({ buttonHandlers, cards }: TItem) {
           cards.map((card: TCard, index: number) => {
             // const status = currentIndex !== index && currentIndex !== index - 1 ? "hidden" : "";
             // console.log(index);
+            const currentPath = router.pathname;
+
+            const category = card.path.split("/")[1];
+            const param = card.path.split("/").pop();
+            const query = category == "creator" ? "username" : category == "collection" && "slug";
+            const newPath = currentPath + `?${query}=` + param;
             return (
               <TinderCard
                 // onSwipe={onSwipe}
@@ -282,12 +275,13 @@ export default function TinderItem({ buttonHandlers, cards }: TItem) {
                 className="swipe absolute w-full cursor-pointer"
                 key={card.name}
                 onSwipe={(dir) => {
-                  console.log("at onSwipe");
                   return swiped(dir, card.name, index);
                 }}
                 onCardLeftScreen={() => {
-                  console.log("at onCardLeftScreen");
                   return outOfFrame(card.name, index);
+                }}
+                onClick={() => {
+                  router.push(newPath, card.path);
                 }}
                 // preventSwipe={["right", "left"]}
               >

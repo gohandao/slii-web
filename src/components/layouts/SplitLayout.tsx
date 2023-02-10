@@ -19,7 +19,7 @@ export const SplitLayout = ({ children }: Props) => {
     <div className="flex h-full min-h-screen flex-col">
       <div id="container" className="flex">
         <div
-          className={`fixed top-0 z-50 h-screen w-[280px] transition-all duration-300 lg:left-0  lg:w-[320px] lg:py-5 lg:pl-5 ${navToggleClass}`}
+          className={`fixed top-0 z-40 h-screen w-[280px] transition-all duration-300 lg:left-0  lg:w-[320px] lg:py-5 lg:pl-5 ${navToggleClass}`}
         >
           <div className="flex h-full rounded-r-2xl bg-white shadow-2xl shadow-gray-100 lg:rounded-lg">
             <SideNavigation />
@@ -31,7 +31,7 @@ export const SplitLayout = ({ children }: Props) => {
             {/* <NoticeBar /> */}
             <div className="">
               <Header />
-              <main className="px-5 pb-[60px]">{children}</main>
+              <main className="px-5 pb-[100px] lg:pb-[60px]">{children}</main>
             </div>
           </div>
         </div>

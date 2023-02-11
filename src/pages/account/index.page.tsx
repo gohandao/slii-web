@@ -8,7 +8,6 @@ import { NextSeo } from "next-seo";
 import { useEffect, useState } from "react";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
-import { v4 as uuidv4 } from "uuid";
 
 import { Input } from "@/components/elements/Input";
 import { NavButton } from "@/components/elements/NavButton";
@@ -98,8 +97,8 @@ const AccountPage: NextPage = () => {
 
   const uploadImage = async ({ image, path, storage }: UploadImageProps) => {
     const STORAGE_URL = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_URL;
-    const uuid = uuidv4();
-    const { data, error } = await supabase.storage.from(storage).upload(`${path}/${uuid}.jpg`, image, {
+    const imageId = nanoid();
+    const { data, error } = await supabase.storage.from(storage).upload(`${path}/${imageId}.jpg`, image, {
       cacheControl: "3600",
       upsert: false,
     });

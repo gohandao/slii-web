@@ -33,15 +33,13 @@
     "react-tinder-card": "git+https://github.com/mrgishi/react-tinder-card.git",
     "react-toastify": "^9.1.1",
     "sass": "^1.56.1",
-    "sortablejs": "^1.15.0",
-    "uuid": "^9.0.0"
+    "sortablejs": "^1.15.0"
   },
   "devDependencies": {
     "@types/node": "18.11.18",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
     "@types/react-modal": "^3.13.1",
-    "@types/uuid": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
     "autoprefixer": "^10.4.13",
